@@ -1,1 +1,1 @@
-# ZingCamBLEIMU
+# ZingCam-BLE
