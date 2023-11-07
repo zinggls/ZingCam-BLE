@@ -1,6 +1,31 @@
+import zmq
 import tkinter
 import threading
 import time
+import json
+
+context = zmq.Context()
+socket = context.socket(zmq.REQ)
+socket.connect("tcp://127.0.0.1:1234")
+
+def req(cmd):
+    socket.send(cmd.encode())
+    return socket.recv().decode()
+
+NUM_HOST_STATUS = int(req("num_host_status"))
+NUM_DEVICE_STATUS = int(req("num_device_status"))
+
+socket.send("host_status".encode())
+host_status = json.loads(socket.recv())
+
+socket.send("device_status".encode())
+device_status = json.loads(socket.recv())
+
+socket.send("host_status_name".encode())
+host_status_name = json.loads(socket.recv())
+
+socket.send("device_status_name".encode())
+device_status_name = json.loads(socket.recv())
 
 def ZingGatewayGUI(host_status, device_status, host_status_name, device_status_name, NUM_HOST_STATUS, NUM_DEVICE_STATUS):
     root = tkinter.Tk()
@@ -66,6 +91,19 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
     device_status_value_list = status[9]
 
     while True:
+        
+        socket.send("host_status".encode())
+        host_status = json.loads(socket.recv())
+
+        socket.send("device_status".encode())
+        device_status = json.loads(socket.recv())
+
+        socket.send("host_status_name".encode())
+        host_status_name = json.loads(socket.recv())
+
+        socket.send("device_status_name".encode())
+        device_status_name = json.loads(socket.recv())
+
         try:
             for i in range(3):
                 host_sof_value_list[i].set(host_status[host_status_name[i]])
@@ -178,4 +216,6 @@ def create_status_window(window, device, status_list, host_status_name, device_s
         for i in range(12, 12 + NUM_HOST_STATUS):
             tkinter.Label(window_label, text = host_status_name[i]).grid(row = i + 1 - 12, column = 0, padx = 25)
             tkinter.Label(window_label, textvariable = host_status_value_list[i - 12]).grid(row = i + 1 - 12, column = 1, padx = 25)
-    
+
+
+ZingGatewayGUI(host_status, device_status, host_status_name, device_status_name, NUM_HOST_STATUS, NUM_DEVICE_STATUS)
