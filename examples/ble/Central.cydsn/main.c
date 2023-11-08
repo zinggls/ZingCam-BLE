@@ -5,19 +5,39 @@ static char msg[128];
 static CYBLE_GAPC_ADV_REPORT_T advertisement_report;
 static const uint8_t peripheral_addr[CYBLE_GAP_BD_ADDR_SIZE] = { 0x01, 0x00, 0x00, 0x50, 0xA0, 0x00 };
 static CYBLE_GAP_BD_ADDR_T addr;
+static uint32_t sec;
 
 void ble_callback(uint32 evt, void* param);
+void systick_isr_callback(void);
 
 int main(void)
 {
     CyGlobalIntEnable;
     
+    CySysTickStart();
     CyBle_Start(ble_callback);
     UART_DBG_Start();
-
+    
+    for (uint8 i = 0; i < CY_SYS_SYST_NUM_OF_CALLBACKS; i++)
+    {
+        if (CySysTickGetCallback(i) == NULL)
+        {
+            CySysTickSetCallback(i, systick_isr_callback);
+            break;
+        }
+    }
+    
     while (1)
     {
         CyBle_ProcessEvents();
+        
+        if (sec == 0)
+        {
+            if (cyBle_state == CYBLE_STATE_CONNECTED)
+            {
+                // alert notification
+            }
+        }
     }
 }
 
@@ -75,36 +95,47 @@ void ble_callback(uint32 evt, void* param)
                 memcpy(addr.bdAddr, advertisement_report.peerBdAddr, CYBLE_GAP_BD_ADDR_SIZE);
             }
         break;
-        case CYBLE_EVT_GAPC_SCAN_START_STOP:
         // callback when scanning is done
+        case CYBLE_EVT_GAPC_SCAN_START_STOP:
             if (cyBle_state == CYBLE_STATE_DISCONNECTED)
             {
                 CyBle_GapcConnectDevice(&addr);
             }
         break;
-        case CYBLE_EVT_GATT_CONNECT_IND:
         // callback when ble is connected in application layer
+        case CYBLE_EVT_GATT_CONNECT_IND:
         break;
-        case CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE:
         // callback when ble is connected in link layer
+        case CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE:
+            CyBle_GapAuthReq(cyBle_connHandle.bdHandle, &cyBle_authInfo);
         break;
-        case CYBLE_EVT_GAP_AUTH_COMPLETE:
         // callback when ble is authenticated in link layer
+        case CYBLE_EVT_GAP_AUTH_COMPLETE:
         break;
-        case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
         // callback when ble is discovered device
+        case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
         break;
-        case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
         // callback when receive mtu request
+        case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
         break;
-        case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
         // callback when receive mtu response
+        case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
         break;
-        case CYBLE_EVT_GATTS_WRITE_REQ:
         // callback when receive write request
+        case CYBLE_EVT_GATTS_WRITE_REQ:
+            CyBle_GattsWriteRsp(cyBle_connHandle);
         break;
-        case CYBLE_EVT_GATTC_WRITE_RSP:
         // callback when receive write response
+        case CYBLE_EVT_GATTC_WRITE_RSP:
+        break;
+        // callback when receive notification
+        case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
         break;
     }
+}
+
+void systick_isr_callback(void)
+{
+    // Callback 1 sec
+    sec = (sec + 1) % 1000;
 }
