@@ -124,7 +124,7 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
         except Exception as e:
             pass
             
-        time.sleep(1)
+        time.sleep(0.1)
 
 
 def create_imu_window(window, device, imu_list):
