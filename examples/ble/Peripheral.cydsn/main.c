@@ -2,19 +2,47 @@
 #include "project.h"
 
 static char msg[128];
+static uint32_t sec;
 
 void ble_callback(uint32 evt, void* param);
+void systick_isr_callback(void);
 
 int main(void)
 {
+    CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
+    uint8_t data;
+    
     CyGlobalIntEnable;
     
+    CySysTickStart();
     CyBle_Start(ble_callback);
     UART_DBG_Start();
+    
+    for (uint8 i = 0; i < CY_SYS_SYST_NUM_OF_CALLBACKS; i++)
+    {
+        if (CySysTickGetCallback(i) == NULL)
+        {
+            CySysTickSetCallback(i, systick_isr_callback);
+            break;
+        }
+    }
     
     while (1)
     {
         CyBle_ProcessEvents();
+        
+        if (sec == 0)
+        {
+            if (cyBle_state == CYBLE_STATE_CONNECTED)
+            {
+                // alert notification
+                notification.value.len = 1;
+                notification.value.val = &data;
+                CyBle_GattsNotification(cyBle_connHandle, &notification);
+                
+                CyDelay(1);
+            }
+        }
     }
 }
 void ble_callback(uint32 evt, void* param)
@@ -81,5 +109,14 @@ void ble_callback(uint32 evt, void* param)
         // callback when receive write response
         case CYBLE_EVT_GATTC_WRITE_RSP:
         break;
+        // callback when receive notification
+        case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
+        break;
     }
+}
+
+void systick_isr_callback(void)
+{
+    // Callback 1 sec
+    sec = (sec + 1) % 1000;
 }

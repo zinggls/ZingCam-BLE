@@ -130,6 +130,7 @@ void ble_callback(uint32 evt, void* param)
         break;
         // callback when receive notification
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
+            UART_DBG_PutString("Something received\r\n");
         break;
     }
 }
