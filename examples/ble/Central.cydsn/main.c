@@ -2,6 +2,9 @@
 #include "project.h"
 
 static char msg[128];
+static CYBLE_GAPC_ADV_REPORT_T advertisement_report;
+static const uint8_t peripheral_addr[CYBLE_GAP_BD_ADDR_SIZE] = { 0x01, 0x00, 0x00, 0x50, 0xA0, 0x00 };
+static CYBLE_GAP_BD_ADDR_T addr;
 
 void ble_callback(uint32 evt, void* param);
 
@@ -63,9 +66,21 @@ void ble_callback(uint32 evt, void* param)
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
             // receive device's information in param
             // typecast param to CYBLE_GAPC_ADV_REPORT_T
+            memcpy(&advertisement_report, param, sizeof(CYBLE_GAPC_ADV_REPORT_T));
+            
+            if (memcmp(peripheral_addr, advertisement_report.peerBdAddr, CYBLE_GAP_BD_ADDR_SIZE) == 0)
+            {
+                CyBle_GapcStopScan();
+                addr.type = advertisement_report.peerAddrType;
+                memcpy(addr.bdAddr, advertisement_report.peerBdAddr, CYBLE_GAP_BD_ADDR_SIZE);
+            }
         break;
         case CYBLE_EVT_GAPC_SCAN_START_STOP:
         // callback when scanning is done
+            if (cyBle_state == CYBLE_STATE_DISCONNECTED)
+            {
+                CyBle_GapcConnectDevice(&addr);
+            }
         break;
         case CYBLE_EVT_GATT_CONNECT_IND:
         // callback when ble is connected in application layer
