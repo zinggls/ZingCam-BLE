@@ -49,14 +49,20 @@ void ble_callback(uint32 evt, void* param)
     
     switch (evt)
     {
-        case CYBLE_EVT_STACK_ON:
         // callback when stack is available
+        case CYBLE_EVT_STACK_ON:
+            // start scanning when ble stack is available
+            CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
         break;
-        case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
         // callback when ble is disconnected
+        case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
+            // start scanning when ble disconnected
+            CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
         break;
+        // callback when scanning is progressing
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
-        // callback when scannin is progressing
+            // receive device's information in param
+            // typecast param to CYBLE_GAPC_ADV_REPORT_T
         break;
         case CYBLE_EVT_GAPC_SCAN_START_STOP:
         // callback when scanning is done
