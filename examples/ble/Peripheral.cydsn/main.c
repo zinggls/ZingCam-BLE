@@ -45,41 +45,41 @@ void ble_callback(uint32 evt, void* param)
 
     switch (evt)
     {
-        case CYBLE_EVT_STACK_ON:
         // callback when stack is available
+        case CYBLE_EVT_STACK_ON:
+            // start advertising when ble stack is available
+            CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
         break;
-        case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
         // callback when ble is disconnected
+        case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
+            // start advertising when ble disconnected
+            CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
         break;
-        case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
-        // callback when scannin is progressing
-        break;
-        case CYBLE_EVT_GAPC_SCAN_START_STOP:
-        // callback when scanning is done
-        break;
-        case CYBLE_EVT_GATT_CONNECT_IND:
         // callback when ble is connected in application layer
+        case CYBLE_EVT_GATT_CONNECT_IND:
         break;
-        case CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE:
         // callback when ble is connected in link layer
+        case CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE:
         break;
-        case CYBLE_EVT_GAP_AUTH_COMPLETE:
         // callback when ble is authenticated in link layer
+        case CYBLE_EVT_GAP_AUTH_COMPLETE:
+            // start ble server discovery process
+            CyBle_GattcStartDiscovery(cyBle_connHandle);
         break;
-        case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
         // callback when ble is discovered device
+        case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
         break;
-        case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
         // callback when receive mtu request
+        case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
         break;
-        case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
         // callback when receive mtu response
+        case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
         break;
-        case CYBLE_EVT_GATTS_WRITE_REQ:
         // callback when receive write request
+        case CYBLE_EVT_GATTS_WRITE_REQ:
         break;
-        case CYBLE_EVT_GATTC_WRITE_RSP:
         // callback when receive write response
+        case CYBLE_EVT_GATTC_WRITE_RSP:
         break;
     }
 }
