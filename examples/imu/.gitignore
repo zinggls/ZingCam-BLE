@@ -6,7 +6,7 @@
 *.html
 *.log
 
-uart.cywrk
+imu.cywrk
 Design01.cydsn
 codegentemp
 CortexM0
