@@ -6,12 +6,16 @@ static CYBLE_GAPC_ADV_REPORT_T advertisement_report;
 static const uint8_t peripheral_addr[CYBLE_GAP_BD_ADDR_SIZE] = { 0x01, 0x00, 0x00, 0x50, 0xA0, 0x00 };
 static CYBLE_GAP_BD_ADDR_T addr;
 static uint32_t sec;
+static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T recv;
 
 void ble_callback(uint32 evt, void* param);
 void systick_isr_callback(void);
 
 int main(void)
 {
+    CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
+    uint8_t data = 0;
+    
     CyGlobalIntEnable;
     
     CySysTickStart();
@@ -36,6 +40,12 @@ int main(void)
             if (cyBle_state == CYBLE_STATE_CONNECTED)
             {
                 // alert notification
+                notification.value.len = 1;
+                notification.value.val = &data;
+                CyBle_GattsNotification(cyBle_connHandle, &notification);
+                
+                data = (data + 1) % 0xFF;
+                CyDelay(1);
             }
         }
     }
@@ -130,7 +140,9 @@ void ble_callback(uint32 evt, void* param)
         break;
         // callback when receive notification
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
-            UART_DBG_PutString("Something received\r\n");
+            memcpy(&recv, param, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
+            sprintf(msg, "receive data = %d, (rssi = %d)\r\n", *recv.handleValPair.value.val, CyBle_GetRssi());
+            UART_DBG_PutString(msg);
         break;
     }
 }

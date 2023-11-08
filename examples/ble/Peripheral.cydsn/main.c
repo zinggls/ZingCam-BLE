@@ -3,6 +3,7 @@
 
 static char msg[128];
 static uint32_t sec;
+static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T recv;
 
 void ble_callback(uint32 evt, void* param);
 void systick_isr_callback(void);
@@ -10,7 +11,7 @@ void systick_isr_callback(void);
 int main(void)
 {
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
-    uint8_t data;
+    uint8_t data = 0;
     
     CyGlobalIntEnable;
     
@@ -40,6 +41,7 @@ int main(void)
                 notification.value.val = &data;
                 CyBle_GattsNotification(cyBle_connHandle, &notification);
                 
+                data = (data + 1) % 0xFF;
                 CyDelay(1);
             }
         }
@@ -111,6 +113,9 @@ void ble_callback(uint32 evt, void* param)
         break;
         // callback when receive notification
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
+            memcpy(&recv, param, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
+            sprintf(msg, "receive data = %d, (rssi = %d)\r\n", *recv.handleValPair.value.val, CyBle_GetRssi());
+            UART_DBG_PutString(msg);
         break;
     }
 }
