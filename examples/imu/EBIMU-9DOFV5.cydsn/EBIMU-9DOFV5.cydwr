@@ -10,7 +10,14 @@
     </Group>
   </Group>
   <Data key="DataVersionKey" value="2" />
-  <Group key="DWRInstGuidMapping" />
+  <Group key="DWRInstGuidMapping">
+    <Group key="Pin">
+      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="UART_IMU_RX" />
+      <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="UART_DBG_RX" />
+      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="UART_IMU_TX" />
+      <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="UART_DBG_TX" />
+    </Group>
+  </Group>
   <Group key="FlashSecurity">
     <Group key="RowsKey">
       <Group key="0">
@@ -3545,6 +3552,29 @@
         <Data key="start_on_reset" value="True" />
       </Group>
     </Group>
+  </Group>
+  <Group key="Pin2">
+    <Group key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba">
+      <Group key="0">
+        <Data key="Port Format" value="0,0" />
+      </Group>
+    </Group>
+    <Group key="1425177d-0d0e-4468-8bcc-e638e5509a9b">
+      <Group key="0">
+        <Data key="Port Format" value="1,4" />
+      </Group>
+    </Group>
+    <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">
+      <Group key="0">
+        <Data key="Port Format" value="0,1" />
+      </Group>
+    </Group>
+    <Group key="ed092b9b-d398-4703-be89-cebf998501f6">
+      <Group key="0">
+        <Data key="Port Format" value="1,5" />
+      </Group>
+    </Group>
+    <Group key="UnAssigned Pins" />
   </Group>
   <Group key="PlaceDir">
     <Data key="count" value="0" />
