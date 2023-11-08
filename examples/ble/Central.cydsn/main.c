@@ -1,26 +1,14 @@
-/* ========================================
- *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
- *
- * ========================================
-*/
 #include "project.h"
 
 int main(void)
 {
-    CyGlobalIntEnable; /* Enable global interrupts. */
+    CyGlobalIntEnable;
+    
+    UART_DBG_Start();
 
-    /* Place your initialization/startup code here (e.g. MyInst_Start()) */
-
-    for(;;)
+    while (1)
     {
-        /* Place your application code here. */
+        UART_DBG_PutString("Hello World\r\n");
+        CyDelay(1000);
     }
 }
-
-/* [] END OF FILE */

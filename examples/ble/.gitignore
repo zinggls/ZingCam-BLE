@@ -1,4 +1,14 @@
 *.iron
+*.cycdx
+*.cyfit
+*.rpt
+*.svd
+*.html
+*.log
 
 ble.cywrk
 Design01.cydsn
+codegentemp
+CortexM0
+Export
+Generated_Source
