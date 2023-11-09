@@ -6,17 +6,22 @@ import time
 import hu205
 import em2890
 import subprocess
+import setting
 
 CAM_UNKNOWN = 0
 CAM_HU205 = 1
 CAM_EM2890 = 2
 
-context = zmq.Context(10)
-req = context.socket(zmq.REP)
-req.bind("tcp://127.0.0.1:1234")
+request_context = zmq.Context(10)
+req = request_context.socket(zmq.REP)
+req.bind("tcp://{}:{}".format(setting.IP, setting.REQREP_PORT))
+
+subscribe_context = zmq.Context(10)
+sub = request_context.socket(zmq.PUB)
+sub.bind("tcp://{}:{}".format(setting.IP, setting.PUBSUB_PORT))
 
 zble = zing_ble.Zing_BLE()
-zble.connect("COM6", 115200)
+zble.connect(setting.COMPORT, setting.BAUDRATE)
 commands = dict()
 camera = CAM_UNKNOWN
 run = 0
@@ -60,6 +65,9 @@ def Zing():
                     if (run != 0):
                         run.kill()
                         run = 0
+            
+            sub.send(json.dumps(zble.host_status_dict).encode())
+            sub.send(json.dumps(zble.device_status_dict).encode())
 
             commands = {
                 "host_status_name": json.dumps(zble.host_status_name).encode(),

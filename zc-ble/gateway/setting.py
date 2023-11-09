@@ -1,0 +1,5 @@
+COMPORT = ""
+BAUDRATE = 115200
+IP = ""
+REQREP_PORT = ""
+PUBSUB_PORT = ""

@@ -3,29 +3,32 @@ import tkinter
 import threading
 import time
 import json
+import setting
 
-context = zmq.Context()
-socket = context.socket(zmq.REQ)
-socket.connect("tcp://127.0.0.1:1234")
+request_context = zmq.Context()
+request_socket = request_context.socket(zmq.REQ)
+request_socket.connect("tcp://{}:{}".format(setting.IP, setting.REQREP_PORT))
+
+subscribe_context = zmq.Context()
+subscribe_socket = subscribe_context.socket(zmq.SUB)
+subscribe_socket.connect("tcp://{}:{}".format(setting.IP, setting.PUBSUB_PORT))
+subscribe_socket.subscribe("")
 
 def req(cmd):
-    socket.send(cmd.encode())
-    return socket.recv().decode()
+    request_socket.send(cmd.encode())
+    return request_socket.recv().decode()
 
 NUM_HOST_STATUS = int(req("num_host_status"))
 NUM_DEVICE_STATUS = int(req("num_device_status"))
 
-socket.send("host_status".encode())
-host_status = json.loads(socket.recv())
+host_status = json.loads(subscribe_socket.recv())
+device_status = json.loads(subscribe_socket.recv())
 
-socket.send("device_status".encode())
-device_status = json.loads(socket.recv())
+request_socket.send("host_status_name".encode())
+host_status_name = json.loads(request_socket.recv())
 
-socket.send("host_status_name".encode())
-host_status_name = json.loads(socket.recv())
-
-socket.send("device_status_name".encode())
-device_status_name = json.loads(socket.recv())
+request_socket.send("device_status_name".encode())
+device_status_name = json.loads(request_socket.recv())
 
 def ZingGatewayGUI(host_status, device_status, host_status_name, device_status_name, NUM_HOST_STATUS, NUM_DEVICE_STATUS):
     root = tkinter.Tk()
@@ -92,17 +95,14 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
 
     while True:
         
-        socket.send("host_status".encode())
-        host_status = json.loads(socket.recv())
+        host_status = json.loads(subscribe_socket.recv())
+        device_status = json.loads(subscribe_socket.recv())
 
-        socket.send("device_status".encode())
-        device_status = json.loads(socket.recv())
+        request_socket.send("host_status_name".encode())
+        host_status_name = json.loads(request_socket.recv())
 
-        socket.send("host_status_name".encode())
-        host_status_name = json.loads(socket.recv())
-
-        socket.send("device_status_name".encode())
-        device_status_name = json.loads(socket.recv())
+        request_socket.send("device_status_name".encode())
+        device_status_name = json.loads(request_socket.recv())
 
         try:
             for i in range(3):
