@@ -16,6 +16,15 @@ int main(void)
     
     while (1)
     {
+        UART_IMU_UartPutChar('*');
+        
+        SOP = UART_IMU_UartGetChar() << 8 | UART_IMU_UartGetChar();
+        
+        if (SOP == 0x5555)
+        {
+            UART_DBG_PutString("Receive SOP\r\n");
+        }
+        
         CyDelay(1000);
     }
 }
