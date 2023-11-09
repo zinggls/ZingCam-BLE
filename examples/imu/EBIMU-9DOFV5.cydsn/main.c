@@ -4,26 +4,18 @@
 
 int main(void)
 {
-    char ch;
+    char msg[128];
+    uint16_t SOP;
     
     CyGlobalIntEnable;
     
     UART_DBG_Start();
     UART_IMU_Start();
     
+    UART_IMU_UartPutString("<soc2>");
+    
     while (1)
     {
-        UART_IMU_UartPutChar('*');
-        while (1)
-        {
-            ch = UART_IMU_UartGetChar();
-            UART_DBG_PutChar(ch);
-            
-            if (ch == '\n')
-            {
-                break;
-            }
-        }
         CyDelay(1000);
     }
 }
