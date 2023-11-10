@@ -10,7 +10,24 @@
     </Group>
   </Group>
   <Data key="DataVersionKey" value="2" />
-  <Group key="DWRInstGuidMapping" />
+  <Group key="DWRInstGuidMapping">
+    <Group key="Pin">
+      <Data key="1c5e0112-de01-438b-9973-26beb3ff5a8f" value="UART_ZING_TX" />
+      <Data key="2f0d90be-0968-4ee2-9017-145a0e2a7a9b/23b8206d-1c77-4e61-be4a-b4037d5de5fc" value="UART_IMU_tx" />
+      <Data key="2f0d90be-0968-4ee2-9017-145a0e2a7a9b/78e33e5d-45ea-4b75-88d5-73274e8a7ce4" value="UART_IMU_rx" />
+      <Data key="6f1c6cc3-8ac8-42b8-9be0-54c1b90c12b2" value="UART_IMU_TX" />
+      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="UART_ZING_RX" />
+      <Data key="17efb76d-c7a8-4121-beb8-bc7fa71723b5" value="UART_DBG_RX" />
+      <Data key="372eb771-f3d8-4f9b-8b92-fddb9e70fdda" value="UART_ZING_RX" />
+      <Data key="388d596f-94ba-48d7-9101-4c014669c562/23b8206d-1c77-4e61-be4a-b4037d5de5fc" value="UART_DBG_tx" />
+      <Data key="388d596f-94ba-48d7-9101-4c014669c562/78e33e5d-45ea-4b75-88d5-73274e8a7ce4" value="UART_DBG_rx" />
+      <Data key="4703c4a4-16ad-48a0-a02e-3a15d4b0387a" value="UART_IMU_RX" />
+      <Data key="613236a4-4fc3-42b8-907c-450e87620c3a" value="UART_DBG_TX" />
+      <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="UART_IMU_RX" />
+      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="UART_ZING_TX" />
+      <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="UART_IMU_TX" />
+    </Group>
+  </Group>
   <Group key="FlashSecurity">
     <Group key="RowsKey">
       <Group key="0">
@@ -3545,6 +3562,79 @@
         <Data key="start_on_reset" value="True" />
       </Group>
     </Group>
+  </Group>
+  <Group key="Pin2">
+    <Group key="1c5e0112-de01-438b-9973-26beb3ff5a8f">
+      <Group key="0">
+        <Data key="Port Format" value="3,1" />
+      </Group>
+    </Group>
+    <Group key="2f0d90be-0968-4ee2-9017-145a0e2a7a9b/23b8206d-1c77-4e61-be4a-b4037d5de5fc">
+      <Group key="0">
+        <Data key="Port Format" value="0,1" />
+      </Group>
+    </Group>
+    <Group key="2f0d90be-0968-4ee2-9017-145a0e2a7a9b/78e33e5d-45ea-4b75-88d5-73274e8a7ce4">
+      <Group key="0">
+        <Data key="Port Format" value="0,0" />
+      </Group>
+    </Group>
+    <Group key="6f1c6cc3-8ac8-42b8-9be0-54c1b90c12b2">
+      <Group key="0">
+        <Data key="Port Format" value="0,1" />
+      </Group>
+    </Group>
+    <Group key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba">
+      <Group key="0">
+        <Data key="Port Format" value="3,0" />
+      </Group>
+    </Group>
+    <Group key="17efb76d-c7a8-4121-beb8-bc7fa71723b5">
+      <Group key="0">
+        <Data key="Port Format" value="1,4" />
+      </Group>
+    </Group>
+    <Group key="372eb771-f3d8-4f9b-8b92-fddb9e70fdda">
+      <Group key="0">
+        <Data key="Port Format" value="3,0" />
+      </Group>
+    </Group>
+    <Group key="388d596f-94ba-48d7-9101-4c014669c562/23b8206d-1c77-4e61-be4a-b4037d5de5fc">
+      <Group key="0">
+        <Data key="Port Format" value="1,5" />
+      </Group>
+    </Group>
+    <Group key="388d596f-94ba-48d7-9101-4c014669c562/78e33e5d-45ea-4b75-88d5-73274e8a7ce4">
+      <Group key="0">
+        <Data key="Port Format" value="1,4" />
+      </Group>
+    </Group>
+    <Group key="4703c4a4-16ad-48a0-a02e-3a15d4b0387a">
+      <Group key="0">
+        <Data key="Port Format" value="0,0" />
+      </Group>
+    </Group>
+    <Group key="613236a4-4fc3-42b8-907c-450e87620c3a">
+      <Group key="0">
+        <Data key="Port Format" value="1,5" />
+      </Group>
+    </Group>
+    <Group key="1425177d-0d0e-4468-8bcc-e638e5509a9b">
+      <Group key="0">
+        <Data key="Port Format" value="0,0" />
+      </Group>
+    </Group>
+    <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">
+      <Group key="0">
+        <Data key="Port Format" value="3,1" />
+      </Group>
+    </Group>
+    <Group key="ed092b9b-d398-4703-be89-cebf998501f6">
+      <Group key="0">
+        <Data key="Port Format" value="0,1" />
+      </Group>
+    </Group>
+    <Group key="UnAssigned Pins" />
   </Group>
   <Group key="PlaceDir">
     <Data key="count" value="0" />
