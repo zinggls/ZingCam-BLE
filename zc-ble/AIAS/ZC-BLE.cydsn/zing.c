@@ -84,7 +84,8 @@ uint8_t ZING_get_device_status(char* device_status)
         
         do
         {
-            if ((ch = UART_ZING_GetChar()) != 0)
+            ch = UART_ZING_GetChar();
+            if (ch != 0)
             {
                 if (cnt < MAX_BUFFER_LENGTH)
                 {
@@ -96,7 +97,7 @@ uint8_t ZING_get_device_status(char* device_status)
                 }
             }
         }
-        while (ch != ASCII_LF);
+        while (ch != '\n');
         
         return 1;
     }
@@ -145,11 +146,12 @@ uint8_t ZING_parse_host_status(char* host_status, uint8_t** status_values)
     return 1;
 }
 
-void ZING_parse_device_status(char* device_status, uint8_t** status_values)
+uint8_t ZING_parse_device_status(char* device_status, uint8_t** status_values)
 {
     char* status = strtok(device_status, " ");
     uint8_t cnt;
     uint8_t idx;
+    char message[128];
     
     cnt = 0;
     idx = 0;
@@ -158,8 +160,25 @@ void ZING_parse_device_status(char* device_status, uint8_t** status_values)
     {
         if ((cnt % 2) == 1)
         {
-            memcpy(status_values[idx++], status, strlen(status));
+            if (idx < NUM_DEVICE_STATUS)
+            {
+                if (strlen(status) < MAX_VALUE_LENGTH)
+                {
+                    memset(status_values[idx], 0, MAX_VALUE_LENGTH);
+                    memcpy(status_values[idx++], status, strlen(status));
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return 0;
+            }
         }
         cnt = cnt + 1;
     }
+    
+    return 1;
 }
