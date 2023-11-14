@@ -28,7 +28,6 @@ int main(void)
     char zing_device_status[MAX_BUFFER_LENGTH];
 #endif
     ZCBLE_frame zcble_frame;
-    uint8_t length;
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
     char ch;
     

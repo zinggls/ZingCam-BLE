@@ -9,7 +9,7 @@ static CYBLE_GAP_BD_ADDR_T device_address;
 #endif
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T notification;
 ZCBLE_frame zcble_frame;
-static char message[128];
+//static char message[128];
 #if CYBLE_GAP_ROLE_CENTRAL
 static uint8_t** zing_device_status_values;
 #endif
@@ -156,6 +156,7 @@ void ZCBLE_callback(uint32_t event, void* parameters)
     }
 }
 
+/*
 void print_ble_state(void)
 {
     char state[MAX_STATE_LENGTH];
@@ -193,3 +194,4 @@ void print_ble_state(void)
     sprintf(message, "BLE state = %s\r\n", state);
     UART_DBG_UartPutString(message);
 }
+*/

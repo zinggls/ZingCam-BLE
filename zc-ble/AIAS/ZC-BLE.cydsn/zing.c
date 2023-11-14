@@ -36,11 +36,9 @@ uint8_t ZING_get_host_status(char* host_status)
 {
     char ch;
     uint16_t cnt;
-    uint16_t loop;
     
     ch = UART_ZING_GetChar();
     cnt = 0;
-    loop = 0;
     
     if (ch == ASCII_HOST)
     {
@@ -113,7 +111,7 @@ uint8_t ZING_parse_host_status(char* host_status, uint8_t** status_values)
     uint8_t cnt;
     uint8_t idx;
     
-    char message[128];
+    //char message[128];
     
     cnt = 0;
     idx = 0;
@@ -151,7 +149,7 @@ uint8_t ZING_parse_device_status(char* device_status, uint8_t** status_values)
     char* status = strtok(device_status, " ");
     uint8_t cnt;
     uint8_t idx;
-    char message[128];
+    //char message[128];
     
     cnt = 0;
     idx = 0;

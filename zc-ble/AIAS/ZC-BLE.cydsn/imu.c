@@ -13,7 +13,7 @@ uint8_t IMU_get(uint16_t* values)
     uint16_t CHK;
     uint16_t DATA;
     uint8_t cnt;
-    char message[128];
+    //char message[128];
     
     UART_IMU_UartPutChar('*');
     CyDelay(10);
