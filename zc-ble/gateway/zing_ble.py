@@ -31,8 +31,12 @@ class Zing_BLE:
 
         idx = 0
         for name in self.host_status_name:
-            self.host_status_dict[name] = status[idx + 1]
-            idx = idx + 1
+            if (idx < self.NUM_HOST_STATUS + 12):
+                #print(name, status[idx + 1])
+                self.host_status_dict[name] = status[idx + 1]
+                idx = idx + 1
+            else:
+                break
 
     def get_device_status(self):
         self.serial.write("&".encode())
@@ -43,8 +47,11 @@ class Zing_BLE:
         
         idx = 0
         for name in self.device_status_name:
-            self.device_status_dict[name] = status[idx + 1]
-            idx = idx + 1
+            if (idx < self.NUM_DEVICE_STATUS + 12):
+                self.device_status_dict[name] = status[idx + 1]
+                idx = idx + 1
+            else:
+                break
 
     
     def get_host_vnd(self):
