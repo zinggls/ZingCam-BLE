@@ -1,4 +1,0 @@
-EM2890_VND = 0xEB1A
-EM2890_PRD = 0xB101
-EM2890_FMT = { "1": "MJPG", "Y":"YUY2", "M":"MJPG", "U":"UNKNOWN" }
-EM2890_IDX = { "":"", "1":"1920x1080", "2":"640x480" }
