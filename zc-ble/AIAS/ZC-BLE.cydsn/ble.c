@@ -9,11 +9,12 @@ static CYBLE_GAP_BD_ADDR_T device_address;
 #endif
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T notification;
 ZCBLE_frame zcble_frame;
-//static char message[128];
 #if CYBLE_GAP_ROLE_CENTRAL
+static char message[128];
 static uint8_t** zing_device_status_values;
 #endif
 #if CYBLE_GAP_ROLE_PERIPHERAL
+static char message[128];
 uint8_t** zing_host_status_values;
 #endif
 
@@ -26,14 +27,14 @@ void ZCBLE_init(void)
     zing_device_status_values = (uint8_t**)calloc(NUM_DEVICE_STATUS, sizeof(uint8_t*));
     for (uint8_t i = 0; i < NUM_DEVICE_STATUS; i++)
     {
-        zing_device_status_values[i] = (uint8_t*)calloc(MAX_VALUE_LENGTH, sizeof(uint8_t));
+        zing_device_status_values[i] = (uint8_t*)calloc(MAX_DATA_LENGTH, sizeof(uint8_t));
     }
 #endif
 #if CYBLE_GAP_ROLE_PERIPHERAL
     zing_host_status_values = (uint8_t**)calloc(NUM_HOST_STATUS, sizeof(uint8_t*));
     for (uint8_t i = 0; i < NUM_HOST_STATUS; i++)
     {
-        zing_host_status_values[i] = (uint8_t*)calloc(MAX_VALUE_LENGTH, sizeof(uint8_t));
+        zing_host_status_values[i] = (uint8_t*)calloc(MAX_DATA_LENGTH, sizeof(uint8_t));
     }
 #endif
     
@@ -84,10 +85,26 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
             for (uint8_t cnt = 0; cnt < NUM_DEVICE_STATUS; cnt++)
             {
-                for (uint8_t idx = 0; idx < MAX_VALUE_LENGTH; idx++)
+                for (uint8_t idx = 0; idx < MAX_DATA_LENGTH; idx++)
                 {
-                    zing_device_status_values[cnt][idx] = zcble_frame.status_values[cnt * MAX_VALUE_LENGTH + idx];
+                    zing_device_status_values[cnt][idx] = zcble_frame.status_values[cnt * MAX_DATA_LENGTH + idx];
                 }
+            }
+            
+            if (zcble_frame.zing_params.reset == 1)
+            {
+                UART_ZING_PutChar(0x4);
+                UART_ZING_PutChar('r');
+                UART_ZING_PutChar('s');
+                UART_ZING_PutChar('t');
+            }
+            
+            if (zcble_frame.zing_params.set_channel == 1)
+            {
+//              UART_ZING_PutChar(0x4);
+//              UART_ZING_PutChar('r');
+//              UART_ZING_PutChar('s');
+//              UART_ZING_PutChar('t');
             }
             
             for (uint8_t i = 0; i < NUM_TOTAL_IMU_VALUES; i++)
@@ -97,11 +114,12 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             }
             UART_DBG_UartPutString("\r\n");
             
-            for (uint8_t i = 0; i < NUM_DEVICE_STATUS; i++)
+            for (uint8_t i = 0; i < NUM_HOST_STATUS; i++)
             {
                 sprintf(message, "%s, ", zing_device_status_values[i]);
                 UART_DBG_UartPutString(message);
             }
+            
             UART_DBG_UartPutString("\r\n");
         break;
 #endif
@@ -116,7 +134,7 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             CyBle_GattcStartDiscovery(cyBle_connHandle);
         break;
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
-            CyBle_GattcExchangeMtuReq(cyBle_connHandle, 200);
+            CyBle_GattcExchangeMtuReq(cyBle_connHandle, MAX_BLE_FRAME_SIZE);
         break;
         case CYBLE_EVT_GATTS_WRITE_REQ:
             CyBle_GattsWriteRsp(cyBle_connHandle);
@@ -128,12 +146,29 @@ void ZCBLE_callback(uint32_t event, void* parameters)
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
+            
             for (uint8_t cnt = 0; cnt < NUM_HOST_STATUS; cnt++)
             {
-                for (uint8_t idx = 0; idx < MAX_VALUE_LENGTH; idx++)
+                for (uint8_t idx = 0; idx < MAX_DATA_LENGTH; idx++)
                 {
-                    zing_host_status_values[cnt][idx] = zcble_frame.status_values[cnt * MAX_VALUE_LENGTH + idx];
+                    zing_host_status_values[cnt][idx] = zcble_frame.status_values[cnt * MAX_DATA_LENGTH + idx];
                 }
+            }
+            
+            if (zcble_frame.zing_params.reset == 1)
+            {
+                UART_ZING_PutChar(0x4);
+                UART_ZING_PutChar('r');
+                UART_ZING_PutChar('s');
+                UART_ZING_PutChar('t');
+            }
+            
+            if (zcble_frame.zing_params.set_channel == 1)
+            {
+//              UART_ZING_PutChar(0x4);
+//              UART_ZING_PutChar('r');
+//              UART_ZING_PutChar('s');
+//              UART_ZING_PutChar('t');
             }
             
             /*
@@ -146,7 +181,7 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             
             for (uint8_t i = 0; i < NUM_HOST_STATUS; i++)
             {
-                sprintf(message, "%s, ", host_status_values[i]);
+                sprintf(message, "%s, ", zing_host_status_values[i]);
                 UART_DBG_UartPutString(message);
             }
             UART_DBG_UartPutString("\r\n");

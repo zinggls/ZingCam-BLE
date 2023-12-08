@@ -107,16 +107,16 @@ uint8_t ZING_get_device_status(char* device_status)
 
 uint8_t ZING_parse_host_status(char* host_status, uint8_t** status_values)
 {
-    char* status = strtok(host_status, " ");
+    char* status;
+    char* next_ptr;
     uint8_t cnt;
     uint8_t idx;
-    
-    //char message[128];
     
     cnt = 0;
     idx = 0;
     
-    while ((status = strtok(NULL, " :")) != NULL)
+    status = strtok_r(host_status, " :", &next_ptr);
+    while ((status = strtok_r(NULL, " :", &next_ptr)) != NULL)
     {
         if ((cnt % 2) == 1)
         {
@@ -146,15 +146,16 @@ uint8_t ZING_parse_host_status(char* host_status, uint8_t** status_values)
 
 uint8_t ZING_parse_device_status(char* device_status, uint8_t** status_values)
 {
-    char* status = strtok(device_status, " ");
+    char* status;
+    char* next_ptr;
     uint8_t cnt;
     uint8_t idx;
-    //char message[128];
     
     cnt = 0;
     idx = 0;
     
-    while ((status = strtok(NULL, " :")) != NULL)
+    status = strtok_r(device_status, " :", &next_ptr);
+    while ((status = strtok_r(NULL, " :", &next_ptr)) != NULL)
     {
         if ((cnt % 2) == 1)
         {

@@ -21,6 +21,7 @@ int main(void)
     char message[128];
 #if CYBLE_GAP_ROLE_CENTRAL
     uint8_t** zing_host_status_values;
+    //uint32_t* zing_host_status_values2;
     char zing_host_status[MAX_BUFFER_LENGTH];
 #endif
 #if CYBLE_GAP_ROLE_PERIPHERAL
@@ -30,11 +31,14 @@ int main(void)
     ZCBLE_frame zcble_frame;
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
     char ch;
+    uint8_t rst;
+    uint8_t set_channel;
     
     UART_DBG_Start();
     
     ZCBLE_init();
     IMU_init();
+    
 #if CYBLE_GAP_ROLE_CENTRAL
     zing_host_status_values = ZING_host_init();
 #endif
@@ -42,13 +46,16 @@ int main(void)
     zing_device_status_values = ZING_device_init();
 #endif
     
+    rst = 0;
+    set_channel = 0;
+
     while (1)
     {
         CyBle_ProcessEvents();
         
         if (cyBle_state == CYBLE_STATE_CONNECTED)
         {
-            if(CyBle_GattGetBusStatus() == CYBLE_STACK_STATE_FREE)
+            if (CyBle_GattGetBusStatus() == CYBLE_STACK_STATE_FREE)
             {
                 memset(&zcble_frame, 0, sizeof(ZCBLE_frame));
 #if CYBLE_GAP_ROLE_CENTRAL
@@ -63,9 +70,9 @@ int main(void)
                     {
                         for (uint8_t cnt = 0; cnt < NUM_HOST_STATUS; cnt++)
                         {
-                            for (uint8_t idx = 0; idx < MAX_VALUE_LENGTH; idx++)
+                            for (uint8_t idx = 0; idx < MAX_DATA_LENGTH; idx++)
                             {
-                                zcble_frame.status_values[cnt * MAX_VALUE_LENGTH + idx] = zing_host_status_values[cnt][idx];
+                                zcble_frame.status_values[cnt * MAX_DATA_LENGTH + idx] = zing_host_status_values[cnt][idx];
                             }
                         }
                     }
@@ -96,11 +103,11 @@ int main(void)
                     }
                     else
                     {
-                        for (uint8_t cnt = 0; cnt < NUM_DEVICE_STATUS; cnt++)
+                        for (uint8_t cnt = 0; cnt < NUM_HOST_STATUS; cnt++)
                         {
-                            for (uint8_t idx = 0; idx < MAX_VALUE_LENGTH; idx++)
+                            for (uint8_t idx = 0; idx < MAX_DATA_LENGTH; idx++)
                             {
-                                zcble_frame.status_values[cnt * MAX_VALUE_LENGTH + idx] = zing_device_status_values[cnt][idx];
+                                zcble_frame.status_values[cnt * MAX_DATA_LENGTH + idx] = zing_device_status_values[cnt][idx];
                             }
                         }
                     }
@@ -113,6 +120,28 @@ int main(void)
                     else
                     {
                         memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
+                    }
+                    
+                    if (rst == 1)
+                    {
+                        rst = 0;
+                        zcble_frame.zing_params.reset = 1;
+                    }
+                    
+//                  if (zing_device_status_values[DEVICE_STATUS_MFIR] > 0)
+//                  {
+//                      UART_ZING_PutChar(0x4);
+//                      UART_ZING_PutChar('r');
+//                      UART_ZING_PutChar('s');
+//                      UART_ZING_PutChar('t');
+
+//                      set_channel = 1;
+//                  }
+                    
+                    if (set_channel == 1)
+                    {
+                        set_channel = 0;
+                        zcble_frame.zing_params.set_channel = 1;
                     }
                     
                     notification.attrHandle = 0x0001;
@@ -151,6 +180,30 @@ int main(void)
                             UART_DBG_UartPutString(message);
                         }
                         UART_DBG_UartPutString("\r\n");
+                    }
+                    else if (ch == 'R')
+                    {
+                        UART_ZING_PutChar(0x4);
+                        UART_ZING_PutChar('r');
+                        UART_ZING_PutChar('s');
+                        UART_ZING_PutChar('t');
+                        
+                        if (rst == 0)
+                        {
+                            rst = 1;
+                        }
+                    }
+                    else if (ch == 'C')
+                    {
+//                      UART_ZING_PutChar(0x4);
+//                      UART_ZING_PutChar('r');
+//                      UART_ZING_PutChar('s');
+//                      UART_ZING_PutChar('t');
+                        
+                        if (set_channel == 0)
+                        {
+                            set_channel = 1;
+                        }
                     }
                 }
 #endif
