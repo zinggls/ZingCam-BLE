@@ -37,9 +37,9 @@ def Zing():
     loop = 0
     while True:
         if (zble.get_host_status() == False):
-            print("Get host status Error")
+            print("Error")
         elif (zble.get_device_status() == False):
-            print("Get device status Error")
+            print("Error")
         else:
             if (loop == 0):
                 oldcnt = zble.get_host_cnt()
@@ -110,8 +110,12 @@ def vlc_player():
         if (camera == CAM_HU205):
             format = hu205.HU205_FMT[fmt]
             resolution = hu205.HU205_IDX[idx]
+            res_x = resolution.split("x")[0]
+            res_y = resolution.split("x")[1]
+
+            """
             #vlc_command = "vlc --fullscreen dshow:// :dshow-vdev=ZingCam :dshow-adev=none  :live-caching=0 :dshow-size=\"{}\" :dshow-aspect-ratio=16\:9 :dshow-fps=28 :dshow-chroma=\"{}\"".format(res, fmt)
-            vlc_command = [
+            command = [
                 'vlc',
                 'dshow://',
                 ':dshow-vdev=ZingCam',
@@ -121,26 +125,63 @@ def vlc_player():
                 ':dshow-fps=28',
                 ':dshow-chroma={}'.format(format)
             ]
-            run = subprocess.Popen(vlc_command)
+            """
+
+            if (format == "MJPG"):
+                if (int(res_x) == 1920 and int(res_y) == 1080):
+                    framerate = 28
+                else:
+                    framerate = 30
+
+                command = [
+                    "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
+                    "ksvideosrc",
+                    "device-index=0",
+                    "!",
+                    "image/jpeg,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
+                    "!",
+                    "jpegdec",
+                    "!",
+                    "autovideosink",
+                    "sync=false"
+                ]
+            run = subprocess.Popen(command)
             run.wait()
         elif (camera == CAM_EM2890):
-            """
             format = em2890.EM2890_FMT[fmt]
             resolution = em2890.EM2890_IDX[idx]
-            x = resolution.split("x")[0]
-            y = resolution.split("x")[1]
-
-            #vlc_command = "vlc dshow:// :dshow-vdev=ZingCam :dshow-adev=none  :live-caching=0 :dshow-size=\"{}\" :dshow-aspect-ratio=4\:3 :dshow-fps=30 :dshow-chroma=\"{}\"".format(res, fmt)
-            vlc_command = [
-                'vlc',
-                'v4l2:///dev/video0:chroma'.format(format),
-                '--v4l2-width=640',
-                '--v4l2-height=480'
-            ]
-            run = subprocess.Popen(vlc_command)
-            run.wait()
+            res_x = resolution.split("x")[0]
+            res_y = resolution.split("x")[1]
             """
-            print("Under v1.3.2 doesn't support EM2890")
+            #vlc_command = "vlc dshow:// :dshow-vdev=ZingCam :dshow-adev=none  :live-caching=0 :dshow-size=\"{}\" :dshow-aspect-ratio=4\:3 :dshow-fps=30 :dshow-chroma=\"{}\"".format(res, fmt)
+            command = [
+                'vlc',
+                'dshow://',
+                ':dshow-vdev=ZingCam',
+                ':dshow-adev=none',
+                ':live-caching=0',
+                ':dshow-size={}'.format(resolution),
+                ':dshow-fps=30',
+                ':dshow-chroma={}'.format(format)
+            ]
+            """
+            # gst-launch-1.0 ksvideosrc device-index=0 ! "image/jpeg,width=640,height=480,framerate=30/1" ! jpegdec ! autovideosink sync=false
+            if (format == "MJPG"):
+                command = [
+                    "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
+                    "ksvideosrc",
+                    "device-index=0",
+                    "!",
+                    "image/jpeg,width={},height={},framerate=30/1".format(res_x, res_y),
+                    "!",
+                    "jpegdec",
+                    "!",
+                    "autovideosink",
+                    "sync=false"
+                ]
+            print(command)
+            run = subprocess.Popen(command)
+            run.wait()
         time.sleep(1)
 
 threading.Thread(target = Zing, daemon = True).start()

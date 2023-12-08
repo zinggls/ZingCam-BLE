@@ -1,19 +1,25 @@
 import serial
 
 class Zing_BLE:
-    NUM_HOST_STATUS = 14
-    NUM_DEVICE_STATUS = 12
+    NUM_HOST_STATUS = 15
+    NUM_DEVICE_STATUS = 16
 
     host_status_name = ["sofx", "accx", "gyrx", "magx",\
                         "sofy", "accy", "gyry", "magy",\
                         "sofz", "accz", "gyrz", "magz",\
-                        "USB", "VND", "PRD", "BND", "PID", "DID", "FMT", "IDX", "TRT", "ACK", "PPC", "RXID", "RUN", "CNT"]
+                        "USB", "VND", "PRD", "BND",\
+                        "PID", "DID", "FMT", "IDX",\
+                        "TRT", "ACK", "PPC", "TXID",\
+                        "RXID", "RUN", "CNT"]
     host_status_dict = { name : 0 for name in host_status_name }
     
     device_status_name = ["sofx", "accx", "gyrx", "magx",\
                             "sofy", "accy", "gyry", "magy",\
                             "sofz", "accz", "gyrz", "magz",\
-                            "USB", "PID", "DID", "FMT", "IDX", "TRT", "ACK", "PPC", "RXID", "RUN", "ITF", "CNT"]
+                            "USB", "PID", "DID", "FMT",\
+                            "IDX", "TRT", "ACK", "PPC",\
+                            "RUN", "ITF", "TXID", "RXID",\
+                            "DID_ERR_CNT", "PHY_RX_FRAME_CNT", "MFIR", "CNT"]
     device_status_dict = { name : 0 for name in device_status_name }
 
     def __init__(self):
@@ -32,9 +38,11 @@ class Zing_BLE:
         idx = 0
         for name in self.host_status_name:
             if (idx < self.NUM_HOST_STATUS + 12):
-                #print(name, status[idx + 1])
-                self.host_status_dict[name] = status[idx + 1]
-                idx = idx + 1
+                try:
+                    self.host_status_dict[name] = status[idx + 1]
+                    idx = idx + 1
+                except:
+                    print("error host idx={} name={} status={}".format(idx, name, status))
             else:
                 break
 
@@ -48,8 +56,11 @@ class Zing_BLE:
         idx = 0
         for name in self.device_status_name:
             if (idx < self.NUM_DEVICE_STATUS + 12):
-                self.device_status_dict[name] = status[idx + 1]
-                idx = idx + 1
+                try:
+                    self.device_status_dict[name] = status[idx + 1]
+                    idx = idx + 1
+                except:
+                    print("error device idx={} name={} status={}".format(idx, name, status))
             else:
                 break
 
