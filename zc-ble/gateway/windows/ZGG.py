@@ -164,6 +164,8 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                 if (i == host_status_name.index("IDX") - 12): # IDX
                     if (host_status[host_status_name[i + 12]] == '1'):
                         host_summary_list[4].set("1920x1080")
+                    elif (host_status[host_status_name[i + 12]] == '2'):
+                        host_summary_list[4].set("640x480")
                     else:
                         host_summary_list[4].set("etc")
                 if (i == host_status_name.index("BND") - 12): # BND
@@ -216,13 +218,13 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                         device_running_label.configure(fg = "green")
                     elif (device_status[device_status_name[i + 12]] == 'N'):
                         device_summary_list[0].set("○")
-                        device_running_label.configure(fg = "red")
+                        device_running_label.configure(fg = "green")
                     else:
                         device_summary_list[0].set("X")
                 if (i == device_status_name.index("ITF") - 12): # ITF
                     if (device_status[device_status_name[i + 12]] == 'Y'):
                         device_summary_list[1].set("●")
-                        device_interference_label.configure(fg = "green")
+                        device_interference_label.configure(fg = "red")
                     elif (device_status[device_status_name[i + 12]] == 'N'):
                         device_summary_list[1].set("○")
                         device_interference_label.configure(fg = "red")
@@ -245,6 +247,8 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                 if (i == device_status_name.index("IDX") - 12): # IDX
                     if (device_status[device_status_name[i + 12]] == '1'):
                         device_summary_list[4].set("1920x1080")
+                    elif (device_status[device_status_name[i + 12]] == '3'):
+                        device_summary_list[4].set("640x480")
                     else:
                         device_summary_list[4].set("etc")
                 if (i == device_status_name.index("TRT") - 12): # TRT
