@@ -101,10 +101,9 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             
             if (zcble_frame.zing_params.set_channel == 1)
             {
-//              UART_ZING_PutChar(0x4);
-//              UART_ZING_PutChar('r');
-//              UART_ZING_PutChar('s');
-//              UART_ZING_PutChar('t');
+                ZING_change_channel(NULL, 1);
+                
+                UART_DBG_UartPutString("Receive Change Channel\r\n");
             }
             
             for (uint8_t i = 0; i < NUM_TOTAL_IMU_VALUES; i++)

@@ -2,6 +2,8 @@
 
 #include "zing.h"
 
+static uint8_t state = 0;
+
 uint8_t** ZING_host_init(void)
 {
     uint8_t** status_values;
@@ -180,4 +182,48 @@ uint8_t ZING_parse_device_status(char* device_status, uint8_t** status_values)
     }
     
     return 1;
+}
+
+void ZING_change_channel(uint8_t** host_status, uint8_t val)
+{
+    char message[128];
+    
+    if (host_status == NULL)
+    {
+        // val = 0: state no change
+        // val = 1: state need change
+        state = val;
+    }
+    else
+    {
+        if (state == 1)
+        {
+            sprintf(message, "OLD BND: %s\r\n", host_status[HOST_STATUS_BND]);
+            UART_DBG_UartPutString(message);
+            
+                
+            if (strcmp((char*)host_status[HOST_STATUS_BND], "L") == 0)
+            {   
+                sprintf(message, "New BND: H\r\n");
+                UART_DBG_UartPutString(message);
+                
+                UART_ZING_PutChar(0x4);
+                UART_ZING_PutChar('b');
+                UART_ZING_PutChar(0x1);
+                UART_ZING_PutChar(0x0);
+            }
+            else if (strcmp((char*)host_status[HOST_STATUS_BND], "H") == 0)
+            {
+                sprintf(message, "New BND: L\r\n");
+                UART_DBG_UartPutString(message);
+                
+                UART_ZING_PutChar(0x4);
+                UART_ZING_PutChar('b');
+                UART_ZING_PutChar(0x0);
+                UART_ZING_PutChar(0x0);
+            }
+            
+            state = 0;
+        }
+    }
 }

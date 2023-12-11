@@ -85,6 +85,8 @@ int main(void)
                         memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
                     }
                     
+                    ZING_change_channel(zing_host_status_values, 0);
+                    
                     notification.attrHandle = 0x0001;
                     notification.value.val = (uint8_t*)&zcble_frame;
                     notification.value.len = sizeof(ZCBLE_frame);
