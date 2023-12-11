@@ -18,21 +18,20 @@ int main(void)
     CyGlobalIntEnable;
     
     uint16_t imu_values[NUM_TOTAL_IMU_VALUES + 2];
-    char message[128];
 #if CYBLE_GAP_ROLE_CENTRAL
     uint8_t** zing_host_status_values;
-    //uint32_t* zing_host_status_values2;
     char zing_host_status[MAX_BUFFER_LENGTH];
 #endif
 #if CYBLE_GAP_ROLE_PERIPHERAL
+    char message[128];
     uint8_t** zing_device_status_values;
     char zing_device_status[MAX_BUFFER_LENGTH];
+    uint8_t rst;
+    uint8_t set_channel;
 #endif
     ZCBLE_frame zcble_frame;
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
     char ch;
-    uint8_t rst;
-    uint8_t set_channel;
     
     UART_DBG_Start();
     
@@ -44,11 +43,10 @@ int main(void)
 #endif
 #if CYBLE_GAP_ROLE_PERIPHERAL
     zing_device_status_values = ZING_device_init();
-#endif
-    
     rst = 0;
     set_channel = 0;
-
+#endif
+    
     while (1)
     {
         CyBle_ProcessEvents();
@@ -127,21 +125,29 @@ int main(void)
                         rst = 0;
                         zcble_frame.zing_params.reset = 1;
                     }
+                    else
+                    {
+                        zcble_frame.zing_params.reset = 0;
+                    }
                     
-//                  if (zing_device_status_values[DEVICE_STATUS_MFIR] > 0)
-//                  {
+                    if (strcmp((char*)zing_device_status_values[DEVICE_STATUS_ITF], "Y") == 0)
+                    {
 //                      UART_ZING_PutChar(0x4);
 //                      UART_ZING_PutChar('r');
 //                      UART_ZING_PutChar('s');
 //                      UART_ZING_PutChar('t');
 
-//                      set_channel = 1;
-//                  }
+                        set_channel = 1;
+                    }
                     
                     if (set_channel == 1)
                     {
                         set_channel = 0;
                         zcble_frame.zing_params.set_channel = 1;
+                    }
+                    else
+                    {
+                        zcble_frame.zing_params.set_channel = 0;
                     }
                     
                     notification.attrHandle = 0x0001;
