@@ -134,11 +134,6 @@ int main(void)
                     
                     if (strcmp((char*)zing_device_status_values[DEVICE_STATUS_ITF], "Y") == 0)
                     {
-//                      UART_ZING_PutChar(0x4);
-//                      UART_ZING_PutChar('r');
-//                      UART_ZING_PutChar('s');
-//                      UART_ZING_PutChar('t');
-
                         set_channel = 1;
                     }
                     
@@ -203,11 +198,6 @@ int main(void)
                     }
                     else if (ch == 'C')
                     {
-//                      UART_ZING_PutChar(0x4);
-//                      UART_ZING_PutChar('r');
-//                      UART_ZING_PutChar('s');
-//                      UART_ZING_PutChar('t');
-                        
                         if (set_channel == 0)
                         {
                             set_channel = 1;
