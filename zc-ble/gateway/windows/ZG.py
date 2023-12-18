@@ -113,6 +113,7 @@ def vlc_player():
             resolution = hu205.HU205_IDX[idx]
             res_x = resolution.split("x")[0]
             res_y = resolution.split("x")[1]
+            framerate = hu205.HU205_FRAME_RATE[format][resolution]
 
             """
             #vlc_command = "vlc --fullscreen dshow:// :dshow-vdev=ZingCam :dshow-adev=none  :live-caching=0 :dshow-size=\"{}\" :dshow-aspect-ratio=16\:9 :dshow-fps=28 :dshow-chroma=\"{}\"".format(res, fmt)
@@ -129,11 +130,6 @@ def vlc_player():
             """
 
             if (format == "MJPG"):
-                if (int(res_x) == 1920 and int(res_y) == 1080):
-                    framerate = 28
-                else:
-                    framerate = 30
-
                 command = [
                     "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
                     "ksvideosrc",
@@ -153,6 +149,7 @@ def vlc_player():
             resolution = em2890.EM2890_IDX[idx]
             res_x = resolution.split("x")[0]
             res_y = resolution.split("x")[1]
+            framerate = em2890.EM2890_FRAME_RATE[format][resolution]
             """
             #vlc_command = "vlc dshow:// :dshow-vdev=ZingCam :dshow-adev=none  :live-caching=0 :dshow-size=\"{}\" :dshow-aspect-ratio=4\:3 :dshow-fps=30 :dshow-chroma=\"{}\"".format(res, fmt)
             command = [
@@ -173,7 +170,7 @@ def vlc_player():
                     "ksvideosrc",
                     "device-index=0",
                     "!",
-                    "image/jpeg,width={},height={},framerate=30/1".format(res_x, res_y),
+                    "image/jpeg,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
                     "!",
                     "jpegdec",
                     "!",

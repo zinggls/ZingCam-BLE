@@ -5,6 +5,9 @@ import json
 import setting
 import time
 from tkinter import font
+import hu205
+import em2890
+import zing_dev
 
 def req(cmd):
     request_socket.send(cmd.encode())
@@ -161,6 +164,9 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
         request_socket.send("device_status_name".encode())
         device_status_name = json.loads(request_socket.recv())
 
+        vnd = int(host_status["VND"], 16)
+        prd = int(host_status["PRD"], 16)
+
         try:
             for i in range(NUM_HOST_STATUS + 12):
                 host_status_value_list[i].set(host_status[host_status_name[i]])
@@ -183,19 +189,15 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                     else:
                         host_summary_value_list[2].set("etc")
                 if (i == host_status_name.index("FMT")): # FMT
-                    if (host_status[host_status_name[i]] == '1'):
-                        host_summary_value_list[3].set("MJPEG")
-                    elif (host_status[host_status_name[i]] == '2'):
-                        host_summary_value_list[3].set("Uncompressed")
-                    else:
-                        host_summary_value_list[3].set("etc")
+                    if (vnd == em2890.EM2890_VND and prd == em2890.EM2890_PRD):
+                        host_summary_value_list[3].set(em2890.EM2890_FMT[host_status["FMT"]])
+                    elif (vnd == hu205.HU205_FMT and prd == hu205.HU205_PRD):
+                        host_summary_value_list[3].set(hu205.HU205_FMT[host_status["FMT"]])
                 if (i == host_status_name.index("IDX")): # IDX
-                    if (host_status[host_status_name[i]] == '1'):
-                        host_summary_value_list[4].set("1920x1080")
-                    elif (host_status[host_status_name[i]] == '2'):
-                        host_summary_value_list[4].set("640x480")
-                    else:
-                        host_summary_value_list[4].set("etc")
+                    if (vnd == em2890.EM2890_VND and prd == em2890.EM2890_PRD):
+                        host_summary_value_list[4].set(em2890.EM2890_FMT[host_status["IDX"]])
+                    elif (vnd == hu205.HU205_FMT and prd == hu205.HU205_PRD):
+                        host_summary_value_list[4].set(hu205.HU205_FMT[host_status["IDX"]])
                 if (i == host_status_name.index("BND")): # BND
                     if (host_status[host_status_name[i]] == 'L'):
                         host_summary_value_list[5].set("Low Band")
@@ -269,19 +271,9 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                     else:
                         device_summary_value_list[2].set("etc")
                 if (i == device_status_name.index("FMT")): # FMT
-                    if (device_status[device_status_name[i]] == '1'):
-                        device_summary_value_list[3].set("MJPEG")
-                    elif (device_status[device_status_name[i]] == '2'):
-                        device_summary_value_list[3].set("Uncompressed")
-                    else:
-                        device_summary_value_list[3].set("etc")
+                    device_summary_value_list[3].set(zing_dev.ZING_DEV_FMT[device_status["FMT"]])
                 if (i == device_status_name.index("IDX")): # IDX
-                    if (device_status[device_status_name[i]] == '1'):
-                        device_summary_value_list[4].set("1920x1080")
-                    elif (device_status[device_status_name[i]] == '2'):
-                        device_summary_value_list[4].set("640x480")
-                    else:
-                        device_summary_value_list[4].set("etc")
+                    device_summary_value_list[4].set(zing_dev.ZING_DEV_IDX[device_status["IDX"]])
                 device_summary_value_list[5].set("-") # BND
                 if (i == device_status_name.index("TRT")): # TRT
                     if (device_status[device_status_name[i]] == 'I'):
