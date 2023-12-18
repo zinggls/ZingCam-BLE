@@ -7,7 +7,6 @@ import hu205
 import em2890
 import subprocess
 import setting
-import signal
 
 CAM_UNKNOWN = 0
 CAM_HU205 = 1
@@ -38,15 +37,15 @@ def Zing():
     loop = 0
     while True:
         if (zble.get_host_status() == False):
-            print("Get host status Error")
+            print("ERROR")
         elif (zble.get_device_status() == False):
-            print("Get device status Error")
+            print("Error")
         else:
             if (loop == 0):
                 oldcnt = zble.get_host_cnt()
             else:
                 newcnt = zble.get_host_cnt()
-    
+
                 if (oldcnt != newcnt):
                     oldcnt = newcnt
                     vnd = int(zble.get_host_vnd(), 16)
@@ -63,6 +62,7 @@ def Zing():
                     else:
                         camera = CAM_UNKNOWN
                 else:
+                    print(oldcnt, newcnt)
                     if (run != 0):
                         run.kill()
                         run = 0
@@ -102,9 +102,8 @@ def Zing():
                 "device_run": zble.device_status_dict["RUN"].encode(),
                 "device_cnt": zble.device_status_dict["CNT"].encode(),
             }
-
-            loop = loop + 1
-            time.sleep(0.1)
+        loop = loop + 1
+        #time.sleep(0.1)
 
 def vlc_player():
     global run
@@ -114,18 +113,28 @@ def vlc_player():
             resolution = hu205.HU205_IDX[idx]
             res_x = resolution.split("x")[0]
             res_y = resolution.split("x")[1]
-            # gst-launch-1.0 v4l2src device=/dev/video0 ! "image/jpeg,width=1920,height=1080,framerate=28/1" ! jpegdec ! autovideosink sync=false
+            framerate = hu205.HU205_FRAME_RATE[format][resolution]
 
-            if (format == "MJPG") :
-                if (int(res_x) == 1920 and int(res_y) == 1080):
-                    framerate = 28
-                else:
-                    framerate = 30
-                gstreamer_cmd = [
+            """
+            #vlc_command = "vlc --fullscreen dshow:// :dshow-vdev=ZingCam :dshow-adev=none  :live-caching=0 :dshow-size=\"{}\" :dshow-aspect-ratio=16\:9 :dshow-fps=28 :dshow-chroma=\"{}\"".format(res, fmt)
+            command = [
+                'vlc',
+                'dshow://',
+                ':dshow-vdev=ZingCam',
+                ':dshow-adev=none',
+                ':live-caching=0',
+                ':dshow-size={}'.format(resolution),
+                ':dshow-fps=28',
+                ':dshow-chroma={}'.format(format)
+            ]
+            """
+
+            if (format == "MJPG"):
+                command = [
                     "gst-launch-1.0",
                     "v4l2src",
                     "device=/dev/video0",
-                    "!"
+                    "!",
                     "image/jpeg,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
                     "!",
                     "jpegdec",
@@ -133,54 +142,77 @@ def vlc_player():
                     "autovideosink",
                     "sync=false"
                 ]
-            run = subprocess.Popen(gstreamer_cmd)
+            elif (format == "YUY2"):
+                command = [
+                    "gst-launch-1.0",
+                    "v4l2src",
+                    "device=/dev/video0",
+                    "!",
+                    "video/x-raw,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
+                    "!",
+                    "autovideosink",
+                    "sync=false"
+                ]
+            run = subprocess.Popen(command)
             run.wait()
         elif (camera == CAM_EM2890):
             format = em2890.EM2890_FMT[fmt]
             resolution = em2890.EM2890_IDX[idx]
             res_x = resolution.split("x")[0]
             res_y = resolution.split("x")[1]
-
+            framerate = em2890.EM2890_FRAME_RATE[format][resolution]
+            """
+            #vlc_command = "vlc dshow:// :dshow-vdev=ZingCam :dshow-adev=none  :live-caching=0 :dshow-size=\"{}\" :dshow-aspect-ratio=4\:3 :dshow-fps=30 :dshow-chroma=\"{}\"".format(res, fmt)
+            command = [
+                'vlc',
+                'dshow://',
+                ':dshow-vdev=ZingCam',
+                ':dshow-adev=none',
+                ':live-caching=0',
+                ':dshow-size={}'.format(resolution),
+                ':dshow-fps=30',
+                ':dshow-chroma={}'.format(format)
+            ]
+            """
+            # gst-launch-1.0 ksvideosrc device-index=0 ! "image/jpeg,width=640,height=480,framerate=30/1" ! jpegdec ! autovideosink sync=false
             if (format == "MJPG"):
-                gstreamer_cmd = [
+                command = [
                     "gst-launch-1.0",
                     "v4l2src",
                     "device=/dev/video0",
                     "!",
-                    "image/jpeg,width={},height={},framerate=30/1".format(res_x, res_y),
+                    "image/jpeg,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
                     "!",
                     "jpegdec",
                     "!",
                     "autovideosink",
                     "sync=false"
                 ]
-            run = subprocess.Popen(gstreamer_cmd)
+            elif (format == "YUY2"):
+                command = [
+                    "gst-launch-1.0",
+                    "v4l2src",
+                    "device=/dev/video0",
+                    "!",
+                    "video/x-raw,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
+                    "!",
+                    "autovideosink",
+                    "sync=false"
+                ]
+            run = subprocess.Popen(command)
             run.wait()
         time.sleep(1)
 
-def zmq_req_resp():
-    while True:
-        recv = req.recv()
-        cmd = recv.decode()
-
-        try:
-            msg = commands[cmd]
-            req.send(msg)
-        except Exception as e:
-            print(e)
-
-def interrupt_handler(signal, frame):
-    global ZingGateway
-    ZingGateway = False
-
-signal.signal(signal.SIGINT, interrupt_handler)
-ZingGateway = True
 threading.Thread(target = Zing, daemon = True).start()
 threading.Thread(target = vlc_player, daemon = True).start()
-threading.Thread(target = zmq_req_resp, daemon = True).start()
 
-while ZingGateway:
-    time.sleep(1)
+while True:
+    recv = req.recv()
+    cmd = recv.decode()
 
-print("Closed")
-zble.close()
+    try:
+        msg = commands[cmd]
+        req.send(msg)
+    except Exception as e:
+        print(e)
+        

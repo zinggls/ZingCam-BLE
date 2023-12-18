@@ -2,19 +2,25 @@ import serial
 import time
 
 class Zing_BLE:
-    NUM_HOST_STATUS = 14
-    NUM_DEVICE_STATUS = 12
+    NUM_HOST_STATUS = 15
+    NUM_DEVICE_STATUS = 16
 
-    host_status_name = ["sofx", "accx", "gyrx", "magx",\
-                        "sofy", "accy", "gyry", "magy",\
-                        "sofz", "accz", "gyrz", "magz",\
-                        "USB", "VND", "PRD", "BND", "PID", "DID", "FMT", "IDX", "TRT", "ACK", "PPC", "RXID", "RUN", "CNT"]
+    host_status_name = ["sofx", "accx", "gyrx", "magx",
+                        "sofy", "accy", "gyry", "magy",
+                        "sofz", "accz", "gyrz", "magz",
+                        "USB", "VND", "PRD", "BND",
+                        "PID", "DID", "FMT", "IDX",
+                        "TRT", "ACK", "PPC", "TXID",
+                        "RXID", "RUN", "CNT"]
     host_status_dict = { name : 0 for name in host_status_name }
     
-    device_status_name = ["sofx", "accx", "gyrx", "magx",\
-                            "sofy", "accy", "gyry", "magy",\
-                            "sofz", "accz", "gyrz", "magz",\
-                            "USB", "PID", "DID", "FMT", "IDX", "TRT", "ACK", "PPC", "RXID", "RUN", "ITF", "CNT"]
+    device_status_name = ["sofx", "accx", "gyrx", "magx",
+                            "sofy", "accy", "gyry", "magy",
+                            "sofz", "accz", "gyrz", "magz",
+                            "USB", "PID", "DID", "FMT",
+                            "IDX", "TRT", "ACK", "PPC",
+                            "RUN", "ITF", "TXID", "RXID",
+                            "DestID_ERR_CNT", "PHY_RX_FRAME_CNT", "MFIR", "CNT"]
     device_status_dict = { name : 0 for name in device_status_name }
 
     def __init__(self):
@@ -23,17 +29,15 @@ class Zing_BLE:
     def connect(self, port, baudrate):
         self.serial = serial.Serial(port, baudrate)
 
-    def close(self):
-        self.serial.close()
-
     def get_host_status(self):
         self.serial.write("*".encode())
-        self.serial.reset_input_buffer()
-        time.sleep(0.01)
-        status = self.serial.readline().decode().split(",")
-        #print(status)
+        try:
+            status = self.serial.readline().decode().replace("\r\n", "").split(",")
+        except:
+            return False
 
         if (status[0] != 'H'):
+            self.serial.readline()
             return False
 
         idx = 0
@@ -43,17 +47,20 @@ class Zing_BLE:
                     self.host_status_dict[name] = status[idx + 1]
                     idx = idx + 1
                 except:
-                    print("error host idx={}".format(idx))
+                    print("error host idx={} name={} status={}".format(idx, name, status))
+                    return False
             else:
                 break
 
     def get_device_status(self):
         self.serial.write("&".encode())
-        self.serial.reset_input_buffer()
-        time.sleep(0.01)
-        status = self.serial.readline().decode().split(",")
+        try:
+            status = self.serial.readline().decode().replace("\r\n", "").split(",")
+        except:
+            return False
 
-        if (status[0] != "D"):
+        if (status[0] != 'D'):
+            self.serial.readline()
             return False
         
         idx = 0
@@ -64,6 +71,7 @@ class Zing_BLE:
                     idx = idx + 1
                 except:
                     print("error device idx={} name={} status={}".format(idx, name, status))
+                    return False
             else:
                 break
 

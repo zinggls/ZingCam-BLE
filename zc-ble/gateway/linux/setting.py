@@ -1,4 +1,4 @@
-COMPORT = "/dev/ttyACM0"
+COMPORT = "/dev/ttyACM1"
 BAUDRATE = 115200
 IP = "192.168.1.13"
 REQREP_PORT = "1234"
