@@ -37,7 +37,7 @@ def Zing():
     loop = 0
     while True:
         if (zble.get_host_status() == False):
-            print("Error")
+            print("ERROR")
         elif (zble.get_device_status() == False):
             print("Error")
         else:
@@ -62,6 +62,7 @@ def Zing():
                     else:
                         camera = CAM_UNKNOWN
                 else:
+                    print(oldcnt, newcnt)
                     if (run != 0):
                         run.kill()
                         run = 0
@@ -102,7 +103,7 @@ def Zing():
                 "device_cnt": zble.device_status_dict["CNT"].encode(),
             }
         loop = loop + 1
-        time.sleep(0.1)
+        #time.sleep(0.1)
 
 def vlc_player():
     global run
