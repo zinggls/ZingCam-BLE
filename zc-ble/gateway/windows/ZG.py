@@ -142,6 +142,17 @@ def vlc_player():
                     "autovideosink",
                     "sync=false"
                 ]
+            elif (format == "YUY2"):
+                command = [
+                    "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
+                    "ksvideosrc",
+                    "device-index=0",
+                    "!",
+                    "video/x-raw,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
+                    "!",
+                    "autovideosink",
+                    "sync=false"
+                ]
             run = subprocess.Popen(command)
             run.wait()
         elif (camera == CAM_EM2890):
@@ -177,7 +188,17 @@ def vlc_player():
                     "autovideosink",
                     "sync=false"
                 ]
-            print(command)
+            elif (format == "YUY2"):
+                command = [
+                    "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
+                    "ksvideosrc",
+                    "device-index=0",
+                    "!",
+                    "video/x-raw,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
+                    "!",
+                    "autovideosink",
+                    "sync=false"
+                ]
             run = subprocess.Popen(command)
             run.wait()
         time.sleep(1)
