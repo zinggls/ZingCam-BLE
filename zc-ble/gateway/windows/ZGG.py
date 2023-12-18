@@ -195,9 +195,9 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                         host_summary_value_list[3].set(hu205.HU205_FMT[host_status["FMT"]])
                 if (i == host_status_name.index("IDX")): # IDX
                     if (vnd == em2890.EM2890_VND and prd == em2890.EM2890_PRD):
-                        host_summary_value_list[4].set(em2890.EM2890_FMT[host_status["IDX"]])
+                        host_summary_value_list[4].set(em2890.EM2890_IDX[host_status["IDX"]])
                     elif (vnd == hu205.HU205_FMT and prd == hu205.HU205_PRD):
-                        host_summary_value_list[4].set(hu205.HU205_FMT[host_status["IDX"]])
+                        host_summary_value_list[4].set(hu205.HU205_IDX[host_status["IDX"]])
                 if (i == host_status_name.index("BND")): # BND
                     if (host_status[host_status_name[i]] == 'L'):
                         host_summary_value_list[5].set("Low Band")
