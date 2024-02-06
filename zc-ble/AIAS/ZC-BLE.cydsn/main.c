@@ -37,6 +37,8 @@ int main(void)
     IMU_init();
     
 #if CYBLE_GAP_ROLE_CENTRAL
+    I2C_Init();
+    
     zing_host_status_values = ZING_host_init();
 #endif
 #if CYBLE_GAP_ROLE_PERIPHERAL

@@ -198,15 +198,8 @@ void ZING_change_channel(uint8_t** host_status, uint8_t val)
     {
         if (state == 1)
         {
-            //sprintf(message, "OLD BND: %s\r\n", host_status[HOST_STATUS_BND]);
-            //UART_DBG_UartPutString(message);
-            
-                
             if (strcmp((char*)host_status[HOST_STATUS_BND], "L") == 0)
             {   
-                //sprintf(message, "New BND: H\r\n");
-                //UART_DBG_UartPutString(message);
-                
                 UART_ZING_PutChar(0x4);
                 UART_ZING_PutChar('b');
                 UART_ZING_PutChar(0x1);
@@ -214,9 +207,6 @@ void ZING_change_channel(uint8_t** host_status, uint8_t val)
             }
             else if (strcmp((char*)host_status[HOST_STATUS_BND], "H") == 0)
             {
-                //sprintf(message, "New BND: L\r\n");
-                //UART_DBG_UartPutString(message);
-                
                 UART_ZING_PutChar(0x4);
                 UART_ZING_PutChar('b');
                 UART_ZING_PutChar(0x0);
