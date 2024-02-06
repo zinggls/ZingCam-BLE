@@ -5,6 +5,7 @@
 #include "zing.h"
 #include "ble.h"
 #include "main.h"
+#include "i2c.h"
 
 #if HBLE
 extern uint8_t** zing_device_status_values;
