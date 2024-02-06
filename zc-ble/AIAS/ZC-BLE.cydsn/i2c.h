@@ -3,6 +3,6 @@
 
 #include "project.h"    
     
-void I2C_Init(void);
+void I2C_init(void);
     
 #endif
