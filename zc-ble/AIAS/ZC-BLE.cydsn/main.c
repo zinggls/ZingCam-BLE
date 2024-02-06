@@ -5,7 +5,7 @@
 #include "zing.h"
 #include "ble.h"
 #include "main.h"
-#include "i2c.h"
+#include "ai2c.h"
 
 #if HBLE
 extern uint8_t** zing_device_status_values;
@@ -39,7 +39,7 @@ int main(void)
     IMU_init();
     
 #if HBLE
-    I2C_Init();
+    AI2C_init();
     
     zing_host_status_values = ZING_host_init();
 #endif
@@ -50,9 +50,46 @@ int main(void)
     rst = 0;
     set_channel = 0;
 #endif
+    uint8_t reg;
+    uint8_t data;
+
+    reg = 0x00;
+
+    P2_6_Write(1);
+    RF_LNA_0_Write(1);
+    RF_LNA_1_Write(1);
     
     while (1)
     {
+        if (AI2C_write(0x24, &reg, 1) == 0)
+        {
+            if (AI2C_read(0x24, &data, 1) == 0)
+            {
+                if (data == 0x00)
+                {
+                    P2_6_Write(0);
+                    RF_LNA_0_Write(1);
+                    RF_LNA_1_Write(1);
+                    reg = 0x01;
+                }
+                else if (data == 0x01)
+                {
+                    P2_6_Write(1);
+                    RF_LNA_0_Write(0);
+                    RF_LNA_1_Write(1);
+                    reg = 0x02;
+                }
+                else if (data == 0x02)
+                {
+                    P2_6_Write(1);
+                    RF_LNA_0_Write(1);
+                    RF_LNA_1_Write(0);
+                    reg = 0x00;
+                }
+            }
+        }
+        CyDelay(1000);
+        /*
         CyBle_ProcessEvents();
         
         if (cyBle_state == CYBLE_STATE_CONNECTED)
@@ -209,6 +246,7 @@ int main(void)
 #endif
             }
         }
+        */
     }
 }
 
