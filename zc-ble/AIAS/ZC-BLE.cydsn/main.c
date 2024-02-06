@@ -4,11 +4,12 @@
 #include "imu.h"
 #include "zing.h"
 #include "ble.h"
+#include "main.h"
 
-#if CYBLE_GAP_ROLE_CENTRAL
+#if HBLE
 extern uint8_t** zing_device_status_values;
 #endif
-#if CYBLE_GAP_ROLE_PERIPHERAL
+#if DBLE
 extern uint8_t** zing_host_status_values;
 #endif
 extern ZCBLE_frame zcble_frame;
@@ -18,30 +19,30 @@ int main(void)
     CyGlobalIntEnable;
     
     uint16_t imu_values[NUM_TOTAL_IMU_VALUES + 2];
-#if CYBLE_GAP_ROLE_CENTRAL
+#if HBLE
     uint8_t** zing_host_status_values;
     char zing_host_status[MAX_BUFFER_LENGTH];
 #endif
-#if CYBLE_GAP_ROLE_PERIPHERAL
+#if DBLE
     char message[128];
     uint8_t** zing_device_status_values;
     char zing_device_status[MAX_BUFFER_LENGTH];
     uint8_t rst;
     uint8_t set_channel;
+    char ch;
 #endif
     ZCBLE_frame zcble_frame;
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
-    char ch;
         
     ZCBLE_init();
     IMU_init();
     
-#if CYBLE_GAP_ROLE_CENTRAL
+#if HBLE
     I2C_Init();
     
     zing_host_status_values = ZING_host_init();
 #endif
-#if CYBLE_GAP_ROLE_PERIPHERAL
+#if DBLE
     UART_DBG_Start();
     
     zing_device_status_values = ZING_device_init();
@@ -58,7 +59,7 @@ int main(void)
             if (CyBle_GattGetBusStatus() == CYBLE_STACK_STATE_FREE)
             {
                 memset(&zcble_frame, 0, sizeof(ZCBLE_frame));
-#if CYBLE_GAP_ROLE_CENTRAL
+#if HBLE
                 if (ZING_get_host_status(zing_host_status) == 1)
                 {
                     if (ZING_parse_host_status(zing_host_status, zing_host_status_values) != 1)
@@ -93,7 +94,7 @@ int main(void)
                     CyBle_GattsNotification(cyBle_connHandle, &notification);
                 }
 #endif
-#if CYBLE_GAP_ROLE_PERIPHERAL
+#if DBLE
                 if (ZING_get_device_status(zing_device_status) == 1)
                 {
                     if (ZING_parse_device_status(zing_device_status, zing_device_status_values) != 1)

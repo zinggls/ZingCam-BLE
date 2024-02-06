@@ -1,19 +1,19 @@
 #include <stdlib.h>
 
 #include "ble.h"
+#include "main.h"
 
-#if CYBLE_GAP_ROLE_CENTRAL
+#if HBLE
 static const uint8_t peripheral_address[CYBLE_GAP_BD_ADDR_SIZE] = { 0x01, 0x00, 0x00, 0x50, 0xA0, 0x00 };
 static CYBLE_GAPC_ADV_REPORT_T advertisement_report;
 static CYBLE_GAP_BD_ADDR_T device_address;
 #endif
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T notification;
 ZCBLE_frame zcble_frame;
-#if CYBLE_GAP_ROLE_CENTRAL
-static char message[128];
+#if HBLE
 static uint8_t** zing_device_status_values;
 #endif
-#if CYBLE_GAP_ROLE_PERIPHERAL
+#if DBLE
 static char message[128];
 uint8_t** zing_host_status_values;
 #endif
@@ -22,14 +22,14 @@ static void ZCBLE_callback(uint32_t event, void* parameters);
 
 void ZCBLE_init(void)
 {
-#if CYBLE_GAP_ROLE_CENTRAL
+#if HBLE
     zing_device_status_values = (uint8_t**)calloc(NUM_DEVICE_STATUS, sizeof(uint8_t*));
     for (uint8_t i = 0; i < NUM_DEVICE_STATUS; i++)
     {
         zing_device_status_values[i] = (uint8_t*)calloc(MAX_DATA_LENGTH, sizeof(uint8_t));
     }
 #endif
-#if CYBLE_GAP_ROLE_PERIPHERAL
+#if DBLE
     zing_host_status_values = (uint8_t**)calloc(NUM_HOST_STATUS, sizeof(uint8_t*));
     for (uint8_t i = 0; i < NUM_HOST_STATUS; i++)
     {
@@ -44,7 +44,7 @@ void ZCBLE_callback(uint32_t event, void* parameters)
 {
     switch (event)
     {
-#if CYBLE_GAP_ROLE_CENTRAL
+#if HBLE
         case CYBLE_EVT_STACK_ON:
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
         break;
@@ -102,7 +102,7 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             }
         break;
 #endif
-#if CYBLE_GAP_ROLE_PERIPHERAL
+#if DBLE
         case CYBLE_EVT_STACK_ON:
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
         break;

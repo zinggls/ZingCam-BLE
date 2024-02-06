@@ -186,8 +186,6 @@ uint8_t ZING_parse_device_status(char* device_status, uint8_t** status_values)
 
 void ZING_change_channel(uint8_t** host_status, uint8_t val)
 {
-    char message[128];
-    
     if (host_status == NULL)
     {
         // val = 0: state no change
