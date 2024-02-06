@@ -5,6 +5,7 @@
 *.svd
 *.html
 *.log
+*.bak
 
 AIAS.cywrk
 Design01.cydsn

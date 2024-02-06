@@ -18,7 +18,6 @@ static char message[128];
 uint8_t** zing_host_status_values;
 #endif
 
-static void print_ble_state(void);
 static void ZCBLE_callback(uint32_t event, void* parameters);
 
 void ZCBLE_init(void)
@@ -43,8 +42,6 @@ void ZCBLE_init(void)
 
 void ZCBLE_callback(uint32_t event, void* parameters)
 {
-    //print_ble_state();
-    
     switch (event)
     {
 #if CYBLE_GAP_ROLE_CENTRAL
@@ -102,24 +99,7 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             if (zcble_frame.zing_params.set_channel == 1)
             {
                 ZING_change_channel(NULL, 1);
-                
-                UART_DBG_UartPutString("Receive Change Channel\r\n");
             }
-            
-            for (uint8_t i = 0; i < NUM_TOTAL_IMU_VALUES; i++)
-            {
-                sprintf(message, "%X, ", zcble_frame.imu_values[i]);
-                UART_DBG_UartPutString(message);
-            }
-            UART_DBG_UartPutString("\r\n");
-            
-            for (uint8_t i = 0; i < NUM_HOST_STATUS; i++)
-            {
-                sprintf(message, "%s, ", zing_device_status_values[i]);
-                UART_DBG_UartPutString(message);
-            }
-            
-            UART_DBG_UartPutString("\r\n");
         break;
 #endif
 #if CYBLE_GAP_ROLE_PERIPHERAL
@@ -189,43 +169,3 @@ void ZCBLE_callback(uint32_t event, void* parameters)
 #endif
     }
 }
-
-/*
-void print_ble_state(void)
-{
-    char state[MAX_STATE_LENGTH];
-    char message[128];
-    
-    switch (cyBle_state)
-    {
-        case CYBLE_STATE_STOPPED:
-            sprintf(state, "stopped");
-        break;
-        case CYBLE_STATE_INITIALIZING:
-            sprintf(state, "initializing");
-        break;
-        case CYBLE_STATE_CONNECTED:
-            sprintf(state, "connected");
-        break;
-#if CYBLE_GAP_ROLE_CENTRAL
-        case CYBLE_STATE_SCANNING:
-            sprintf(state, "scanning");
-        break;
-        case CYBLE_STATE_CONNECTING:
-            sprintf(state, "connecting");
-        break;
-#endif
-#if CYBLE_GAP_ROLE_PERIPHERAL
-        case CYBLE_STATE_ADVERTISING:
-            sprintf(state, "advertising");
-        break;
-#endif
-        case CYBLE_STATE_DISCONNECTED:
-            sprintf(state, "disconnected");
-        break;
-    }
-    
-    sprintf(message, "BLE state = %s\r\n", state);
-    UART_DBG_UartPutString(message);
-}
-*/

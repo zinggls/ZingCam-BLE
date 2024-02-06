@@ -32,9 +32,7 @@ int main(void)
     ZCBLE_frame zcble_frame;
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
     char ch;
-    
-    UART_DBG_Start();
-    
+        
     ZCBLE_init();
     IMU_init();
     
@@ -42,6 +40,8 @@ int main(void)
     zing_host_status_values = ZING_host_init();
 #endif
 #if CYBLE_GAP_ROLE_PERIPHERAL
+    UART_DBG_Start();
+    
     zing_device_status_values = ZING_device_init();
     rst = 0;
     set_channel = 0;
@@ -61,7 +61,6 @@ int main(void)
                 {
                     if (ZING_parse_host_status(zing_host_status, zing_host_status_values) != 1)
                     {
-                        UART_DBG_UartPutString("Parse zing status failed\r\n");
                         continue;
                     }
                     else
@@ -77,7 +76,6 @@ int main(void)
                     
                     if (IMU_get(imu_values) != 1)
                     {
-                        UART_DBG_UartPutString("Get IMU datas failed\r\n");
                         continue;
                     }
                     else
