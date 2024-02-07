@@ -13,7 +13,7 @@
 
 typedef struct
 {
-    uint8_t reserved0;
+    uint8_t battery_level;
     uint8_t reserved1;
     uint8_t reserved2;
     uint8_t reserved3;
