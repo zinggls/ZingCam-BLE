@@ -1,12 +1,29 @@
 #include "ai2c.h"
 #include "main.h"
 
+#if DBLE
+#define I2C_WR_BUFFER_SIZE 4
+#define I2C_RD_BUFFER_SIZE 4
+    
+static uint8_t i2c_slave_wr_buffer[I2C_WR_BUFFER_SIZE];
+static uint8_t i2c_slave_rd_buffer[I2C_RD_BUFFER_SIZE];
+#endif
+
 void AI2C_init(void)
 {
+#if DBLE
+    I2C_I2CSlaveInitReadBuf(i2c_slave_rd_buffer, I2C_RD_BUFFER_SIZE);
+    I2C_I2CSlaveInitWriteBuf(i2c_slave_wr_buffer, I2C_WR_BUFFER_SIZE);
+#endif
     I2C_Start();
 }
 
+#if HBLE
 uint8_t AI2C_write(uint8_t addr, uint8_t* data, uint8_t len)
+#endif
+#if DBLE
+uint8_t AI2C_write(uint8_t* data, uint8_t len)
+#endif
 {
     uint8_t status;
 #if HBLE
@@ -35,12 +52,30 @@ uint8_t AI2C_write(uint8_t addr, uint8_t* data, uint8_t len)
     
 #endif
 #if DBLE
-    // add whenever ~_~
+    // I2C SLAVE's read is TX
+    
+    memcpy(i2c_slave_rd_buffer, data, len);
+        
+    if (((status = I2C_I2CSlaveStatus()) & I2C_I2C_SSTAT_RD_CMPLT) != 0)
+    {
+        if (I2C_I2CSlaveGetReadBufSize() == len)
+        {
+            
+        }
+        
+        I2C_I2CSlaveClearReadBuf();
+        I2C_I2CSlaveClearReadStatus();
+    }
 #endif
-    return status;
+    return 0;
 }
 
+#if HBLE
 uint8_t AI2C_read(uint8_t addr, uint8_t* data, uint8_t len)
+#endif
+#if DBLE
+uint8_t AI2C_read(uint8_t* data, uint8_t len)
+#endif
 {
     uint8_t status;
 #if HBLE
@@ -68,7 +103,17 @@ uint8_t AI2C_read(uint8_t addr, uint8_t* data, uint8_t len)
     }
 #endif
 #if DBLE
-    // add whenever ~_~
+    // I2C SLAVE's write is RX
+    if (((status = I2C_I2CSlaveStatus()) & I2C_I2C_SSTAT_WR_CMPLT) != 0)
+    {    
+        if (I2C_I2CSlaveGetWriteBufSize() == len)
+        {
+            memcpy(data, i2c_slave_wr_buffer, len);
+        }
+        
+        I2C_I2CSlaveClearWriteBuf();
+        I2C_I2CSlaveClearWriteStatus();
+    }
 #endif
-    return status;
+    return 0;
 }
