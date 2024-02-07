@@ -38,22 +38,22 @@ int main(void)
         
     ZCBLE_init();
     IMU_init();
+    AI2C_init();
     
 #if HBLE
-    AI2C_init();
     AADC_init();
     
     zing_host_status_values = ZING_host_init();
 #endif
-#if DBLE
-    UART_DBG_Start();
-    
+#if DBLE    
     zing_device_status_values = ZING_device_init();
     rst = 0;
     set_channel = 0;
+    
+    uint8_t data;
+    
 #endif
-    int16_t res;
-    res = 0;
+
     while (1)
     {
         /*
