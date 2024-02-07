@@ -56,7 +56,7 @@ int main(void)
     res = 0;
     while (1)
     {
-        res = AADC_measure();
+        res = AADC_measure(0);
         
         /*
         CyBle_ProcessEvents();
