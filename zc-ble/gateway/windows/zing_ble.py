@@ -2,9 +2,10 @@ import serial
 import time
 
 class Zing_BLE:
-    NUM_HOST_STATUS = 15
-    NUM_DEVICE_STATUS = 16
+#    NUM_HOST_STATUS = 15
+#    NUM_DEVICE_STATUS = 16
 
+    """
     host_status_name = ["sofx", "accx", "gyrx", "magx",
                         "sofy", "accy", "gyry", "magy",
                         "sofz", "accz", "gyrz", "magz",
@@ -12,8 +13,19 @@ class Zing_BLE:
                         "PID", "DID", "FMT", "IDX",
                         "TRT", "ACK", "PPC", "TXID",
                         "RXID", "RUN", "CNT"]
-    host_status_dict = { name : 0 for name in host_status_name }
+    """
     
+    host_status_name = ["sofx", "accx", "gyrx", "magx",
+                        "sofy", "accy", "gyry", "magy",
+                        "sofz", "accz", "gyrz", "magz",
+                        "USB", "VND", "PRD", "BND",
+                        "PID", "DID", "FMT", "IDX",
+                        "TRT", "ACK", "PPC", "RXID",
+                        "RUN", "CNT"]
+                        
+    host_status_dict = { name : 0 for name in host_status_name }
+
+    """
     device_status_name = ["sofx", "accx", "gyrx", "magx",
                             "sofy", "accy", "gyry", "magy",
                             "sofz", "accz", "gyrz", "magz",
@@ -21,8 +33,17 @@ class Zing_BLE:
                             "IDX", "TRT", "ACK", "PPC",
                             "RUN", "ITF", "TXID", "RXID",
                             "DestID_ERR_CNT", "PHY_RX_FRAME_CNT", "MFIR", "CNT"]
+    """
+    device_status_name = ["sofx", "accx", "gyrx", "magx",
+                            "sofy", "accy", "gyry", "magy",
+                            "sofz", "accz", "gyrz", "magz",
+                            "USB", "PID", "DID", "FMT",
+                            "IDX", "TRT", "ACK", "PPC",
+                            "RXID", "RUN", "ITF", "CNT"]
     device_status_dict = { name : 0 for name in device_status_name }
-
+    NUM_HOST_STATUS = len(host_status_name) - 12
+    NUM_DEVICE_STATUS = len(device_status_name) - 12
+    
     def __init__(self):
         pass
 
@@ -35,7 +56,7 @@ class Zing_BLE:
             status = self.serial.readline().decode().replace("\r\n", "").split(",")
         except:
             return False
-
+        
         if (status[0] != 'H'):
             self.serial.readline()
             return False

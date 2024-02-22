@@ -1,35 +1,36 @@
 #include <stdlib.h>
 
 #include "ble.h"
-#include "main.h"
 
-#if HBLE
+#if CYBLE_GAP_ROLE_CENTRAL
 static const uint8_t peripheral_address[CYBLE_GAP_BD_ADDR_SIZE] = { 0x01, 0x00, 0x00, 0x50, 0xA0, 0x00 };
 static CYBLE_GAPC_ADV_REPORT_T advertisement_report;
 static CYBLE_GAP_BD_ADDR_T device_address;
 #endif
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T notification;
 ZCBLE_frame zcble_frame;
-#if HBLE
+#if CYBLE_GAP_ROLE_CENTRAL
+static char message[128];
 static uint8_t** zing_device_status_values;
 #endif
-#if DBLE
+#if CYBLE_GAP_ROLE_PERIPHERAL
 static char message[128];
 uint8_t** zing_host_status_values;
 #endif
 
+static void print_ble_state(void);
 static void ZCBLE_callback(uint32_t event, void* parameters);
 
 void ZCBLE_init(void)
 {
-#if HBLE
+#if CYBLE_GAP_ROLE_CENTRAL
     zing_device_status_values = (uint8_t**)calloc(NUM_DEVICE_STATUS, sizeof(uint8_t*));
     for (uint8_t i = 0; i < NUM_DEVICE_STATUS; i++)
     {
         zing_device_status_values[i] = (uint8_t*)calloc(MAX_DATA_LENGTH, sizeof(uint8_t));
     }
 #endif
-#if DBLE
+#if CYBLE_GAP_ROLE_PERIPHERAL
     zing_host_status_values = (uint8_t**)calloc(NUM_HOST_STATUS, sizeof(uint8_t*));
     for (uint8_t i = 0; i < NUM_HOST_STATUS; i++)
     {
@@ -42,9 +43,11 @@ void ZCBLE_init(void)
 
 void ZCBLE_callback(uint32_t event, void* parameters)
 {
+    //print_ble_state();
+    
     switch (event)
     {
-#if HBLE
+#if CYBLE_GAP_ROLE_CENTRAL
         case CYBLE_EVT_STACK_ON:
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
         break;
@@ -99,10 +102,27 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             if (zcble_frame.zing_params.set_channel == 1)
             {
                 ZING_change_channel(NULL, 1);
+                
+                UART_DBG_UartPutString("Receive Change Channel\r\n");
             }
+            
+            for (uint8_t i = 0; i < NUM_TOTAL_IMU_VALUES; i++)
+            {
+                sprintf(message, "%X, ", zcble_frame.imu_values[i]);
+                UART_DBG_UartPutString(message);
+            }
+            UART_DBG_UartPutString("\r\n");
+            
+            for (uint8_t i = 0; i < NUM_DEVICE_STATUS; i++)
+            {
+                sprintf(message, "%s, ", zing_device_status_values[i]);
+                UART_DBG_UartPutString(message);
+            }
+            
+            UART_DBG_UartPutString("\r\n");
         break;
 #endif
-#if DBLE
+#if CYBLE_GAP_ROLE_PERIPHERAL
         case CYBLE_EVT_STACK_ON:
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
         break;
@@ -168,4 +188,42 @@ void ZCBLE_callback(uint32_t event, void* parameters)
         break;
 #endif
     }
+}
+
+void print_ble_state(void)
+{
+    char state[MAX_STATE_LENGTH];
+    char message[128];
+    
+    switch (cyBle_state)
+    {
+        case CYBLE_STATE_STOPPED:
+            sprintf(state, "stopped");
+        break;
+        case CYBLE_STATE_INITIALIZING:
+            sprintf(state, "initializing");
+        break;
+        case CYBLE_STATE_CONNECTED:
+            sprintf(state, "connected");
+        break;
+#if CYBLE_GAP_ROLE_CENTRAL
+        case CYBLE_STATE_SCANNING:
+            sprintf(state, "scanning");
+        break;
+        case CYBLE_STATE_CONNECTING:
+            sprintf(state, "connecting");
+        break;
+#endif
+#if CYBLE_GAP_ROLE_PERIPHERAL
+        case CYBLE_STATE_ADVERTISING:
+            sprintf(state, "advertising");
+        break;
+#endif
+        case CYBLE_STATE_DISCONNECTED:
+            sprintf(state, "disconnected");
+        break;
+    }
+    
+    sprintf(message, "BLE state = %s\r\n", state);
+    UART_DBG_UartPutString(message);
 }

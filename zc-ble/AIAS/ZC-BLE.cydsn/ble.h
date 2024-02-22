@@ -13,7 +13,7 @@
 
 typedef struct
 {
-    uint8_t battery_level;
+    uint8_t reserved0;
     uint8_t reserved1;
     uint8_t reserved2;
     uint8_t reserved3;
@@ -28,7 +28,7 @@ typedef struct
 typedef struct
 {
     uint16_t imu_values[NUM_TOTAL_IMU_VALUES];
-    uint8_t status_values[NUM_HOST_STATUS * MAX_DATA_LENGTH];
+    uint8_t status_values[(NUM_HOST_STATUS > NUM_DEVICE_STATUS ? NUM_HOST_STATUS : NUM_DEVICE_STATUS) * MAX_DATA_LENGTH];
     //uint32_t status_values2[NUM_HOST_STATUS > NUM_DEVICE_STATUS ? NUM_HOST_STATUS : NUM_DEVICE_STATUS];
     ZING_parameters zing_params;
 } ZCBLE_frame;

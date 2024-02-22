@@ -177,26 +177,26 @@ def vlc_player():
             # gst-launch-1.0 ksvideosrc device-index=0 ! "image/jpeg,width=640,height=480,framerate=30/1" ! jpegdec ! autovideosink sync=false
             if (format == "MJPG"):
                 command = [
-                    "gst-launch-1.0",
-                    "v4l2src",
-                    "device=/dev/video0",
-                    "!",
-                    "image/jpeg,width={},height={},framerate=30/1".format(res_x, res_y),
-                    "!",
-                    "jpegdec",
-                    "!",
-                    "autovideosink",
-                    "sync=false"
-#                    "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
-#                    "ksvideosrc",
-#                    "device-index=0",
+#                    "gst-launch-1.0",
+#                    "v4l2src",
+#                    "device=/dev/video0",
 #                    "!",
-#                    "image/jpeg,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
+#                    "image/jpeg,width={},height={},framerate=30/1".format(res_x, res_y),
 #                    "!",
 #                    "jpegdec",
 #                    "!",
 #                    "autovideosink",
 #                    "sync=false"
+                    "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
+                    "ksvideosrc",
+                    "device-index=0",
+                    "!",
+                    "image/jpeg,width={},height={},framerate={}/1".format(res_x, res_y, framerate),
+                    "!",
+                    "jpegdec",
+                    "!",
+                    "autovideosink",
+                    "sync=false"
                 ]
             elif (format == "YUY2"):
                 command = [

@@ -1,5 +1,6 @@
 import zmq
 import tkinter
+
 import threading
 import json
 import setting
@@ -226,6 +227,7 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                         host_summary_value_list[8].set("DEV")
                     else:
                         host_summary_value_list[8].set("etc")
+                """
                 if (i == host_status_name.index("TXID")):
                     txid = int(host_status[host_status_name[i]], 16)
                     ppcid = (txid & 0xFF000000) >> 24
@@ -233,6 +235,7 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                     ppid = txid & 0x0000FFFF
                     txid_str = "Dest(0x{:02X}) | Src(0x{:02X}) | PPID(0x{:04X})".format(ppcid, devid, ppid)
                     host_summary_value_list[9].set(txid_str)
+                """
                 if (i == host_status_name.index("RXID")):
                     rxid = int(host_status[host_status_name[i]], 16)
                     ppcid = (rxid & 0xFF000000) >> 24
@@ -240,7 +243,7 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                     ppid = rxid & 0x0000FFFF
                     rxid_str = "Dest(0x{:02X}) | Src(0x{:02X}) | PPID(0x{:04X})".format(ppcid, devid, ppid)
                     host_summary_value_list[10].set(rxid_str)
-                host_summary_value_list[11].set("-") # MFIR
+                #host_summary_value_list[11].set("-") # MFIR
             for i in range(NUM_DEVICE_STATUS + 12):
                 device_status_value_list[i].set(device_status[device_status_name[i]])
                 if (i == device_status_name.index("RUN")): # RUN
@@ -296,6 +299,7 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                         device_summary_value_list[8].set("DEV")
                     else:
                         device_summary_value_list[8].set("etc")
+                """
                 if (i == device_status_name.index("TXID")):
                     txid = int(device_status[device_status_name[i]], 16)
                     ppcid = (txid & 0xFF000000) >> 24
@@ -303,6 +307,7 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                     ppid = txid & 0x0000FFFF
                     txid_str = "Dest(0x{:02X}) | Src(0x{:02X}) | PPID(0x{:04X})".format(ppcid, devid, ppid)
                     device_summary_value_list[9].set(txid_str)
+                """
                 if (i == device_status_name.index("RXID")):
                     rxid = int(device_status[device_status_name[i]], 16)
                     ppcid = (rxid & 0xFF000000) >> 24
@@ -310,11 +315,13 @@ def set_value(status, host_status, device_status, host_status_name, device_statu
                     ppid = rxid & 0x0000FFFF
                     rxid_str = "Dest(0x{:02X}) | Src(0x{:02X}) | PPID(0x{:04X})".format(ppcid, devid, ppid)
                     device_summary_value_list[10].set(rxid_str)
+                """
                 if (i == device_status_name.index("MFIR")):
                     dst_id_err_cnt_diff = device_status[device_status_name[i]].split("/")[0]
                     rx_frame_err_cnt_diff = device_status[device_status_name[i]].split("/")[1]
                     mfir = float(dst_id_err_cnt_diff) / float(rx_frame_err_cnt_diff)
                     device_summary_value_list[11].set("{}/{} ({:.2f}%)".format(dst_id_err_cnt_diff, rx_frame_err_cnt_diff, mfir))
+                """
         except Exception as e:
             pass
             
