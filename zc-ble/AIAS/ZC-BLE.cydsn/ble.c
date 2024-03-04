@@ -2,6 +2,7 @@
 
 #include "ble.h"
 #include "main.h"
+#include "icd.h"
 
 #if HBLE
 static const uint8_t peripheral_address[CYBLE_GAP_BD_ADDR_SIZE] = { 0x01, 0x00, 0x00, 0x50, 0xA0, 0x00 };
@@ -15,10 +16,24 @@ static uint8_t** zing_device_status_values;
 #endif
 #if DBLE
 static char message[128];
-uint8_t** zing_host_status_values;
+static uint8_t** zing_host_status_values;
 #endif
 
 static void ZCBLE_callback(uint32_t event, void* parameters);
+
+#if HBLE
+uint8_t** ZCBLE_get_zing_device_status_values(void)
+{
+    return zing_device_status_values;
+}
+#endif
+
+#if DBLE
+uint8_t** ZCBLE_get_zing_host_status_values(void)
+{
+    return zing_host_status_values;
+}
+#endif
 
 void ZCBLE_init(void)
 {
@@ -96,26 +111,57 @@ void ZCBLE_callback(uint32_t event, void* parameters)
                 UART_ZING_PutChar('t');
             }
             
-            if (zcble_frame.zing_params.set_channel == 1)
+            if (zcble_frame.zing_params.auto_channel == 1)
             {
                 ZING_change_channel(NULL, 1);
             }
+            else
+            {
+                switch (zcble_frame.zing_params.set_channel)
+                {
+                    case 0x01:
+                        ZING_set_channel_high();
+                        break;
+                    case 0x02:
+                        ZING_set_channel_low();
+                        break;
+                }
+            }
+            
+            switch (zcble_frame.zing_params.calibrate_imu)
+            {
+                case 0x01:
+                    IMU_calibration_gyro();
+                    break;
+                case 0x02:
+                    IMU_calibration_accelero_free();
+                    break;
+                case 0x03:
+                    IMU_calibration_magneto_free();
+                    break;
+            }
+                        
         break;
 #endif
 #if DBLE
         case CYBLE_EVT_STACK_ON:
+            AIAS_ICD_set(AIAS_BLE_STATUS, 0x00);
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
         break;
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
+            AIAS_ICD_set(AIAS_BLE_STATUS, 0x00);
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
         break;
         case CYBLE_EVT_GAP_AUTH_COMPLETE:
+            AIAS_ICD_set(AIAS_BLE_STATUS, 0x01);
             CyBle_GattcStartDiscovery(cyBle_connHandle);
         break;
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
+            AIAS_ICD_set(AIAS_BLE_STATUS, 0x01);
             CyBle_GattcExchangeMtuReq(cyBle_connHandle, MAX_BLE_FRAME_SIZE);
         break;
         case CYBLE_EVT_GATTS_WRITE_REQ:
+            AIAS_ICD_set(AIAS_BLE_STATUS, 0x01);
             CyBle_GattsWriteRsp(cyBle_connHandle);
         break;
         case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
@@ -134,6 +180,29 @@ void ZCBLE_callback(uint32_t event, void* parameters)
                 }
             }
             
+            if (zcble_frame.zing_params.zing_error == 1)
+            {
+                AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_MODEM_STATUS, 0xE3);
+            }
+            
+            if (zcble_frame.zing_params.imu_error == 1)
+            {
+                AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_STATUS, 0xE5);
+            }
+            
+            if (zcble_frame.zing_params.imu_output == IMU_EULER)
+            {
+                AIAS_ICD_set_transmitter_imu_data(IMU_EULER, zcble_frame.imu_values);
+            }
+            else if (zcble_frame.zing_params.imu_output == IMU_QUATERNION)
+            {
+                AIAS_ICD_set_transmitter_imu_data(IMU_QUATERNION, zcble_frame.imu_values);
+            }
+            
+            P2_6_Write(!(P2_6_Read()));
+            AIAS_ICD_update_host_status(zing_host_status_values);
+            
+           
             if (zcble_frame.zing_params.reset == 1)
             {
                 UART_ZING_PutChar(0x4);
