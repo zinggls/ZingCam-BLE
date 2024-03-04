@@ -2,8 +2,8 @@
 #include "main.h"
 
 #if DBLE
-#define I2C_WR_BUFFER_SIZE 4
-#define I2C_RD_BUFFER_SIZE 4
+#define I2C_WR_BUFFER_SIZE 11
+#define I2C_RD_BUFFER_SIZE 40 + 16
     
 static uint8_t i2c_slave_wr_buffer[I2C_WR_BUFFER_SIZE];
 static uint8_t i2c_slave_rd_buffer[I2C_RD_BUFFER_SIZE];
@@ -66,6 +66,10 @@ uint8_t AI2C_write(uint8_t* data, uint8_t len)
         I2C_I2CSlaveClearReadBuf();
         I2C_I2CSlaveClearReadStatus();
     }
+    else
+    {
+        return status;
+    }
 #endif
     return 0;
 }
@@ -113,6 +117,10 @@ uint8_t AI2C_read(uint8_t* data, uint8_t len)
         
         I2C_I2CSlaveClearWriteBuf();
         I2C_I2CSlaveClearWriteStatus();
+    }
+    else
+    {
+        return status;
     }
 #endif
     return 0;
