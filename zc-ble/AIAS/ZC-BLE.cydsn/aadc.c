@@ -1,4 +1,5 @@
 #include "aadc.h"
+#include "icd.h"
 
 #define BATTERY_THRESHOLD 1475
 
