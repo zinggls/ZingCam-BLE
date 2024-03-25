@@ -12,8 +12,13 @@
   <Data key="DataVersionKey" value="2" />
   <Group key="DWRInstGuidMapping">
     <Group key="Pin">
+      <Data key="8b4398e0-e75e-4c9b-b1c9-d07db9c63688" value="LED_USER2" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="UART_DBG_RX" />
+      <Data key="8862465b-aaca-4ec4-ae03-a75181e8c404" value="SW_USER1" />
       <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="P3_2" />
+      <Data key="bbdba8f7-dabe-4fbc-93de-5ef9b677a2f7" value="LED_USER1" />
+      <Data key="c5cfbf1e-3d82-46f4-a736-0f0de42541c7" value="SW_USER0" />
+      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="LED_USER0" />
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="UART_DBG_TX" />
       <Data key="fcc00d2d-c14a-4c01-961f-3b105c75182b" value="P2_6" />
     </Group>
@@ -3554,14 +3559,39 @@
     </Group>
   </Group>
   <Group key="Pin2">
+    <Group key="8b4398e0-e75e-4c9b-b1c9-d07db9c63688">
+      <Group key="0">
+        <Data key="Port Format" value="4,1" />
+      </Group>
+    </Group>
     <Group key="1425177d-0d0e-4468-8bcc-e638e5509a9b">
       <Group key="0">
         <Data key="Port Format" value="1,4" />
       </Group>
     </Group>
+    <Group key="8862465b-aaca-4ec4-ae03-a75181e8c404">
+      <Group key="0">
+        <Data key="Port Format" value="1,0" />
+      </Group>
+    </Group>
     <Group key="77715107-f8d5-47e5-a629-0fb83101ac6b">
       <Group key="0">
         <Data key="Port Format" value="3,2" />
+      </Group>
+    </Group>
+    <Group key="bbdba8f7-dabe-4fbc-93de-5ef9b677a2f7">
+      <Group key="0">
+        <Data key="Port Format" value="4,0" />
+      </Group>
+    </Group>
+    <Group key="c5cfbf1e-3d82-46f4-a736-0f0de42541c7">
+      <Group key="0">
+        <Data key="Port Format" value="2,7" />
+      </Group>
+    </Group>
+    <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">
+      <Group key="0">
+        <Data key="Port Format" value="2,5" />
       </Group>
     </Group>
     <Group key="ed092b9b-d398-4703-be89-cebf998501f6">
@@ -3588,8 +3618,8 @@
     <Data key="CYDEV_TEMPERATURE" value="-40C - 85C" />
     <Data key="CYDEV_USE_BUNDLED_CMSIS" value="True" />
     <Data key="CYDEV_VARIABLE_VDDA" value="True" />
-    <Data key="CYDEV_VDDA" value="3.3" />
-    <Data key="CYDEV_VDDD" value="3.3" />
-    <Data key="CYDEV_VDDR" value="3.3" />
+    <Data key="CYDEV_VDDA" value="2.5" />
+    <Data key="CYDEV_VDDD" value="2.5" />
+    <Data key="CYDEV_VDDR" value="2.5" />
   </Group>
 </DesignWideResources>
