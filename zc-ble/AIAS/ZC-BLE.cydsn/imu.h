@@ -6,8 +6,12 @@
 #include "project.h"
 
 #define NUM_TOTAL_IMU_VALUES 4
-#define MAX_IMU_VALUES_SIZE 48
-
+#define NUM_IMU_DATA_BYTES 10
+#define NUM_IMU_SOF_UPPER 0
+#define NUM_IMU_SOF_LOWER 1
+#define NUM_IMU_CHECKSUM_UPPER 10
+#define NUM_IMU_CHECKSUM_LOWER 11
+    
 #define IMU_EULER 0
 #define IMU_QUATERNION 1
     
@@ -23,6 +27,8 @@ typedef enum
     
 void IMU_init(void);
 uint8_t IMU_get(uint16_t* values);
+uint8_t IMU_get_type(void);
+uint8_t IMU_get_calibrate(void);
 
 void IMU_set_output_format(uint8_t sof);
 void IMU_set_output_gyro(uint8_t sog);
