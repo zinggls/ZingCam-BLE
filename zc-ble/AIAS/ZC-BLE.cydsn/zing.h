@@ -63,15 +63,20 @@ typedef struct
     uint16_t phy_rx_frame_diff;
 } ZING_mfir; 
 
+CY_ISR(UART_ZING_RX_INTERRUPT);
+
 uint8_t** ZING_host_init(void);
 uint8_t** ZING_device_init(void);
 uint8_t ZING_get_host_status(char* data);
 uint8_t ZING_get_device_status(char* data);
-uint8_t ZING_parse_host_status(char* device_status, uint8_t** status_values);
-uint8_t ZING_parse_device_status(char* device_status, uint8_t** status_values);
+uint8_t ZING_parse_host_status(uint8_t** status_values);
+uint8_t ZING_parse_device_status(uint8_t** status_values);
 void ZING_change_channel(uint8_t** host_status, uint8_t val);
 void ZING_set_channel_high(void);
 void ZING_set_channel_low(void);
+uint8_t ZING_get_mode(void);
+uint8_t ZING_get_info(void);
+void ZING_reset(void);
 
 uint8_t ZING_get_host_status_usb(uint8_t** host_status);
 uint16_t ZING_get_host_status_vnd(uint8_t** host_status);

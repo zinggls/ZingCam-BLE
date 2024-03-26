@@ -3,7 +3,15 @@
 #include "zing.h"
 #include "icd.h"
 
+#define NUM_ZING_CNT 10
+
 static uint8_t state = 0;
+static uint32_t ZING_parse_systick;
+static uint16_t cnt_tmp = 0;
+static uint16_t uart_loop = 0;
+static uint8_t current_channel = 0;
+
+static char zing_status[MAX_BUFFER_LENGTH];
 
 static uint16_t ZING_get_device_status_dst_id_err_diff_cnt(char* dst_id_err_cnt_end_ptr);
 static uint16_t ZING_get_device_status_phy_rx_frame_diff_cnt(char* phy_rx_frame_cnt_end_ptr);
@@ -14,6 +22,8 @@ uint8_t** ZING_host_init(void)
     uint8_t** status_values;
     
     UART_ZING_Start();
+    UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
+    ZING_parse_systick = 0;
     
     status_values = (uint8_t**)calloc(NUM_HOST_STATUS, sizeof(uint8_t*));
     for (uint8_t i = 0; i < NUM_HOST_STATUS; i++)
@@ -29,6 +39,8 @@ uint8_t** ZING_device_init(void)
     uint8_t** status_values;
     
     UART_ZING_Start();
+    UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
+    ZING_parse_systick = 0;
         
     status_values = (uint8_t**)calloc(NUM_DEVICE_STATUS, sizeof(uint8_t*));
     for (uint8_t i = 0; i < NUM_DEVICE_STATUS; i++)
@@ -39,17 +51,18 @@ uint8_t** ZING_device_init(void)
     return status_values;
 }
 
-uint8_t ZING_get_host_status(char* host_status)
+CY_ISR(UART_ZING_RX_INTERRUPT)
 {
     char ch;
     uint16_t cnt;
     
     ch = UART_ZING_GetChar();
     cnt = 0;
+    uart_loop = uart_loop + 1;
     
-    if (ch == ASCII_HOST)
+    if (ch == ASCII_HOST || ch == ASCII_DEVICE)
     {
-        host_status[cnt++] = ASCII_HOST;
+        zing_status[cnt++] = ch;
         
         do
         {
@@ -57,62 +70,15 @@ uint8_t ZING_get_host_status(char* host_status)
             {
                 if (cnt < MAX_BUFFER_LENGTH)
                 {
-                    host_status[cnt++] = ch;
-                }
-                else
-                {
-                    return 0;
+                    zing_status[cnt++] = ch;
                 }
             }
         }
         while (ch != ASCII_LF);
-        
-        return 1;
-    }
-    else
-    {
-        return 0;
     }
 }
 
-uint8_t ZING_get_device_status(char* device_status)
-{
-    char ch;
-    uint16_t cnt;
-    
-    ch = UART_ZING_GetChar();
-    cnt = 0;
-    
-    if (ch == ASCII_DEVICE)
-    {
-        device_status[cnt++] = ASCII_DEVICE;
-        
-        do
-        {
-            ch = UART_ZING_GetChar();
-            if (ch != 0)
-            {
-                if (cnt < MAX_BUFFER_LENGTH)
-                {
-                    device_status[cnt++] = ch;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-        while (ch != '\n');
-        
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-uint8_t ZING_parse_host_status(char* host_status, uint8_t** status_values)
+uint8_t ZING_parse_host_status(uint8_t** status_values)
 {
     char* status;
     char* next_ptr;
@@ -122,7 +88,13 @@ uint8_t ZING_parse_host_status(char* host_status, uint8_t** status_values)
     cnt = 0;
     idx = 0;
     
-    status = strtok_r(host_status, " :", &next_ptr);
+    status = strtok_r(zing_status, " :", &next_ptr);
+    
+    if (status == NULL)
+    {
+        return 0;
+    }
+    
     while ((status = strtok_r(NULL, " :", &next_ptr)) != NULL)
     {
         if ((cnt % 2) == 1)
@@ -148,10 +120,24 @@ uint8_t ZING_parse_host_status(char* host_status, uint8_t** status_values)
         cnt = cnt + 1;
     }
     
+    if (cnt_tmp != uart_loop)
+    {
+        ZING_parse_systick = ZCBLE_get_systick();
+    }
+    else
+    {
+        if (ZCBLE_get_systick() - ZING_parse_systick > 100)
+        {
+            return 0;
+        }
+    }
+    
+    cnt_tmp = uart_loop;
+    
     return 1;
 }
 
-uint8_t ZING_parse_device_status(char* device_status, uint8_t** status_values)
+uint8_t ZING_parse_device_status(uint8_t** status_values)
 {
     char* status;
     char* next_ptr;
@@ -161,7 +147,13 @@ uint8_t ZING_parse_device_status(char* device_status, uint8_t** status_values)
     cnt = 0;
     idx = 0;
     
-    status = strtok_r(device_status, " :", &next_ptr);
+    status = strtok_r(zing_status, " :", &next_ptr);
+    
+    if (status == NULL)
+    {
+        return 0;
+    }
+    
     while ((status = strtok_r(NULL, " :", &next_ptr)) != NULL)
     {
         if ((cnt % 2) == 1)
@@ -186,11 +178,27 @@ uint8_t ZING_parse_device_status(char* device_status, uint8_t** status_values)
         cnt = cnt + 1;
     }
     
+    if (cnt_tmp != uart_loop)
+    {
+        ZING_parse_systick = ZCBLE_get_systick();
+    }
+    else
+    {
+        if (ZCBLE_get_systick() - ZING_parse_systick > 100)
+        {
+            return 0;
+        }
+    }
+    
+    cnt_tmp = uart_loop;
+    
     return 1;
 }
 
 void ZING_change_channel(uint8_t** host_status, uint8_t val)
 {
+    uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
+    
     if (host_status == NULL)
     {
         // val = 0: state no change
@@ -203,17 +211,15 @@ void ZING_change_channel(uint8_t** host_status, uint8_t val)
         {
             if (strcmp((char*)host_status[HOST_STATUS_BND], "L") == 0)
             {   
-                UART_ZING_PutChar(0x4);
-                UART_ZING_PutChar('b');
-                UART_ZING_PutChar(0x1);
-                UART_ZING_PutChar(0x0);
+                arr[2] = 0x1;
+                current_channel = 1;
+                UART_ZING_PutArray(arr, 4);
             }
             else if (strcmp((char*)host_status[HOST_STATUS_BND], "H") == 0)
             {
-                UART_ZING_PutChar(0x4);
-                UART_ZING_PutChar('b');
-                UART_ZING_PutChar(0x0);
-                UART_ZING_PutChar(0x0);
+                arr[2] = 0x0;
+                current_channel = 0;
+                UART_ZING_PutArray(arr, 4);
             }
             
             state = 0;
@@ -223,18 +229,52 @@ void ZING_change_channel(uint8_t** host_status, uint8_t val)
 
 void ZING_set_channel_high(void)
 {
-    UART_ZING_PutChar(0x4);
-    UART_ZING_PutChar('b');
-    UART_ZING_PutChar(0x0);
-    UART_ZING_PutChar(0x0);
+    uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
+    
+    if (current_channel != 0)
+    {
+        current_channel = 0;
+        UART_ZING_PutArray(arr, 4);
+    }
 }
 
 void ZING_set_channel_low(void)
 {
-    UART_ZING_PutChar(0x4);
-    UART_ZING_PutChar('b');
-    UART_ZING_PutChar(0x1);
-    UART_ZING_PutChar(0x0);
+    uint8_t arr[4] = { 0x4, 'b', 0x1, 0x0 };
+    
+    if (current_channel != 1)
+    {
+        current_channel = 1;
+        UART_ZING_PutArray(arr, 4);
+    }
+}
+
+uint8_t ZING_get_mode(void)
+{
+    uint8_t mode;
+    
+    switch (state)
+    {
+        case 0:
+            mode = 2;
+        break;
+        case 1:
+            mode = 1;
+        break;
+    }
+    return mode;
+}
+
+uint8_t ZING_get_info(void)
+{
+    return current_channel;
+}
+
+void ZING_reset(void)
+{
+    uint8_t arr[4] = { 0x4, 'r', 's', 't' };
+    
+    UART_ZING_PutArray(arr, 4);
 }
 
 uint8_t ZING_get_host_status_usb(uint8_t** host_status)
