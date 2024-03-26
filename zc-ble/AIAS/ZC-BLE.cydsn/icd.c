@@ -1,0 +1,950 @@
+#include "icd.h"
+#include "imu.h"
+#include "zing.h"
+
+#include <stdlib.h>
+
+static uint8_t icd_imu_type = IMU_EULER;
+
+static uint8_t AIAS_ICD_MAP[] =
+{
+#if HBLE
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    
+    // ZING HOST STATUS
+    0x02,                   // USB
+    0x12, 0x34,             // VND
+    0x00, 0x00,             // PRD
+    0x00,                   // BND
+    0x00, 0x00,             // PPID
+    0x00, 0x00,             // DEVID
+    0x00,                   // FMT
+    0x00,                   // IDX
+    0x00,                   // TRT
+    0x00,                   // ACK
+    0x00,                   // PPC
+    0x00,                   // RUN
+    0x00, 0x00, 0x00, 0x00, // TXID
+    0x00, 0x00, 0x00, 0x00, // RXID
+    0x00, 0x00,             // CNT
+    // ZING DEVICE STATUS
+    0x00,                   // USB
+    0x00, 0x00,             // PPID
+    0x00, 0x00,             // DEVID
+    0x00,                   // FMT
+    0x00,                   // IDX
+    0x00,                   // TRT
+    0x00,                   // ACK
+    0x00,                   // PPC
+    0x00,                   // RUN
+    0x00,                   // ITF
+    0x00, 0x00, 0x00, 0x00, // TXID
+    0x00, 0x00, 0x00, 0x00, // RXID
+    0x00, 0x00, 0x00, 0x00, // DST_ID_ERR_CNT
+    0x00, 0x00,             // DST_ID_DIFF_CNT
+    0x00, 0x00, 0x00, 0x00, // RX_FRAME_CNT
+    0x00, 0x00,             // RX_FRAME_DIFF_CNT
+    0x00, 0x00, 0x00, 0x00, // MFIR
+    0x00, 0x00, // CNT
+#endif    
+#if DBLE
+    // AIAS ICD
+    0x00, 0x01, 0x02, 0x02, 0x00, 0x00, 0x00, 0x07, 0x08, 0x09,
+    0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13,
+    0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,
+    0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
+    // ZING HOST STATUS
+    0x02,                   // USB
+    0x12, 0x34,             // VND
+    0x00, 0x00,             // PRD
+    0x00,                   // BND
+    0x00, 0x00,             // PPID
+    0x00, 0x00,             // DEVID
+    0x00,                   // FMT
+    0x00,                   // IDX
+    0x00,                   // TRT
+    0x00,                   // ACK
+    0x00,                   // PPC
+    0x00,                   // RUN
+    0x00, 0x00, 0x00, 0x00, // TXID
+    0x00, 0x00, 0x00, 0x00, // RXID
+    0x00, 0x00,             // CNT
+    // ZING DEVICE STATUS
+    0x00,                   // USB
+    0x00, 0x00,             // PPID
+    0x00, 0x00,             // DEVID
+    0x00,                   // FMT
+    0x00,                   // IDX
+    0x00,                   // TRT
+    0x00,                   // ACK
+    0x00,                   // PPC
+    0x00,                   // RUN
+    0x00,                   // ITF
+    0x00, 0x00, 0x00, 0x00, // TXID
+    0x00, 0x00, 0x00, 0x00, // RXID
+    0x00, 0x00, 0x00, 0x00, // DST_ID_ERR_CNT
+    0x00, 0x00,             // DST_ID_DIFF_CNT
+    0x00, 0x00, 0x00, 0x00, // RX_FRAME_CNT
+    0x00, 0x00,             // RX_FRAME_DIFF_CNT
+    0x00, 0x00, 0x00, 0x00, // MFIR
+    0x00, 0x00, // CNT
+#endif
+};
+
+uint8_t* AIAS_ICD_get_map(void)
+{
+    return AIAS_ICD_MAP;
+}
+
+uint8_t AIAS_ICD_get(uint8_t addr)
+{
+    return AIAS_ICD_MAP[addr];
+}
+
+void AIAS_ICD_get_block(uint8_t addr, uint8_t* buffer, uint8_t len)
+{
+    for (uint8_t i = 0; i < len; i++)
+    {
+        buffer[i] = AIAS_ICD_get(addr + i);
+    }
+}
+
+void AIAS_ICD_set(uint8_t addr, uint8_t value)
+{
+    AIAS_ICD_MAP[addr] = value;
+}
+
+void AIAS_ICD_set_block(uint8_t addr, uint8_t* buffer, uint8_t len)
+{
+    for (uint8_t i = 0; i < len; i++)
+    {
+        AIAS_ICD_MAP[addr + i] = buffer[i];
+    }
+}
+
+#if DBLE
+void AIAS_ICD_read(void)
+{
+    AI2C_set_read_buffer(AIAS_ICD_MAP, NUM_READ_AIAS_ICD);
+    AI2C_read();
+}
+
+void AIAS_ICD_write(void)
+{
+    AI2C_set_write_buffer(AIAS_ICD_MAP, NUM_WRITE_AIAS_ICD);
+    AI2C_write();
+    
+    switch (AIAS_ICD_get(WIRELESS_VIDEO_RECEIVER_IMU_CALIBRATE))
+    {
+        case 0x01:
+            IMU_calibration_gyro();
+            IMU_calibration_accelero_simple();
+            IMU_calibration_magneto_free();
+        break;
+        case 0x02:
+            UART_IMU_UartPutChar('>');
+        break;
+    }    
+}
+#endif
+
+void AIAS_ICD_set_scope(ZCBLE_scope scope)
+{
+#if HBLE
+    switch (scope.camera)
+    {
+        case 1:
+            // Turn EO
+        break;
+        case 2:
+            // Turn IR
+        break;
+    }
+    
+    switch (scope.output)
+    {
+        case 0:
+            // Output
+        break;
+        case 1:
+            // No output
+        break;
+    }
+#endif
+    AIAS_ICD_set(SCOPE_CAMERA, scope.camera);
+    AIAS_ICD_set(SCOPE_OUTPUT, scope.output);
+}
+
+void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c)
+{
+#if HBLE
+    switch (w_c.mode)
+    {
+        case 1:
+            // Auto mode
+            ZING_change_channel(NULL, 1);
+        break;
+        case 2:
+            // Manual mode
+            ZING_change_channel(NULL, 0);
+        break;
+    }
+    
+    switch (w_c.info)
+    {
+        case 1:
+            // Set channel 1
+            ZING_set_channel_low();
+        break;
+        case 2:
+            // Set channel 2
+            ZING_set_channel_high();
+        break;
+    }
+#endif
+#if DBLE
+    AIAS_ICD_set(WIRELESS_VIDEO_CHANNEL_MODE, w_c.mode);
+    AIAS_ICD_set(WIRELESS_VIDEO_CHANNEL_INFORMATION, w_c.info);
+#endif
+}
+
+void AIAS_ICD_set_opmode(ZCBLE_opmode opmode)
+{
+#if HBLE
+    switch (opmode.scope)
+    {
+        case 1:
+            // Operate mode
+        break;
+        case 2:
+            // Standby mode
+        break;
+        case 4:
+            // Power save mode
+        break;
+    }
+    
+    switch (opmode.transmitter)
+    {
+        case 1:
+            // Operate mode
+        break;
+        case 2:
+            // Standby mode
+            // ZING is not used
+        break;
+        case 4:
+            // Power save mode
+        break;
+    }
+#endif
+    AIAS_ICD_set(SCOPE_OPERATION_MODE, opmode.scope);
+#if DBLE
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_OPERATION_MODE_STATUS, opmode.transmitter);
+#endif
+}
+
+void AIAS_ICD_set_transitter_imu(ZCBLE_transmitter_imu imu)
+{
+#if HBLE
+    switch (imu.type)
+    {
+        case 0:
+            if (icd_imu_type != IMU_EULER)
+            {
+                icd_imu_type = IMU_EULER;
+                IMU_set_output_format(IMU_EULER);
+            }
+        break;
+        case 1:
+            if (icd_imu_type != IMU_QUATERNION)
+            {
+                icd_imu_type = IMU_QUATERNION;
+                IMU_set_output_format(IMU_QUATERNION);
+            }
+        break;
+    }
+    
+    switch (imu.calibrate)
+    {
+        case 1:
+            IMU_calibration_gyro();
+            IMU_calibration_accelero_simple();
+            IMU_calibration_magneto_free();
+        break;
+        case 2:
+            UART_IMU_UartPutChar('>'); // calibrate done
+        break;
+    }
+#endif
+#if DBLE
+    uint8_t status;
+    
+    if (imu.status != 0x00)
+    {
+        status = imu.status | 0xE0;    
+    }
+    else
+    {
+        status = 0x00;
+    }
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_STATUS, status);
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE, imu.type);
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_CALIBRATE, imu.calibrate);
+#endif
+}
+
+void AIAS_ICD_set_zcble_frame(ZCBLE_frame* zcble_frame)
+{
+#if HBLE
+    zcble_frame->icd_params.scope.camera = AIAS_ICD_MAP[SCOPE_CAMERA];
+    zcble_frame->icd_params.scope.output = AIAS_ICD_MAP[SCOPE_OUTPUT];
+    zcble_frame->icd_params.w_c.mode = ZING_get_mode();
+    zcble_frame->icd_params.w_c.info = ZING_get_info();
+    zcble_frame->icd_params.opmode.scope = AIAS_ICD_MAP[SCOPE_OPERATION_MODE];
+    zcble_frame->icd_params.opmode.transmitter = 0x00;
+    zcble_frame->icd_params.tx_imu.type = IMU_get_type();
+    zcble_frame->icd_params.tx_imu.calibrate = IMU_get_calibrate();
+#endif
+#if DBLE
+    zcble_frame->icd_params.scope.camera = AIAS_ICD_MAP[SCOPE_CAMERA];
+    zcble_frame->icd_params.scope.output = AIAS_ICD_MAP[SCOPE_OUTPUT];
+    zcble_frame->icd_params.w_c.mode = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_MODE];
+    zcble_frame->icd_params.w_c.info = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_INFORMATION];
+    zcble_frame->icd_params.opmode.scope = AIAS_ICD_MAP[SCOPE_OPERATION_MODE];
+    zcble_frame->icd_params.opmode.transmitter = AIAS_ICD_MAP[WIRELESS_VIDEO_TRANSMITTER_OPERATION_MODE_STATUS];
+    zcble_frame->icd_params.tx_imu.type = AIAS_ICD_MAP[WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE];
+    zcble_frame->icd_params.tx_imu.calibrate = AIAS_ICD_MAP[WIRELESS_VIDEO_TRANSMITTER_IMU_CALIBRATE];
+#endif
+}
+
+#if DBLE
+void AIAS_ICD_set_battery_level(ZCBLE_battery_level battery)
+{
+    AIAS_ICD_set(SCOPE_BATTERY_STATUS, battery.scope);
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_BATTERY_STATUS, battery.transmitter);
+}
+
+void AIAS_ICD_set_modules_status(ZCBLE_modules_status modules)
+{
+    AIAS_ICD_set(SCOPE_IR_MODULE_STATUS, modules.ir);
+    AIAS_ICD_set(SCOPE_EO_MODULE_STATUS, modules.eo);
+}
+
+void AIAS_ICD_set_modem_status(ZCBLE_modem modem)
+{
+    uint8_t status;
+    
+    if (modem.transmitter != 0x00)
+    {
+        status = modem.transmitter | 0xE0;    
+    }
+    else
+    {
+        status = 0x00;
+    }
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_MODEM_STATUS, status);
+}
+
+#endif
+
+// TEST
+
+#if DBLE
+void AIAS_ICD_set_receiver_imu_data(uint8_t sof, uint16_t* imu_values)
+{
+    if (sof == IMU_EULER)
+    {
+        AIAS_ICD_set_receiver_imu_data1(IMU_EULER, 0x00);
+        AIAS_ICD_set_receiver_imu_data2(imu_values[IMU_SOF_0]);
+        AIAS_ICD_set_receiver_imu_data3(imu_values[IMU_SOF_1]);
+        AIAS_ICD_set_receiver_imu_data4(imu_values[IMU_SOF_2]);
+        AIAS_ICD_set_receiver_imu_data5(imu_values[IMU_SOF_3]);
+        AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_OUTPUT_TYPE, IMU_EULER);
+    }
+    else
+    {
+        AIAS_ICD_set_receiver_imu_data1(IMU_QUATERNION, imu_values[IMU_SOF_0]);
+        AIAS_ICD_set_receiver_imu_data2(imu_values[IMU_SOF_1]);
+        AIAS_ICD_set_receiver_imu_data3(imu_values[IMU_SOF_2]);
+        AIAS_ICD_set_receiver_imu_data4(imu_values[IMU_SOF_3]);
+        AIAS_ICD_set_receiver_imu_data5(imu_values[IMU_SOTS]);
+        AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_OUTPUT_TYPE, IMU_QUATERNION);
+    }
+}
+
+void AIAS_ICD_set_receiver_imu_data1(uint8_t sof, uint16_t data1)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    if (sof == IMU_EULER)
+    {
+        AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA1_H, 0x00);
+        AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA1_L, 0x00);
+    }
+    else if (sof == IMU_QUATERNION)
+    {
+        data_h = (data1 & 0xFF00) >> 8;
+        data_l = (data1 & 0x00FF);
+        
+        AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA1_H, data_h);
+        AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA1_L, data_l);
+    }
+}
+
+void AIAS_ICD_set_receiver_imu_data2(uint16_t data2)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    data_h = (data2 & 0xFF00) >> 8;
+    data_l = (data2 & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA2_H, data_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA2_L, data_l);
+}
+
+void AIAS_ICD_set_receiver_imu_data3(uint16_t data3)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    data_h = (data3 & 0xFF00) >> 8;
+    data_l = (data3 & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA3_H, data_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA3_L, data_l);
+}
+
+void AIAS_ICD_set_receiver_imu_data4(uint16_t data4)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    data_h = (data4 & 0xFF00) >> 8;
+    data_l = (data4 & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA4_H, data_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA4_L, data_l);
+}
+
+void AIAS_ICD_set_receiver_imu_data5(uint16_t data5)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    data_h = (data5 & 0xFF00) >> 8;
+    data_l = (data5 & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA5_H, data_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA5_L, data_l);
+}
+
+void AIAS_ICD_set_transmitter_imu_data(uint8_t sof, uint16_t* imu_values)
+{
+    if (sof == IMU_EULER)
+    {
+        AIAS_ICD_set_transmitter_imu_data1(IMU_EULER, 0x00);
+        AIAS_ICD_set_transmitter_imu_data2(imu_values[IMU_SOF_0]);
+        AIAS_ICD_set_transmitter_imu_data3(imu_values[IMU_SOF_1]);
+        AIAS_ICD_set_transmitter_imu_data4(imu_values[IMU_SOF_2]);
+        AIAS_ICD_set_transmitter_imu_data5(imu_values[IMU_SOF_3]);
+        AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE, IMU_EULER);
+    }
+    else
+    {
+        AIAS_ICD_set_transmitter_imu_data1(IMU_QUATERNION, imu_values[IMU_SOF_0]);
+        AIAS_ICD_set_transmitter_imu_data2(imu_values[IMU_SOF_1]);
+        AIAS_ICD_set_transmitter_imu_data3(imu_values[IMU_SOF_2]);
+        AIAS_ICD_set_transmitter_imu_data4(imu_values[IMU_SOF_3]);
+        AIAS_ICD_set_transmitter_imu_data5(imu_values[IMU_SOTS]);
+        AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE, IMU_QUATERNION);
+    }
+}
+
+void AIAS_ICD_set_transmitter_imu_data1(uint8_t sof, uint16_t data1)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    if (sof == IMU_EULER)
+    {
+        AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA1_H, 0x00);
+        AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA1_L, 0x00);
+    }
+    else if (sof == IMU_QUATERNION)
+    {
+        data_h = (data1 & 0xFF00) >> 8;
+        data_l = (data1 & 0x00FF);
+        
+        AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA1_H, data_h);
+        AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA1_L, data_l);
+    }
+}
+
+void AIAS_ICD_set_transmitter_imu_data2(uint16_t data2)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    data_h = (data2 & 0xFF00) >> 8;
+    data_l = (data2 & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA2_H, data_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA2_L, data_l);
+}
+
+void AIAS_ICD_set_transmitter_imu_data3(uint16_t data3)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    data_h = (data3 & 0xFF00) >> 8;
+    data_l = (data3 & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA3_H, data_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA3_L, data_l);
+}
+
+void AIAS_ICD_set_transmitter_imu_data4(uint16_t data4)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    data_h = (data4 & 0xFF00) >> 8;
+    data_l = (data4 & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA4_H, data_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA4_L, data_l);
+}
+
+void AIAS_ICD_set_transmitter_imu_data5(uint16_t data5)
+{
+    uint8_t data_h;
+    uint8_t data_l;
+    
+    data_h = (data5 & 0xFF00) >> 8;
+    data_l = (data5 & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA5_H, data_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA5_L, data_l);
+}
+#endif 
+
+void AIAS_ICD_update_host_status(uint8_t** host_status)
+{
+    AIAS_ICD_set_host_status_usb(host_status);
+    AIAS_ICD_set_host_status_vnd(host_status);
+    AIAS_ICD_set_host_status_prd(host_status);
+    AIAS_ICD_set_host_status_bnd(host_status);
+    AIAS_ICD_set_host_status_ppid(host_status);
+    AIAS_ICD_set_host_status_devid(host_status);
+    AIAS_ICD_set_host_status_fmt(host_status);
+    AIAS_ICD_set_host_status_idx(host_status);
+    AIAS_ICD_set_host_status_trt(host_status);
+    AIAS_ICD_set_host_status_ack(host_status);
+    AIAS_ICD_set_host_status_ppc(host_status);
+    AIAS_ICD_set_host_status_txid(host_status);
+    AIAS_ICD_set_host_status_rxid(host_status);
+    AIAS_ICD_set_host_status_run(host_status);
+    AIAS_ICD_set_host_status_cnt(host_status);
+}
+
+void AIAS_ICD_set_host_status_usb(uint8_t** host_status)
+{
+    uint8_t usb;
+    
+    usb = ZING_get_host_status_usb(host_status);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_USB] = usb;
+}
+
+void AIAS_ICD_set_host_status_vnd(uint8_t** host_status)
+{
+    uint16_t vnd;
+    uint8_t VND_H;
+    uint8_t VND_L;
+    
+    vnd = ZING_get_host_status_vnd(host_status);
+    VND_H = (vnd & 0xFF00) >> 8;
+    VND_L = (vnd & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_VND_H] = VND_H;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_VND_L] = VND_L;
+}
+
+void AIAS_ICD_set_host_status_prd(uint8_t** host_status)
+{
+    uint16_t prd;
+    uint8_t PRD_H;
+    uint8_t PRD_L;
+    
+    prd = ZING_get_host_status_prd(host_status);
+    PRD_H = (prd& 0xFF00) >> 8;
+    PRD_L = (prd & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_PRD_H] = PRD_H;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_PRD_L] = PRD_L;
+}
+
+void AIAS_ICD_set_host_status_bnd(uint8_t** host_status)
+{
+    char bnd;
+    
+    bnd = ZING_get_host_status_bnd(host_status);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_BND] = bnd;
+}
+
+void AIAS_ICD_set_host_status_ppid(uint8_t** host_status)
+{
+    uint16_t ppid;
+    uint8_t PPID_H;
+    uint8_t PPID_L;
+    
+    ppid = ZING_get_host_status_ppid(host_status);
+    PPID_H = (ppid & 0xFF00) >> 8;
+    PPID_L = (ppid & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_PPID_H] = PPID_H;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_PPID_L] = PPID_L;
+}
+
+void AIAS_ICD_set_host_status_devid(uint8_t** host_status)
+{
+    uint16_t devid;
+    uint8_t DEVID_H;
+    uint8_t DEVID_L;
+    
+    devid = ZING_get_host_status_devid(host_status);
+    DEVID_H = (devid & 0xFF00) >> 8;
+    DEVID_L = (devid & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_DEVID_H] = DEVID_H;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_DEVID_L] = DEVID_L;
+}
+
+void AIAS_ICD_set_host_status_fmt(uint8_t** host_status)
+{
+    uint8_t fmt;
+    
+    fmt = ZING_get_host_status_fmt(host_status);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_FMT] = fmt;
+}
+
+void AIAS_ICD_set_host_status_idx(uint8_t** host_status)
+{
+    uint8_t idx;
+    
+    idx = ZING_get_host_status_idx(host_status);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_IDX] = idx;
+}
+
+void AIAS_ICD_set_host_status_trt(uint8_t** host_status)
+{
+    char trt;
+    
+    trt = ZING_get_host_status_trt(host_status);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_TRT] = trt;
+}
+
+void AIAS_ICD_set_host_status_ack(uint8_t** host_status)
+{
+    char ack;
+    
+    ack = ZING_get_host_status_ack(host_status);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_ACK] = ack;
+}
+
+void AIAS_ICD_set_host_status_ppc(uint8_t** host_status)
+{
+    char ppc;
+    
+    ppc = ZING_get_host_status_ppc(host_status);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_PPC] = ppc;
+}
+
+void AIAS_ICD_set_host_status_txid(uint8_t** host_status)
+{
+    uint32_t txid;
+    uint8_t TXID_HH;
+    uint8_t TXID_HL;
+    uint8_t TXID_LH;
+    uint8_t TXID_LL;
+    
+    txid = ZING_get_host_status_txid(host_status);
+    TXID_HH = (txid & 0xFF000000) >> 24;
+    TXID_HL = (txid & 0x00FF0000) >> 16;
+    TXID_LH = (txid & 0x0000FF00) >> 8;
+    TXID_LL = (txid & 0x000000FF);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_TXID_HH] = TXID_HH;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_TXID_HL] = TXID_HL;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_TXID_LH] = TXID_LH;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_TXID_LL] = TXID_LL;
+}
+
+void AIAS_ICD_set_host_status_rxid(uint8_t** host_status)
+{
+    uint32_t rxid;
+    uint8_t RXID_HH;
+    uint8_t RXID_HL;
+    uint8_t RXID_LH;
+    uint8_t RXID_LL;
+    
+    rxid = ZING_get_host_status_rxid(host_status);
+    RXID_HH = (rxid & 0xFF000000) >> 24;
+    RXID_HL = (rxid & 0x00FF0000) >> 16;
+    RXID_LH = (rxid & 0x0000FF00) >> 8;
+    RXID_LL = (rxid & 0x000000FF);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_RXID_HH] = RXID_HH;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_RXID_HL] = RXID_HL;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_RXID_LH] = RXID_LH;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_RXID_LL] = RXID_LL;
+}
+
+void AIAS_ICD_set_host_status_run(uint8_t** host_status)
+{
+    char run;
+    
+    run = ZING_get_host_status_run(host_status);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_RUN] = run;
+}
+
+void AIAS_ICD_set_host_status_cnt(uint8_t** host_status)
+{
+    uint16_t cnt;
+    uint8_t CNT_H;
+    uint8_t CNT_L;
+    
+    cnt = ZING_get_host_status_cnt(host_status);
+    CNT_H = (cnt & 0xFF00) >> 8;
+    CNT_L = (cnt & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_CNT_H] = CNT_H;
+    AIAS_ICD_MAP[AIAS_ZING_HOST_STATUS_CNT_L] = CNT_L;
+}
+
+void AIAS_ICD_update_device_status(uint8_t** device_status)
+{
+    AIAS_ICD_set_device_status_usb(device_status);
+    AIAS_ICD_set_device_status_ppid(device_status);
+    AIAS_ICD_set_device_status_devid(device_status);
+    AIAS_ICD_set_device_status_fmt(device_status);
+    AIAS_ICD_set_device_status_idx(device_status);
+    AIAS_ICD_set_device_status_trt(device_status);
+    AIAS_ICD_set_device_status_ack(device_status);
+    AIAS_ICD_set_device_status_ppc(device_status);
+    AIAS_ICD_set_device_status_run(device_status);
+    AIAS_ICD_set_device_status_itf(device_status);
+    AIAS_ICD_set_device_status_txid(device_status);
+    AIAS_ICD_set_device_status_rxid(device_status);
+    AIAS_ICD_set_device_status_dst_id_err_cnt(device_status);
+    AIAS_ICD_set_device_status_phy_rx_frame_cnt(device_status);
+    AIAS_ICD_set_device_status_mfir(device_status);
+    AIAS_ICD_set_device_status_cnt(device_status);
+}
+
+void AIAS_ICD_set_device_status_usb(uint8_t** device_status)
+{
+    uint8_t usb;
+    
+    usb = ZING_get_device_status_usb(device_status);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_USB] = usb;
+}
+
+void AIAS_ICD_set_device_status_ppid(uint8_t** device_status)
+{
+    uint16_t ppid;
+    uint8_t PPID_H;
+    uint8_t PPID_L;
+    
+    ppid = ZING_get_device_status_ppid(device_status);
+    PPID_H = (ppid & 0xFF00) >> 8;
+    PPID_L = (ppid & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_PPID_H] = PPID_H;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_PPID_L] = PPID_L;
+}
+
+void AIAS_ICD_set_device_status_devid(uint8_t** device_status)
+{
+    uint16_t devid;
+    uint8_t DEVID_H;
+    uint8_t DEVID_L;
+    
+    devid = ZING_get_device_status_devid(device_status);
+    DEVID_H = (devid & 0xFF00) >> 8;
+    DEVID_L = (devid & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DEVID_H] = DEVID_H;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DEVID_L] = DEVID_L;
+}
+
+void AIAS_ICD_set_device_status_fmt(uint8_t** device_status)
+{
+    uint8_t fmt;
+    
+    fmt = ZING_get_device_status_fmt(device_status);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_FMT] = fmt;
+}
+
+void AIAS_ICD_set_device_status_idx(uint8_t** device_status)
+{
+    uint8_t idx;
+    
+    idx = ZING_get_device_status_idx(device_status);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_IDX] = idx;
+}
+
+void AIAS_ICD_set_device_status_trt(uint8_t** device_status)
+{
+    char trt;
+    
+    trt = ZING_get_device_status_trt(device_status);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_TRT] = trt;
+}
+
+void AIAS_ICD_set_device_status_ack(uint8_t** device_status)
+{
+    char ack;
+    
+    ack = ZING_get_device_status_ack(device_status);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_ACK] = ack;
+}
+
+void AIAS_ICD_set_device_status_ppc(uint8_t** device_status)
+{
+    char ppc;
+    
+    ppc = ZING_get_device_status_ppc(device_status);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_PPC] = ppc;
+}
+
+void AIAS_ICD_set_device_status_run(uint8_t** device_status)
+{
+    char run;
+    
+    run = ZING_get_device_status_run(device_status);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_RUN] = run;
+}
+
+void AIAS_ICD_set_device_status_itf(uint8_t** device_status)
+{
+    char itf;
+    
+    itf = ZING_get_device_status_itf(device_status);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_ITF] = itf;
+}
+
+void AIAS_ICD_set_device_status_txid(uint8_t** device_status)
+{
+    uint32_t txid;
+    uint8_t TXID_HH;
+    uint8_t TXID_HL;
+    uint8_t TXID_LH;
+    uint8_t TXID_LL;
+    
+    txid = ZING_get_device_status_txid(device_status);
+    TXID_HH = (txid & 0xFF000000) >> 24;
+    TXID_HL = (txid & 0x00FF0000) >> 16;
+    TXID_LH = (txid & 0x0000FF00) >> 8;
+    TXID_LL = (txid & 0x000000FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_TXID_HH] = TXID_HH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_TXID_HL] = TXID_HL;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_TXID_LH] = TXID_LH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_TXID_LL] = TXID_LL;
+}
+
+void AIAS_ICD_set_device_status_rxid(uint8_t** device_status)
+{
+    uint32_t rxid;
+    uint8_t RXID_HH;
+    uint8_t RXID_HL;
+    uint8_t RXID_LH;
+    uint8_t RXID_LL;
+    
+    rxid = ZING_get_device_status_rxid(device_status);
+    RXID_HH = (rxid & 0xFF000000) >> 24;
+    RXID_HL = (rxid & 0x00FF0000) >> 16;
+    RXID_LH = (rxid & 0x0000FF00) >> 8;
+    RXID_LL = (rxid & 0x000000FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_RXID_HH] = RXID_HH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_RXID_HL] = RXID_HL;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_RXID_LH] = RXID_LH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_RXID_LL] = RXID_LL;
+}
+
+void AIAS_ICD_set_device_status_dst_id_err_cnt(uint8_t** device_status)
+{
+    ZING_diff dst_id_err;
+    uint8_t DST_ID_ERR_CNT_HH;
+    uint8_t DST_ID_ERR_CNT_HL;
+    uint8_t DST_ID_ERR_CNT_LH;
+    uint8_t DST_ID_ERR_CNT_LL;
+    uint8_t DST_ID_ERR_DIFF_CNT_H;
+    uint8_t DST_ID_ERR_DIFF_CNT_L;
+    
+    dst_id_err = ZING_get_device_status_dst_id_err_cnt(device_status);
+    DST_ID_ERR_CNT_HH = (dst_id_err.cnt & 0xFF000000) >> 24;
+    DST_ID_ERR_CNT_HL = (dst_id_err.cnt & 0x00FF0000) >> 16;
+    DST_ID_ERR_CNT_LH = (dst_id_err.cnt & 0x0000FF00) >> 8;
+    DST_ID_ERR_CNT_LL = (dst_id_err.cnt & 0x000000FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_HH] = DST_ID_ERR_CNT_HH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_HL] = DST_ID_ERR_CNT_HL;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_LH] = DST_ID_ERR_CNT_LH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_LL] = DST_ID_ERR_CNT_LL;
+    DST_ID_ERR_DIFF_CNT_H = (dst_id_err.diff & 0xFF00) >> 8;
+    DST_ID_ERR_DIFF_CNT_L = (dst_id_err.diff & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_DIFF_CNT_H] = DST_ID_ERR_DIFF_CNT_H;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_DIFF_CNT_L] = DST_ID_ERR_DIFF_CNT_L;
+}
+
+void AIAS_ICD_set_device_status_phy_rx_frame_cnt(uint8_t** device_status)
+{
+    ZING_diff phy_rx_frame;
+    uint8_t PHY_RX_FRAME_CNT_HH;
+    uint8_t PHY_RX_FRAME_CNT_HL;
+    uint8_t PHY_RX_FRAME_CNT_LH;
+    uint8_t PHY_RX_FRAME_CNT_LL;
+    uint8_t PHY_RX_FRAME_DIFF_CNT_H;
+    uint8_t PHY_RX_FRAME_DIFF_CNT_L;
+    
+    phy_rx_frame = ZING_get_device_status_phy_rx_frame_cnt(device_status);
+    PHY_RX_FRAME_CNT_HH = (phy_rx_frame.cnt & 0xFF000000) >> 24;
+    PHY_RX_FRAME_CNT_HL = (phy_rx_frame.cnt & 0x00FF0000) >> 16;
+    PHY_RX_FRAME_CNT_LH = (phy_rx_frame.cnt & 0x0000FF00) >> 8;
+    PHY_RX_FRAME_CNT_LL = (phy_rx_frame.cnt & 0x000000FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_HH] = PHY_RX_FRAME_CNT_HH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_HL] = PHY_RX_FRAME_CNT_HL;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_LH] = PHY_RX_FRAME_CNT_LH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_LL] = PHY_RX_FRAME_CNT_LL;
+    PHY_RX_FRAME_DIFF_CNT_H = (phy_rx_frame.diff & 0xFF00) >> 8;
+    PHY_RX_FRAME_DIFF_CNT_L = (phy_rx_frame.diff & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_DIFF_CNT_H] = PHY_RX_FRAME_DIFF_CNT_H;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_DIFF_CNT_L] = PHY_RX_FRAME_DIFF_CNT_L;
+}
+
+void AIAS_ICD_set_device_status_mfir(uint8_t** device_status)
+{
+    ZING_mfir mfir;
+    uint8_t MFIR_DST_ID_ERR_DIFF_H;
+    uint8_t MFIR_DST_ID_ERR_DIFF_L;
+    uint8_t MFIR_PHY_RX_FRAME_DIFF_H;
+    uint8_t MFIR_PHY_RX_FRAME_DIFF_L;
+    
+    mfir = ZING_get_device_status_mfir(device_status);
+    MFIR_DST_ID_ERR_DIFF_H = (mfir.dst_id_err_diff & 0xFF00) >> 8;
+    MFIR_DST_ID_ERR_DIFF_L = (mfir.dst_id_err_diff & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_MFIR_HH] = MFIR_DST_ID_ERR_DIFF_H;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_MFIR_HL] = MFIR_DST_ID_ERR_DIFF_L;
+    MFIR_PHY_RX_FRAME_DIFF_H = (mfir.phy_rx_frame_diff & 0xFF00) >> 8;
+    MFIR_PHY_RX_FRAME_DIFF_L = (mfir.phy_rx_frame_diff & 0x00FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_MFIR_LH] = MFIR_PHY_RX_FRAME_DIFF_H;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_MFIR_LL] = MFIR_PHY_RX_FRAME_DIFF_L;
+}
+
+void AIAS_ICD_set_device_status_cnt(uint8_t** device_status)
+{
+    uint16_t cnt;
+    uint8_t CNT_H;
+    uint8_t CNT_L;
+    
+    cnt = ZING_get_device_status_cnt(device_status);
+    CNT_H = (cnt & 0x0000FF00) >> 8;
+    CNT_L = (cnt & 0x000000FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_CNT_H] = CNT_H;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_CNT_L] = CNT_L;
+}
