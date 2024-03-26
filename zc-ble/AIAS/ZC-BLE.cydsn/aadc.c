@@ -1,7 +1,8 @@
 #include "aadc.h"
 #include "icd.h"
 
-#define BATTERY_THRESHOLD 1475
+#define BATTERY_FULL_CHARGE 1610
+#define BATTERY_NEED_CHARGE 1568
 
 void AADC_init(void)
 {
@@ -20,18 +21,22 @@ int16_t AADC_measure(uint8_t channel)
     return result;
 }
 
-uint8_t AADC_get_battery_percent(int16_t adc_value)
+uint8_t AADC_get_battery_level(int16_t adc_value)
 {
-    uint8_t percent;
+    uint8_t level;
     
-    if (adc_value < BATTERY_THRESHOLD)
+    if (adc_value < BATTERY_FULL_CHARGE)
     {
-        percent = 0;
+        level = 0;
     }
-    else
+    else if ((adc_value > BATTERY_NEED_CHARGE) && (adc_value <= BATTERY_FULL_CHARGE))
     {
-        percent = 1; // 1 ~ 100
+        level = 1;
+    }
+    else if (adc_value < BATTERY_NEED_CHARGE)
+    {
+        level = 2;
     }
     
-    return percent;
+    return level;
 }
