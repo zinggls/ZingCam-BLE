@@ -12,36 +12,69 @@
 #define MAX_STATE_LENGTH 13
 #define MAX_DATA_LENGTH 12
 
+#define ZCBLE_NUM_ZING_STATUS (NUM_HOST_STATUS > NUM_DEVICE_STATUS ? NUM_HOST_STATUS : NUM_DEVICE_STATUS)
+#define ZCBLE_LENGTH_ZING_STATUS (ZCBLE_NUM_ZING_STATUS * MAX_DATA_LENGTH)
+    
 typedef struct
 {
-    uint8_t battery_level;
-    
-    uint8_t scope_camera:4;
-    uint8_t scope_format:4;
-    
-    uint8_t reserved3;
-    uint8_t reserved4;
-    uint8_t reserved5;
-    
-    
-    uint8_t calibrate_imu:5;
-    uint8_t imu_output:1;
-    uint8_t imu_cali_status:1;
-    uint8_t imu_error:1;
-    
-    uint8_t reserved7:3;
-    uint8_t zing_error:1;
-    uint8_t auto_channel;
-    uint8_t set_channel:2;
-    uint8_t reset:1;
-} ZING_parameters;
+    uint8_t camera:4;
+    uint8_t output:4;
+} ZCBLE_scope;
+
+typedef struct
+{
+    uint8_t mode:4;
+    uint8_t info:4;
+} ZCBLE_wireless_channel;
+
+typedef struct
+{
+    uint8_t scope:4;
+    uint8_t transmitter:4;
+} ZCBLE_opmode;
+
+typedef struct
+{
+    uint8_t status;
+    uint8_t type:4;
+    uint8_t calibrate:4;
+} ZCBLE_transmitter_imu;
+
+typedef struct
+{
+    uint8_t scope:4;
+    uint8_t transmitter:4;
+} ZCBLE_battery_level;
+
+typedef struct
+{
+    uint8_t ir:4;
+    uint8_t eo:4;
+} ZCBLE_modules_status;
+
+typedef struct
+{
+    uint8_t transmitter:4;
+    uint8_t reserved:4;
+} ZCBLE_modem;
+
+typedef struct
+{
+    ZCBLE_scope scope;
+    ZCBLE_wireless_channel w_c;
+    ZCBLE_opmode opmode;
+    ZCBLE_transmitter_imu tx_imu;
+    ZCBLE_battery_level battey;
+    ZCBLE_modules_status modules;
+    ZCBLE_modem modem;
+} ICD_parameters;
     
 typedef struct
 {
     uint16_t imu_values[NUM_TOTAL_IMU_VALUES];
-    uint8_t status_values[(NUM_HOST_STATUS > NUM_DEVICE_STATUS ? NUM_HOST_STATUS : NUM_DEVICE_STATUS) * MAX_DATA_LENGTH];
+    uint8_t status_values[ZCBLE_LENGTH_ZING_STATUS];
     //uint32_t status_values2[NUM_HOST_STATUS > NUM_DEVICE_STATUS ? NUM_HOST_STATUS : NUM_DEVICE_STATUS];
-    ZING_parameters zing_params;
+    ICD_parameters icd_params;
 } ZCBLE_frame;
 
 #if HBLE

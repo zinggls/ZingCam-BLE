@@ -15,7 +15,6 @@ ZCBLE_frame zcble_frame;
 static uint8_t** zing_device_status_values;
 #endif
 #if DBLE
-static char message[128];
 static uint8_t** zing_host_status_values;
 #endif
 
@@ -66,6 +65,9 @@ void ZCBLE_callback(uint32_t event, void* parameters)
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
         break;
+        case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
+            CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
+        break;
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
             memcpy(&advertisement_report, parameters, sizeof(CYBLE_GAPC_ADV_REPORT_T));
             
@@ -103,44 +105,11 @@ void ZCBLE_callback(uint32_t event, void* parameters)
                 }
             }
             
-            if (zcble_frame.zing_params.reset == 1)
-            {
-                UART_ZING_PutChar(0x4);
-                UART_ZING_PutChar('r');
-                UART_ZING_PutChar('s');
-                UART_ZING_PutChar('t');
-            }
+            AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
+            AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
+            AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
+            AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
             
-            if (zcble_frame.zing_params.auto_channel == 1)
-            {
-                ZING_change_channel(NULL, 1);
-            }
-            else
-            {
-                switch (zcble_frame.zing_params.set_channel)
-                {
-                    case 0x01:
-                        ZING_set_channel_high();
-                        break;
-                    case 0x02:
-                        ZING_set_channel_low();
-                        break;
-                }
-            }
-            
-            switch (zcble_frame.zing_params.calibrate_imu)
-            {
-                case 0x01:
-                    IMU_calibration_gyro();
-                    break;
-                case 0x02:
-                    IMU_calibration_accelero_free();
-                    break;
-                case 0x03:
-                    IMU_calibration_magneto_free();
-                    break;
-            }
-                        
         break;
 #endif
 #if DBLE
@@ -178,62 +147,23 @@ void ZCBLE_callback(uint32_t event, void* parameters)
                 {
                     zing_host_status_values[cnt][idx] = zcble_frame.status_values[cnt * MAX_DATA_LENGTH + idx];
                 }
+            
             }
             
-            if (zcble_frame.zing_params.zing_error == 1)
-            {
-                AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_MODEM_STATUS, 0xE3);
-            }
+            AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
+            AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
+            AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
+            AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
+            AIAS_ICD_set_battery_level(zcble_frame.icd_params.battey);
+            AIAS_ICD_set_modules_status(zcble_frame.icd_params.modules);
+            AIAS_ICD_set_modem_status(zcble_frame.icd_params.modem);
+            AIAS_ICD_set_transmitter_imu_data(IMU_EULER, zcble_frame.imu_values);
             
-            if (zcble_frame.zing_params.imu_error == 1)
-            {
-                AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_STATUS, 0xE5);
-            }
-            
-            if (zcble_frame.zing_params.imu_output == IMU_EULER)
-            {
-                AIAS_ICD_set_transmitter_imu_data(IMU_EULER, zcble_frame.imu_values);
-            }
-            else if (zcble_frame.zing_params.imu_output == IMU_QUATERNION)
-            {
-                AIAS_ICD_set_transmitter_imu_data(IMU_QUATERNION, zcble_frame.imu_values);
-            }
-            
-            P2_6_Write(!(P2_6_Read()));
             AIAS_ICD_update_host_status(zing_host_status_values);
             
-           
-            if (zcble_frame.zing_params.reset == 1)
-            {
-                UART_ZING_PutChar(0x4);
-                UART_ZING_PutChar('r');
-                UART_ZING_PutChar('s');
-                UART_ZING_PutChar('t');
-            }
+            P2_6_Write(!(P2_6_Read()));
+            //LED_USER_Write(!(LED_USER_Read()));  
             
-            if (zcble_frame.zing_params.set_channel == 1)
-            {
-//              UART_ZING_PutChar(0x4);
-//              UART_ZING_PutChar('r');
-//              UART_ZING_PutChar('s');
-//              UART_ZING_PutChar('t');
-            }
-            
-            /*
-            for (uint8_t i = 0; i < NUM_TOTAL_IMU_VALUES; i++)
-            {
-                sprintf(message, "%X, ", zcble_frame.imu_values[i]);
-                UART_DBG_UartPutString(message);
-            }
-            UART_DBG_UartPutString("\r\n");
-            
-            for (uint8_t i = 0; i < NUM_HOST_STATUS; i++)
-            {
-                sprintf(message, "%s, ", zing_host_status_values[i]);
-                UART_DBG_UartPutString(message);
-            }
-            UART_DBG_UartPutString("\r\n");
-            */
         break;
 #endif
     }
