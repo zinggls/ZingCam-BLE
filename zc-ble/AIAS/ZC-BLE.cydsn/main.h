@@ -14,5 +14,7 @@
 #else
 #define DBLE 0
 #endif
-    
+
+uint32_t ZCBLE_get_systick(void);
+
 #endif
