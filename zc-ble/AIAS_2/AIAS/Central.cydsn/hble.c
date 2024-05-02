@@ -85,6 +85,11 @@ static void HBLE_callback(unsigned long event, void* parameters)
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&ble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
             
+            if (ble_frame.type == -1)
+            {
+                break;
+            }
+            
             sprintf(msg, "USB:%d ", ble_frame.zing_frame.usb);
             UART_DBG_UartPutString(msg);
             sprintf(msg, "PPID:0x%X ", ble_frame.zing_frame.ppid);
@@ -130,7 +135,7 @@ AIAS_BLE_FRAME HBLE_set_frame(char* zing_status, char** status_values)
     
     memset(&ble_frame, 0, sizeof(AIAS_BLE_FRAME));
     
-    if (ZING_parse_zch_status(zing_status, status_values) == 0)
+    if (ZING_parse_zch_status(zing_status, status_values) != NUM_ZCH_STATUS)
     {
         ble_frame.type = -1;
     }

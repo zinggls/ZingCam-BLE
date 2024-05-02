@@ -39,13 +39,16 @@ int main(void)
     {
         CyBle_ProcessEvents();
         
-        ZING_get_status(zing_status);
-        ble_frame = DBLE_set_frame(zing_status, status_values);
-        
-        notification.attrHandle = 0x0001;
-        notification.value.val = (uint8_t*)&ble_frame;
-        notification.value.len = sizeof(AIAS_BLE_FRAME);
-        CyBle_GattsNotification(cyBle_connHandle, &notification);
+        memset(zing_status, 0, MAX_ZING_STATUS_LENGTH);
+        if (ZING_get_status(zing_status) == 1)
+        {
+            ble_frame = DBLE_set_frame(zing_status, status_values);
+            
+            notification.attrHandle = 0x0001;
+            notification.value.val = (uint8_t*)&ble_frame;
+            notification.value.len = sizeof(AIAS_BLE_FRAME);
+            CyBle_GattsNotification(cyBle_connHandle, &notification);
+        }
     }
 }
 

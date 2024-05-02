@@ -68,8 +68,17 @@ uint8_t ZING_get_status(char* zing_status)
     uint32_t tick;
     
     tick = AIAS_get_systick();
+
+    ch = UART_ZING_GetChar();
     
-    for (uint8_t i = 0; i < MAX_ZING_STATUS_LENGTH; i++)
+    if (ch != 'Z')
+    {
+        return 0;
+    }
+    
+    zing_status[0] = 'Z';
+    
+    for (uint8_t i = 1; i < MAX_ZING_STATUS_LENGTH; i++)
     {   
         ch = UART_ZING_GetChar();
         
@@ -84,11 +93,6 @@ uint8_t ZING_get_status(char* zing_status)
                 i =  i - 1;
                 continue;
             }
-        }
-        
-        if (ch == 'Z')
-        {
-            i = 0;
         }
         
         zing_status[i] = ch;
@@ -144,11 +148,11 @@ uint8_t ZING_parse_zch_status(char* zing_status, char** status_values)
         }
         else
         {
-            return 1;
+            return idx;
         }
     }
     
-    return 1;
+    return 0;
 }
 
 uint8_t ZING_parse_zcd_status(char* zing_status, char** status_values)
@@ -193,11 +197,11 @@ uint8_t ZING_parse_zcd_status(char* zing_status, char** status_values)
         }
         else
         {
-            return 1;
+            return idx;
         }
     }
     
-    return 1;
+    return 0;
 }
 
 uint32_t ZING_parse_status_values(char* status_values, uint8_t type)

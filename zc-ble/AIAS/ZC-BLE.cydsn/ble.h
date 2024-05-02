@@ -42,8 +42,8 @@ typedef struct
 
 typedef struct
 {
-    uint8_t scope:4;
-    uint8_t transmitter:4;
+    uint8_t scope;
+    uint8_t transmitter;
 } ZCBLE_battery_level;
 
 typedef struct
