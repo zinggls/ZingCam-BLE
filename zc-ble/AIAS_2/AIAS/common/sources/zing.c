@@ -65,7 +65,7 @@ uint8_t ZING_get_status(char* zing_status)
     char ch;
     uint32_t tick;
     
-    tick = ZCBLE_get_systick();
+    tick = AIAS_get_systick();
     
     for (uint8_t i = 0; i < MAX_ZING_STATUS_LENGTH; i++)
     {   
@@ -73,7 +73,7 @@ uint8_t ZING_get_status(char* zing_status)
         
         if (ch == 0 && i > 0)
         {
-            if (ZCBLE_get_systick() - tick > MAX_ZING_TIMEOUT_MS)
+            if (AIAS_get_systick() - tick > MAX_ZING_TIMEOUT_MS)
             {
                 return 0;
             }
@@ -109,7 +109,7 @@ uint8_t ZING_parse_zch_status(char* zing_status, char** status_values)
     char msg[128];
     uint32_t tick;
     
-    tick = ZCBLE_get_systick();
+    tick = AIAS_get_systick();
     elem = strtok_r(zing_status, " ", &next_elem);
     idx = 0;
     
@@ -120,7 +120,7 @@ uint8_t ZING_parse_zch_status(char* zing_status, char** status_values)
     
     while (elem != NULL)
     {
-        if (ZCBLE_get_systick() - tick > MAX_ZING_TIMEOUT_MS)
+        if (AIAS_get_systick() - tick > MAX_ZING_TIMEOUT_MS)
         {
             return 0;
         }
@@ -164,7 +164,7 @@ uint8_t ZING_parse_zcd_status(char* zing_status, char** status_values)
     char msg[128];
     uint32_t tick;
     
-    tick = ZCBLE_get_systick();
+    tick = AIAS_get_systick();
     elem = strtok_r(zing_status, " ", &next_elem);
     idx = 0;
     
@@ -175,7 +175,7 @@ uint8_t ZING_parse_zcd_status(char* zing_status, char** status_values)
     
     while (elem != NULL)
     {
-        if (ZCBLE_get_systick() - tick > MAX_ZING_TIMEOUT_MS)
+        if (AIAS_get_systick() - tick > MAX_ZING_TIMEOUT_MS)
         {
             return 0;
         }

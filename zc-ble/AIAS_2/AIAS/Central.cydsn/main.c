@@ -1,8 +1,8 @@
 #include "../common/headers/main.h"
 
-static uint32_t ZCBLE_systick;
+static uint32_t AIAS_systick;
 
-static void ZCBLE_systick_isr(void);
+static void AIAS_systick_isr(void);
 
 int main(void)
 {
@@ -21,13 +21,13 @@ int main(void)
     {
         status_values[i] = (char*)malloc(sizeof(char) * MAX_STATUS_VALUE_LENGTH);
     }
-    ZCBLE_systick = 0;
+    AIAS_systick = 0;
     
     for (uint8_t i = 0; i < CY_SYS_SYST_NUM_OF_CALLBACKS; ++i)
     {
         if (CySysTickGetCallback(i) == NULL)
         {
-            CySysTickSetCallback(i, ZCBLE_systick_isr);
+            CySysTickSetCallback(i, AIAS_systick_isr);
             break;
         }
     }
@@ -40,12 +40,12 @@ int main(void)
     }
 }
 
-static void ZCBLE_systick_isr(void)
+static void AIAS_systick_isr(void)
 {
-    ZCBLE_systick = ZCBLE_systick + 1;
+    AIAS_systick = AIAS_systick + 1;
 }
 
-int ZCBLE_get_systick(void)
+int AIAS_get_systick(void)
 {
-    return ZCBLE_systick;
+    return AIAS_systick;
 }
