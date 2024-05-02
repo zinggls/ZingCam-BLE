@@ -1,5 +1,5 @@
 #include "../headers/zing.h"
-#include "../headers/main.h"
+#include "main.h"
 
 static uint8_t ZCH_STATUS_type[] =
 {
@@ -33,6 +33,8 @@ static uint8_t ZCD_STATUS_type[] =
     // ASCII_ACK        = 3
     // ASCII_PPC        = 4
     // ASCII_RUN        = 5
+    // ASCII_ITF        = 6
+    // ASCII_MFIR       = 7
     0, // USB
     0, // PPID
     0, // DeviceID
@@ -48,12 +50,12 @@ static uint8_t ZCD_STATUS_type[] =
     0, // RXID
     0, // DestID_ERR_CNT
     0, // PHY_RX_FRAME_CNT
-    0, // MFIR
+    7, // MFIR
     0, // CNT
 };
 
-static uint8_t ZING_get_zch_status_type(uint8_t idx, char value);
-static uint8_t ZING_get_zcd_status_type(uint8_t idx, char value);
+static uint32_t ZING_get_zch_status_type(uint8_t idx, char* value);
+static uint32_t ZING_get_zcd_status_type(uint8_t idx, char* value);
 
 void ZING_init(void)
 {
@@ -131,19 +133,13 @@ uint8_t ZING_parse_zch_status(char* zing_status, char** status_values)
             char* value;
             
             elem = strtok_r(NULL, " ", &next_elem);
-            strcpy(status_values[idx], elem);
-            name = strtok_r(status_values[idx], ":", &value);
             
-            if (ZCH_STATUS_type[idx] == 0)
+            if (elem == NULL)
             {
-                num = strtol(value, NULL, 16);
+                return 0;
             }
-            else
-            {
-                num = ZING_get_zch_status_type(idx, value[0]);
-            }
-            sprintf(msg, "%s %X\r\n", name, num);
-            UART_DBG_UartPutString(msg);
+            
+            strcpy(status_values[idx], elem);
             idx = idx + 1;
         }
         else
@@ -186,18 +182,13 @@ uint8_t ZING_parse_zcd_status(char* zing_status, char** status_values)
             char* value;
             
             elem = strtok_r(NULL, " ", &next_elem);
+            
+            if (elem == NULL)
+            {
+                return 0;
+            }
+            
             strcpy(status_values[idx], elem);
-            name = strtok_r(status_values[idx], ":", &value);
-            if (ZCD_STATUS_type[idx] == 0)
-            {
-                num = strtol(value, NULL, 16);
-            }
-            else
-            {
-                num = ZING_get_zcd_status_type(idx, value[0]);
-            }
-            sprintf(msg, "%s %X\r\n", name, num);
-            UART_DBG_UartPutString(msg);
             idx = idx + 1;
         }
         else
@@ -209,15 +200,34 @@ uint8_t ZING_parse_zcd_status(char* zing_status, char** status_values)
     return 1;
 }
 
+uint32_t ZING_parse_status_values(char* status_values, uint8_t type)
+{
+    char* name;
+    char* value;
+    int ret;
+    
+    name = strtok_r(status_values, ":", &value);
+    
+    if (ZCD_STATUS_type[type] == 0)
+    {
+        ret = strtol(value, NULL, 16);
+    }
+    else
+    {
+        ret = ZING_get_zcd_status_type(type, value);
+    }
+    
+    return ret;
+}
 
-static uint8_t ZING_get_zch_status_type(uint8_t idx, char value)
+static uint32_t ZING_get_zch_status_type(uint8_t idx, char* value)
 {
     uint8_t num;
     
     switch (ZCH_STATUS_type[idx])
     {
         case 1:
-            if (value == 'L')
+            if (value[0] == 'L')
             {
                 num = 0;
             }
@@ -227,7 +237,7 @@ static uint8_t ZING_get_zch_status_type(uint8_t idx, char value)
             }
             break;
         case 2:
-            if (value == 'I')
+            if (value[0] == 'I')
             {
                 num = 0;
             }
@@ -237,7 +247,7 @@ static uint8_t ZING_get_zch_status_type(uint8_t idx, char value)
             }
             break;
         case 3:
-            if (value == 'N')
+            if (value[0] == 'N')
             {
                 num = 0;
             }
@@ -247,7 +257,7 @@ static uint8_t ZING_get_zch_status_type(uint8_t idx, char value)
             }
             break;
         case 4:
-            if (value == 'P')
+            if (value[0] == 'P')
             {
                 num = 0;
             }
@@ -257,7 +267,7 @@ static uint8_t ZING_get_zch_status_type(uint8_t idx, char value)
             }
             break;
         case 5:
-            if (value == 'N')
+            if (value[0] == 'N')
             {
                 num = 0;
             }
@@ -265,20 +275,25 @@ static uint8_t ZING_get_zch_status_type(uint8_t idx, char value)
             {
                 num = 1;
             }
+            break;
+        default:
+            num = 0;
             break;
     }
     
     return num;
 }
 
-static uint8_t ZING_get_zcd_status_type(uint8_t idx, char value)
+static uint32_t ZING_get_zcd_status_type(uint8_t idx, char* value)
 {
     uint8_t num;
+    
+    num = 0;
     
     switch (ZCD_STATUS_type[idx])
     {
         case 2:
-            if (value == 'I')
+            if (value[0] == 'I')
             {
                 num = 0;
             }
@@ -288,7 +303,7 @@ static uint8_t ZING_get_zcd_status_type(uint8_t idx, char value)
             }
             break;
         case 3:
-            if (value == 'N')
+            if (value[0] == 'N')
             {
                 num = 0;
             }
@@ -298,7 +313,7 @@ static uint8_t ZING_get_zcd_status_type(uint8_t idx, char value)
             }
             break;
         case 4:
-            if (value == 'P')
+            if (value[0] == 'P')
             {
                 num = 0;
             }
@@ -308,7 +323,7 @@ static uint8_t ZING_get_zcd_status_type(uint8_t idx, char value)
             }
             break;
         case 5:
-            if (value == 'N')
+            if (value[0] == 'N')
             {
                 num = 0;
             }
@@ -318,7 +333,7 @@ static uint8_t ZING_get_zcd_status_type(uint8_t idx, char value)
             }
             break;
         case 6:
-            if (value == 'N')
+            if (value[0] == 'N')
             {
                 num = 0;
             }
@@ -326,6 +341,19 @@ static uint8_t ZING_get_zcd_status_type(uint8_t idx, char value)
             {
                 num = 1;
             }
+            break;
+        case 7:
+            num = 0;
+            
+            char* mfir_h;
+            char* mfir_l;
+            
+            mfir_h = strtok_r(value, "/", &mfir_l);
+            num |= (strtol(mfir_h, NULL, 16)) << 16;
+            num |= strtol(mfir_l, NULL, 16);
+            break;
+        default:
+            num = 0;
             break;
     }
     

@@ -1,5 +1,5 @@
-#ifndef ZING_H
-#define ZING_H
+#ifndef AIAS_ZING_H
+#define AIAS_ZING_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,5 +56,6 @@ void ZING_init(void);
 uint8_t ZING_get_status(char* zing_status);
 uint8_t ZING_parse_zcd_status(char* zing_status, char** status_values);
 uint8_t ZING_parse_zch_status(char* zing_status, char** status_values);
+uint32_t ZING_parse_status_values(char* status_values, uint8_t type);
 
 #endif

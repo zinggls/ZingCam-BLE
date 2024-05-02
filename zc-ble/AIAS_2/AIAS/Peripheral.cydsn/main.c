@@ -1,4 +1,4 @@
-#include "../common/headers/main.h"
+#include "main.h"
 
 static uint32_t AIAS_systick;
 
@@ -11,8 +11,11 @@ int main(void)
     
     char* zing_status;
     char** status_values;
+    AIAS_BLE_FRAME ble_frame;
+    CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
          
     ZING_init();
+    DBLE_init();
     Debug_init();
     
     zing_status = (char*)malloc(sizeof(char) * MAX_ZING_STATUS_LENGTH);
@@ -34,10 +37,15 @@ int main(void)
         
     while (1)
     {
-        ZING_get_status(zing_status);
-        ZING_parse_zcd_status(zing_status, status_values);
+        CyBle_ProcessEvents();
         
-        UART_DBG_UartPutString("Hello World\n");
+        ZING_get_status(zing_status);
+        ble_frame = DBLE_set_frame(zing_status, status_values);
+        
+        notification.attrHandle = 0x0001;
+        notification.value.val = (uint8_t*)&ble_frame;
+        notification.value.len = sizeof(AIAS_BLE_FRAME);
+        CyBle_GattsNotification(cyBle_connHandle, &notification);
     }
 }
 
