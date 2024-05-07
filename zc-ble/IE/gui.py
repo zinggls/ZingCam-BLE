@@ -45,24 +45,34 @@ class I2C:
         return read_data
 
 class Player:
-    def Play(self):
+    playing = 0
+    
+    def play(self):
+        self.playing = 1
+
+    def stop(self):
+        self.playing = 0
+        self.run.kill()
+        
+    def Thread(self):
         while True:
-            command = [
-                "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
-                "ksvideosrc",
-                "device-index=0",
-                "!"
-                "image/jpeg,width=640,height=480,framerate=30/1",
-                "!"
-                "jpegdec",
-                "!",
-                "videoconvert",
-                "!",
-                "autovideosink",
-                "sync=false",
-                ]
-            run = subprocess.Popen(command)
-            run.wait()
+            if (self.playing == 1):                
+                command = [
+                    "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
+                    "ksvideosrc",
+                    "device-index=0",
+                    "!"
+                    "image/jpeg,width=640,height=480,framerate=30/1",
+                    "!"
+                    "jpegdec",
+                    "!",
+                    "videoconvert",
+                    "!",
+                    "autovideosink",
+                    "sync=false",
+                    ]
+                self.run = subprocess.Popen(command)
+                self.run.wait()
             time.sleep(1)
 
 class GUI:
@@ -130,13 +140,12 @@ class GUI:
         self.connect_frame_button.config(text = "Disconnect", command = self.connect_frame_disconnect)
         self.connect = True
         self.i2c_read(i2c_address)
-        
-        player = Player()
-        threading.Thread(target = player.Play, daemon = True).start()
+        player.play()        
     
     def connect_frame_disconnect(self):
         self.i2c.close_port()
         self.connect = False
+        player.stop()
         self.connect_frame_button.config(text = "Connect", command = self.connect_frame_connect)
 
     def create_log_frame(self, frame):
@@ -170,4 +179,6 @@ class GUI:
 
 i2c = I2C()
 gui = GUI(i2c = i2c)
+player = Player()
+threading.Thread(target = player.Thread, daemon = True).start()
 gui.run()
