@@ -12,7 +12,7 @@
 #endif
 
 #if DBLE
-#define NUM_READ_AIAS_ICD 40
+#define NUM_READ_AIAS_ICD 40 + 30 + 38
 #define NUM_WRITE_AIAS_ICD 11
 #endif
 
@@ -68,6 +68,10 @@ typedef enum {
     AIAS_ZING_DEVICE_STATUS_DEVID_L,
     AIAS_ZING_DEVICE_STATUS_FMT,
     AIAS_ZING_DEVICE_STATUS_IDX,
+    AIAS_ZING_DEVICE_STATUS_FPS_HH,
+    AIAS_ZING_DEVICE_STATUS_FPS_HL,
+    AIAS_ZING_DEVICE_STATUS_FPS_LH,
+    AIAS_ZING_DEVICE_STATUS_FPS_LL,
     AIAS_ZING_DEVICE_STATUS_TRT,
     AIAS_ZING_DEVICE_STATUS_ACK,
     AIAS_ZING_DEVICE_STATUS_PPC,
@@ -179,6 +183,10 @@ typedef enum {
     AIAS_ZING_DEVICE_STATUS_DEVID_L,
     AIAS_ZING_DEVICE_STATUS_FMT,
     AIAS_ZING_DEVICE_STATUS_IDX,
+    AIAS_ZING_DEVICE_STATUS_FPS_HH,
+    AIAS_ZING_DEVICE_STATUS_FPS_HL,
+    AIAS_ZING_DEVICE_STATUS_FPS_LH,
+    AIAS_ZING_DEVICE_STATUS_FPS_LL,
     AIAS_ZING_DEVICE_STATUS_TRT,
     AIAS_ZING_DEVICE_STATUS_ACK,
     AIAS_ZING_DEVICE_STATUS_PPC,
@@ -271,6 +279,7 @@ void AIAS_ICD_set_device_status_ppid(uint8_t** device_status);
 void AIAS_ICD_set_device_status_devid(uint8_t** device_status);
 void AIAS_ICD_set_device_status_fmt(uint8_t** device_status);
 void AIAS_ICD_set_device_status_idx(uint8_t** device_status);
+void AIAS_ICD_set_device_status_fps(uint8_t** host_status);
 void AIAS_ICD_set_device_status_trt(uint8_t** device_status);
 void AIAS_ICD_set_device_status_ack(uint8_t** device_status);
 void AIAS_ICD_set_device_status_ppc(uint8_t** device_status);

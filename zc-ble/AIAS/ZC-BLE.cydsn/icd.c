@@ -73,6 +73,7 @@ static uint8_t AIAS_ICD_MAP[] =
     0x00,                   // USB
     0x00, 0x00,             // PPID
     0x00, 0x00,             // DEVID
+    0x00, 0x00, 0x00, 0x00, // FPS
     0x00,                   // FMT
     0x00,                   // IDX
     0x00,                   // TRT
@@ -724,6 +725,7 @@ void AIAS_ICD_update_device_status(uint8_t** device_status)
     AIAS_ICD_set_device_status_usb(device_status);
     AIAS_ICD_set_device_status_ppid(device_status);
     AIAS_ICD_set_device_status_devid(device_status);
+    AIAS_ICD_set_device_status_fps(device_status);
     AIAS_ICD_set_device_status_fmt(device_status);
     AIAS_ICD_set_device_status_idx(device_status);
     AIAS_ICD_set_device_status_trt(device_status);
@@ -771,6 +773,25 @@ void AIAS_ICD_set_device_status_devid(uint8_t** device_status)
     DEVID_L = (devid & 0x00FF);
     AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DEVID_H] = DEVID_H;
     AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_DEVID_L] = DEVID_L;
+}
+
+void AIAS_ICD_set_device_status_fps(uint8_t** device_status)
+{
+    uint32_t fps;
+    uint8_t FPS_HH;
+    uint8_t FPS_HL;
+    uint8_t FPS_LH;
+    uint8_t FPS_LL;
+    
+    fps = ZING_get_device_status_fps(device_status);
+    FPS_HH = (fps & 0xFF000000) >> 24;
+    FPS_HL = (fps & 0x00FF0000) >> 16;
+    FPS_LH = (fps & 0x0000FF00) >> 8;
+    FPS_LL = (fps & 0x000000FF);
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_FPS_HH] = FPS_HH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_FPS_HL] = FPS_HL;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_FPS_LH] = FPS_LH;
+    AIAS_ICD_MAP[AIAS_ZING_DEVICE_STATUS_FPS_LL] = FPS_LL;
 }
 
 void AIAS_ICD_set_device_status_fmt(uint8_t** device_status)

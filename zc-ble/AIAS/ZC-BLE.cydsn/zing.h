@@ -6,8 +6,8 @@
 
 #include "project.h"
 
-#define ASCII_HOST 'H'
-#define ASCII_DEVICE 'D'
+#define ASCII_HOST 'Z'
+#define ASCII_DEVICE 'Z'
 #define ASCII_LF '\n'
 #define MAX_BUFFER_LENGTH 256
 #define MAX_VALUE_LENGTH 32
@@ -37,6 +37,7 @@ typedef enum {
     DEVICE_STATUS_DEVID,
     DEVICE_STATUS_FMT,
     DEVICE_STATUS_IDX,
+    DEVICE_STATUS_FPS,
     DEVICE_STATUS_TRT,
     DEVICE_STATUS_ACK,
     DEVICE_STATUS_PPC,
@@ -98,6 +99,7 @@ uint16_t ZING_get_device_status_ppid(uint8_t** device_status);
 uint16_t ZING_get_device_status_devid(uint8_t** device_status);
 uint8_t ZING_get_device_status_fmt(uint8_t** device_status);
 uint8_t ZING_get_device_status_idx(uint8_t** device_status);
+uint32_t ZING_get_device_status_fps(uint8_t** device_status);
 char ZING_get_device_status_trt(uint8_t** device_status);
 char ZING_get_device_status_ack(uint8_t** device_status);
 char ZING_get_device_status_ppc(uint8_t** device_status);

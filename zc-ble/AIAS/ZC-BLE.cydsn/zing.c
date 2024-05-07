@@ -417,6 +417,13 @@ uint8_t ZING_get_device_status_idx(uint8_t** device_status)
     return idx;
 }
 
+uint32_t ZING_get_device_status_fps(uint8_t** device_status)
+{
+    uint32_t fps = strtol((char*)device_status[DEVICE_STATUS_FPS], NULL, 16);
+    
+    return fps;
+}
+
 char ZING_get_device_status_trt(uint8_t** device_status)
 {
     char trt = *device_status[DEVICE_STATUS_TRT];

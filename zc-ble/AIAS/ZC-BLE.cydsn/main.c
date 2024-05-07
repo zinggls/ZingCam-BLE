@@ -42,10 +42,12 @@ int main(void)
     zing_device_status_values = ZING_device_init();
 #endif
 
-/*
+    /*
     UART_IMU_UartPutString("<sor0>");
     CyDelay(1000);
     UART_IMU_UartPutString("<sof1>");
+    CyDelay(1000);
+    UART_IMU_UartPutString("<soc2>");
     CyDelay(1000);
     UART_IMU_UartPutString("<sog0>");
     CyDelay(1000);
@@ -57,7 +59,7 @@ int main(void)
     CyDelay(1000);
     UART_IMU_UartPutString("<sots1>");
     CyDelay(1000);
-*/
+    */
 
     P2_6_Write(1);
     RF_LNA_0_Write(1);
@@ -82,6 +84,7 @@ int main(void)
 
     while (1)
     {
+        
 #if HBLE
         AI2C_read(0x3C, AIAS_ICD_get_map(), NUM_READ_AIAS_ICD);
         AI2C_write(0x3C, AIAS_ICD_get_map(), NUM_WRITE_AIAS_ICD);
