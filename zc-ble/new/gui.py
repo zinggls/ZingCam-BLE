@@ -3,6 +3,8 @@ import tkinter.ttk
 import win32com.client
 import array
 import time
+import subprocess
+import threading
 
 class I2C:
     READ = 0x38
@@ -37,10 +39,31 @@ class I2C:
         return address
     
     def read_use_addr(self, device_addr, addr, len):
-        result = self.dev.I2C_ReadData(device_addr, 40)
+        result = self.dev.I2C_ReadData(device_addr, 40 + 30 + 38)
         read_data = result[1]
 
         return read_data
+
+class Player:
+    def Play(self):
+        while True:
+            command = [
+                "D:/gstreamer/1.0/msvc_x86_64/bin/gst-launch-1.0",
+                "ksvideosrc",
+                "device-index=0",
+                "!"
+                "image/jpeg,width=640,height=480,framerate=30/1",
+                "!"
+                "jpegdec",
+                "!",
+                "videoconvert",
+                "!",
+                "autovideosink",
+                "sync=false",
+                ]
+            run = subprocess.Popen(command)
+            run.wait()
+            time.sleep(1)
 
 class GUI:
     icd = [
@@ -59,8 +82,9 @@ class GUI:
         "RXID_HH", "RXID_HL", "RXID_LH", "RXID_LL", "CNT_H",
         "CNT_L",
         "USB", "PPID_H", "PPID_L", "DevID H", "DevID L",
-        "Format", "Index", "TRT", "ACK", "PPC",
-        "RUN", "ITF",
+        "Format", "Index",
+        "FPS_HH", "FPS_HL", "FPS_LH", "FPS_LL",
+        "TRT", "ACK", "PPC", "RUN", "ITF",
         "TXID_HH", "TXID_HL", "TXID_LH", "TXID_LL",
         "RXID_HH", "RXID_HL", "RXID_LH", "RXID_LL",
         "DST_ID_ERR_CNT_HH", "DST_ID_ERR_CNT_HL", "DST_ID_ERR_CNT_LH", "DST_ID_ERR_CNT_LL",
@@ -106,6 +130,9 @@ class GUI:
         self.connect_frame_button.config(text = "Disconnect", command = self.connect_frame_disconnect)
         self.connect = True
         self.i2c_read(i2c_address)
+        
+        player = Player()
+        threading.Thread(target = player.Play, daemon = True).start()
     
     def connect_frame_disconnect(self):
         self.i2c.close_port()
@@ -116,7 +143,7 @@ class GUI:
         idx = 0
         self.i2c_values = [tkinter.StringVar() for value in range(len(self.icd))]
         for log in self.icd:
-            if ((idx % 5) == 0):
+            if ((idx % 8) == 0):
                 label_line = tkinter.Frame(frame)
                 label_line.pack()
                 value_line = tkinter.Frame(frame)
