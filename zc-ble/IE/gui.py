@@ -175,7 +175,15 @@ class GUI:
             self.root.after(100, self.i2c_read, device_addr)
 
     def run(self):
+        self.root.protocol("WM_DELETE_WINDOW", self.exit)
         self.root.mainloop()
+
+    def exit(self):
+        self.i2c.close_port()
+        self.connect = False
+        player.stop()
+        self.root.destroy()
+        
 
 i2c = I2C()
 gui = GUI(i2c = i2c)
