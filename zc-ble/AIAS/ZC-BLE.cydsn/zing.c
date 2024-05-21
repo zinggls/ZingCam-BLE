@@ -10,6 +10,7 @@ static uint32_t ZING_parse_systick;
 static uint16_t cnt_tmp = 0;
 static uint16_t uart_loop = 0;
 static uint8_t current_channel = 0;
+static uint8_t ZED = 0;
 
 static char zing_status[MAX_BUFFER_LENGTH];
 
@@ -93,6 +94,15 @@ uint8_t ZING_parse_host_status(uint8_t** status_values)
     if (status == NULL)
     {
         return 0;
+    }
+    
+    if (strcmp(status, "ZED") == 0)
+    {
+        ZED = 1;
+    }
+    else
+    {
+        ZED = 0;
     }
     
     while ((status = strtok_r(NULL, " :", &next_ptr)) != NULL)
@@ -227,6 +237,11 @@ void ZING_change_channel(uint8_t** host_status, uint8_t val)
     }
 }
 
+uint8_t ZING_get_ZED(void)
+{
+    return ZED;
+}
+
 void ZING_set_channel_high(void)
 {
     uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
@@ -257,17 +272,24 @@ uint8_t ZING_get_mode(void)
     {
         case 0:
             mode = 2;
-        break;
+            break;
         case 1:
             mode = 1;
-        break;
+            break;
     }
     return mode;
 }
 
 uint8_t ZING_get_info(void)
 {
-    return current_channel;
+    if (state == 1)
+    {
+        return current_channel;
+    }
+    else
+    {
+        return 2;
+    }
 }
 
 void ZING_reset(void)
@@ -275,6 +297,31 @@ void ZING_reset(void)
     uint8_t arr[4] = { 0x4, 'r', 's', 't' };
     
     UART_ZING_PutArray(arr, 4);
+}
+
+void ZING_get_status(uint8_t** host_status, uint8_t type, uint8_t index, uint8_t* arg)
+{
+    uint32_t value;
+    
+    switch (type)
+    {
+        case 0: // ASCII
+            value = *host_status[index];
+            memcpy(arg, &value, sizeof(char));
+            break;
+        case 1: // HEX, 8-bits
+            value = atoi((char*)host_status[index]);
+            memcpy(arg, &value, sizeof(char));
+            break;
+        case 2: // HEX, 16-bits
+            value = strtol((char*)host_status[index], NULL, 16);
+            memcpy(arg, &value, sizeof(uint16_t));
+            break;
+        case 3: // HEX, 16-bits
+            value = strtol((char*)host_status[index], NULL, 16);
+            memcpy(arg, &value, sizeof(uint32_t));
+            break;
+    }
 }
 
 uint8_t ZING_get_host_status_usb(uint8_t** host_status)

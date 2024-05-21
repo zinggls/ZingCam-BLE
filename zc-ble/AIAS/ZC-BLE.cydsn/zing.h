@@ -13,6 +13,25 @@
 #define MAX_VALUE_LENGTH 32
     
 typedef enum { 
+    ZED_STATUS_USB,
+    //ZED_STATUS_VND,
+    //ZED_STATUS_PRD,
+    ZED_STATUS_BND,
+    ZED_STATUS_PPID,
+    ZED_STATUS_DEVID,
+    //ZED_STATUS_FMT,
+    //ZED_STATUS_IDX,
+    ZED_STATUS_TRT,
+    ZED_STATUS_ACK,
+    ZED_STATUS_PPC,
+    ZED_STATUS_TXID,
+    ZED_STATUS_RXID,
+    ZED_STATUS_RUN,
+    ZED_STATUS_CNT,
+    NUM_ZED_STATUS,
+} ZED_STATUS_NAME;
+    
+typedef enum { 
     HOST_STATUS_USB,
     HOST_STATUS_VND,
     HOST_STATUS_PRD,
@@ -73,12 +92,14 @@ uint8_t ZING_get_device_status(char* data);
 uint8_t ZING_parse_host_status(uint8_t** status_values);
 uint8_t ZING_parse_device_status(uint8_t** status_values);
 void ZING_change_channel(uint8_t** host_status, uint8_t val);
+uint8_t ZING_get_ZED(void);
 void ZING_set_channel_high(void);
 void ZING_set_channel_low(void);
 uint8_t ZING_get_mode(void);
 uint8_t ZING_get_info(void);
 void ZING_reset(void);
 
+void ZING_get_status(uint8_t** host_status, uint8_t type, uint8_t index, uint8_t* arg);
 uint8_t ZING_get_host_status_usb(uint8_t** host_status);
 uint16_t ZING_get_host_status_vnd(uint8_t** host_status);
 uint16_t ZING_get_host_status_prd(uint8_t** host_status);
