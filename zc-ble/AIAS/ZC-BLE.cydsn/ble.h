@@ -68,12 +68,35 @@ typedef struct
     ZCBLE_modules_status modules;
     ZCBLE_modem modem;
 } ICD_parameters;
-    
+
+typedef struct
+{
+    uint8_t usb;
+    uint16_t vendor_id;
+    uint16_t product_id;
+    uint8_t channel;
+    uint16_t ppid;
+    uint16_t device_id;
+    uint8_t format;
+    uint8_t index;
+    uint32_t fps;
+    uint8_t trt;
+    uint8_t ack;
+    uint8_t ppc;
+    uint8_t run;
+    uint8_t itf;
+    uint32_t txid;
+    uint32_t rxid;
+    uint32_t destid_err_cnt;
+    uint32_t phy_rx_frame_cnt;
+    uint32_t mfir;
+    uint32_t cnt;
+} ZING_status;
+
 typedef struct
 {
     uint16_t imu_values[NUM_TOTAL_IMU_VALUES];
-    uint8_t status_values[ZCBLE_LENGTH_ZING_STATUS];
-    //uint32_t status_values2[NUM_HOST_STATUS > NUM_DEVICE_STATUS ? NUM_HOST_STATUS : NUM_DEVICE_STATUS];
+    ZING_status status;
     ICD_parameters icd_params;
 } ZCBLE_frame;
 
@@ -84,5 +107,9 @@ uint8_t** ZCBLE_get_zing_device_status_values(void);
 uint8_t** ZCBLE_get_zing_host_status_values(void);
 #endif
 void ZCBLE_init(void);
+
+ZING_status ZING_zed_set_status(uint8_t** status_values);
+ZING_status ZING_zch_set_status(uint8_t** status_values);
+ZING_status ZING_zcd_set_status(uint8_t** status_values);
 
 #endif

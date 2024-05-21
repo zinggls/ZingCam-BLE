@@ -3,6 +3,7 @@
 #include "ble.h"
 #include "main.h"
 #include "icd.h"
+#include "zing.h"
 
 #if HBLE
 static const uint8_t peripheral_address[CYBLE_GAP_BD_ADDR_SIZE] = { 0x01, 0x00, 0x00, 0x50, 0xA0, 0x00 };
@@ -97,19 +98,15 @@ void ZCBLE_callback(uint32_t event, void* parameters)
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
-            for (uint8_t cnt = 0; cnt < NUM_DEVICE_STATUS; cnt++)
-            {
-                for (uint8_t idx = 0; idx < MAX_DATA_LENGTH; idx++)
-                {
-                    zing_device_status_values[cnt][idx] = zcble_frame.status_values[cnt * MAX_DATA_LENGTH + idx];
-                }
-            }
             
             AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
             AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
             AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
             AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
             
+            //AIAS_ICD_update_device_status(zcble_frame.status, NULL);
+            
+            P2_6_Write(!(P2_6_Read()));
         break;
 #endif
 #if DBLE
@@ -141,15 +138,6 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
             
-            for (uint8_t cnt = 0; cnt < NUM_HOST_STATUS; cnt++)
-            {
-                for (uint8_t idx = 0; idx < MAX_DATA_LENGTH; idx++)
-                {
-                    zing_host_status_values[cnt][idx] = zcble_frame.status_values[cnt * MAX_DATA_LENGTH + idx];
-                }
-            
-            }
-            
             AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
             AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
             AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
@@ -159,7 +147,7 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             AIAS_ICD_set_modem_status(zcble_frame.icd_params.modem);
             AIAS_ICD_set_transmitter_imu_data(IMU_EULER, zcble_frame.imu_values);
             
-            AIAS_ICD_update_host_status(zing_host_status_values);
+            AIAS_ICD_update_host_status(zcble_frame.status, NULL);
             
             P2_6_Write(!(P2_6_Read()));
             //LED_USER_Write(!(LED_USER_Read()));  
@@ -167,4 +155,74 @@ void ZCBLE_callback(uint32_t event, void* parameters)
         break;
 #endif
     }
+}
+
+ZING_status ZING_zed_set_status(uint8_t** status_values)
+{
+    ZING_status status;
+    
+    ZING_get_status(status_values, 1, ZED_STATUS_USB, &status.usb);
+    status.vendor_id = 0;
+    status.product_id = 0;
+    ZING_get_status(status_values, 0, ZED_STATUS_BND, &status.channel);
+    ZING_get_status(status_values, 2, ZED_STATUS_PPID, (uint8_t*)&status.ppid);
+    ZING_get_status(status_values, 2, ZED_STATUS_DEVID, (uint8_t*)&status.device_id);
+    status.format = 0;
+    status.index = 0;
+    ZING_get_status(status_values, 0, ZED_STATUS_TRT, &status.trt);
+    ZING_get_status(status_values, 0, ZED_STATUS_ACK, &status.ack);
+    ZING_get_status(status_values, 0, ZED_STATUS_PPC, &status.ppc);
+    ZING_get_status(status_values, 3, ZED_STATUS_TXID, (uint8_t*)&status.txid);
+    ZING_get_status(status_values, 3, ZED_STATUS_RXID, (uint8_t*)&status.rxid);
+    ZING_get_status(status_values, 0, ZED_STATUS_RUN, (uint8_t*)&status.run);
+    ZING_get_status(status_values, 3, ZED_STATUS_CNT, (uint8_t*)&status.cnt);
+    
+    return status;
+}
+
+ZING_status ZING_zch_set_status(uint8_t** status_values)
+{
+    ZING_status status;
+    
+    status.usb = ZING_get_host_status_usb(status_values);
+    status.vendor_id = ZING_get_host_status_vnd(status_values);
+    status.product_id = ZING_get_host_status_prd(status_values);
+    status.channel = ZING_get_host_status_bnd(status_values);
+    status.ppid = ZING_get_host_status_ppid(status_values);
+    status.device_id = ZING_get_host_status_devid(status_values);
+    status.format = ZING_get_host_status_fmt(status_values);
+    status.index = ZING_get_host_status_idx(status_values);
+    status.trt = ZING_get_host_status_trt(status_values);
+    status.ack = ZING_get_host_status_ack(status_values);
+    status.ppc = ZING_get_host_status_ppc(status_values);
+    status.txid = ZING_get_host_status_txid(status_values);
+    status.rxid = ZING_get_host_status_rxid(status_values);
+    status.run = ZING_get_host_status_run(status_values);
+    status.cnt = ZING_get_host_status_cnt(status_values);
+    
+    return status;
+}
+
+ZING_status ZING_zcd_set_status(uint8_t** status_values)
+{
+    ZING_status status;
+    
+    status.usb = ZING_get_device_status_usb(status_values);
+    status.ppid = ZING_get_device_status_ppid(status_values);
+    status.device_id = ZING_get_device_status_devid(status_values);
+    status.format = ZING_get_device_status_fmt(status_values);
+    status.index = ZING_get_device_status_idx(status_values);
+    status.fps = ZING_get_device_status_fps(status_values);
+    status.trt = ZING_get_device_status_trt(status_values);
+    status.ack = ZING_get_device_status_ack(status_values);
+    status.ppc = ZING_get_device_status_ppc(status_values);
+    status.run = ZING_get_device_status_run(status_values);
+    status.txid = ZING_get_device_status_txid(status_values);
+    status.rxid = ZING_get_device_status_rxid(status_values);
+    status.destid_err_cnt = ZING_get_device_status_dst_id_err_cnt(status_values).cnt;
+    status.phy_rx_frame_cnt = ZING_get_device_status_phy_rx_frame_cnt(status_values).cnt;
+    status.mfir = (ZING_get_device_status_mfir(status_values).dst_id_err_diff << 16) | ZING_get_device_status_mfir(status_values).phy_rx_frame_diff;
+    status.cnt = ZING_get_device_status_cnt(status_values);
+    
+    return status;
 }
