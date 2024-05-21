@@ -702,6 +702,7 @@ class IE:
         self.create_connect_frame()
         self.create_main_frame()
 
+        self.window.title("IE")
         self.window.mainloop()
 
     def create_connect_frame(self):
