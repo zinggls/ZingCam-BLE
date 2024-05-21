@@ -49,14 +49,6 @@ int main(void)
     CyDelay(1000);
     UART_IMU_UartPutString("<soc2>");
     CyDelay(1000);
-    UART_IMU_UartPutString("<sog0>");
-    CyDelay(1000);
-    UART_IMU_UartPutString("<soa0>");
-    CyDelay(1000);
-    UART_IMU_UartPutString("<som0>");
-    CyDelay(1000);
-    UART_IMU_UartPutString("<sot0>");
-    CyDelay(1000);
     UART_IMU_UartPutString("<sots1>");
     CyDelay(1000);
     */
@@ -64,6 +56,8 @@ int main(void)
     P2_6_Write(1);
     RF_LNA_0_Write(1);
     RF_LNA_1_Write(1);
+    
+    RF_PA_0_Write(1);
     
     LED_USER_Write(1);
 
@@ -92,9 +86,10 @@ int main(void)
 #if DBLE
         AIAS_ICD_read();
         AIAS_ICD_write();
+        
 #endif
         CyBle_ProcessEvents();
-        
+                
         if (cyBle_state == CYBLE_STATE_CONNECTED)
         {
             if (CyBle_GattGetBusStatus() == CYBLE_STACK_STATE_FREE)
@@ -110,14 +105,6 @@ int main(void)
                     zcble_frame.icd_params.modem.transmitter = 0x00;
                 }
                 
-                for (uint8_t cnt = 0; cnt < ZCBLE_NUM_ZING_STATUS; cnt++)
-                {
-                    for (uint8_t idx = 0; idx < MAX_DATA_LENGTH; idx++)
-                    {
-                        zcble_frame.status_values[cnt * MAX_DATA_LENGTH + idx] = zing_host_status_values[cnt][idx];
-                    }
-                }
-                
                 if (IMU_get(imu_values) != 1)
                 {
                     zcble_frame.icd_params.tx_imu.status = 0x05;
@@ -125,6 +112,15 @@ int main(void)
                 else
                 {
                     zcble_frame.icd_params.tx_imu.status = 0x00;
+                }
+                
+                if (ZING_get_ZED() == 1)
+                {
+                    zcble_frame.status = ZING_zed_set_status(zing_host_status_values);
+                }
+                else
+                {
+                    zcble_frame.status = ZING_zch_set_status(zing_host_status_values);
                 }
                 
                 zcble_frame.icd_params.battey.transmitter = AADC_get_battery_level(AADC_measure(0));
@@ -137,11 +133,10 @@ int main(void)
                 notification.value.len = sizeof(ZCBLE_frame);
                 CyBle_GattsNotification(cyBle_connHandle, &notification);
                 
-                LED_USER_Write(!(LED_USER_Read()));  
 #endif
 #if DBLE
                 AIAS_ICD_set(AIAS_BLE_STATUS, 0x02);
-            
+                
                 if (ZING_parse_device_status(zing_device_status_values) != 1)
                 {
                     AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_MODEM_STATUS, 0xE4);
@@ -151,13 +146,7 @@ int main(void)
                     AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_MODEM_STATUS, 0x00);   
                 }
                 
-                for (uint8_t cnt = 0; cnt < ZCBLE_NUM_ZING_STATUS; cnt++)
-                {
-                    for (uint8_t idx = 0; idx < MAX_DATA_LENGTH; idx++)
-                    {
-                        zcble_frame.status_values[cnt * MAX_DATA_LENGTH + idx] = zing_device_status_values[cnt][idx];
-                    }
-                }
+                zcble_frame.status = ZING_zcd_set_status(zing_device_status_values);
                 
                 if (IMU_get(imu_values) != 1)
                 {
@@ -165,11 +154,12 @@ int main(void)
                 }
                 else
                 {
-                    memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
                     AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_STATUS, 0x00);
                 }
                 
-                AIAS_ICD_update_device_status(zing_device_status_values);
+                AIAS_ICD_update_device_status(zcble_frame.status, zing_device_status_values);
+                
+                memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
                 AIAS_ICD_set_zcble_frame(&zcble_frame);
                 
                 notification.attrHandle = 0x0001;
