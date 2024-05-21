@@ -111,6 +111,10 @@ void IMU_init(void)
 {
     UART_IMU_Start();
     UART_IMU_SetCustomInterruptHandler(UART_IMU_RX_INTERRUPT);
+    
+#if DBLE
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_CALIBRATE, 0);
+#endif
 }
 
 uint8_t IMU_get(uint16_t* values)
@@ -128,7 +132,7 @@ uint8_t IMU_get(uint16_t* values)
     {   
         if (imu_status[NUM_IMU_DATA_BYTES] == 0) // checksum failed
         {
-            return 1; // this is not imu's problem
+            return 0; // this is not imu's problem
         }
         
         for (uint8_t i = 2; i < NUM_IMU_DATA_BYTES; i = i + 2)
