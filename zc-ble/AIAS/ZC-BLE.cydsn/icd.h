@@ -12,7 +12,7 @@
 #endif
 
 #if DBLE
-#define NUM_READ_AIAS_ICD 40 + 30 + 38
+#define NUM_READ_AIAS_ICD 40 + 26 + 42
 #define NUM_WRITE_AIAS_ICD 11
 #endif
 
@@ -257,39 +257,39 @@ void AIAS_ICD_set_transmitter_imu_data4(uint16_t data4);
 void AIAS_ICD_set_transmitter_imu_data5(uint16_t data5);
 #endif
 
-void AIAS_ICD_update_host_status(uint8_t** host_status);
-void AIAS_ICD_set_host_status_usb(uint8_t** host_status);
-void AIAS_ICD_set_host_status_vnd(uint8_t** host_status);
-void AIAS_ICD_set_host_status_prd(uint8_t** host_status);
-void AIAS_ICD_set_host_status_bnd(uint8_t** host_status);
-void AIAS_ICD_set_host_status_ppid(uint8_t** host_status);
-void AIAS_ICD_set_host_status_devid(uint8_t** host_status);
-void AIAS_ICD_set_host_status_fmt(uint8_t** host_status);
-void AIAS_ICD_set_host_status_idx(uint8_t** host_status);
-void AIAS_ICD_set_host_status_trt(uint8_t** host_status);
-void AIAS_ICD_set_host_status_ack(uint8_t** host_status);
-void AIAS_ICD_set_host_status_ppc(uint8_t** host_status);
-void AIAS_ICD_set_host_status_txid(uint8_t** host_status);
-void AIAS_ICD_set_host_status_rxid(uint8_t** host_status);
-void AIAS_ICD_set_host_status_run(uint8_t** host_status);
-void AIAS_ICD_set_host_status_cnt(uint8_t** host_status);
-void AIAS_ICD_update_device_status(uint8_t** host_status);
-void AIAS_ICD_set_device_status_usb(uint8_t** device_status);
-void AIAS_ICD_set_device_status_ppid(uint8_t** device_status);
-void AIAS_ICD_set_device_status_devid(uint8_t** device_status);
-void AIAS_ICD_set_device_status_fmt(uint8_t** device_status);
-void AIAS_ICD_set_device_status_idx(uint8_t** device_status);
-void AIAS_ICD_set_device_status_fps(uint8_t** host_status);
-void AIAS_ICD_set_device_status_trt(uint8_t** device_status);
-void AIAS_ICD_set_device_status_ack(uint8_t** device_status);
-void AIAS_ICD_set_device_status_ppc(uint8_t** device_status);
-void AIAS_ICD_set_device_status_run(uint8_t** device_status);
-void AIAS_ICD_set_device_status_itf(uint8_t** device_status);
-void AIAS_ICD_set_device_status_txid(uint8_t** device_status);
-void AIAS_ICD_set_device_status_rxid(uint8_t** device_status);
-void AIAS_ICD_set_device_status_dst_id_err_cnt(uint8_t** device_status);
-void AIAS_ICD_set_device_status_phy_rx_frame_cnt(uint8_t** device_status);
-void AIAS_ICD_set_device_status_mfir(uint8_t** device_status);
-void AIAS_ICD_set_device_status_cnt(uint8_t** device_status);
+void AIAS_ICD_update_host_status(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_usb(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_vnd(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_prd(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_bnd(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_ppid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_devid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_fmt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_idx(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_trt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_ack(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_ppc(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_txid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_rxid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_run(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_cnt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_update_device_status(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_usb(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_ppid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_devid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_fmt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_idx(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_fps(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_trt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_ack(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_ppc(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_run(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_itf(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_txid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_rxid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_dst_id_err_cnt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_phy_rx_frame_cnt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_mfir(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_cnt(ZING_status status, uint8_t** ptr);
 
 #endif
