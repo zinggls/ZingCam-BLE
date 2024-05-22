@@ -176,8 +176,10 @@ void AIAS_ICD_set_scope(ZCBLE_scope scope)
         break;
     }
 #endif
+#if DBLE
     AIAS_ICD_set(SCOPE_CAMERA, scope.camera);
     AIAS_ICD_set(SCOPE_OUTPUT, scope.output);
+#endif
 }
 
 void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c)
@@ -243,8 +245,8 @@ void AIAS_ICD_set_opmode(ZCBLE_opmode opmode)
         break;
     }
 #endif
-    AIAS_ICD_set(SCOPE_OPERATION_MODE, opmode.scope);
 #if DBLE
+    AIAS_ICD_set(SCOPE_OPERATION_MODE, opmode.scope);
     if (opmode.transmitter != 0)
     {
         AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_OPERATION_MODE_STATUS, opmode.transmitter);
