@@ -113,6 +113,11 @@ int main(void)
                 {
                     zcble_frame.icd_params.tx_imu.status = 0x00;
                 }
+                 
+                zcble_frame.icd_params.battey.transmitter = AADC_get_battery_level(AADC_measure(0));
+                
+                memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
+                AIAS_ICD_set_zcble_frame(&zcble_frame);
                 
                 if (ZING_get_ZED() == 1)
                 {
@@ -121,13 +126,9 @@ int main(void)
                 else
                 {
                     zcble_frame.status = ZING_zch_set_status(zing_host_status_values);
+                    zcble_frame.icd_params.scope.camera = 0x04;
                 }
-                
-                zcble_frame.icd_params.battey.transmitter = AADC_get_battery_level(AADC_measure(0));
-                
-                memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
-                AIAS_ICD_set_zcble_frame(&zcble_frame);
-                
+               
                 notification.attrHandle = 0x0001;
                 notification.value.val = (uint8_t*)&zcble_frame;
                 notification.value.len = sizeof(ZCBLE_frame);
@@ -136,6 +137,7 @@ int main(void)
 #endif
 #if DBLE
                 AIAS_ICD_set(AIAS_BLE_STATUS, 0x02);
+                AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_OPERATION_MODE_STATUS, 1);
                 
                 if (ZING_parse_device_status(zing_device_status_values) != 1)
                 {
