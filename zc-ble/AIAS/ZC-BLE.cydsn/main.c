@@ -106,13 +106,18 @@ int main(void)
                 
                 if (SW_CH_Read() == 0)
                 {
-                    if (ZING_get_info() == 2)
+                    if (ZCBLE_systick - sw_ch_timestamp_ms > 1000)
                     {
-                        ZING_set_channel_low();
-                    }
-                    else
-                    {
-                        ZING_set_channel_high();
+                        if (ZING_get_info() == 2)
+                        {
+                            ZING_set_channel_low();
+                        }
+                        else
+                        {
+                            ZING_set_channel_high();
+                        }
+                        
+                        sw_ch_timestamp_ms = ZCBLE_systick;
                     }
                 }
                 
