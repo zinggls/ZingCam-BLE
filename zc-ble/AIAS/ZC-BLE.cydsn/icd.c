@@ -204,11 +204,11 @@ void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c)
     {
         case 1:
             // Auto mode
-            ZING_change_channel(NULL, 1);
+            //ZING_change_channel(NULL, 1);
         break;
         case 2:
             // Manual mode
-            ZING_change_channel(NULL, 0);
+            //ZING_change_channel(NULL, 0);
         break;
     }
     
@@ -216,11 +216,11 @@ void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c)
     {
         case 1:
             // Set channel 1
-            ZING_set_channel_low();
+            //ZING_set_channel_low();
         break;
         case 2:
             // Set channel 2
-            ZING_set_channel_high();
+            //ZING_set_channel_high();
         break;
     }
 #endif
