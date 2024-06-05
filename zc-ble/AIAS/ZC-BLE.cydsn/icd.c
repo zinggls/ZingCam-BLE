@@ -124,7 +124,6 @@ void AIAS_ICD_set_block(uint8_t addr, uint8_t* buffer, uint8_t len)
     }
 }
 
-#if DBLE
 void AIAS_ICD_read(void)
 {
     AI2C_set_read_buffer(AIAS_ICD_MAP, NUM_READ_AIAS_ICD);
@@ -137,21 +136,37 @@ void AIAS_ICD_write(void)
     {
         AI2C_set_write_buffer(AIAS_ICD_MAP, NUM_WRITE_AIAS_ICD);
         
+#if DBLE
         switch (AIAS_ICD_get(WIRELESS_VIDEO_RECEIVER_IMU_CALIBRATE))
         {
             case 0x01:
                 IMU_calibration_gyro();
                 IMU_calibration_accelero_simple();
                 IMU_calibration_magneto_free();
-            break;
+                break;
             case 0x02:
                 UART_IMU_UartPutChar('>');
-            break;
-        }    
-    }
-    
-}
+                break;
+        }
+
+        switch (AIAS_ICD_get(WIRELESS_VIDEO_CHANNEL_MODE))
+        {
+            case 0x01:
+                break;
+            case 0x02:
+                break;
+        }
+        
+        switch (AIAS_ICD_get(WIRELESS_VIDEO_CHANNEL_INFORMATION))
+        {
+            case 0x01:
+                break;
+            case 0x02:
+                break;
+        }
 #endif
+    }
+}
 
 void AIAS_ICD_set_scope(ZCBLE_scope scope)
 {

@@ -106,7 +106,7 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             
             //AIAS_ICD_update_device_status(zcble_frame.status, NULL);
             
-            P2_6_Write(!(P2_6_Read()));
+            //P2_6_Write(!(P2_6_Read()));
         break;
 #endif
 #if DBLE

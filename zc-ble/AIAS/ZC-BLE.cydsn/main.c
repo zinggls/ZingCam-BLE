@@ -22,6 +22,7 @@ int main(void)
     //uint8_t i2c_data[AIAS_ICD_DATA_STRUCT_LENGTH];
 #if HBLE
     uint8_t** zing_host_status_values;
+    uint16_t sw_ch_timestamp_ms;
 #endif
 #if DBLE
     uint8_t** zing_device_status_values;
@@ -35,8 +36,8 @@ int main(void)
     
 #if HBLE
     AADC_init();
-    
     zing_host_status_values = ZING_host_init();
+    sw_ch_timestamp_ms = 0;
 #endif
 #if DBLE    
     zing_device_status_values = ZING_device_init();
@@ -53,16 +54,8 @@ int main(void)
     CyDelay(1000);
     */
 
-    P2_6_Write(1);
-    RF_LNA_0_Write(1);
-    RF_LNA_1_Write(1);
-    
-    RF_PA_0_Write(1);
-    
-    LED_USER_Write(1);
-
     CySysTickStart();
-
+    
     for (uint8_t i = 0; i < CY_SYS_SYST_NUM_OF_CALLBACKS; ++i)
     {
         if (CySysTickGetCallback(i) == NULL)
@@ -78,16 +71,9 @@ int main(void)
 
     while (1)
     {
-        
-#if HBLE
-        AI2C_read(0x3C, AIAS_ICD_get_map(), NUM_READ_AIAS_ICD);
-        AI2C_write(0x3C, AIAS_ICD_get_map(), NUM_WRITE_AIAS_ICD);
-#endif
-#if DBLE
         AIAS_ICD_read();
         AIAS_ICD_write();
         
-#endif
         CyBle_ProcessEvents();
                 
         if (cyBle_state == CYBLE_STATE_CONNECTED)
@@ -113,7 +99,7 @@ int main(void)
                 {
                     zcble_frame.icd_params.tx_imu.status = 0x00;
                 }
-                 
+                
                 zcble_frame.icd_params.battey.transmitter = AADC_get_battery_level(AADC_measure(0));
                 
                 memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
