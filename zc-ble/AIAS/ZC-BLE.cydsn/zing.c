@@ -246,22 +246,16 @@ void ZING_set_channel_high(void)
 {
     uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
     
-    if (current_channel != 0)
-    {
-        current_channel = 0;
-        UART_ZING_PutArray(arr, 4);
-    }
+    current_channel = 2;
+    UART_ZING_PutArray(arr, 4);
 }
 
 void ZING_set_channel_low(void)
 {
     uint8_t arr[4] = { 0x4, 'b', 0x1, 0x0 };
     
-    if (current_channel != 1)
-    {
-        current_channel = 1;
-        UART_ZING_PutArray(arr, 4);
-    }
+    current_channel = 1;
+    UART_ZING_PutArray(arr, 4);
 }
 
 uint8_t ZING_get_mode(void)
@@ -282,14 +276,7 @@ uint8_t ZING_get_mode(void)
 
 uint8_t ZING_get_info(void)
 {
-    if (state == 1)
-    {
-        return current_channel;
-    }
-    else
-    {
-        return 2;
-    }
+    return current_channel;
 }
 
 void ZING_reset(void)
