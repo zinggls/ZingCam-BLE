@@ -14,6 +14,22 @@ static uint32_t ZCBLE_systick = 0;
 
 static void ZCBLE_systick_isr(void);
 
+CY_ISR(SW_CH_IRQ_Handler)
+{
+    if (ZING_get_info() == 2)
+    {
+        ZING_set_channel_low();
+        zcble_frame.icd_params.w_c.info = ZING_get_info();
+    }
+    else
+    {
+        ZING_set_channel_high();
+        zcble_frame.icd_params.w_c.info = ZING_get_info();
+    }
+    
+    SW_CH_ClearInterrupt();
+}
+
 int main(void)
 {
     CyGlobalIntEnable;
@@ -22,7 +38,6 @@ int main(void)
     //uint8_t i2c_data[AIAS_ICD_DATA_STRUCT_LENGTH];
 #if HBLE
     uint8_t** zing_host_status_values;
-    uint16_t sw_ch_timestamp_ms;
 #endif
 #if DBLE
     uint8_t** zing_device_status_values;
@@ -37,7 +52,9 @@ int main(void)
 #if HBLE
     AADC_init();
     zing_host_status_values = ZING_host_init();
-    sw_ch_timestamp_ms = 0;
+    
+    SW_CH_IRQ_StartEx(SW_CH_IRQ_Handler);
+    
 #endif
 #if DBLE    
     zing_device_status_values = ZING_device_init();
@@ -102,23 +119,6 @@ int main(void)
                 else
                 {
                     zcble_frame.icd_params.tx_imu.status = 0x00;
-                }
-                
-                if (SW_CH_Read() == 0)
-                {
-                    if (ZCBLE_systick - sw_ch_timestamp_ms > 1000)
-                    {
-                        if (ZING_get_info() == 2)
-                        {
-                            ZING_set_channel_low();
-                        }
-                        else
-                        {
-                            ZING_set_channel_high();
-                        }
-                        
-                        sw_ch_timestamp_ms = ZCBLE_systick;
-                    }
                 }
                 
                 if (SW_LED_Read() == 1)
