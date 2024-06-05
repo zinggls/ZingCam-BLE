@@ -99,10 +99,10 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
             
-            AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
-            AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
-            AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
-            AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
+            //AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
+            //AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
+            //AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
+            //AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
             
             //AIAS_ICD_update_device_status(zcble_frame.status, NULL);
             
@@ -149,7 +149,6 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             
             AIAS_ICD_update_host_status(zcble_frame.status, NULL);
             
-            P2_6_Write(!(P2_6_Read()));
             //LED_USER_Write(!(LED_USER_Read()));  
             
         break;
