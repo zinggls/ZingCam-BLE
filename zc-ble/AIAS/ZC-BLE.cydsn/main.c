@@ -71,6 +71,10 @@ int main(void)
 
     while (1)
     {
+        if (SW_PW_Read() == 0)
+        {
+        }
+
         AIAS_ICD_read();
         AIAS_ICD_write();
         
@@ -98,6 +102,38 @@ int main(void)
                 else
                 {
                     zcble_frame.icd_params.tx_imu.status = 0x00;
+                }
+                
+                if (SW_CH_Read() == 0)
+                {
+                    if (ZING_get_info() == 2)
+                    {
+                        ZING_set_channel_low();
+                    }
+                    else
+                    {
+                        ZING_set_channel_high();
+                    }
+                }
+                
+                if (SW_LED_Read() == 1)
+                {
+                    if (ZING_get_info() == 2)
+                    {
+                        LED_USER0_Write(1);
+                    }
+                    else
+                    {
+                        LED_USER1_Write(1);
+                    }
+                    
+                    LED_USER2_Write(1);
+                }
+                else
+                {
+                    LED_USER0_Write(0);
+                    LED_USER1_Write(0);
+                    LED_USER2_Write(0);
                 }
                 
                 zcble_frame.icd_params.battey.transmitter = AADC_get_battery_level(AADC_measure(0));
