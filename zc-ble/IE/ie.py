@@ -1,6 +1,7 @@
 import win32com.client
 import tkinter
 import tkinter.ttk
+import array
 import em2890
 import subprocess
 import zingcam
@@ -36,6 +37,10 @@ class I2C:
         result = self.dev.I2C_ReadData(device_addr, 40 + 26 + 42)
         read_data = result[1]
         return read_data
+    
+    def send_use_addr(self, device_addr, dataIN):
+        data = array.array('B', dataIN)
+        self.dev.I2C_SendData(device_addr, memoryview(data))
     
 class ICD:
     def __init__(self):
@@ -742,6 +747,15 @@ class IE:
             self.debug.debug.destroy()
             self.i2c.close_port()
 
+    def ch1_button(self):
+        data = [0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def ch2_button(self):
+        data = [0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+
     def create_main_frame(self):
         self.main_frame = tkinter.Frame(self.window)
         label_frame = tkinter.LabelFrame(self.main_frame, text = "Open GUI")
@@ -750,6 +764,10 @@ class IE:
         gui_button.pack(padx = 5, pady = 5)
         cam_button = tkinter.Button(label_frame, text = "Open Camera Output", width = 20, command = self.create_camera_output)
         cam_button.pack(padx = 5, pady = 5)
+        ch1_button = tkinter.Button(label_frame, text = "Set CH1", width = 20, command = self.ch1_button)
+        ch1_button.pack(padx = 5, pady = 5)
+        ch2_button = tkinter.Button(label_frame, text = "Set CH2", width = 20, command = self.ch2_button)
+        ch2_button.pack(padx = 5, pady = 5)
 
         label_frame.pack(fill = tkinter.BOTH)
 
