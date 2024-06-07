@@ -148,20 +148,30 @@ void AIAS_ICD_write(void)
                 UART_IMU_UartPutChar('>');
                 break;
         }
-
+        
         switch (AIAS_ICD_get(WIRELESS_VIDEO_CHANNEL_MODE))
         {
             case 0x01:
+                ZING_set_mode(ZING_MODE_AUTO);
                 break;
             case 0x02:
+                ZING_set_mode(ZING_MODE_MANUAL);
+                break;
+            default:
+                ZING_set_mode(ZING_MODE_MANUAL);
                 break;
         }
         
         switch (AIAS_ICD_get(WIRELESS_VIDEO_CHANNEL_INFORMATION))
         {
             case 0x01:
+                ZING_set_channel_low();
                 break;
             case 0x02:
+                ZING_set_channel_high();
+                break;
+            default:
+                ZING_set_channel_low();
                 break;
         }
 #endif
@@ -175,20 +185,20 @@ void AIAS_ICD_set_scope(ZCBLE_scope scope)
     {
         case 1:
             // Turn EO
-        break;
+            break;
         case 2:
             // Turn IR
-        break;
+            break;
     }
     
     switch (scope.output)
     {
         case 0:
             // Output
-        break;
+            break;
         case 1:
             // No output
-        break;
+            break;
     }
 #endif
 #if DBLE
@@ -197,36 +207,48 @@ void AIAS_ICD_set_scope(ZCBLE_scope scope)
 #endif
 }
 
-void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c)
+void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c, uint8_t itf)
 {
 #if HBLE
     switch (w_c.mode)
     {
-        case 1:
+        case ZING_MODE_AUTO:
             // Auto mode
-            //ZING_change_channel(NULL, 1);
-        break;
-        case 2:
-            // Manual mode
-            //ZING_change_channel(NULL, 0);
-        break;
+            if (itf == 'Y')
+            {
+                ZING_auto_channel();
+            }
+            break;
+        case ZING_MODE_MANUAL:
+            // Manual mode            
+            break;
     }
     
     switch (w_c.info)
     {
-        case 1:
+        case 0x01:
             // Set channel 1
-            //ZING_set_channel_low();
-        break;
-        case 2:
+            ZING_set_channel_low();
+            break;
+        case 0x02:
             // Set channel 2
-            //ZING_set_channel_high();
-        break;
+            ZING_set_channel_high();
+            break;
     }
 #endif
 #if DBLE
     AIAS_ICD_set(WIRELESS_VIDEO_CHANNEL_MODE, w_c.mode);
     AIAS_ICD_set(WIRELESS_VIDEO_CHANNEL_INFORMATION, w_c.info);
+    
+    switch (w_c.info)
+    {
+        case 1:
+            ZING_set_channel_low();
+            break;
+        case 2:
+            ZING_set_channel_high();
+            break;
+    }
 #endif
 }
 
@@ -237,27 +259,27 @@ void AIAS_ICD_set_opmode(ZCBLE_opmode opmode)
     {
         case 1:
             // Operate mode
-        break;
+            break;
         case 2:
             // Standby mode
-        break;
+            break;
         case 4:
             // Power save mode
-        break;
+            break;
     }
     
     switch (opmode.transmitter)
     {
         case 1:
             // Operate mode
-        break;
+            break;
         case 2:
             // Standby mode
             // ZING is not used
-        break;
+            break;
         case 4:
             // Power save mode
-        break;
+            break;
     }
 #endif
 #if DBLE
@@ -334,8 +356,8 @@ void AIAS_ICD_set_zcble_frame(ZCBLE_frame* zcble_frame)
 #if DBLE
     zcble_frame->icd_params.scope.camera = AIAS_ICD_MAP[SCOPE_CAMERA];
     zcble_frame->icd_params.scope.output = AIAS_ICD_MAP[SCOPE_OUTPUT];
-    zcble_frame->icd_params.w_c.mode = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_MODE];
-    zcble_frame->icd_params.w_c.info = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_INFORMATION];
+    //zcble_frame->icd_params.w_c.mode = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_MODE];
+    //zcble_frame->icd_params.w_c.info = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_INFORMATION];
     zcble_frame->icd_params.opmode.scope = AIAS_ICD_MAP[SCOPE_OPERATION_MODE];
     zcble_frame->icd_params.tx_imu.type = AIAS_ICD_MAP[WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE];
     zcble_frame->icd_params.tx_imu.calibrate = AIAS_ICD_MAP[WIRELESS_VIDEO_TRANSMITTER_IMU_CALIBRATE];
