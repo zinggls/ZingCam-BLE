@@ -71,6 +71,20 @@ typedef enum {
     NUM_DEVICE_STATUS
 } ZING_DEVICE_STATUS_NAME;
 
+typedef enum
+{
+    ZING_MODE_UNKNOWN,
+    ZING_MODE_AUTO,
+    ZING_MODE_MANUAL,
+} ZING_MODE;
+
+typedef enum
+{
+    ZING_INFO_DEFAULT,
+    ZING_INFO_CH1,
+    ZING_INFO_CH2,
+} ZING_INFO;
+
 typedef struct
 {
     uint32_t cnt;
@@ -91,11 +105,12 @@ uint8_t ZING_get_host_status(char* data);
 uint8_t ZING_get_device_status(char* data);
 uint8_t ZING_parse_host_status(uint8_t** status_values);
 uint8_t ZING_parse_device_status(uint8_t** status_values);
-void ZING_change_channel(uint8_t** host_status, uint8_t val);
+void ZING_auto_channel(void);
 uint8_t ZING_get_ZED(void);
 void ZING_set_channel_high(void);
 void ZING_set_channel_low(void);
 uint8_t ZING_get_mode(void);
+void ZING_set_mode(uint8_t mode);
 uint8_t ZING_get_info(void);
 void ZING_reset(void);
 

@@ -6,10 +6,12 @@
 #define NUM_ZING_CNT 10
 
 static uint8_t state = 0;
+static uint8_t zing_mode = ZING_MODE_MANUAL;
+static uint32_t ble_tick = 0;
 static uint32_t ZING_parse_systick;
 static uint16_t cnt_tmp = 0;
 static uint16_t uart_loop = 0;
-static uint8_t current_channel = 0;
+static uint8_t current_channel = ZING_INFO_CH1;
 static uint8_t ZED = 0;
 
 static char zing_status[MAX_BUFFER_LENGTH];
@@ -205,35 +207,27 @@ uint8_t ZING_parse_device_status(uint8_t** status_values)
     return 1;
 }
 
-void ZING_change_channel(uint8_t** host_status, uint8_t val)
+void ZING_auto_channel(void)
 {
     uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
     
-    if (host_status == NULL)
-    {
-        // val = 0: state no change
-        // val = 1: state need change
-        state = val;
-    }
-    else
-    {
-        if (state == 1)
+    if (ZCBLE_get_systick() - ble_tick > 1000)
+    {   
+        switch (ZING_get_info())
         {
-            if (strcmp((char*)host_status[HOST_STATUS_BND], "L") == 0)
-            {   
-                arr[2] = 0x1;
-                current_channel = 1;
+            case ZING_INFO_CH1:
+                arr[2] = 0x01;
+                ZING_set_channel_high();
                 UART_ZING_PutArray(arr, 4);
-            }
-            else if (strcmp((char*)host_status[HOST_STATUS_BND], "H") == 0)
-            {
-                arr[2] = 0x0;
-                current_channel = 0;
+                break;
+            case ZING_INFO_CH2:
+                arr[2] = 0x00;
+                ZING_set_channel_low();
                 UART_ZING_PutArray(arr, 4);
-            }
-            
-            state = 0;
+                break;
         }
+        
+        ble_tick = ZCBLE_get_systick();
     }
 }
 
@@ -244,34 +238,40 @@ uint8_t ZING_get_ZED(void)
 
 void ZING_set_channel_high(void)
 {
+#if HBLE
     uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
     
-    current_channel = 2;
     UART_ZING_PutArray(arr, 4);
+    current_channel = ZING_INFO_CH2;
+#endif
+#if DBLE
+    RF_SPDT_Write(1);
+    current_channel = ZING_INFO_CH2;
+#endif
 }
 
 void ZING_set_channel_low(void)
 {
+#if HBLE
     uint8_t arr[4] = { 0x4, 'b', 0x1, 0x0 };
     
-    current_channel = 1;
     UART_ZING_PutArray(arr, 4);
+    current_channel = ZING_INFO_CH1;
+#endif
+#if DBLE
+    RF_SPDT_Write(0);
+    current_channel = ZING_INFO_CH1;
+#endif
 }
 
 uint8_t ZING_get_mode(void)
 {
-    uint8_t mode;
-    
-    switch (state)
-    {
-        case 0:
-            mode = 2;
-            break;
-        case 1:
-            mode = 1;
-            break;
-    }
-    return mode;
+    return zing_mode;
+}
+
+void ZING_set_mode(uint8_t value)
+{
+    zing_mode = value;
 }
 
 uint8_t ZING_get_info(void)
