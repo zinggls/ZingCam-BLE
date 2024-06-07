@@ -229,7 +229,7 @@ void AIAS_ICD_set(uint8_t addr, uint8_t value);
 void AIAS_ICD_set_block(uint8_t addr, uint8_t* buffer, uint8_t len);
 
 void AIAS_ICD_read(void);
-void AIAS_ICD_write(void);
+uint8_t AIAS_ICD_write(void);
 
 void AIAS_ICD_set_scope(ZCBLE_scope scope);
 #if HBLE

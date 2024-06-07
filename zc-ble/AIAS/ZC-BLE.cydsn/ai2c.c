@@ -21,20 +21,20 @@ uint8_t AI2C_write(void)
     
     if (((status = I2C_I2CSlaveStatus()) & I2C_I2C_SSTAT_WR_CMPLT) != 0)
     {    
-        I2C_I2CSlaveClearWriteBuf();
-        I2C_I2CSlaveClearWriteStatus();
-        
         if (I2C_I2CSlaveGetWriteBufSize() == I2C_WR_BUFFER_SIZE)
         {
-            return 1;   
+            status = 1;
+        }
+        else
+        {
+            status = 0;
         }
         
+        I2C_I2CSlaveClearWriteBuf();
+        I2C_I2CSlaveClearWriteStatus();
     }
-    else
-    {
-        return status;
-    }
-    return 0;
+    
+    return status;
 }
 
 uint8_t AI2C_read(void)
@@ -43,21 +43,20 @@ uint8_t AI2C_read(void)
     
     if (((status = I2C_I2CSlaveStatus()) & I2C_I2C_SSTAT_RD_CMPLT) != 0)
     {
-        I2C_I2CSlaveClearReadBuf();
-        I2C_I2CSlaveClearReadStatus();
-        
         if (I2C_I2CSlaveGetReadBufSize() == I2C_RD_BUFFER_SIZE)
         {
-            return 0;    
+            status = 1;   
+        }
+        else
+        {
+            status = 0;
         }
         
-    }
-    else
-    {
-        return status;
+        I2C_I2CSlaveClearReadBuf();
+        I2C_I2CSlaveClearReadStatus();
     }
     
-    return 0;
+    return status;
 }
 
 void AI2C_set_read_buffer(uint8_t* buffer, uint8_t len)

@@ -11,12 +11,13 @@
 
 extern ZCBLE_frame zcble_frame;
 static uint32_t ZCBLE_systick = 0;
-static uint32_t ch_tick = 0;
+static uint8_t sw_ch_intr = 0;
 
 static void ZCBLE_systick_isr(void);
 
 CY_ISR(SW_CH_IRQ_Handler)
-{    
+{
+    /*
     if (ZING_get_info() == ZING_INFO_CH2)
     {
         ZING_set_channel_low();
@@ -25,7 +26,7 @@ CY_ISR(SW_CH_IRQ_Handler)
     {
         ZING_set_channel_high();
     }
-    
+    */
     SW_CH_ClearInterrupt();
 }
 
@@ -33,6 +34,7 @@ int main(void)
 {
     CyGlobalIntEnable;
     
+    uint8_t write;
     uint16_t imu_values[NUM_TOTAL_IMU_VALUES];
     //uint8_t i2c_data[AIAS_ICD_DATA_STRUCT_LENGTH];
 #if HBLE
@@ -94,7 +96,7 @@ int main(void)
         }
 #endif
         AIAS_ICD_read();
-        AIAS_ICD_write();
+        write = AIAS_ICD_write();
         
         CyBle_ProcessEvents();
                 

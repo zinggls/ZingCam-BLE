@@ -130,9 +130,13 @@ void AIAS_ICD_read(void)
     AI2C_read();
 }
 
-void AIAS_ICD_write(void)
+uint8_t AIAS_ICD_write(void)
 {
-    if (AI2C_write() == 1)
+    uint8_t ret;
+    
+    ret = 0;
+    
+    if ((ret = AI2C_write()) == 1)
     {
         AI2C_set_write_buffer(AIAS_ICD_MAP, NUM_WRITE_AIAS_ICD);
         
@@ -176,6 +180,7 @@ void AIAS_ICD_write(void)
         }
 #endif
     }
+    return ret;
 }
 
 void AIAS_ICD_set_scope(ZCBLE_scope scope)
@@ -349,8 +354,8 @@ void AIAS_ICD_set_zcble_frame(ZCBLE_frame* zcble_frame)
 #if HBLE
     zcble_frame->icd_params.scope.camera = AIAS_ICD_MAP[SCOPE_CAMERA];
     zcble_frame->icd_params.scope.output = AIAS_ICD_MAP[SCOPE_OUTPUT];
-    zcble_frame->icd_params.w_c.mode = ZING_get_mode();
-    zcble_frame->icd_params.w_c.info = ZING_get_info();
+    //zcble_frame->icd_params.w_c.mode = ZING_get_mode();
+    //zcble_frame->icd_params.w_c.info = ZING_get_info();
     zcble_frame->icd_params.opmode.scope = AIAS_ICD_MAP[SCOPE_OPERATION_MODE];
     zcble_frame->icd_params.opmode.transmitter = 0x1;
     zcble_frame->icd_params.tx_imu.type = IMU_get_type();
@@ -359,8 +364,8 @@ void AIAS_ICD_set_zcble_frame(ZCBLE_frame* zcble_frame)
 #if DBLE
     zcble_frame->icd_params.scope.camera = AIAS_ICD_MAP[SCOPE_CAMERA];
     zcble_frame->icd_params.scope.output = AIAS_ICD_MAP[SCOPE_OUTPUT];
-    //zcble_frame->icd_params.w_c.mode = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_MODE];
-    //zcble_frame->icd_params.w_c.info = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_INFORMATION];
+    zcble_frame->icd_params.w_c.mode = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_MODE];
+    zcble_frame->icd_params.w_c.info = AIAS_ICD_MAP[WIRELESS_VIDEO_CHANNEL_INFORMATION];
     zcble_frame->icd_params.opmode.scope = AIAS_ICD_MAP[SCOPE_OPERATION_MODE];
     zcble_frame->icd_params.tx_imu.type = AIAS_ICD_MAP[WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE];
     zcble_frame->icd_params.tx_imu.calibrate = AIAS_ICD_MAP[WIRELESS_VIDEO_TRANSMITTER_IMU_CALIBRATE];
