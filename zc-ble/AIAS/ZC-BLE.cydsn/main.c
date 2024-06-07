@@ -11,20 +11,19 @@
 
 extern ZCBLE_frame zcble_frame;
 static uint32_t ZCBLE_systick = 0;
+static uint32_t ch_tick = 0;
 
 static void ZCBLE_systick_isr(void);
 
 CY_ISR(SW_CH_IRQ_Handler)
-{
+{    
     if (ZING_get_info() == ZING_INFO_CH2)
     {
         ZING_set_channel_low();
-        zcble_frame.icd_params.w_c.info = ZING_get_info();
     }
     else
     {
         ZING_set_channel_high();
-        zcble_frame.icd_params.w_c.info = ZING_get_info();
     }
     
     SW_CH_ClearInterrupt();
@@ -72,6 +71,7 @@ int main(void)
     */
 
     CySysTickStart();
+    LED_USER2_Write(0);
     
     for (uint8_t i = 0; i < CY_SYS_SYST_NUM_OF_CALLBACKS; ++i)
     {
@@ -124,7 +124,7 @@ int main(void)
                 
                 if (SW_LED_Read() == 1)
                 {
-                    if (ZING_get_info() == 2)
+                    if (ZING_get_info() == ZING_INFO_CH1)
                     {
                         LED_USER0_Write(1);
                     }
@@ -186,26 +186,7 @@ int main(void)
                 {
                     AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_STATUS, 0x00);
                 }
-                
-                if (ZING_get_mode() == ZING_MODE_AUTO)
-                {
-                    zcble_frame.icd_params.w_c.mode = 0x01;
-                    zcble_frame.icd_params.w_c.info = 0x00;
-                }
-                else
-                {
-                    if (ZING_get_info() == ZING_INFO_CH1)
-                    {
-                        zcble_frame.icd_params.w_c.mode = 0x02;
-                        zcble_frame.icd_params.w_c.info = 0x01;
-                    }
-                    else if (ZING_get_info() == ZING_INFO_CH2)
-                    {
-                        zcble_frame.icd_params.w_c.mode = 0x02;
-                        zcble_frame.icd_params.w_c.info = 0x02;
-                    }
-                }
-                
+                                
                 AIAS_ICD_update_device_status(zcble_frame.status, zing_device_status_values);
                 
                 memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
