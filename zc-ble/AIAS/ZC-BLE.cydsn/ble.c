@@ -100,7 +100,7 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
             
             //AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
-            //AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
+            AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c, zcble_frame.status.itf);
             //AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
             //AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
             
