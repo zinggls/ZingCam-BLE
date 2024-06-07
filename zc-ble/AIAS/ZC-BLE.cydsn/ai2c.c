@@ -12,6 +12,7 @@ void AI2C_init(void)
 {
     I2C_I2CSlaveInitReadBuf(i2c_slave_rd_buffer, I2C_RD_BUFFER_SIZE);
     I2C_I2CSlaveInitWriteBuf(i2c_slave_wr_buffer, I2C_WR_BUFFER_SIZE);
+    I2C_Start();
 }
 
 uint8_t AI2C_write(void)
