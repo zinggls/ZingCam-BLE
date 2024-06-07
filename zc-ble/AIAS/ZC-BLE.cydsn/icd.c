@@ -207,14 +207,14 @@ void AIAS_ICD_set_scope(ZCBLE_scope scope)
 #endif
 }
 
+#if HBLE
 void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c, uint8_t itf)
 {
-#if HBLE
     switch (w_c.mode)
     {
         case ZING_MODE_AUTO:
             // Auto mode
-            if (itf == 'Y')
+            //if (itf == 'Y')
             {
                 ZING_auto_channel();
             }
@@ -226,31 +226,34 @@ void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c, uint8_t itf)
     
     switch (w_c.info)
     {
-        case 0x01:
+        case ZING_INFO_CH1:
             // Set channel 1
             ZING_set_channel_low();
             break;
-        case 0x02:
+        case ZING_INFO_CH2:
             // Set channel 2
             ZING_set_channel_high();
             break;
     }
+}
 #endif
 #if DBLE
-    AIAS_ICD_set(WIRELESS_VIDEO_CHANNEL_MODE, w_c.mode);
-    AIAS_ICD_set(WIRELESS_VIDEO_CHANNEL_INFORMATION, w_c.info);
-    
+void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c)
+{
     switch (w_c.info)
     {
-        case 1:
+        case ZING_INFO_CH1:
             ZING_set_channel_low();
             break;
-        case 2:
+        case ZING_INFO_CH2:
             ZING_set_channel_high();
             break;
     }
-#endif
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_CHANNEL_MODE, w_c.mode);
+    AIAS_ICD_set(WIRELESS_VIDEO_CHANNEL_INFORMATION, w_c.info);
 }
+#endif
 
 void AIAS_ICD_set_opmode(ZCBLE_opmode opmode)
 {

@@ -232,7 +232,12 @@ void AIAS_ICD_read(void);
 void AIAS_ICD_write(void);
 
 void AIAS_ICD_set_scope(ZCBLE_scope scope);
+#if HBLE
 void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c, uint8_t itf);
+#endif
+#if DBLE
+void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c);
+#endif
 void AIAS_ICD_set_opmode(ZCBLE_opmode opmode);
 void AIAS_ICD_set_transitter_imu(ZCBLE_transmitter_imu imu);
 void AIAS_ICD_set_zcble_frame(ZCBLE_frame* zcble_frame);
