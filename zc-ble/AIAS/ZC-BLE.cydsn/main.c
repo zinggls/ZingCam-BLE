@@ -16,7 +16,7 @@ static void ZCBLE_systick_isr(void);
 
 CY_ISR(SW_CH_IRQ_Handler)
 {
-    if (ZING_get_info() == 2)
+    if (ZING_get_info() == ZING_INFO_CH2)
     {
         ZING_set_channel_low();
         zcble_frame.icd_params.w_c.info = ZING_get_info();
@@ -88,10 +88,11 @@ int main(void)
 
     while (1)
     {
+#if HBLE
         if (SW_PW_Read() == 0)
         {
         }
-
+#endif
         AIAS_ICD_read();
         AIAS_ICD_write();
         
@@ -184,6 +185,25 @@ int main(void)
                 else
                 {
                     AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_STATUS, 0x00);
+                }
+                
+                if (ZING_get_mode() == ZING_MODE_AUTO)
+                {
+                    zcble_frame.icd_params.w_c.mode = 0x01;
+                    zcble_frame.icd_params.w_c.info = 0x00;
+                }
+                else
+                {
+                    if (ZING_get_info() == ZING_INFO_CH1)
+                    {
+                        zcble_frame.icd_params.w_c.mode = 0x02;
+                        zcble_frame.icd_params.w_c.info = 0x01;
+                    }
+                    else if (ZING_get_info() == ZING_INFO_CH2)
+                    {
+                        zcble_frame.icd_params.w_c.mode = 0x02;
+                        zcble_frame.icd_params.w_c.info = 0x02;
+                    }
                 }
                 
                 AIAS_ICD_update_device_status(zcble_frame.status, zing_device_status_values);
