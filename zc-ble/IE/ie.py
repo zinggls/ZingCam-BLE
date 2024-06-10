@@ -400,6 +400,7 @@ class Debug:
             ("IMU 보정", 1, 1),
             ("배터리 잔량", 1, 0),
             ("모뎀 상태", 1, 1),
+            ("IMU 상태", 1, 1),
             ("IMU Data 1", 1, 1),
             ("IMU Data 2", 1, 1),
             ("IMU Data 3", 1, 1),
@@ -520,7 +521,8 @@ class Debug:
         icd_frame.pack(expand = tkinter.YES, fill = tkinter.BOTH)
 
     def set_icd(self):
-        if (self.icd.icd_list[self.icd.icd_name_list.index("ZCH USB")] == 2):
+        if (self.icd.icd_list[self.icd.icd_name_list.index("화기조준경 영상 종류")] == 0x01 or 
+            self.icd.icd_list[self.icd.icd_name_list.index("화기조준경 영상 종류")] == 0x02 ):
             self.hble_frame.config(text = "ZCH")
             ZED = 0
         else:
