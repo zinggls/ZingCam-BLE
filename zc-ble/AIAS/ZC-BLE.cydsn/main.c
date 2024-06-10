@@ -15,20 +15,14 @@ static uint8_t sw_ch_intr = 0;
 
 static void ZCBLE_systick_isr(void);
 
-CY_ISR(SW_CH_IRQ_Handler)
+#if HBLE
+CY_ISR(SW_PW_EN_IRQ_Handler)
 {
-    /*
-    if (ZING_get_info() == ZING_INFO_CH2)
-    {
-        ZING_set_channel_low();
-    }
-    else
-    {
-        ZING_set_channel_high();
-    }
-    */
-    SW_CH_ClearInterrupt();
+    PW_EN_Write(!(PW_EN_Read()));
+    
+    SW_PW_EN_ClearInterrupt();
 }
+#endif
 
 int main(void)
 {
@@ -54,7 +48,7 @@ int main(void)
     AADC_init();
     zing_host_status_values = ZING_host_init();
     
-    SW_CH_IRQ_StartEx(SW_CH_IRQ_Handler);
+    SW_PW_EN_IRQ_StartEx(SW_PW_EN_IRQ_Handler);
     
 #endif
 #if DBLE    
@@ -90,11 +84,6 @@ int main(void)
 
     while (1)
     {
-#if HBLE
-        if (SW_PW_Read() == 0)
-        {
-        }
-#endif
         AIAS_ICD_read();
         write = AIAS_ICD_write();
         
