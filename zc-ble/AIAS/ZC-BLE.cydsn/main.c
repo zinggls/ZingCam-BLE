@@ -118,9 +118,11 @@ int main(void)
                     if (ZING_get_info() == ZING_INFO_CH1)
                     {
                         LED_USER0_Write(1);
+                        LED_USER1_Write(0);
                     }
                     else
                     {
+                        LED_USER0_Write(0);
                         LED_USER1_Write(1);
                     }
                     
@@ -177,7 +179,7 @@ int main(void)
                 {
                     AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_STATUS, 0x00);
                 }
-                                
+                
                 AIAS_ICD_update_device_status(zcble_frame.status, zing_device_status_values);
                 
                 memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
