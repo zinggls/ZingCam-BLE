@@ -521,8 +521,7 @@ class Debug:
         icd_frame.pack(expand = tkinter.YES, fill = tkinter.BOTH)
 
     def set_icd(self):
-        if (self.icd.icd_list[self.icd.icd_name_list.index("화기조준경 영상 종류")] == 0x01 or 
-            self.icd.icd_list[self.icd.icd_name_list.index("화기조준경 영상 종류")] == 0x02 ):
+        if (self.icd.icd_list[self.icd.icd_name_list.index("화기조준경 영상 종류")] == 0x04):
             self.hble_frame.config(text = "ZCH")
             ZED = 0
         else:
