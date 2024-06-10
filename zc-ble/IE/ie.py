@@ -756,6 +756,9 @@ class IE:
         data = [0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0]
         self.i2c.send_use_addr(self.i2c.get_address(), data)
 
+    def auto_button(self):
+        data = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
 
     def create_main_frame(self):
         self.main_frame = tkinter.Frame(self.window)
@@ -768,6 +771,8 @@ class IE:
         ch1_button = tkinter.Button(label_frame, text = "Set CH1", width = 20, command = self.ch1_button)
         ch1_button.pack(padx = 5, pady = 5)
         ch2_button = tkinter.Button(label_frame, text = "Set CH2", width = 20, command = self.ch2_button)
+        ch2_button.pack(padx = 5, pady = 5)
+        ch2_button = tkinter.Button(label_frame, text = "자동채널변경", width = 20, command = self.auto_button)
         ch2_button.pack(padx = 5, pady = 5)
 
         label_frame.pack(fill = tkinter.BOTH)
