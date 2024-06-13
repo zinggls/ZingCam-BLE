@@ -9,6 +9,8 @@
 #include "aadc.h"
 #include "icd.h"
 
+#define BLE_TDD_SLOT 6
+
 static uint32_t ZCBLE_systick = 0;
 static uint32_t sw_ch_systick = 0;
 
@@ -24,10 +26,6 @@ CY_ISR(SW_PW_EN_IRQ_Handler)
 
 CY_ISR(OTG_Detect_IRQ_Handler)
 {
-    uint32_t otg_detect_systick;
-    
-    LED_USER2_Write(1);
-    
     PW_EN_Write(0);
     CyDelay(100);
     PW_EN_Write(1);
@@ -51,6 +49,9 @@ int main(void)
 #endif
     ZCBLE_frame zcble_frame;
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
+
+    uint8_t type = 0;
+    uint32_t tdd_tick = 0;
         
     ZCBLE_init();
     IMU_init();
@@ -102,13 +103,23 @@ int main(void)
                 
         if (cyBle_state == CYBLE_STATE_CONNECTED)
         {
+            if (tdd_tick == 0)
+            {
+#if HBLE
+                tdd_tick = ZCBLE_systick;
+#endif
+#if DBLE
+                tdd_tick = ZCBLE_systick + (BLE_TDD_SLOT / 2);
+#endif
+            }
+            
             if (CyBle_GattGetBusStatus() == CYBLE_STACK_STATE_FREE)
             {
                 memset(&zcble_frame, 0, sizeof(ZCBLE_frame));
                 
                 if (write == 1)
                 {
-                    zcble_frame.type = ZCBLE_WRITE;
+                    type = 1;
                 }
                 else
                 {
@@ -145,11 +156,13 @@ int main(void)
                         LED_USER0_Write(0);
                         LED_USER1_Write(1);
                     }
+                    LED_USER2_Write(1);
                 }
                 else
                 {
                     LED_USER0_Write(0);
                     LED_USER1_Write(0);
+                    LED_USER2_Write(0);
                 }
                 
                 if (SW_CH_Read() == 0)
@@ -165,7 +178,7 @@ int main(void)
                             ZING_set_channel_low();
                         }
                  
-                        zcble_frame.type = ZCBLE_WRITE;
+                        type = 1;
                         sw_ch_systick = ZCBLE_systick;
                     }
                 }
@@ -188,7 +201,17 @@ int main(void)
                 notification.attrHandle = 0x0001;
                 notification.value.val = (uint8_t*)&zcble_frame;
                 notification.value.len = sizeof(ZCBLE_frame);
-                CyBle_GattsNotification(cyBle_connHandle, &notification);
+                
+                if (ZCBLE_systick - tdd_tick > BLE_TDD_SLOT)
+                {
+                    tdd_tick = ZCBLE_systick;
+                    if (type == 1)
+                    {
+                        zcble_frame.type = ZCBLE_WRITE;
+                        type = 0;
+                    }
+                    CyBle_GattsNotification(cyBle_connHandle, &notification);
+                }
 #endif
 #if DBLE
                 AIAS_ICD_set(AIAS_BLE_STATUS, 0x02);
@@ -222,8 +245,18 @@ int main(void)
                 notification.attrHandle = 0x0001;
                 notification.value.val = (uint8_t*)&zcble_frame;
                 notification.value.len = sizeof(ZCBLE_frame);
-                CyBle_GattsNotification(cyBle_connHandle, &notification);
-
+                
+                if (ZCBLE_systick - tdd_tick > BLE_TDD_SLOT)
+                {
+                    tdd_tick = ZCBLE_systick;
+                    if (type == 1)
+                    {
+                        zcble_frame.type = ZCBLE_WRITE;
+                        type = 0;
+                    }
+                    CyBle_GattsNotification(cyBle_connHandle, &notification);
+                }
+                
                 AIAS_ICD_set_receiver_imu_data(IMU_EULER, imu_values);
 #endif
             }
