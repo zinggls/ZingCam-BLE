@@ -9,9 +9,8 @@
 #include "aadc.h"
 #include "icd.h"
 
-extern ZCBLE_frame zcble_frame;
 static uint32_t ZCBLE_systick = 0;
-static uint8_t sw_ch_intr = 0;
+static uint32_t sw_ch_systick = 0;
 
 static void ZCBLE_systick_isr(void);
 
@@ -21,6 +20,18 @@ CY_ISR(SW_PW_EN_IRQ_Handler)
     PW_EN_Write(!(PW_EN_Read()));
     
     SW_PW_EN_ClearInterrupt();
+}
+
+CY_ISR(OTG_Detect_IRQ_Handler)
+{
+    uint32_t otg_detect_systick;
+    
+    otg_detect_systick = ZCBLE_systick;
+    PW_EN_Write(0);
+    while (ZCBLE_systick - otg_detect_systick > 100);
+    PW_EN_Write(1);
+    
+    OTG_Detect_ClearInterrupt();
 }
 #endif
 
@@ -49,7 +60,7 @@ int main(void)
     zing_host_status_values = ZING_host_init();
     
     SW_PW_EN_IRQ_StartEx(SW_PW_EN_IRQ_Handler);
-    
+    OTG_Detect_IRQ_StartEx(OTG_Detect_IRQ_Handler);
 #endif
 #if DBLE    
     zing_device_status_values = ZING_device_init();
@@ -67,8 +78,7 @@ int main(void)
     */
 
     CySysTickStart();
-    LED_USER2_Write(0);
-    
+        
     for (uint8_t i = 0; i < CY_SYS_SYST_NUM_OF_CALLBACKS; ++i)
     {
         if (CySysTickGetCallback(i) == NULL)
@@ -94,6 +104,15 @@ int main(void)
             if (CyBle_GattGetBusStatus() == CYBLE_STACK_STATE_FREE)
             {
                 memset(&zcble_frame, 0, sizeof(ZCBLE_frame));
+                
+                if (write == 1)
+                {
+                    zcble_frame.type = ZCBLE_WRITE;
+                }
+                else
+                {
+                    zcble_frame.type = ZCBLE_READ;
+                }
 #if HBLE
                 if (ZING_parse_host_status(zing_host_status_values) != 1)
                 {
@@ -125,14 +144,29 @@ int main(void)
                         LED_USER0_Write(0);
                         LED_USER1_Write(1);
                     }
-                    
-                    LED_USER2_Write(1);
                 }
                 else
                 {
                     LED_USER0_Write(0);
                     LED_USER1_Write(0);
-                    LED_USER2_Write(0);
+                }
+                
+                if (SW_CH_Read() == 0)
+                {
+                    if (ZCBLE_systick - sw_ch_systick > 1000)
+                    {
+                        if (ZING_get_info() == ZING_INFO_CH1)
+                        {
+                            ZING_set_channel_high();
+                        }
+                        else
+                        {
+                            ZING_set_channel_low();
+                        }
+                 
+                        zcble_frame.type = ZCBLE_WRITE;
+                        sw_ch_systick = ZCBLE_systick;
+                    }
                 }
                 
                 zcble_frame.icd_params.battey.transmitter = AADC_get_battery_level(AADC_measure(0));
@@ -154,7 +188,6 @@ int main(void)
                 notification.value.val = (uint8_t*)&zcble_frame;
                 notification.value.len = sizeof(ZCBLE_frame);
                 CyBle_GattsNotification(cyBle_connHandle, &notification);
-                
 #endif
 #if DBLE
                 AIAS_ICD_set(AIAS_BLE_STATUS, 0x02);
