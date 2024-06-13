@@ -99,14 +99,20 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
             
-            AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
-            AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c, zcble_frame.status.itf);
-            AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
-            AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
-                
-            //AIAS_ICD_update_device_status(zcble_frame.status, NULL);
+            if (zcble_frame.type == ZCBLE_UNKNOWN)
+            {
+                break;
+            }
             
-            //P2_6_Write(!(P2_6_Read()));
+            if (zcble_frame.type == ZCBLE_WRITE)
+            {
+                AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
+                AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c, zcble_frame.status.itf);
+                AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
+                AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
+            }
+            
+            //AIAS_ICD_update_device_status(zcble_frame.status, NULL);
         break;
 #endif
 #if DBLE
@@ -138,13 +144,23 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
             
-            AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
-            //AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
-            AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
-            AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
-            AIAS_ICD_set_battery_level(zcble_frame.icd_params.battey);
-            AIAS_ICD_set_modules_status(zcble_frame.icd_params.modules);
-            AIAS_ICD_set_modem_status(zcble_frame.icd_params.modem);
+            if (zcble_frame.type == ZCBLE_UNKNOWN)
+            {
+                break;
+            }
+            
+            if (zcble_frame.type == ZCBLE_WRITE)
+            {   
+                BIB_RST_N_Write(!(BIB_RST_N_Read()));
+                
+                AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
+                AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
+                AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
+                AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
+                AIAS_ICD_set_battery_level(zcble_frame.icd_params.battey);
+                AIAS_ICD_set_modules_status(zcble_frame.icd_params.modules);
+                AIAS_ICD_set_modem_status(zcble_frame.icd_params.modem);   
+            }
             
             AIAS_ICD_set_transmitter_imu_data(IMU_EULER, zcble_frame.imu_values);
             AIAS_ICD_update_host_status(zcble_frame.status, NULL);

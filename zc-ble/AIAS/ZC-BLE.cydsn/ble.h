@@ -93,8 +93,16 @@ typedef struct
     uint32_t cnt;
 } ZING_status;
 
+typedef enum
+{
+    ZCBLE_UNKNOWN,
+    ZCBLE_READ,
+    ZCBLE_WRITE,
+} ZCBLE_type;
+
 typedef struct
 {
+    uint8_t type;
     uint16_t imu_values[NUM_TOTAL_IMU_VALUES];
     ZING_status status;
     ICD_parameters icd_params;
