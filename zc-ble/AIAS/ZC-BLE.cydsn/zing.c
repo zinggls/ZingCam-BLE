@@ -7,7 +7,7 @@
 
 static uint8_t state = 0;
 static uint8_t zing_mode = ZING_MODE_MANUAL;
-static uint32_t ble_tick = 0;
+static uint32_t ble_itf_tick = 0;
 static uint32_t ZING_parse_systick;
 static uint16_t cnt_tmp = 0;
 static uint16_t uart_loop = 0;
@@ -75,10 +75,18 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
                 {
                     zing_status[cnt++] = ch;
                 }
+                else
+                {
+                    return;
+                }
             }
         }
         while (ch != ASCII_LF);
     }
+    
+    UART_ZING_RX_ClearInterrupt();
+    
+    return;
 }
 
 uint8_t ZING_parse_host_status(uint8_t** status_values)
@@ -211,8 +219,8 @@ void ZING_auto_channel(void)
 {
     uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
     
-    if (ZCBLE_get_systick() - ble_tick > 1000)
-    {   
+    if (ZCBLE_get_systick() - ble_itf_tick > 1000)
+    {
         switch (ZING_get_info())
         {
             case ZING_INFO_CH1:
@@ -227,7 +235,7 @@ void ZING_auto_channel(void)
                 break;
         }
         
-        ble_tick = ZCBLE_get_systick();
+        ble_itf_tick = ZCBLE_get_systick();
     }
 }
 
@@ -241,13 +249,18 @@ void ZING_set_channel_high(void)
 #if HBLE
     uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
     
-    UART_ZING_PutArray(arr, 4);
-    current_channel = ZING_INFO_CH2;
+    if (current_channel == ZING_INFO_CH1)
+    {
+        UART_ZING_PutArray(arr, 4);
+        current_channel = ZING_INFO_CH2;
 #endif
 #if DBLE
-    RF_SPDT_Write(1);
-    current_channel = ZING_INFO_CH2;
+    if (current_channel == ZING_INFO_CH1)
+    {
+        RF_SPDT_Write(1);
+        current_channel = ZING_INFO_CH2;
 #endif
+    }
 }
 
 void ZING_set_channel_low(void)
@@ -255,13 +268,18 @@ void ZING_set_channel_low(void)
 #if HBLE
     uint8_t arr[4] = { 0x4, 'b', 0x1, 0x0 };
     
-    UART_ZING_PutArray(arr, 4);
-    current_channel = ZING_INFO_CH1;
+    if (current_channel == ZING_INFO_CH2)
+    {
+        UART_ZING_PutArray(arr, 4);
+        current_channel = ZING_INFO_CH1;
 #endif
 #if DBLE
-    RF_SPDT_Write(0);
-    current_channel = ZING_INFO_CH1;
+    if (current_channel == ZING_INFO_CH2)
+    {
+        RF_SPDT_Write(0);
+        current_channel = ZING_INFO_CH1;
 #endif
+    }
 }
 
 uint8_t ZING_get_mode(void)
@@ -304,7 +322,7 @@ void ZING_get_status(uint8_t** host_status, uint8_t type, uint8_t index, uint8_t
             value = strtol((char*)host_status[index], NULL, 16);
             memcpy(arg, &value, sizeof(uint16_t));
             break;
-        case 3: // HEX, 16-bits
+        case 3: // HEX, 32-bits
             value = strtol((char*)host_status[index], NULL, 16);
             memcpy(arg, &value, sizeof(uint32_t));
             break;
