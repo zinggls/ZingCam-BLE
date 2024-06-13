@@ -26,9 +26,10 @@ CY_ISR(OTG_Detect_IRQ_Handler)
 {
     uint32_t otg_detect_systick;
     
-    otg_detect_systick = ZCBLE_systick;
+    LED_USER2_Write(1);
+    
     PW_EN_Write(0);
-    while (ZCBLE_systick - otg_detect_systick > 100);
+    CyDelay(100);
     PW_EN_Write(1);
     
     OTG_Detect_ClearInterrupt();
