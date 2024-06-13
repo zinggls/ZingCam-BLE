@@ -16,15 +16,6 @@
 #define NUM_WRITE_AIAS_ICD 11
 #endif
 
-#define AIAS_ICD_READ 0
-#define AIAS_ICD_WRITE 1
-
-typedef enum {
-    AIAS_ICD_REG,
-    AIAS_ICD_LENGTH,
-    AIAS_ICD_DATA,
-} AIAS_ICD_DATA_STRUCT;
-    
 #if HBLE
 typedef enum {
     SCOPE_CAMERA,
