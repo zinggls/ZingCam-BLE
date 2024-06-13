@@ -50,7 +50,7 @@ static uint8_t AIAS_ICD_MAP[] =
 #endif    
 #if DBLE
     // AIAS ICD
-    0x00, 0x01, 0x02, 0x02, 0x01, 0x00, 0x01, 0x07, 0x08, 0x09,
+    0x00, 0x01, 0x02, 0x01, 0x01, 0x00, 0x01, 0x07, 0x08, 0x09,
     0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13,
     0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,
     0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
@@ -134,9 +134,9 @@ uint8_t AIAS_ICD_write(void)
 {
     uint8_t ret;
     
-    ret = 0;
+    ret = AI2C_write();
     
-    if ((ret = AI2C_write()) == 1)
+    if (ret == 1)
     {
         AI2C_set_write_buffer(AIAS_ICD_MAP, NUM_WRITE_AIAS_ICD);
         
@@ -185,7 +185,7 @@ uint8_t AIAS_ICD_write(void)
 
 void AIAS_ICD_set_scope(ZCBLE_scope scope)
 {
-#if HBLE
+#if HBLE    
     switch (scope.camera)
     {
         case 1:
@@ -206,10 +206,8 @@ void AIAS_ICD_set_scope(ZCBLE_scope scope)
             break;
     }
 #endif
-#if DBLE
     AIAS_ICD_set(SCOPE_CAMERA, scope.camera);
     AIAS_ICD_set(SCOPE_OUTPUT, scope.output);
-#endif
 }
 
 #if HBLE
@@ -219,7 +217,7 @@ void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c, uint8_t itf)
     {
         case ZING_MODE_AUTO:
             // Auto mode
-            //if (itf == 'Y')
+            if (itf == 'Y')
             {
                 ZING_auto_channel();
             }
@@ -245,6 +243,11 @@ void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c, uint8_t itf)
 #if DBLE
 void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c)
 {
+    if (w_c.mode == 0)
+    {
+        return;
+    }
+    
     switch (w_c.info)
     {
         case ZING_INFO_CH1:
@@ -292,10 +295,7 @@ void AIAS_ICD_set_opmode(ZCBLE_opmode opmode)
 #endif
 #if DBLE
     AIAS_ICD_set(SCOPE_OPERATION_MODE, opmode.scope);
-    if (opmode.transmitter != 0)
-    {
-        AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_OPERATION_MODE_STATUS, opmode.transmitter);
-    }
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_OPERATION_MODE_STATUS, opmode.transmitter);
 #endif
 }
 
@@ -354,8 +354,8 @@ void AIAS_ICD_set_zcble_frame(ZCBLE_frame* zcble_frame)
 #if HBLE
     zcble_frame->icd_params.scope.camera = AIAS_ICD_MAP[SCOPE_CAMERA];
     zcble_frame->icd_params.scope.output = AIAS_ICD_MAP[SCOPE_OUTPUT];
-    //zcble_frame->icd_params.w_c.mode = ZING_get_mode();
-    //zcble_frame->icd_params.w_c.info = ZING_get_info();
+    zcble_frame->icd_params.w_c.mode = ZING_get_mode();
+    zcble_frame->icd_params.w_c.info = ZING_get_info();
     zcble_frame->icd_params.opmode.scope = AIAS_ICD_MAP[SCOPE_OPERATION_MODE];
     zcble_frame->icd_params.opmode.transmitter = 0x1;
     zcble_frame->icd_params.tx_imu.type = IMU_get_type();
