@@ -151,8 +151,6 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             
             if (zcble_frame.type == ZCBLE_WRITE)
             {   
-                BIB_RST_N_Write(!(BIB_RST_N_Read()));
-                
                 AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
                 AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
                 AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
