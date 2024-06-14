@@ -51,6 +51,8 @@ int main(void)
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
 
     uint8_t type = 0;
+    uint8_t zing_status = 1;
+    uint8_t imu_status = 1;
     uint32_t tdd_tick = 0;
         
     ZCBLE_init();
@@ -128,20 +130,40 @@ int main(void)
 #if HBLE
                 if (ZING_parse_host_status(zing_host_status_values) != 1)
                 {
-                    zcble_frame.icd_params.modem.transmitter = 0x03;
+                    if (zing_status == 0)
+                    {
+                        type = 1;
+                        zing_status = 1;
+                        zcble_frame.icd_params.modem.transmitter = 0x03;
+                    }
                 }
                 else
                 {
-                    zcble_frame.icd_params.modem.transmitter = 0x00;
+                    if (zing_status == 1)
+                    {
+                        type = 0;
+                        zing_status = 0;
+                        zcble_frame.icd_params.modem.transmitter = 0x00;
+                    }
                 }
                 
                 if (IMU_get(imu_values) != 1)
                 {
-                    zcble_frame.icd_params.tx_imu.status = 0x05;
+                    if (imu_status == 0)
+                    {
+                        type = 1;
+                        imu_status = 1;
+                        zcble_frame.icd_params.tx_imu.status = 0x05;
+                    }
                 }
                 else
                 {
-                    zcble_frame.icd_params.tx_imu.status = 0x00;
+                    if (imu_status == 1)
+                    {
+                        type = 1;
+                        imu_status = 0;
+                        zcble_frame.icd_params.tx_imu.status = 0x00;
+                    }
                 }
                 
                 if (SW_LED_Read() == 1)
