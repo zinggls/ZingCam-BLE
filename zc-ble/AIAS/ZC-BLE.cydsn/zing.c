@@ -247,7 +247,7 @@ uint8_t ZING_get_ZED(void)
 void ZING_set_channel_high(void)
 {
 #if HBLE
-    uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
+    uint8_t arr[4] = { 0x4, 'b', 0x1, 0x0 };
     
     if (current_channel == ZING_INFO_CH1)
     {
@@ -266,7 +266,7 @@ void ZING_set_channel_high(void)
 void ZING_set_channel_low(void)
 {
 #if HBLE
-    uint8_t arr[4] = { 0x4, 'b', 0x1, 0x0 };
+    uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
     
     if (current_channel == ZING_INFO_CH2)
     {
