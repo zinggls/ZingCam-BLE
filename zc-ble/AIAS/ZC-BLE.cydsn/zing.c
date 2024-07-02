@@ -5,14 +5,13 @@
 
 #define NUM_ZING_CNT 10
 
-static uint8_t state = 0;
-static uint8_t zing_mode = ZING_MODE_MANUAL;
-static uint32_t ble_itf_tick = 0;
+static uint8_t zing_mode = ZING_MODE_AUTO;
 static uint32_t ZING_parse_systick;
 static uint16_t cnt_tmp = 0;
 static uint16_t uart_loop = 0;
 static uint8_t current_channel = ZING_INFO_CH1;
 static uint8_t ZED = 0;
+static uint8_t current_itf = 'N';
 
 static char zing_status[MAX_BUFFER_LENGTH];
 
@@ -213,30 +212,6 @@ uint8_t ZING_parse_device_status(uint8_t** status_values)
     cnt_tmp = uart_loop;
     
     return 1;
-}
-
-void ZING_auto_channel(void)
-{
-    uint8_t arr[4] = { 0x4, 'b', 0x0, 0x0 };
-    
-    if (ZCBLE_get_systick() - ble_itf_tick > 1000)
-    {
-        switch (ZING_get_info())
-        {
-            case ZING_INFO_CH1:
-                arr[2] = 0x01;
-                ZING_set_channel_high();
-                UART_ZING_PutArray(arr, 4);
-                break;
-            case ZING_INFO_CH2:
-                arr[2] = 0x00;
-                ZING_set_channel_low();
-                UART_ZING_PutArray(arr, 4);
-                break;
-        }
-        
-        ble_itf_tick = ZCBLE_get_systick();
-    }
 }
 
 uint8_t ZING_get_ZED(void)
@@ -582,4 +557,14 @@ uint32_t ZING_get_device_status_cnt(uint8_t** device_status)
     uint32_t cnt = atoi((char*)device_status[DEVICE_STATUS_CNT]);
     
     return cnt;
+}
+
+void ZING_set_itf(uint8_t itf)
+{
+    current_itf = itf;
+}
+
+uint8_t ZING_get_itf(void)
+{
+    return current_itf;
 }

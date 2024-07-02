@@ -105,7 +105,6 @@ uint8_t ZING_get_host_status(char* data);
 uint8_t ZING_get_device_status(char* data);
 uint8_t ZING_parse_host_status(uint8_t** status_values);
 uint8_t ZING_parse_device_status(uint8_t** status_values);
-void ZING_auto_channel(void);
 uint8_t ZING_get_ZED(void);
 void ZING_set_channel_high(void);
 void ZING_set_channel_low(void);
@@ -147,5 +146,7 @@ ZING_diff ZING_get_device_status_dst_id_err_cnt(uint8_t** device_status);
 ZING_diff ZING_get_device_status_phy_rx_frame_cnt(uint8_t** device_status);
 ZING_mfir ZING_get_device_status_mfir(uint8_t** device_status);
 uint32_t ZING_get_device_status_cnt(uint8_t** device_status);
+void ZING_set_itf(uint8_t itf);
+uint8_t ZING_get_itf(void);
 
 #endif
