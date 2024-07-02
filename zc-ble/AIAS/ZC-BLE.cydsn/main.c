@@ -9,10 +9,12 @@
 #include "aadc.h"
 #include "icd.h"
 
-#define BLE_TDD_SLOT 6
+#define BLE_TDD_SLOT 10
 
 static uint32_t ZCBLE_systick = 0;
 static uint32_t sw_ch_systick = 0;
+static uint32_t itf_systick = 0;
+static uint32_t auto_ch_systick = 0;
 
 static void ZCBLE_systick_isr(void);
 
@@ -46,6 +48,7 @@ int main(void)
 #endif
 #if DBLE
     uint8_t** zing_device_status_values;
+    uint8_t imu_type;
 #endif
     ZCBLE_frame zcble_frame;
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
@@ -205,6 +208,35 @@ int main(void)
                     }
                 }
                 
+                if (ZING_get_mode() == ZING_MODE_AUTO)
+                {
+                    if (ZING_get_itf() == 'Y')
+                    {
+                        if (ZCBLE_systick - itf_systick > 1000)
+                        {   
+                            if (ZCBLE_systick - auto_ch_systick > 1000)
+                            {
+                                if (ZING_get_info() == ZING_INFO_CH1)
+                                {
+                                    ZING_set_channel_high();
+                                }
+                                else
+                                {
+                                    ZING_set_channel_low();
+                                }
+                                
+                                type = 1;
+                                auto_ch_systick = ZCBLE_systick;
+                            }
+                            itf_systick = ZCBLE_systick;
+                        }  
+                    }
+                    else
+                    {
+                        itf_systick = ZCBLE_systick;
+                    }
+                }
+                
                 zcble_frame.icd_params.battey.transmitter = AADC_get_battery_level(AADC_measure(0));
                 
                 memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * NUM_TOTAL_IMU_VALUES);
@@ -234,7 +266,7 @@ int main(void)
                     }
                     CyBle_GattsNotification(cyBle_connHandle, &notification);
                 }
-#endif
+#endif 
 #if DBLE
                 AIAS_ICD_set(AIAS_BLE_STATUS, 0x02);
                 AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_OPERATION_MODE_STATUS, 1);
@@ -257,6 +289,8 @@ int main(void)
                 else
                 {
                     AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_STATUS, 0x00);
+                    imu_type = AIAS_ICD_get(WIRELESS_VIDEO_RECEIVER_IMU_OUTPUT_TYPE);
+                    AIAS_ICD_set_receiver_imu_data(imu_type, imu_values);
                 }
                 
                 AIAS_ICD_update_device_status(zcble_frame.status, zing_device_status_values);
@@ -278,8 +312,6 @@ int main(void)
                     }
                     CyBle_GattsNotification(cyBle_connHandle, &notification);
                 }
-                
-                AIAS_ICD_set_receiver_imu_data(IMU_EULER, imu_values);
 #endif
             }
         }
