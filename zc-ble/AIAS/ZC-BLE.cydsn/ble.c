@@ -107,10 +107,12 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             if (zcble_frame.type == ZCBLE_WRITE)
             {
                 AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
-                AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c, zcble_frame.status.itf);
+                AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
                 AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
                 AIAS_ICD_set_opmode(zcble_frame.icd_params.opmode);
             }
+            
+            ZING_set_itf(zcble_frame.status.itf);
             
             //AIAS_ICD_update_device_status(zcble_frame.status, NULL);
         break;
@@ -230,6 +232,7 @@ ZING_status ZING_zcd_set_status(uint8_t** status_values)
     status.ack = ZING_get_device_status_ack(status_values);
     status.ppc = ZING_get_device_status_ppc(status_values);
     status.run = ZING_get_device_status_run(status_values);
+    status.itf = ZING_get_device_status_itf(status_values);
     status.txid = ZING_get_device_status_txid(status_values);
     status.rxid = ZING_get_device_status_rxid(status_values);
     status.destid_err_cnt = ZING_get_device_status_dst_id_err_cnt(status_values).cnt;
