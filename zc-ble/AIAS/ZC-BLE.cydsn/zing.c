@@ -5,7 +5,7 @@
 
 #define NUM_ZING_CNT 10
 
-static uint8_t zing_mode = ZING_MODE_AUTO;
+static uint8_t zing_mode = ZING_MODE_MANUAL;
 static uint32_t ZING_parse_systick;
 static uint16_t cnt_tmp = 0;
 static uint16_t uart_loop = 0;
