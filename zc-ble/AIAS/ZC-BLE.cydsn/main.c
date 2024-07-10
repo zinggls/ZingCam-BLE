@@ -231,10 +231,6 @@ int main(void)
                             itf_systick = ZCBLE_systick;
                         }  
                     }
-                    else
-                    {
-                        itf_systick = ZCBLE_systick;
-                    }
                 }
                 
                 zcble_frame.icd_params.battey.transmitter = AADC_get_battery_level(AADC_measure(0));
