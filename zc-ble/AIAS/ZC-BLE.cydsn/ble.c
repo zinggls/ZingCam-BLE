@@ -62,11 +62,11 @@ void ZCBLE_callback(uint32 event, void* parameters)
 #if HBLE
         case CYBLE_EVT_STACK_ON:
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
-        break;
+            break;
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             CyBle_GapRemoveDeviceFromWhiteList(&device_address);
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
-        break;
+            break;
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
             memcpy(&advertisement_report, parameters, sizeof(CYBLE_GAPC_ADV_REPORT_T));
             
@@ -76,23 +76,23 @@ void ZCBLE_callback(uint32 event, void* parameters)
                 device_address.type = advertisement_report.peerAddrType;
                 memcpy(device_address.bdAddr, advertisement_report.peerBdAddr, CYBLE_GAP_BD_ADDR_SIZE);
             }
-        break;
+            break;
         case CYBLE_EVT_GAPC_SCAN_START_STOP:
             if (cyBle_state == CYBLE_STATE_DISCONNECTED)
             {
                 CyBle_GapcConnectDevice(&device_address);
             }
-        break;
+            break;
         case CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE:
             CyBle_GapAuthReq(cyBle_connHandle.bdHandle, &cyBle_authInfo);
-        break;
+            break;
         case CYBLE_EVT_GATTS_WRITE_REQ:
             CyBle_GattsWriteRsp(cyBle_connHandle);
-        break;
+            break;
         case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
-        break;
+            break;
         case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
-        break;
+            break;
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
@@ -115,40 +115,40 @@ void ZCBLE_callback(uint32 event, void* parameters)
             ZING_set_itf(zcble_frame.status.itf);
             
             //AIAS_ICD_update_device_status(zcble_frame.status, NULL);
-        break;
+            break;
 #endif
 #if DBLE
         case CYBLE_EVT_STACK_ON:
             AIAS_ICD_set(AIAS_BLE_STATUS, 0x00);
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
-        break;
+            break;
         case CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP:
             if (CYBLE_STATE_DISCONNECTED == CyBle_GetState())
             {
                 AIAS_ICD_set(AIAS_BLE_STATUS, 0x00);
                 CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
             }
-        break;       
+            break;       
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             AIAS_ICD_set(AIAS_BLE_STATUS, 0x00);
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
-        break;
+            break;
         case CYBLE_EVT_GAP_AUTH_COMPLETE:
             AIAS_ICD_set(AIAS_BLE_STATUS, 0x01);
             CyBle_GattcStartDiscovery(cyBle_connHandle);
-        break;
+            break;
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
             AIAS_ICD_set(AIAS_BLE_STATUS, 0x01);
             CyBle_GattcExchangeMtuReq(cyBle_connHandle, MAX_BLE_FRAME_SIZE);
-        break;
+            break;
         case CYBLE_EVT_GATTS_WRITE_REQ:
             AIAS_ICD_set(AIAS_BLE_STATUS, 0x01);
             CyBle_GattsWriteRsp(cyBle_connHandle);
-        break;
+            break;
         case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
-        break;
+            break;
         case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
-        break;
+            break;
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
@@ -176,7 +176,7 @@ void ZCBLE_callback(uint32 event, void* parameters)
             
             //LED_USER_Write(!(LED_USER_Read()));  
             
-        break;
+            break;
 #endif
     }
 }
