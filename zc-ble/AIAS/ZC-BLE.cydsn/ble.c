@@ -19,7 +19,7 @@ static uint8_t** zing_device_status_values;
 static uint8_t** zing_host_status_values;
 #endif
 
-static void ZCBLE_callback(uint32_t event, void* parameters);
+static void ZCBLE_callback(uint32 event, void* parameters);
 
 #if HBLE
 uint8_t** ZCBLE_get_zing_device_status_values(void)
@@ -55,7 +55,7 @@ void ZCBLE_init(void)
     CyBle_Start(ZCBLE_callback);
 }
 
-void ZCBLE_callback(uint32_t event, void* parameters)
+void ZCBLE_callback(uint32 event, void* parameters)
 {
     switch (event)
     {
@@ -63,10 +63,8 @@ void ZCBLE_callback(uint32_t event, void* parameters)
         case CYBLE_EVT_STACK_ON:
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
         break;
-        case CYBLE_EVT_GAP_DEVICE_CONNECTED:
-            CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
-        break;
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
+            CyBle_GapRemoveDeviceFromWhiteList(&device_address);
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
         break;
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
@@ -99,6 +97,8 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
             
+            BIB_RST_N_Write(!(BIB_RST_N_Read()));
+            
             if (zcble_frame.type == ZCBLE_UNKNOWN)
             {
                 break;
@@ -122,6 +122,13 @@ void ZCBLE_callback(uint32_t event, void* parameters)
             AIAS_ICD_set(AIAS_BLE_STATUS, 0x00);
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
         break;
+        case CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP:
+            if (CYBLE_STATE_DISCONNECTED == CyBle_GetState())
+            {
+                AIAS_ICD_set(AIAS_BLE_STATUS, 0x00);
+                CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
+            }
+        break;       
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             AIAS_ICD_set(AIAS_BLE_STATUS, 0x00);
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
@@ -145,6 +152,8 @@ void ZCBLE_callback(uint32_t event, void* parameters)
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
             memcpy(&notification, parameters, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             memcpy(&zcble_frame, notification.handleValPair.value.val, notification.handleValPair.value.len);
+            
+            BIB_RST_N_Write(!(BIB_RST_N_Read()));
             
             if (zcble_frame.type == ZCBLE_UNKNOWN)
             {
