@@ -54,8 +54,6 @@ int main(void)
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
 
     uint8_t type = 0;
-    uint8_t zing_status = 1;
-    uint8_t imu_status = 1;
     uint32_t tdd_tick = 0;
         
     ZCBLE_init();
@@ -73,7 +71,9 @@ int main(void)
     zing_device_status_values = ZING_device_init();
 #endif
 
-    /*
+/*
+    BIB_RST_N_Write(0);
+
     UART_IMU_UartPutString("<sor0>");
     CyDelay(1000);
     UART_IMU_UartPutString("<sof1>");
@@ -82,7 +82,9 @@ int main(void)
     CyDelay(1000);
     UART_IMU_UartPutString("<sots1>");
     CyDelay(1000);
-    */
+    
+    BIB_RST_N_Write(1);
+*/
 
     CySysTickStart();
         
@@ -133,40 +135,14 @@ int main(void)
 #if HBLE
                 if (ZING_parse_host_status(zing_host_status_values) != 1)
                 {
-                    if (zing_status == 0)
-                    {
-                        type = 1;
-                        zing_status = 1;
-                        zcble_frame.icd_params.modem.transmitter = 0x03;
-                    }
-                }
-                else
-                {
-                    if (zing_status == 1)
-                    {
-                        type = 0;
-                        zing_status = 0;
-                        zcble_frame.icd_params.modem.transmitter = 0x00;
-                    }
+                    type = 1;
+                    zcble_frame.icd_params.modem.transmitter = 0x03;
                 }
                 
                 if (IMU_get(imu_values) != 1)
                 {
-                    if (imu_status == 0)
-                    {
-                        type = 1;
-                        imu_status = 1;
-                        zcble_frame.icd_params.tx_imu.status = 0x05;
-                    }
-                }
-                else
-                {
-                    if (imu_status == 1)
-                    {
-                        type = 1;
-                        imu_status = 0;
-                        zcble_frame.icd_params.tx_imu.status = 0x00;
-                    }
+                    type = 1;
+                    zcble_frame.icd_params.tx_imu.status = 0x05;
                 }
                 
                 if (SW_LED_Read() == 1)
