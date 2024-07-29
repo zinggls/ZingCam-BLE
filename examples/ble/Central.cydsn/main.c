@@ -77,8 +77,10 @@ void ble_callback(uint32 evt, void* param)
             break;
     }
     
-    sprintf(msg, "BLE state = %s\r\n", state);
+    sprintf(msg, "BLE state = %s %X\r\n", state, evt);
     UART_DBG_PutString(msg);
+    
+    uint32_t res;
     
     switch (evt)
     {
@@ -90,6 +92,10 @@ void ble_callback(uint32 evt, void* param)
         // callback when ble is disconnected
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             // start scanning when ble disconnected
+            //res = CyBle_GapRemoveBondedDevice(&addr);
+            res = CyBle_GapRemoveDeviceFromWhiteList(&addr);
+            sprintf(msg, "GAP REMOVE BONDED DEVICE RET=%X\n", res);
+            UART_DBG_PutString(msg);
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
         break;
         // callback when scanning is progressing
@@ -112,6 +118,10 @@ void ble_callback(uint32 evt, void* param)
                 CyBle_GapcConnectDevice(&addr);
             }
         break;
+        case CYBLE_EVT_GAP_AUTH_FAILED:
+            sprintf(msg, "AUTH FAILED=%X\n", *(uint32_t*)param);
+            UART_DBG_PutString(msg);
+            break;
         // callback when ble is connected in application layer
         case CYBLE_EVT_GATT_CONNECT_IND:
         break;
@@ -121,12 +131,15 @@ void ble_callback(uint32 evt, void* param)
         break;
         // callback when ble is authenticated in link layer
         case CYBLE_EVT_GAP_AUTH_COMPLETE:
+
         break;
         // callback when ble is discovered device
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
         break;
         // callback when receive mtu request
         case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
+            CyBle_GattsExchangeMtuRsp(cyBle_connHandle, 200);
+            UART_DBG_PutString("MTU REQ\r\n");
         break;
         // callback when receive mtu response
         case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
