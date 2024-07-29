@@ -140,7 +140,17 @@ uint8_t AIAS_ICD_write(void)
     {
         AI2C_set_write_buffer(AIAS_ICD_MAP, NUM_WRITE_AIAS_ICD);
         
-#if DBLE 
+#if DBLE   
+        switch (AIAS_ICD_get(WIRELESS_VIDEO_RECEIVER_IMU_OUTPUT_TYPE))
+        {
+            case 0x00:
+                IMU_set_output_format(IMU_EULER);
+                break;
+            case 0x01:
+                IMU_set_output_format(IMU_QUATERNION);
+                break;
+        }
+
         switch (AIAS_ICD_get(WIRELESS_VIDEO_RECEIVER_IMU_CALIBRATE))
         {
             case 0x01:
