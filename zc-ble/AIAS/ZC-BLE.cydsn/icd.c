@@ -155,10 +155,14 @@ uint8_t AIAS_ICD_write(void)
         {
             case 0x01:
                 IMU_calibration_gyro();
-                IMU_calibration_accelero_simple();
-                IMU_calibration_magneto_free();
                 break;
             case 0x02:
+                IMU_calibration_accelero_simple();
+                break;
+            case 0x03:
+                IMU_calibration_magneto_free();
+                break;
+            case 0x04:
                 UART_IMU_UartPutChar('>');
                 break;
         }
@@ -334,12 +338,16 @@ void AIAS_ICD_set_transitter_imu(ZCBLE_transmitter_imu imu)
     
     switch (imu.calibrate)
     {
-        case 1:
+        case 0x01:
             IMU_calibration_gyro();
+            break;
+        case 0x02:
             IMU_calibration_accelero_simple();
+            break;
+        case 0x03:
             IMU_calibration_magneto_free();
             break;
-        case 2:
+        case 0x04:
             UART_IMU_UartPutChar('>'); // calibrate done
             break;
     }
