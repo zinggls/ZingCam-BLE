@@ -109,6 +109,7 @@ int main(void)
         
         CyBle_ProcessEvents();
 
+#if HBLE
         if (SW_LED_Read() == 1)
         {
             if (ZING_get_info() == ZING_INFO_CH1)
@@ -137,6 +138,7 @@ int main(void)
             LED_USER1_Write(0);
             LED_USER2_Write(0);
         }
+#endif
                         
         if (cyBle_state == CYBLE_STATE_CONNECTED)
         {
