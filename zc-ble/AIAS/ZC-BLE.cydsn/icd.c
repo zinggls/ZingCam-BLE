@@ -140,7 +140,7 @@ uint8_t AIAS_ICD_write(void)
     {
         AI2C_set_write_buffer(AIAS_ICD_MAP, NUM_WRITE_AIAS_ICD);
         
-#if DBLE
+#if DBLE 
         switch (AIAS_ICD_get(WIRELESS_VIDEO_RECEIVER_IMU_CALIBRATE))
         {
             case 0x01:
@@ -181,6 +181,7 @@ uint8_t AIAS_ICD_write(void)
 #endif
     }
     return ret;
+
 }
 
 void AIAS_ICD_set_scope(ZCBLE_scope scope)
@@ -287,25 +288,38 @@ void AIAS_ICD_set_opmode(ZCBLE_opmode opmode)
 #endif
 }
 
+void AIAS_ICD_set_transitter_imu_status(uint8_t imu_status)
+{
+    uint8_t status;
+    
+    if (imu_status != 0x00)
+    {
+        status = imu_status | 0xE0;    
+    }
+    else
+    {
+        status = 0x00;
+    }
+#if DBLE
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_STATUS, status);
+#endif
+}
+
 void AIAS_ICD_set_transitter_imu(ZCBLE_transmitter_imu imu)
 {
 #if HBLE
     switch (imu.type)
     {
         case 0:
-            if (icd_imu_type != IMU_EULER)
-            {
-                icd_imu_type = IMU_EULER;
-                IMU_set_output_format(IMU_EULER);
-            }
-        break;
+            icd_imu_type = IMU_EULER;
+            IMU_set_output_format(IMU_EULER);
+            break;
         case 1:
-            if (icd_imu_type != IMU_QUATERNION)
-            {
-                icd_imu_type = IMU_QUATERNION;
-                IMU_set_output_format(IMU_QUATERNION);
-            }
-        break;
+            icd_imu_type = IMU_QUATERNION;
+            IMU_set_output_format(IMU_QUATERNION);
+            break;
+        default:
+            break;
     }
     
     switch (imu.calibrate)
@@ -314,24 +328,13 @@ void AIAS_ICD_set_transitter_imu(ZCBLE_transmitter_imu imu)
             IMU_calibration_gyro();
             IMU_calibration_accelero_simple();
             IMU_calibration_magneto_free();
-        break;
+            break;
         case 2:
             UART_IMU_UartPutChar('>'); // calibrate done
-        break;
+            break;
     }
 #endif
 #if DBLE
-    uint8_t status;
-    
-    if (imu.status != 0x00)
-    {
-        status = imu.status | 0xE0;    
-    }
-    else
-    {
-        status = 0x00;
-    }
-    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_STATUS, status);
     AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE, imu.type);
     AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_CALIBRATE, imu.calibrate);
 #endif
@@ -403,7 +406,6 @@ void AIAS_ICD_set_receiver_imu_data(uint8_t sof, uint16_t* imu_values)
         AIAS_ICD_set_receiver_imu_data3(imu_values[IMU_SOF_1]);
         AIAS_ICD_set_receiver_imu_data4(imu_values[IMU_SOF_2]);
         AIAS_ICD_set_receiver_imu_data5(imu_values[IMU_SOF_3]);
-        AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_OUTPUT_TYPE, IMU_EULER);
     }
     else
     {
@@ -412,7 +414,6 @@ void AIAS_ICD_set_receiver_imu_data(uint8_t sof, uint16_t* imu_values)
         AIAS_ICD_set_receiver_imu_data3(imu_values[IMU_SOF_2]);
         AIAS_ICD_set_receiver_imu_data4(imu_values[IMU_SOF_3]);
         AIAS_ICD_set_receiver_imu_data5(imu_values[IMU_SOTS]);
-        AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_OUTPUT_TYPE, IMU_QUATERNION);
     }
 }
 
@@ -493,7 +494,6 @@ void AIAS_ICD_set_transmitter_imu_data(uint8_t sof, uint16_t* imu_values)
         AIAS_ICD_set_transmitter_imu_data3(imu_values[IMU_SOF_1]);
         AIAS_ICD_set_transmitter_imu_data4(imu_values[IMU_SOF_2]);
         AIAS_ICD_set_transmitter_imu_data5(imu_values[IMU_SOF_3]);
-        AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE, IMU_EULER);
     }
     else
     {
@@ -502,7 +502,6 @@ void AIAS_ICD_set_transmitter_imu_data(uint8_t sof, uint16_t* imu_values)
         AIAS_ICD_set_transmitter_imu_data3(imu_values[IMU_SOF_2]);
         AIAS_ICD_set_transmitter_imu_data4(imu_values[IMU_SOF_3]);
         AIAS_ICD_set_transmitter_imu_data5(imu_values[IMU_SOTS]);
-        AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE, IMU_QUATERNION);
     }
 }
 
