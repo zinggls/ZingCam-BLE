@@ -98,15 +98,18 @@ void ble_callback(uint32 evt, void* param)
         break;
         // callback when ble is discovered device
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
+            CyBle_GattcExchangeMtuReq(cyBle_connHandle, 200);
         break;
         // callback when receive mtu request
         case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
         break;
         // callback when receive mtu response
         case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
+            UART_DBG_PutString("MTU RSP\r\n");
         break;
         // callback when receive write request
         case CYBLE_EVT_GATTS_WRITE_REQ:
+            CyBle_GattsWriteRsp(cyBle_connHandle);
         break;
         // callback when receive write response
         case CYBLE_EVT_GATTC_WRITE_RSP:
