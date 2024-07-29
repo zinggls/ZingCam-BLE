@@ -15,6 +15,7 @@ static uint32_t ZCBLE_systick = 0;
 static uint32_t sw_ch_systick = 0;
 static uint32_t itf_systick = 0;
 static uint32_t auto_ch_systick = 0;
+static uint32_t led_systick = 0;
 
 static void ZCBLE_systick_isr(void);
 
@@ -56,6 +57,7 @@ int main(void)
 
     uint8_t type = 0;
 	uint32_t tdd_tick = 0;
+    uint32_t led_tick = 0;
         
     ZCBLE_init();
     IMU_init();
@@ -125,11 +127,26 @@ int main(void)
             
             if (ZING_get_host_status_run(zing_host_status_values) == 'Y')
             {
-                LED_USER2_Write(1);
+                if (cyBle_state == CYBLE_STATE_CONNECTED)
+                {
+                    led_tick = 100;
+                }
+                else
+                {
+                    led_tick = 1000;
+                }
+                
+                if (ZCBLE_systick - led_systick > led_tick)
+                {
+                    LED_USER2_Write(!(LED_USER2_Read()));
+                }
             }
             else
             {
-                LED_USER2_Write(0);
+                if (cyBle_state == CYBLE_STATE_CONNECTED)
+                {
+                    LED_USER2_Write(1);
+                }
             }
         }
         else
