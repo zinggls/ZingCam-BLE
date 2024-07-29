@@ -12,6 +12,7 @@ static CYBLE_GAP_BD_ADDR_T device_address;
 #endif
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T notification;
 ZCBLE_frame zcble_frame;
+
 #if HBLE
 static uint8_t** zing_device_status_values;
 #endif
@@ -103,7 +104,7 @@ void ZCBLE_callback(uint32 event, void* parameters)
             }
             
             if (zcble_frame.type == ZCBLE_WRITE)
-            {
+            {                
                 AIAS_ICD_set_scope(zcble_frame.icd_params.scope);
                 AIAS_ICD_set_wireless_channel(zcble_frame.icd_params.w_c);
                 AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
@@ -164,10 +165,11 @@ void ZCBLE_callback(uint32 event, void* parameters)
                 AIAS_ICD_set_battery_level(zcble_frame.icd_params.battey);
                 AIAS_ICD_set_modules_status(zcble_frame.icd_params.modules);
                 AIAS_ICD_set_transitter_imu(zcble_frame.icd_params.tx_imu);
-                AIAS_ICD_set_modem_status(zcble_frame.icd_params.modem);   
             }
             
-            AIAS_ICD_set_transmitter_imu_data(IMU_EULER, zcble_frame.imu_values);
+            AIAS_ICD_set_transitter_imu_status(zcble_frame.icd_params.tx_imu.status);
+            AIAS_ICD_set_modem_status(zcble_frame.icd_params.modem);   
+            AIAS_ICD_set_transmitter_imu_data(zcble_frame.icd_params.tx_imu.type, zcble_frame.imu_values);
             AIAS_ICD_update_host_status(zcble_frame.status, NULL);
             
             //LED_USER_Write(!(LED_USER_Read()));  
