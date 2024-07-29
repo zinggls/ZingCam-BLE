@@ -8,7 +8,7 @@
 #include "zing.h"
 #include "main.h"
     
-#define MAX_BLE_FRAME_SIZE 250
+#define MAX_BLE_FRAME_SIZE 128
 #define MAX_STATE_LENGTH 13
 #define MAX_DATA_LENGTH 12
 
@@ -103,7 +103,7 @@ typedef enum
 typedef struct
 {
     uint8_t type;
-    uint16_t imu_values[NUM_TOTAL_IMU_VALUES];
+    uint16_t imu_values[NUM_TOTAL_IMU_QUATERNION_VALUES];
     ZING_status status;
     ICD_parameters icd_params;
 } ZCBLE_frame;
