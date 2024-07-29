@@ -108,7 +108,36 @@ int main(void)
         write = AIAS_ICD_write();
         
         CyBle_ProcessEvents();
-                
+
+        if (SW_LED_Read() == 1)
+        {
+            if (ZING_get_info() == ZING_INFO_CH1)
+            {
+                LED_USER0_Write(1);
+                LED_USER1_Write(0);
+            }
+            else
+            {
+                LED_USER0_Write(0);
+                LED_USER1_Write(1);
+            }
+            
+            if (ZING_get_host_status_run(zing_host_status_values) == 'Y')
+            {
+                LED_USER2_Write(1);
+            }
+            else
+            {
+                LED_USER2_Write(0);
+            }
+        }
+        else
+        {
+            LED_USER0_Write(0);
+            LED_USER1_Write(0);
+            LED_USER2_Write(0);
+        }
+                        
         if (cyBle_state == CYBLE_STATE_CONNECTED)
         {
             if (CyBle_GattGetBusStatus() == CYBLE_STACK_STATE_FREE)
@@ -152,28 +181,7 @@ int main(void)
                     zcble_frame.icd_params.tx_imu.status = 0x00;
                 }
                 
-                if (SW_LED_Read() == 1)
-                {
-                    if (ZING_get_info() == ZING_INFO_CH1)
-                    {
-                        LED_USER0_Write(1);
-                        LED_USER1_Write(0);
-                    }
-                    else
-                    {
-                        LED_USER0_Write(0);
-                        LED_USER1_Write(1);
-                    }
-                    LED_USER2_Write(1);
-                }
-                else
-                {
-                    LED_USER0_Write(0);
-                    LED_USER1_Write(0);
-                    LED_USER2_Write(0);
-                }
-                
-                if (SW_CH_Read() == 1)
+                if (SW_CH_Read() == 0)
                 {
                     if (ZCBLE_systick - sw_ch_systick > 1000)
                     {
