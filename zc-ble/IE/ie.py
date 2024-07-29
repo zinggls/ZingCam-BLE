@@ -837,7 +837,7 @@ class IE:
                         "ksvideosrc",
                         "device-index=0",
                         "!"
-                        "video/x-raw,width=1920,height=1080,framerate=30/1,format=UYVY",
+                        "video/x-raw,width=640,height=480,framerate=30/1,format=UYVY",
                         "!"
                         "videoconvert"
                         "!"
