@@ -138,15 +138,14 @@ int main(void)
             if (ZING_get_info() == ZING_INFO_CH1)
             {
                 LED_USER0_Write(1);
-                LED_USER1_Write(0);
             }
             else
             {
                 LED_USER0_Write(0);
-                LED_USER1_Write(1);
             }
             
-             
+            LED_USER1_Write(PW_EN_Read());
+            
             if (ZING_get_ZED() == 1)
             {
                 ZING_get_status(zing_host_status_values, 0, ZED_STATUS_RUN, (uint8_t*)&run_status);
