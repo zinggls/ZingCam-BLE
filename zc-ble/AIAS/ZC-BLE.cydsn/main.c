@@ -58,6 +58,7 @@ int main(void)
     CYBLE_GATTS_HANDLE_VALUE_NTF_T notification;
 
     uint8_t type = 0;
+    char run_status = 0;
 	uint32_t tdd_tick = 0;
     uint32_t led_tick = 0;
         
@@ -112,8 +113,26 @@ int main(void)
         write = AIAS_ICD_write();
         
         CyBle_ProcessEvents();
-
+        memset(&zcble_frame, 0, sizeof(ZCBLE_frame));
 #if HBLE
+        if (ZING_parse_host_status(zing_host_status_values) != 1)
+        {
+            zcble_frame.icd_params.modem.transmitter = 0x03;
+        }
+        else
+        {
+            zcble_frame.icd_params.modem.transmitter = 0x00;
+        }
+        
+        if (IMU_get(imu_values) != 1)
+        {
+            zcble_frame.icd_params.tx_imu.status = 0x05;
+        }
+        else
+        {
+            zcble_frame.icd_params.tx_imu.status = 0x00;
+        }
+        
         if (SW_LED_Read() == 1)
         {
             if (ZING_get_info() == ZING_INFO_CH1)
@@ -127,8 +146,18 @@ int main(void)
                 LED_USER1_Write(1);
             }
             
-            if (ZING_get_host_status_run(zing_host_status_values) == 'Y')
+             
+            if (ZING_get_ZED() == 1)
             {
+                ZING_get_status(zing_host_status_values, 0, ZED_STATUS_RUN, (uint8_t*)&run_status);
+            }
+            else
+            {
+                run_status = ZING_get_host_status_run(zing_host_status_values);
+            }
+            
+            if (run_status == 'Y')
+            {                
                 if (cyBle_state == CYBLE_STATE_CONNECTED)
                 {
                     led_tick = 100;
@@ -140,6 +169,7 @@ int main(void)
                 
                 if (ZCBLE_systick - led_systick > led_tick)
                 {
+                    led_systick = ZCBLE_systick;
                     LED_USER2_Write(!(LED_USER2_Read()));
                 }
             }
@@ -156,9 +186,35 @@ int main(void)
             LED_USER0_Write(0);
             LED_USER1_Write(0);
             LED_USER2_Write(0);
-        }
+        }  
 #endif
-                        
+#if DBLE
+        AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_OPERATION_MODE_STATUS, 1);
+        
+        if (ZING_parse_device_status(zing_device_status_values) != 1)
+        {
+            AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_MODEM_STATUS, 0xE4);
+        }
+        else
+        {
+            AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_MODEM_STATUS, 0x00);   
+        }
+        
+        zcble_frame.status = ZING_zcd_set_status(zing_device_status_values);
+        
+        if (IMU_get(imu_values) != 1)
+        {
+            AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_STATUS, 0xE6);
+        }
+        else
+        {
+            AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_STATUS, 0x00);
+            imu_type = AIAS_ICD_get(WIRELESS_VIDEO_RECEIVER_IMU_OUTPUT_TYPE);
+            AIAS_ICD_set_receiver_imu_data(imu_type, imu_values);
+        }
+        
+        AIAS_ICD_update_device_status(zcble_frame.status, zing_device_status_values);
+#endif
         if (cyBle_state == CYBLE_STATE_CONNECTED)
         {
             if (CyBle_GattGetBusStatus() == CYBLE_STACK_STATE_FREE)
@@ -173,8 +229,6 @@ int main(void)
 #endif
                 }
             
-                memset(&zcble_frame, 0, sizeof(ZCBLE_frame));
-                
                 if (write == 1)
                 {
                     type = 1;
@@ -184,24 +238,6 @@ int main(void)
                     zcble_frame.type = ZCBLE_READ;
                 }
 #if HBLE
-                if (ZING_parse_host_status(zing_host_status_values) != 1)
-                {
-                    zcble_frame.icd_params.modem.transmitter = 0x03;
-                }
-                else
-                {
-                    zcble_frame.icd_params.modem.transmitter = 0x00;
-                }
-                
-                if (IMU_get(imu_values) != 1)
-                {
-                    zcble_frame.icd_params.tx_imu.status = 0x05;
-                }
-                else
-                {
-                    zcble_frame.icd_params.tx_imu.status = 0x00;
-                }
-                
                 if (SW_CH_Read() == 0)
                 {
                     if (ZCBLE_systick - sw_ch_systick > 1000)
@@ -279,31 +315,6 @@ int main(void)
 #endif 
 #if DBLE
                 AIAS_ICD_set(AIAS_BLE_STATUS, 0x02);
-                AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_OPERATION_MODE_STATUS, 1);
-                
-                if (ZING_parse_device_status(zing_device_status_values) != 1)
-                {
-                    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_MODEM_STATUS, 0xE4);
-                }
-                else
-                {
-                    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_MODEM_STATUS, 0x00);   
-                }
-                
-                zcble_frame.status = ZING_zcd_set_status(zing_device_status_values);
-                
-                if (IMU_get(imu_values) != 1)
-                {
-                    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_STATUS, 0xE6);
-                }
-                else
-                {
-                    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_STATUS, 0x00);
-                    imu_type = AIAS_ICD_get(WIRELESS_VIDEO_RECEIVER_IMU_OUTPUT_TYPE);
-                    AIAS_ICD_set_receiver_imu_data(imu_type, imu_values);
-                }
-                
-                AIAS_ICD_update_device_status(zcble_frame.status, zing_device_status_values);
                 
                 num_total_imu_values = (IMU_get_type() == 0) ? NUM_TOTAL_IMU_EULER_VALUES : NUM_TOTAL_IMU_QUATERNION_VALUES;
                 memcpy(zcble_frame.imu_values, imu_values, sizeof(uint16_t) * num_total_imu_values);
