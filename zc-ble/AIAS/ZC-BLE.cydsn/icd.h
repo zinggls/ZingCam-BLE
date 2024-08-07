@@ -129,6 +129,8 @@ typedef enum {
     WIRELESS_VIDEO_TRANSMITTER_IMU_DATA4_L,
     WIRELESS_VIDEO_TRANSMITTER_IMU_DATA5_H,
     WIRELESS_VIDEO_TRANSMITTER_IMU_DATA5_L,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_CHECKSUM_UPPER,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_CHECKSUM_LOWER,
     WIRELESS_VIDEO_RECEIVER_IMU_DATA1_H,
     WIRELESS_VIDEO_RECEIVER_IMU_DATA1_L,
     WIRELESS_VIDEO_RECEIVER_IMU_DATA2_H,
@@ -139,6 +141,8 @@ typedef enum {
     WIRELESS_VIDEO_RECEIVER_IMU_DATA4_L,
     WIRELESS_VIDEO_RECEIVER_IMU_DATA5_H,
     WIRELESS_VIDEO_RECEIVER_IMU_DATA5_L,
+    WIRELESS_VIDEO_RECEIVER_IMU_CHECKSUM_UPPER,
+    WIRELESS_VIDEO_RECEIVER_IMU_CHECKSUM_LOWER,
     
     AIAS_ZING_HOST_STATUS_USB,
     AIAS_ZING_HOST_STATUS_VND_H,
@@ -241,12 +245,14 @@ void AIAS_ICD_set_receiver_imu_data2(uint16_t data2);
 void AIAS_ICD_set_receiver_imu_data3(uint16_t data3);
 void AIAS_ICD_set_receiver_imu_data4(uint16_t data4);
 void AIAS_ICD_set_receiver_imu_data5(uint16_t data5);
+void AIAS_ICD_set_receiver_imu_checksum(uint16_t checksum);
 void AIAS_ICD_set_transmitter_imu_data(uint8_t sof, uint16_t* imu_values);
 void AIAS_ICD_set_transmitter_imu_data1(uint8_t sof, uint16_t data1);
 void AIAS_ICD_set_transmitter_imu_data2(uint16_t data2);
 void AIAS_ICD_set_transmitter_imu_data3(uint16_t data3);
 void AIAS_ICD_set_transmitter_imu_data4(uint16_t data4);
 void AIAS_ICD_set_transmitter_imu_data5(uint16_t data5);
+void AIAS_ICD_set_transmitter_imu_checksum(uint16_t checksum);
 #endif
 
 void AIAS_ICD_update_host_status(ZING_status status, uint8_t** ptr);
