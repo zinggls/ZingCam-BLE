@@ -51,9 +51,9 @@ static uint8_t AIAS_ICD_MAP[] =
 #if DBLE
     // AIAS ICD
     0x00, 0x01, 0x02, 0x01, 0x01, 0x00, 0x01, 0x07, 0x08, 0x09,
-    0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13,
-    0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,
-    0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
+    0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
+    0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
+    0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29,
     // ZING HOST STATUS
     0x02,                   // USB
     0x12, 0x34,             // VND
@@ -424,6 +424,7 @@ void AIAS_ICD_set_receiver_imu_data(uint8_t sof, uint16_t* imu_values)
         AIAS_ICD_set_receiver_imu_data3(imu_values[IMU_SOF_1]);
         AIAS_ICD_set_receiver_imu_data4(imu_values[IMU_SOF_2]);
         AIAS_ICD_set_receiver_imu_data5(imu_values[IMU_SOF_3]);
+        AIAS_ICD_set_receiver_imu_checksum(imu_values[IMU_SOTS]);
     }
     else
     {
@@ -432,6 +433,7 @@ void AIAS_ICD_set_receiver_imu_data(uint8_t sof, uint16_t* imu_values)
         AIAS_ICD_set_receiver_imu_data3(imu_values[IMU_SOF_2]);
         AIAS_ICD_set_receiver_imu_data4(imu_values[IMU_SOF_3]);
         AIAS_ICD_set_receiver_imu_data5(imu_values[IMU_SOTS]);
+        AIAS_ICD_set_receiver_imu_checksum(imu_values[IMU_CHECKSUM]);
     }
 }
 
@@ -503,6 +505,18 @@ void AIAS_ICD_set_receiver_imu_data5(uint16_t data5)
     AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_DATA5_L, data_l);
 }
 
+void AIAS_ICD_set_receiver_imu_checksum(uint16_t checksum)
+{
+    uint8_t checksum_h;
+    uint8_t checksum_l;
+    
+    checksum_h = (checksum & 0xFF00) >> 8;
+    checksum_l = (checksum & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_CHECKSUM_UPPER, checksum_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_RECEIVER_IMU_CHECKSUM_LOWER, checksum_l);
+}
+
 void AIAS_ICD_set_transmitter_imu_data(uint8_t sof, uint16_t* imu_values)
 {
     if (sof == IMU_EULER)
@@ -512,6 +526,7 @@ void AIAS_ICD_set_transmitter_imu_data(uint8_t sof, uint16_t* imu_values)
         AIAS_ICD_set_transmitter_imu_data3(imu_values[IMU_SOF_1]);
         AIAS_ICD_set_transmitter_imu_data4(imu_values[IMU_SOF_2]);
         AIAS_ICD_set_transmitter_imu_data5(imu_values[IMU_SOF_3]);
+        AIAS_ICD_set_transmitter_imu_checksum(imu_values[IMU_SOTS]);
     }
     else
     {
@@ -520,6 +535,7 @@ void AIAS_ICD_set_transmitter_imu_data(uint8_t sof, uint16_t* imu_values)
         AIAS_ICD_set_transmitter_imu_data3(imu_values[IMU_SOF_2]);
         AIAS_ICD_set_transmitter_imu_data4(imu_values[IMU_SOF_3]);
         AIAS_ICD_set_transmitter_imu_data5(imu_values[IMU_SOTS]);
+        AIAS_ICD_set_transmitter_imu_checksum(imu_values[IMU_CHECKSUM]);
     }
 }
 
@@ -589,6 +605,18 @@ void AIAS_ICD_set_transmitter_imu_data5(uint16_t data5)
     
     AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA5_H, data_h);
     AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_DATA5_L, data_l);
+}
+
+void AIAS_ICD_set_transmitter_imu_checksum(uint16_t checksum)
+{
+    uint8_t checksum_h;
+    uint8_t checksum_l;
+    
+    checksum_h = (checksum & 0xFF00) >> 8;
+    checksum_l = (checksum & 0x00FF);
+    
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_CHECKSUM_UPPER, checksum_h);
+    AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_IMU_CHECKSUM_LOWER, checksum_l);
 }
 #endif 
 
