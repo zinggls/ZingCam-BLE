@@ -42,20 +42,20 @@ void UART_IMU_RX_INTERRUPT(void)
     }
     else
     {
-        if (imu_cnt < num_bytes)
+        if (imu_cnt < num_bytes - 2)
         {
             imu_status[imu_cnt] = ch;
             checksum = checksum + ch;
         }
         else
         {
-            if (imu_cnt == num_bytes)
+            if (imu_cnt == num_bytes - 2)
             {
-                checksum_upper = ch;
+                imu_status[imu_cnt] = checksum_upper = ch;
             }
-            else if (imu_cnt == num_bytes + 1)
+            else if (imu_cnt == num_bytes - 2 + 1)
             {
-                checksum_lower = ch;
+                imu_status[imu_cnt] = checksum_lower = ch;
                 
                 imu_cnt = 0;
                 SOF = 0;
