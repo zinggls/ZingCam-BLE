@@ -34,7 +34,7 @@ class I2C:
         return address
     
     def read_use_addr(self, device_addr):
-        result = self.dev.I2C_ReadData(device_addr, 40 + 26 + 42)
+        result = self.dev.I2C_ReadData(device_addr, 44 + 26 + 42)
         read_data = result[1]
         return read_data
     
@@ -70,11 +70,13 @@ class ICD:
             "무선영상 송신기 IMU Data 3",
             "무선영상 송신기 IMU Data 4",
             "무선영상 송신기 IMU Data 5",
+            "무선영상 송신기 IMU Checksum",
             "무선영상 수신기 IMU Data 1",
             "무선영상 수신기 IMU Data 2",
             "무선영상 수신기 IMU Data 3",
             "무선영상 수신기 IMU Data 4",
             "무선영상 수신기 IMU Data 5",
+            "무선영상 수신기 IMU Checksum",
             "ZCH USB", # HBLE
             "ZCH Vendor ID",
             "ZCH Product ID",
@@ -132,16 +134,18 @@ class ICD:
             "무선영상 송신기 IMU 상태",
             "무선영상 수신기 IMU 상태",
             "BLE 상태",
-            'd',
-            'd',
-            'd',
-            'd',
-            'd',
-            'd',
-            'd',
-            'd',
-            'd',
-            'd', 
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
+            'x',
             'd', # HBLE
             'x',
             'x',
@@ -209,6 +213,8 @@ class ICD:
             0x00, 0x00,
             0x00, 0x00,
             0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00,
             0x00, # HBLE
             0x00, 0x00,
             0x00, 0x00,
@@ -265,6 +271,8 @@ class ICD:
             0x00,
             0x00,
             0x00,
+            0x0000,
+            0x0000,
             0x0000,
             0x0000,
             0x0000,
@@ -342,40 +350,42 @@ class ICD:
         self.icd_list[27] = (self.icd_i2c_list[34] << 8) | self.icd_i2c_list[35]
         self.icd_list[28] = (self.icd_i2c_list[36] << 8) | self.icd_i2c_list[37]
         self.icd_list[29] = (self.icd_i2c_list[38] << 8) | self.icd_i2c_list[39]
-        self.icd_list[30] = self.icd_i2c_list[40] # HBLE
-        self.icd_list[31] = (self.icd_i2c_list[41] << 8) | self.icd_i2c_list[42]
-        self.icd_list[32] = (self.icd_i2c_list[43] << 8) | self.icd_i2c_list[44]
-        self.icd_list[33] = self.icd_i2c_list[45]
-        self.icd_list[34] = (self.icd_i2c_list[46] << 8) | self.icd_i2c_list[47]
-        self.icd_list[35] = (self.icd_i2c_list[48] << 8) | self.icd_i2c_list[49]
-        self.icd_list[36] = self.icd_i2c_list[50]
-        self.icd_list[37] = self.icd_i2c_list[51]
-        self.icd_list[38] = self.icd_i2c_list[52]
-        self.icd_list[39] = self.icd_i2c_list[53]
-        self.icd_list[40] = self.icd_i2c_list[54]
-        self.icd_list[41] = self.icd_i2c_list[55]
-        self.icd_list[42] = (self.icd_i2c_list[56] << 24) | (self.icd_i2c_list[57] << 16) | (self.icd_i2c_list[58] << 8) | self.icd_i2c_list[59]
-        self.icd_list[43] = (self.icd_i2c_list[60] << 24) | (self.icd_i2c_list[61] << 16) | (self.icd_i2c_list[62] << 8) | self.icd_i2c_list[63]
-        self.icd_list[44] = (self.icd_i2c_list[64] << 8) | self.icd_i2c_list[65]
-        self.icd_list[45] = self.icd_i2c_list[66] # DBLE
-        self.icd_list[46] = (self.icd_i2c_list[67] << 8) | self.icd_i2c_list[68]
-        self.icd_list[47] = (self.icd_i2c_list[69] << 8) | self.icd_i2c_list[70]
-        self.icd_list[48] = self.icd_i2c_list[71]
-        self.icd_list[49] = self.icd_i2c_list[72]
-        self.icd_list[50] = (self.icd_i2c_list[73] << 24) | (self.icd_i2c_list[74] << 16) | (self.icd_i2c_list[75] << 8) | self.icd_i2c_list[76]
-        self.icd_list[51] = self.icd_i2c_list[77]
-        self.icd_list[52] = self.icd_i2c_list[78]
-        self.icd_list[53] = self.icd_i2c_list[79]
-        self.icd_list[54] = self.icd_i2c_list[80]
-        self.icd_list[55] = self.icd_i2c_list[81]
-        self.icd_list[56] = (self.icd_i2c_list[82] << 24) | (self.icd_i2c_list[83] << 16) | (self.icd_i2c_list[84] << 8) | self.icd_i2c_list[85]
-        self.icd_list[57] = (self.icd_i2c_list[86] << 24) | (self.icd_i2c_list[87] << 16) | (self.icd_i2c_list[88] << 8) | self.icd_i2c_list[89]
-        self.icd_list[58] = (self.icd_i2c_list[90] << 24) | (self.icd_i2c_list[91] << 16) | (self.icd_i2c_list[92] << 8) | self.icd_i2c_list[93]
-        self.icd_list[59] = (self.icd_i2c_list[94] << 8) | self.icd_i2c_list[95]
-        self.icd_list[60] = (self.icd_i2c_list[96] << 24) | (self.icd_i2c_list[97] << 16) | (self.icd_i2c_list[98] << 8) | self.icd_i2c_list[99]
-        self.icd_list[61] = (self.icd_i2c_list[100] << 8) | self.icd_i2c_list[101]
-        self.icd_list[62] = (self.icd_i2c_list[102] << 24) | (self.icd_i2c_list[103] << 16) | (self.icd_i2c_list[104] << 8) | self.icd_i2c_list[105]
-        self.icd_list[63] = (self.icd_i2c_list[106] << 8) | self.icd_i2c_list[107]
+        self.icd_list[30] = (self.icd_i2c_list[40] << 8) | self.icd_i2c_list[41]
+        self.icd_list[31] = (self.icd_i2c_list[42] << 8) | self.icd_i2c_list[43]
+        self.icd_list[32] = self.icd_i2c_list[44] # HBLE
+        self.icd_list[33] = (self.icd_i2c_list[45] << 8) | self.icd_i2c_list[46]
+        self.icd_list[34] = (self.icd_i2c_list[47] << 8) | self.icd_i2c_list[48]
+        self.icd_list[35] = self.icd_i2c_list[49]
+        self.icd_list[36] = (self.icd_i2c_list[50] << 8) | self.icd_i2c_list[51]
+        self.icd_list[37] = (self.icd_i2c_list[52] << 8) | self.icd_i2c_list[53]
+        self.icd_list[38] = self.icd_i2c_list[54]
+        self.icd_list[39] = self.icd_i2c_list[55]
+        self.icd_list[40] = self.icd_i2c_list[56]
+        self.icd_list[41] = self.icd_i2c_list[57]
+        self.icd_list[42] = self.icd_i2c_list[58]
+        self.icd_list[43] = self.icd_i2c_list[59]
+        self.icd_list[44] = (self.icd_i2c_list[60] << 24) | (self.icd_i2c_list[61] << 16) | (self.icd_i2c_list[62] << 8) | self.icd_i2c_list[63]
+        self.icd_list[45] = (self.icd_i2c_list[64] << 24) | (self.icd_i2c_list[65] << 16) | (self.icd_i2c_list[66] << 8) | self.icd_i2c_list[67]
+        self.icd_list[46] = (self.icd_i2c_list[68] << 8) | self.icd_i2c_list[69]
+        self.icd_list[47] = self.icd_i2c_list[70] # DBLE
+        self.icd_list[48] = (self.icd_i2c_list[71] << 8) | self.icd_i2c_list[72]
+        self.icd_list[49] = (self.icd_i2c_list[73] << 8) | self.icd_i2c_list[74]
+        self.icd_list[50] = self.icd_i2c_list[75]
+        self.icd_list[51] = self.icd_i2c_list[76]
+        self.icd_list[52] = (self.icd_i2c_list[77] << 24) | (self.icd_i2c_list[78] << 16) | (self.icd_i2c_list[79] << 8) | self.icd_i2c_list[80]
+        self.icd_list[53] = self.icd_i2c_list[81]
+        self.icd_list[54] = self.icd_i2c_list[82]
+        self.icd_list[55] = self.icd_i2c_list[83]
+        self.icd_list[56] = self.icd_i2c_list[84]
+        self.icd_list[57] = self.icd_i2c_list[85]
+        self.icd_list[58] = (self.icd_i2c_list[86] << 24) | (self.icd_i2c_list[87] << 16) | (self.icd_i2c_list[88] << 8) | self.icd_i2c_list[89]
+        self.icd_list[59] = (self.icd_i2c_list[90] << 24) | (self.icd_i2c_list[91] << 16) | (self.icd_i2c_list[92] << 8) | self.icd_i2c_list[93]
+        self.icd_list[60] = (self.icd_i2c_list[94] << 24) | (self.icd_i2c_list[95] << 16) | (self.icd_i2c_list[96] << 8) | self.icd_i2c_list[97]
+        self.icd_list[61] = (self.icd_i2c_list[98] << 8) | self.icd_i2c_list[99]
+        self.icd_list[62] = (self.icd_i2c_list[100] << 24) | (self.icd_i2c_list[101] << 16) | (self.icd_i2c_list[102] << 8) | self.icd_i2c_list[103]
+        self.icd_list[63] = (self.icd_i2c_list[104] << 8) | self.icd_i2c_list[105]
+        self.icd_list[64] = (self.icd_i2c_list[106] << 24) | (self.icd_i2c_list[107] << 16) | (self.icd_i2c_list[108] << 8) | self.icd_i2c_list[109]
+        self.icd_list[65] = (self.icd_i2c_list[110] << 8) | self.icd_i2c_list[111]
 
 class Debug:
     def __init__(self, window, icd):
@@ -406,6 +416,7 @@ class Debug:
             ("IMU Data 3", 1, 1),
             ("IMU Data 4", 1, 1),
             ("IMU Data 5", 1, 1),
+            ("IMU Checksum", 1, 1),
         ]
 
         self.zing_status_list = [
@@ -459,6 +470,7 @@ class Debug:
                 idx = self.icd.icd_name_list.index(zch)
                 hble_label = tkinter.Label(self.hble_frame, text = "", width = 20)
                 self.status_list.append((idx, hble_label))
+                print("ZCH", idx, hble_label)
                 hble_label.pack()
             else:
                 tkinter.Label(self.hble_frame).pack()
@@ -468,6 +480,7 @@ class Debug:
                 idx = self.icd.icd_name_list.index(zcd)
                 dble_label = tkinter.Label(dble_frame, text = "", width = 20)
                 self.status_list.append((idx, dble_label))
+                print("ZCD", idx, zcd)
                 dble_label.pack()
             else:
                 tkinter.Label(dble_frame).pack()
@@ -704,6 +717,8 @@ class IE:
         self.window = tkinter.Tk()
         self.ports = tkinter.StringVar()
         self.connected = False
+        self.tx_imu_type = 0
+        self.rx_imu_type = 0
         
         self.create_connect_frame()
         self.create_main_frame()
@@ -760,6 +775,58 @@ class IE:
         data = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
         self.i2c.send_use_addr(self.i2c.get_address(), data)
 
+    def tx_euler_button(self):
+        self.tx_imu_type = 0
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def tx_quaternion_button(self):
+        self.tx_imu_type = 1
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def rx_euler_button(self):
+        self.rx_imu_type = 0
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def rx_quaternion_button(self):
+        self.rx_imu_type = 1
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def tx_imu_gyro_cal_button(self):
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 1, self.rx_imu_type, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def tx_imu_acc_cal_button(self):
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 2, self.rx_imu_type, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def tx_imu_mag_cal_button(self):
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 3, self.rx_imu_type, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def tx_imu_mag_cal_done_button(self):
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 4, self.rx_imu_type, 0]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def rx_imu_gyro_cal_button(self):
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 1]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def rx_imu_acc_cal_button(self):
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 2]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def rx_imu_mag_cal_button(self):
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 3]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def rx_imu_mag_cal_done_button(self):
+        data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 4]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
     def create_main_frame(self):
         self.main_frame = tkinter.Frame(self.window)
         label_frame = tkinter.LabelFrame(self.main_frame, text = "Open GUI")
@@ -772,8 +839,32 @@ class IE:
         ch1_button.pack(padx = 5, pady = 5)
         ch2_button = tkinter.Button(label_frame, text = "Set CH2", width = 20, command = self.ch2_button)
         ch2_button.pack(padx = 5, pady = 5)
-        ch2_button = tkinter.Button(label_frame, text = "자동채널변경", width = 20, command = self.auto_button)
-        ch2_button.pack(padx = 5, pady = 5)
+        auto_button = tkinter.Button(label_frame, text = "자동채널변경", width = 20, command = self.auto_button)
+        auto_button.pack(padx = 5, pady = 5)
+        tx_euler_button = tkinter.Button(label_frame, text = "Set TX IMU Euler", width = 20, command = self.tx_euler_button)
+        tx_euler_button.pack(padx = 5, pady = 5)
+        tx_quaternion_button = tkinter.Button(label_frame, text = "Set TX IMU Quaternion", width = 20, command = self.tx_quaternion_button)
+        tx_quaternion_button.pack(padx = 5, pady = 5)
+        rx_euler_button = tkinter.Button(label_frame, text = "Set RX IMU Euler", width = 20, command = self.rx_euler_button)
+        rx_euler_button.pack(padx = 5, pady = 5)
+        rx_quaternion_button = tkinter.Button(label_frame, text = "Set RX IMU Quaternion", width = 20, command = self.rx_quaternion_button)
+        rx_quaternion_button.pack(padx = 5, pady = 5)
+        tx_imu_gyro_cal_button = tkinter.Button(label_frame, text = "TX IMU GYRO Calibration", width = 20, command = self.tx_imu_gyro_cal_button)
+        tx_imu_gyro_cal_button.pack(padx = 5, pady = 5)
+        tx_imu_acc_cal_button = tkinter.Button(label_frame, text = "TX IMU ACC Calibration", width = 20, command = self.tx_imu_acc_cal_button)
+        tx_imu_acc_cal_button.pack(padx = 5, pady = 5)
+        tx_imu_mag_cal_button = tkinter.Button(label_frame, text = "TX IMU MAG Calibration", width = 20, command = self.tx_imu_mag_cal_button)
+        tx_imu_mag_cal_button.pack(padx = 5, pady = 5)
+        tx_imu_mag_cal_done_button = tkinter.Button(label_frame, text = "TX IMU MAG Calibration Done", width = 20, command = self.tx_imu_mag_cal_done_button)
+        tx_imu_mag_cal_done_button.pack(padx = 5, pady = 5)
+        rx_imu_gyro_cal_button = tkinter.Button(label_frame, text = "RX IMU GYRO Calibration", width = 20, command = self.rx_imu_gyro_cal_button)
+        rx_imu_gyro_cal_button.pack(padx = 5, pady = 5)
+        rx_imu_acc_cal_button = tkinter.Button(label_frame, text = "RX IMU ACC Calibration", width = 20, command = self.rx_imu_acc_cal_button)
+        rx_imu_acc_cal_button.pack(padx = 5, pady = 5)
+        rx_imu_mag_cal_button = tkinter.Button(label_frame, text = "RX IMU MAG Calibration", width = 20, command = self.rx_imu_mag_cal_button)
+        rx_imu_mag_cal_button.pack(padx = 5, pady = 5)
+        rx_imu_mag_cal_done_button = tkinter.Button(label_frame, text = "RX IMU Calibration Done", width = 20, command = self.rx_imu_mag_cal_done_button)
+        rx_imu_mag_cal_done_button.pack(padx = 5, pady = 5)
 
         label_frame.pack(fill = tkinter.BOTH)
 
@@ -837,7 +928,7 @@ class IE:
                         "ksvideosrc",
                         "device-index=0",
                         "!"
-                        "video/x-raw,width=640,height=480,framerate=30/1,format=UYVY",
+                        "video/x-raw,width=1920,height=1080,framerate=30/1,format=UYVY",
                         "!"
                         "videoconvert"
                         "!"
