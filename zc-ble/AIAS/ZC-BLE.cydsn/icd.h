@@ -12,7 +12,7 @@
 #endif
 
 #if DBLE
-#define NUM_READ_AIAS_ICD 40 + 26 + 42
+#define NUM_READ_AIAS_ICD 44 + 26 + 42
 #define NUM_WRITE_AIAS_ICD 11
 #endif
 
