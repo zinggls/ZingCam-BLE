@@ -13,4 +13,5 @@ typedef struct {
 int main(int argc, char *argv[])
 {  
 	printf("I2C master emulating the scope\r\n");
+	return 0;
 }  
