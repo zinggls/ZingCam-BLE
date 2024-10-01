@@ -1,0 +1,293 @@
+#ifndef ICD_H
+#define ICD_H
+
+#include "project.h"
+#include "ble.h"
+#include "main.h"
+#include "ai2c.h"
+
+#if HBLE
+#define NUM_READ_AIAS_ICD 3
+#define NUM_WRITE_AIAS_ICD 6
+#endif
+
+#if DBLE
+#define NUM_READ_AIAS_ICD 44 + 26 + 42
+#define NUM_WRITE_AIAS_ICD 11
+#endif
+
+#if HBLE
+typedef enum {
+    SCOPE_CAMERA,
+    SCOPE_OUTPUT,
+    SCOPE_OPERATION_MODE,
+    SCOPE_BATTERY_STATUS,
+    SCOPE_IR_MODULE_STATUS,
+    SCOPE_EO_MODULE_STATUS,
+    
+    AIAS_ZING_HOST_STATUS_USB,
+    AIAS_ZING_HOST_STATUS_VND_H,
+    AIAS_ZING_HOST_STATUS_VND_L,
+    AIAS_ZING_HOST_STATUS_PRD_H,
+    AIAS_ZING_HOST_STATUS_PRD_L,
+    AIAS_ZING_HOST_STATUS_BND,
+    AIAS_ZING_HOST_STATUS_PPID_H,
+    AIAS_ZING_HOST_STATUS_PPID_L,
+    AIAS_ZING_HOST_STATUS_DEVID_H,
+    AIAS_ZING_HOST_STATUS_DEVID_L,
+    AIAS_ZING_HOST_STATUS_FMT,
+    AIAS_ZING_HOST_STATUS_IDX,
+    AIAS_ZING_HOST_STATUS_TRT,
+    AIAS_ZING_HOST_STATUS_ACK,
+    AIAS_ZING_HOST_STATUS_PPC,
+    AIAS_ZING_HOST_STATUS_RUN,
+    AIAS_ZING_HOST_STATUS_TXID_HH,
+    AIAS_ZING_HOST_STATUS_TXID_HL,
+    AIAS_ZING_HOST_STATUS_TXID_LH,
+    AIAS_ZING_HOST_STATUS_TXID_LL,
+    AIAS_ZING_HOST_STATUS_RXID_HH,
+    AIAS_ZING_HOST_STATUS_RXID_HL,
+    AIAS_ZING_HOST_STATUS_RXID_LH,
+    AIAS_ZING_HOST_STATUS_RXID_LL,
+    AIAS_ZING_HOST_STATUS_CNT_H,
+    AIAS_ZING_HOST_STATUS_CNT_L,
+
+    AIAS_ZING_DEVICE_STATUS_USB,
+    AIAS_ZING_DEVICE_STATUS_PPID_H,
+    AIAS_ZING_DEVICE_STATUS_PPID_L,
+    AIAS_ZING_DEVICE_STATUS_DEVID_H,
+    AIAS_ZING_DEVICE_STATUS_DEVID_L,
+    AIAS_ZING_DEVICE_STATUS_FMT,
+    AIAS_ZING_DEVICE_STATUS_IDX,
+    AIAS_ZING_DEVICE_STATUS_FPS_HH,
+    AIAS_ZING_DEVICE_STATUS_FPS_HL,
+    AIAS_ZING_DEVICE_STATUS_FPS_LH,
+    AIAS_ZING_DEVICE_STATUS_FPS_LL,
+    AIAS_ZING_DEVICE_STATUS_TRT,
+    AIAS_ZING_DEVICE_STATUS_ACK,
+    AIAS_ZING_DEVICE_STATUS_PPC,
+    AIAS_ZING_DEVICE_STATUS_RUN,
+    AIAS_ZING_DEVICE_STATUS_ITF,
+    AIAS_ZING_DEVICE_STATUS_TXID_HH,
+    AIAS_ZING_DEVICE_STATUS_TXID_HL,
+    AIAS_ZING_DEVICE_STATUS_TXID_LH,
+    AIAS_ZING_DEVICE_STATUS_TXID_LL,
+    AIAS_ZING_DEVICE_STATUS_RXID_HH,
+    AIAS_ZING_DEVICE_STATUS_RXID_HL,
+    AIAS_ZING_DEVICE_STATUS_RXID_LH,
+    AIAS_ZING_DEVICE_STATUS_RXID_LL,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_HH,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_HL,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_LH,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_LL,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_DIFF_CNT_H,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_DIFF_CNT_L,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_HH,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_HL,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_LH,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_LL,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_DIFF_CNT_H,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_DIFF_CNT_L,
+    AIAS_ZING_DEVICE_STATUS_MFIR_HH,
+    AIAS_ZING_DEVICE_STATUS_MFIR_HL,
+    AIAS_ZING_DEVICE_STATUS_MFIR_LH,
+    AIAS_ZING_DEVICE_STATUS_MFIR_LL,
+    AIAS_ZING_DEVICE_STATUS_CNT_H,
+    AIAS_ZING_DEVICE_STATUS_CNT_L,
+} WIRELESS_VIDEO_TRANSMITTER_ICD;
+#endif
+
+#if DBLE
+typedef enum {
+    SCOPE_CAMERA,
+    SCOPE_OUTPUT,
+    WIRELESS_VIDEO_CHANNEL_MODE,
+    WIRELESS_VIDEO_CHANNEL_INFORMATION,
+    SCOPE_OPERATION_MODE,
+    WIRELESS_VIDEO_TRANSMITTER_OPERATION_MODE_STATUS,
+    WIRELESS_VIDEO_RECEIVER_OPERATION_MODE_STATUS,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_OUTPUT_TYPE,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_CALIBRATE,
+    WIRELESS_VIDEO_RECEIVER_IMU_OUTPUT_TYPE,
+    WIRELESS_VIDEO_RECEIVER_IMU_CALIBRATE,
+    SCOPE_BATTERY_STATUS,
+    WIRELESS_VIDEO_TRANSMITTER_BATTERY_STATUS,
+    SCOPE_IR_MODULE_STATUS,
+    SCOPE_EO_MODULE_STATUS,
+    WIRELESS_VIDEO_TRANSMITTER_MODEM_STATUS,
+    WIRELESS_VIDEO_RECEIVER_MODEM_STATUS,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_STATUS,
+    WIRELESS_VIDEO_RECEIVER_IMU_STATUS,
+    AIAS_BLE_STATUS,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA1_H,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA1_L,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA2_H,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA2_L,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA3_H,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA3_L,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA4_H,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA4_L,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA5_H,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_DATA5_L,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_CHECKSUM_UPPER,
+    WIRELESS_VIDEO_TRANSMITTER_IMU_CHECKSUM_LOWER,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA1_H,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA1_L,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA2_H,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA2_L,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA3_H,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA3_L,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA4_H,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA4_L,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA5_H,
+    WIRELESS_VIDEO_RECEIVER_IMU_DATA5_L,
+    WIRELESS_VIDEO_RECEIVER_IMU_CHECKSUM_UPPER,
+    WIRELESS_VIDEO_RECEIVER_IMU_CHECKSUM_LOWER,
+    
+    AIAS_ZING_HOST_STATUS_USB,
+    AIAS_ZING_HOST_STATUS_VND_H,
+    AIAS_ZING_HOST_STATUS_VND_L,
+    AIAS_ZING_HOST_STATUS_PRD_H,
+    AIAS_ZING_HOST_STATUS_PRD_L,
+    AIAS_ZING_HOST_STATUS_BND,
+    AIAS_ZING_HOST_STATUS_PPID_H,
+    AIAS_ZING_HOST_STATUS_PPID_L,
+    AIAS_ZING_HOST_STATUS_DEVID_H,
+    AIAS_ZING_HOST_STATUS_DEVID_L,
+    AIAS_ZING_HOST_STATUS_FMT,
+    AIAS_ZING_HOST_STATUS_IDX,
+    AIAS_ZING_HOST_STATUS_TRT,
+    AIAS_ZING_HOST_STATUS_ACK,
+    AIAS_ZING_HOST_STATUS_PPC,
+    AIAS_ZING_HOST_STATUS_RUN,
+    AIAS_ZING_HOST_STATUS_TXID_HH,
+    AIAS_ZING_HOST_STATUS_TXID_HL,
+    AIAS_ZING_HOST_STATUS_TXID_LH,
+    AIAS_ZING_HOST_STATUS_TXID_LL,
+    AIAS_ZING_HOST_STATUS_RXID_HH,
+    AIAS_ZING_HOST_STATUS_RXID_HL,
+    AIAS_ZING_HOST_STATUS_RXID_LH,
+    AIAS_ZING_HOST_STATUS_RXID_LL,
+    AIAS_ZING_HOST_STATUS_CNT_H,
+    AIAS_ZING_HOST_STATUS_CNT_L,
+
+    AIAS_ZING_DEVICE_STATUS_USB,
+    AIAS_ZING_DEVICE_STATUS_PPID_H,
+    AIAS_ZING_DEVICE_STATUS_PPID_L,
+    AIAS_ZING_DEVICE_STATUS_DEVID_H,
+    AIAS_ZING_DEVICE_STATUS_DEVID_L,
+    AIAS_ZING_DEVICE_STATUS_FMT,
+    AIAS_ZING_DEVICE_STATUS_IDX,
+    AIAS_ZING_DEVICE_STATUS_FPS_HH,
+    AIAS_ZING_DEVICE_STATUS_FPS_HL,
+    AIAS_ZING_DEVICE_STATUS_FPS_LH,
+    AIAS_ZING_DEVICE_STATUS_FPS_LL,
+    AIAS_ZING_DEVICE_STATUS_TRT,
+    AIAS_ZING_DEVICE_STATUS_ACK,
+    AIAS_ZING_DEVICE_STATUS_PPC,
+    AIAS_ZING_DEVICE_STATUS_RUN,
+    AIAS_ZING_DEVICE_STATUS_ITF,
+    AIAS_ZING_DEVICE_STATUS_TXID_HH,
+    AIAS_ZING_DEVICE_STATUS_TXID_HL,
+    AIAS_ZING_DEVICE_STATUS_TXID_LH,
+    AIAS_ZING_DEVICE_STATUS_TXID_LL,
+    AIAS_ZING_DEVICE_STATUS_RXID_HH,
+    AIAS_ZING_DEVICE_STATUS_RXID_HL,
+    AIAS_ZING_DEVICE_STATUS_RXID_LH,
+    AIAS_ZING_DEVICE_STATUS_RXID_LL,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_HH,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_HL,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_LH,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_CNT_LL,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_DIFF_CNT_H,
+    AIAS_ZING_DEVICE_STATUS_DST_ID_ERR_DIFF_CNT_L,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_HH,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_HL,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_LH,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_CNT_LL,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_DIFF_CNT_H,
+    AIAS_ZING_DEVICE_STATUS_PHY_RX_FRAME_DIFF_CNT_L,
+    AIAS_ZING_DEVICE_STATUS_MFIR_HH,
+    AIAS_ZING_DEVICE_STATUS_MFIR_HL,
+    AIAS_ZING_DEVICE_STATUS_MFIR_LH,
+    AIAS_ZING_DEVICE_STATUS_MFIR_LL,
+    AIAS_ZING_DEVICE_STATUS_CNT_H,
+    AIAS_ZING_DEVICE_STATUS_CNT_L,
+    
+} WIRELESS_VIDEO_RECEIVER_ICD;
+#endif
+
+uint8_t* AIAS_ICD_get_map(void);
+uint8_t AIAS_ICD_get(uint8_t addr);
+void AIAS_ICD_get_block(uint8_t addr, uint8_t* buffer, uint8_t len);
+void AIAS_ICD_set(uint8_t addr, uint8_t value);
+void AIAS_ICD_set_block(uint8_t addr, uint8_t* buffer, uint8_t len);
+
+void AIAS_ICD_read(void);
+uint8_t AIAS_ICD_write(void);
+
+void AIAS_ICD_set_scope(ZCBLE_scope scope);
+void AIAS_ICD_set_wireless_channel(ZCBLE_wireless_channel w_c);
+void AIAS_ICD_set_opmode(ZCBLE_opmode opmode);
+void AIAS_ICD_set_transitter_imu_status(uint8_t imu_status);
+void AIAS_ICD_set_transitter_imu(ZCBLE_transmitter_imu imu);
+void AIAS_ICD_set_zcble_frame(ZCBLE_frame* zcble_frame);
+#if DBLE
+void AIAS_ICD_set_battery_level(ZCBLE_battery_level battery);
+void AIAS_ICD_set_modules_status(ZCBLE_modules_status modules);
+void AIAS_ICD_set_modem_status(ZCBLE_modem modem);
+#endif
+
+#if DBLE
+void AIAS_ICD_set_receiver_imu_data(uint8_t sof, uint16_t* imu_values);
+void AIAS_ICD_set_receiver_imu_data1(uint8_t sof, uint16_t data1);
+void AIAS_ICD_set_receiver_imu_data2(uint16_t data2);
+void AIAS_ICD_set_receiver_imu_data3(uint16_t data3);
+void AIAS_ICD_set_receiver_imu_data4(uint16_t data4);
+void AIAS_ICD_set_receiver_imu_data5(uint16_t data5);
+void AIAS_ICD_set_receiver_imu_checksum(uint16_t checksum);
+void AIAS_ICD_set_transmitter_imu_data(uint8_t sof, uint16_t* imu_values);
+void AIAS_ICD_set_transmitter_imu_data1(uint8_t sof, uint16_t data1);
+void AIAS_ICD_set_transmitter_imu_data2(uint16_t data2);
+void AIAS_ICD_set_transmitter_imu_data3(uint16_t data3);
+void AIAS_ICD_set_transmitter_imu_data4(uint16_t data4);
+void AIAS_ICD_set_transmitter_imu_data5(uint16_t data5);
+void AIAS_ICD_set_transmitter_imu_checksum(uint16_t checksum);
+#endif
+
+void AIAS_ICD_update_host_status(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_usb(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_vnd(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_prd(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_bnd(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_ppid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_devid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_fmt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_idx(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_trt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_ack(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_ppc(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_txid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_rxid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_run(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_host_status_cnt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_update_device_status(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_usb(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_ppid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_devid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_fmt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_idx(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_fps(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_trt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_ack(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_ppc(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_run(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_itf(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_txid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_rxid(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_dst_id_err_cnt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_phy_rx_frame_cnt(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_mfir(ZING_status status, uint8_t** ptr);
+void AIAS_ICD_set_device_status_cnt(ZING_status status, uint8_t** ptr);
+
+#endif
