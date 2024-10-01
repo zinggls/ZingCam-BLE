@@ -1,0 +1,13 @@
+Last Modified Date & Time: 10/01/2024 18:01:01
+
+ZC-BLE: TopDesign.cysch
+	ADC [v2.50] to [v2.60]
+	ZCBLE [v3.50] to [v3.66]
+	OTG_Detect_IRQ [v1.70] to [v1.71]
+	SW_PW_EN_IRQ [v1.70] to [v1.71]
+	UART_ZING_RX_INTR [v1.70] to [v1.71]
+
+ZC-BLE: ZC-BLE.cydwr
+	cy_boot [v5.82] to [v6.10]
+
+
