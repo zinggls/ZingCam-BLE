@@ -36,8 +36,7 @@ def clear_screen():
 
 # Function to display title and commands
 def display_title_and_commands():
-    print("I2C Master Emulator")
-    print("Commands: 1: Camera, 2: Output, 3: Mode, 4: Battery, 5: IR, 6: EO, r: Refresh, q to quit.\n")
+    print("I2C Master Emulator\n")
 
 # Function to read 6-byte block from the I2C slave
 def read_from_i2c():
