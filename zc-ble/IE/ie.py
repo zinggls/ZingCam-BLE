@@ -827,6 +827,14 @@ class IE:
         data = [0, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 4]
         self.i2c.send_use_addr(self.i2c.get_address(), data)
 
+    def eo_camera(self):
+        data = [1, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 4]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
+    def ir_camera(self):
+        data = [2, 0, 2, 1, 0, 0, 0, self.tx_imu_type, 0, self.rx_imu_type, 4]
+        self.i2c.send_use_addr(self.i2c.get_address(), data)
+
     def create_main_frame(self):
         self.main_frame = tkinter.Frame(self.window)
         label_frame = tkinter.LabelFrame(self.main_frame, text = "Open GUI")
@@ -864,6 +872,10 @@ class IE:
         rx_imu_mag_cal_button = tkinter.Button(label_frame, text = "RX IMU MAG Calibration", width = 20, command = self.rx_imu_mag_cal_button)
         rx_imu_mag_cal_button.pack(padx = 5, pady = 5)
         rx_imu_mag_cal_done_button = tkinter.Button(label_frame, text = "RX IMU Calibration Done", width = 20, command = self.rx_imu_mag_cal_done_button)
+        rx_imu_mag_cal_done_button.pack(padx = 5, pady = 5)
+        rx_imu_mag_cal_done_button = tkinter.Button(label_frame, text = "EO", width = 20, command = self.eo_camera)
+        rx_imu_mag_cal_done_button.pack(padx = 5, pady = 5)
+        rx_imu_mag_cal_done_button = tkinter.Button(label_frame, text = "IR", width = 20, command = self.ir_camera)
         rx_imu_mag_cal_done_button.pack(padx = 5, pady = 5)
 
         label_frame.pack(fill = tkinter.BOTH)
@@ -928,7 +940,7 @@ class IE:
                         "ksvideosrc",
                         "device-index=0",
                         "!"
-                        "video/x-raw,width=1920,height=1080,framerate=30/1,format=UYVY",
+                        "video/x-raw,width=640,height=480,framerate=30/1,format=UYVY",
                         "!"
                         "videoconvert"
                         "!"
