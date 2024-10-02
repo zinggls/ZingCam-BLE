@@ -37,7 +37,7 @@ def clear_screen():
 # Function to display title and commands
 def display_title_and_commands():
     print("I2C Master Emulator")
-    print("Commands: 1: Camera, 2: Output, 3: Mode, 4: Battery, 5: IR, 6: EO, q to quit.\n")
+    print("Commands: 1: Camera, 2: Output, 3: Mode, 4: Battery, 5: IR, 6: EO, r: Refresh, q to quit.\n")
 
 # Function to read 6-byte block from the I2C slave
 def read_from_i2c():
@@ -72,7 +72,7 @@ def main():
         display_title_and_commands()
         scope.display()  # Display current scope data
 
-        command = input("Enter command (1-6 to update, q to quit): ")
+        command = input("Enter command (1-6 to update, r to refresh, q to quit): ")
 
         if command == '1':
             scope.camera = int(input("Enter new value for Camera (0-255): "))
@@ -86,14 +86,22 @@ def main():
             scope.ir_status = int(input("Enter new value for IR Status (0-255): "))
         elif command == '6':
             scope.eo_status = int(input("Enter new value for EO Status (0-255): "))
+        elif command == 'r':  # Refresh command
+            updated_scope = read_from_i2c()
+            if updated_scope is not None:
+                scope = updated_scope  # Update local scope with new I2C values
+                print("Scope values refreshed from I2C device.")
+            else:
+                print("Failed to refresh scope values.")
         elif command == 'q':
             print("Exiting program...")
             break
         else:
-            print("Invalid input! Please enter 1-6 or q to quit.")
+            print("Invalid input! Please enter 1-6, r to refresh, or q to quit.")
 
         write_to_i2c(scope)  # Write updated scope values to I2C
         time.sleep(1)  # Pause for a bit before refreshing the screen
 
 if __name__ == "__main__":
     main()
+
