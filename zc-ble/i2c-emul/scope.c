@@ -23,15 +23,22 @@ void clearScreen() {
     system("clear");  // Unix/Linux command to clear screen
 }
 
-// Function to display the current status of the Scope struct
+// Function to display the title and available commands
+void displayTitleAndCommands() {
+    printf("I2C Master Emulator\n");
+    printf("Commands: 1: Camera, 2: Output, 3: Mode, 4: Battery, 5: IR, 6: EO, q to quit.\n");
+}
+
+// Function to display the current status of the Scope struct with command numbers
 void displayScope(Scope *s) {
-    printf("\nCurrent Scope Status:\n");
-    printf("Camera: %u\n", s->camera);
-    printf("Output: %u\n", s->output);
-    printf("Mode: %u\n", s->mode);
-    printf("Battery Status: %u\n", s->battery_status);
-    printf("IR Status: %u\n", s->ir_status);
-    printf("EO Status: %u\n", s->eo_status);
+    printf("Current Scope Status:\n");
+    printf("  1: Camera: %u\n", s->camera);
+    printf("  2: Output: %u\n", s->output);
+    printf("  3: Mode: %u\n", s->mode);
+    printf("  4: Battery Status: %u\n", s->battery_status);
+    printf("  5: IR Status: %u\n", s->ir_status);
+    printf("  6: EO Status: %u\n", s->eo_status);
+    printf("\n");
 }
 
 int main() {
@@ -39,13 +46,15 @@ int main() {
     char input;
     uint8_t temp_value;  // Temporary value for updating fields
 
-    printf("CUI Example: Update Scope data\n");
-    printf("Commands: 1: Camera, 2: Output, 3: Mode, 4: Battery, 5: IR, 6: EO, q to quit.\n");
-
     // Infinite loop until 'q' is pressed
     while (1) {
         clearScreen();  // Clear the screen before showing the updated values
-        displayScope(&scope);  // Show current Scope data
+
+        // Display title and available commands
+        displayTitleAndCommands();
+
+        // Show current Scope data
+        displayScope(&scope);
 
         printf("Enter command (1-6 to update, q to quit): ");
         input = getchar();
@@ -90,4 +99,3 @@ int main() {
 
     return 0;
 }
-
