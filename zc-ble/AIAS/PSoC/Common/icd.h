@@ -7,7 +7,7 @@
 #include "ai2c.h"
 
 #if HBLE
-#define NUM_READ_AIAS_ICD 3
+#define NUM_READ_AIAS_ICD 6
 #define NUM_WRITE_AIAS_ICD 6
 #endif
 

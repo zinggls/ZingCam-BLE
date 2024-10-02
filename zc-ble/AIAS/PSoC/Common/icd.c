@@ -371,6 +371,9 @@ void AIAS_ICD_set_zcble_frame(ZCBLE_frame* zcble_frame)
     zcble_frame->icd_params.opmode.transmitter = 0x1;
     zcble_frame->icd_params.tx_imu.type = IMU_get_type();
     zcble_frame->icd_params.tx_imu.calibrate = IMU_get_calibrate();
+    zcble_frame->icd_params.battey.scope = AIAS_ICD_MAP[SCOPE_BATTERY_STATUS];
+    zcble_frame->icd_params.modules.ir = AIAS_ICD_MAP[SCOPE_IR_MODULE_STATUS];
+    zcble_frame->icd_params.modules.eo = AIAS_ICD_MAP[SCOPE_EO_MODULE_STATUS];
 #endif
 #if DBLE
     zcble_frame->icd_params.scope.camera = AIAS_ICD_MAP[SCOPE_CAMERA];
