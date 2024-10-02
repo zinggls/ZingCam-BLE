@@ -74,17 +74,47 @@ def main():
         command = input("Enter command (1-6 to update, r to refresh, q to quit): ")
 
         if command == '1':
-            scope.camera = int(input("Enter new value for Camera (0-255): "))
+            new_value = input("Enter new value for Camera (0-255): ")
+            if new_value:  # Check if input is not empty
+                try:
+                    scope.camera = int(new_value)
+                except ValueError:
+                    print("Invalid value! Please enter an integer between 0 and 255.")
         elif command == '2':
-            scope.output = int(input("Enter new value for Output (0-255): "))
+            new_value = input("Enter new value for Output (0-255): ")
+            if new_value:
+                try:
+                    scope.output = int(new_value)
+                except ValueError:
+                    print("Invalid value! Please enter an integer between 0 and 255.")
         elif command == '3':
-            scope.mode = int(input("Enter new value for Mode (0-255): "))
+            new_value = input("Enter new value for Mode (0-255): ")
+            if new_value:
+                try:
+                    scope.mode = int(new_value)
+                except ValueError:
+                    print("Invalid value! Please enter an integer between 0 and 255.")
         elif command == '4':
-            scope.battery_status = int(input("Enter new value for Battery Status (0-255): "))
+            new_value = input("Enter new value for Battery Status (0-255): ")
+            if new_value:
+                try:
+                    scope.battery_status = int(new_value)
+                except ValueError:
+                    print("Invalid value! Please enter an integer between 0 and 255.")
         elif command == '5':
-            scope.ir_status = int(input("Enter new value for IR Status (0-255): "))
+            new_value = input("Enter new value for IR Status (0-255): ")
+            if new_value:
+                try:
+                    scope.ir_status = int(new_value)
+                except ValueError:
+                    print("Invalid value! Please enter an integer between 0 and 255.")
         elif command == '6':
-            scope.eo_status = int(input("Enter new value for EO Status (0-255): "))
+            new_value = input("Enter new value for EO Status (0-255): ")
+            if new_value:
+                try:
+                    scope.eo_status = int(new_value)
+                except ValueError:
+                    print("Invalid value! Please enter an integer between 0 and 255.")
         elif command == 'r':  # Refresh command
             updated_scope = read_from_i2c()
             if updated_scope is not None:
