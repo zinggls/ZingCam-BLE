@@ -192,8 +192,10 @@ class IE:
 
     def update_values(self):
         scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
-        ttt = self.icd.icd_list[scope_camera_idx]
-        self.scope_camera_dropdown.current(self.icd.icd_list[scope_camera_idx])
+        cur = self.scope_camera_dropdown.current()
+        val = self.icd.icd_list[scope_camera_idx]
+        if val != cur:
+            self.scope_camera_dropdown.current(val)
 
     def i2c_read(self, device_addr):
         if (self.connected == True):
