@@ -98,8 +98,7 @@ class I2CMasterEmulatorApp:
         self.update_button = tk.Button(self.master, text="Update", command=self.update)
         self.update_button.grid(row=len(self.labels), column=1, padx=10, pady=10)
 
-        self.quit_button = tk.Button(self.master, text="Quit", command=self.quit)
-        self.quit_button.grid(row=len(self.labels), column=2, padx=10, pady=10)
+        # Remove the Quit button from the GUI
 
         # Create log box
         self.log_box = tk.Text(self.master, width=50, height=10, state='disabled')
