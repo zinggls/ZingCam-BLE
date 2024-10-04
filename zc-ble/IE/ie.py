@@ -745,7 +745,7 @@ class IE:
 
     def connect(self):
         if (self.connected == False):
-            self.connect_frame_button.config(text = "Disconnect", command = self.disconnect)
+            self.connect_frame_button.config(state="disabled")
             self.connected = True 
             self.i2c.open_port(self.ports.get())
             try:
@@ -754,14 +754,6 @@ class IE:
                 print("No devices found")
                 return
             self.i2c_read(i2c_address)
-    
-    def disconnect(self):
-        if (self.connected == True):
-            self.connect_frame_button.config(text = "Connect", command = self.connect)
-            self.connected = False
-            self.run.kill()
-            self.debug.debug.destroy()
-            self.i2c.close_port()
 
     def ch1_button(self):
         data = [0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0]
