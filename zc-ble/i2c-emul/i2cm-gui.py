@@ -71,6 +71,9 @@ class I2CMasterEmulatorApp:
         self.refresh_thread = threading.Thread(target=self.continuous_refresh)
         self.refresh_thread.start()
 
+        # Bind the close button (window close event) to the quit method
+        self.master.protocol("WM_DELETE_WINDOW", self.quit)
+
     def create_widgets(self):
         self.labels = [
             "Camera", "Output", "Mode", 
