@@ -2,7 +2,6 @@ import smbus
 import time
 import threading
 import tkinter as tk
-from tkinter import messagebox
 
 # Define the Scope class
 class Scope:
@@ -32,7 +31,7 @@ def read_from_i2c():
         return Scope(camera=data[0], output=data[1], mode=data[2],
                      battery_status=data[3], ir_status=data[4], eo_status=data[5])
     except OSError as e:
-        messagebox.showerror("Error", f"Error reading from I2C device: {e}")
+        log_message(f"Error reading from I2C device: {e}")
         return None
 
 # Function to write to the I2C slave
@@ -43,7 +42,14 @@ def write_to_i2c(scope):
         bus.write_i2c_block_data(I2C_SLAVE_ADDR, data[0], data[1:])
         time.sleep(0.01)  # Delay to allow the slave to process
     except OSError as e:
-        messagebox.showerror("Error", f"Error writing to I2C device: {e}")
+        log_message(f"Error writing to I2C device: {e}")
+
+# Function to log messages in the log box
+def log_message(message):
+    app.log_box.config(state='normal')  # Enable editing
+    app.log_box.insert(tk.END, message + "\n")  # Add message to log
+    app.log_box.config(state='disabled')  # Disable editing
+    app.log_box.see(tk.END)  # Auto-scroll to the bottom
 
 # GUI Application Class
 class I2CMasterEmulatorApp:
@@ -53,7 +59,7 @@ class I2CMasterEmulatorApp:
         self.scope = read_from_i2c()  # Initialize by reading from I2C
 
         if self.scope is None:
-            messagebox.showerror("Initialization Error", "Initialization failed. Exiting.")
+            log_message("Initialization failed. Exiting.")
             self.master.quit()
             return
 
@@ -92,6 +98,10 @@ class I2CMasterEmulatorApp:
         self.quit_button = tk.Button(self.master, text="Quit", command=self.quit)
         self.quit_button.grid(row=len(self.labels), column=2, padx=10, pady=10)
 
+        # Create log box
+        self.log_box = tk.Text(self.master, width=50, height=10, state='disabled')
+        self.log_box.grid(row=len(self.labels)+1, column=0, columnspan=3, padx=10, pady=10)
+
     def update_display(self):
         for read_only_box, value in zip(self.read_only_boxes, self.scope.display()):
             read_only_box.config(state='normal')  # Enable box to update
@@ -128,10 +138,12 @@ class I2CMasterEmulatorApp:
                 # Clear the write-only boxes without a message box
                 for entry in self.write_only_boxes:
                     entry.delete(0, tk.END)
+                
+                log_message("Scope values updated successfully.")
             else:
-                messagebox.showerror("Input Error", "Please enter valid integers between 0 and 255.")
+                log_message("Input Error: Please enter valid integers between 0 and 255.")
         except ValueError:
-            messagebox.showerror("Input Error", "Please enter valid integers between 0 and 255.")
+            log_message("Input Error: Please enter valid integers between 0 and 255.")
 
     def quit(self):
         self.stop_refresh = True  # Signal the thread to stop
