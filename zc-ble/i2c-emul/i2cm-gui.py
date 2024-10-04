@@ -120,13 +120,17 @@ class I2CMasterEmulatorApp:
     def update(self):
         try:
             new_values = []
-            for entry in self.write_only_boxes:
+            log_message("Attempting to update values:")
+            for i, entry in enumerate(self.write_only_boxes):
+                old_value = int(self.read_only_boxes[i].get())  # Get the old value
                 if entry.get():  # If the entry is not empty
-                    new_values.append(int(entry.get()))
+                    new_value = int(entry.get())
+                    log_message(f" - Changing {self.labels[i]} from {old_value} to {new_value}")
+                    new_values.append(new_value)
                 else:
                     # Use the current value from the read-only box if the entry is empty
-                    current_value = int(self.read_only_boxes[self.write_only_boxes.index(entry)].get())
-                    new_values.append(current_value)
+                    new_values.append(old_value)
+                    log_message(f" - Keeping {self.labels[i]} as {old_value}")
 
             # Check if all values are within the allowed range
             if all(0 <= value <= 255 for value in new_values):
