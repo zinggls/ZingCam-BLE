@@ -24,6 +24,7 @@
     <Compile Include="aias.py" />
     <Compile Include="em2890.py" />
     <Compile Include="I2C.py" />
+    <Compile Include="ICD.py" />
     <Compile Include="IE.py" />
     <Compile Include="zingcam.py" />
   </ItemGroup>
