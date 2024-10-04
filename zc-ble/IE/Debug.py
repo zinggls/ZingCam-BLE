@@ -1,4 +1,5 @@
 ﻿import tkinter
+import em2890
 
 class Debug:
     def __init__(self, window, icd):

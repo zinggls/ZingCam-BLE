@@ -1,4 +1,5 @@
 import win32com.client
+import array
 
 class I2C:
     def __init__(self):

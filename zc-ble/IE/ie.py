@@ -1,9 +1,7 @@
 import tkinter
 import tkinter.ttk
-import array
 import em2890
 import subprocess
-import zingcam
 import aias
 import I2C
 import ICD
