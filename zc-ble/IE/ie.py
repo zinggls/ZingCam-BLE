@@ -184,11 +184,16 @@ class IE:
         scope_camera_label = tkinter.Label(lframe, text="Scope Camera")
         scope_camera_label.pack(side="left")
 
-        scope_camera_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_camera)
+        self.scope_camera_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_camera)
         formatted_values = [f"{value} (0x{key:X})" for key, value in self.scope_camera_options.items()]
-        scope_camera_dropdown.config(values=formatted_values)
-        scope_camera_dropdown.current(0)  # Set default selection
-        scope_camera_dropdown.pack()
+        self.scope_camera_dropdown.config(values=formatted_values)
+        self.scope_camera_dropdown.current(0)  # Set default selection
+        self.scope_camera_dropdown.pack()
+
+    def update_values(self):
+        scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
+        ttt = self.icd.icd_list[scope_camera_idx]
+        self.scope_camera_dropdown.current(self.icd.icd_list[scope_camera_idx])
 
     def i2c_read(self, device_addr):
         if (self.connected == True):
@@ -199,6 +204,7 @@ class IE:
                     self.icd.icd_i2c_list[idx] = int(data)
                     idx = idx + 1
                 self.icd.set_icd()
+                self.update_values()
             except:
                 pass
             #print(self.icd.icd_i2c_list)
