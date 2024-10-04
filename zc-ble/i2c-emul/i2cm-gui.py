@@ -86,7 +86,7 @@ class I2CMasterEmulatorApp:
             tk.Label(self.master, text=label).grid(row=i, column=0, padx=10, pady=5)
             
             # Read-only display box
-            read_only_box = tk.Entry(self.master, state='readonly', width=10)
+            read_only_box = tk.Entry(self.master, state='readonly', width=15)
             read_only_box.grid(row=i, column=1, padx=10, pady=5)
             self.read_only_boxes.append(read_only_box)
 
@@ -106,9 +106,11 @@ class I2CMasterEmulatorApp:
 
     def update_display(self):
         for read_only_box, value in zip(self.read_only_boxes, self.scope.display()):
+            hex_value = hex(value)[2:].upper()  # Convert to hex and remove '0x' prefix
+            display_value = f"{value} (0x{hex_value})"  # Format as "decimal (0xhex)"
             read_only_box.config(state='normal')  # Enable box to update
             read_only_box.delete(0, tk.END)
-            read_only_box.insert(0, str(value))
+            read_only_box.insert(0, display_value)
             read_only_box.config(state='readonly')  # Set back to readonly
 
     def continuous_refresh(self):
@@ -124,7 +126,7 @@ class I2CMasterEmulatorApp:
             new_values = []
             log_message("Attempting to update values:")
             for i, entry in enumerate(self.write_only_boxes):
-                old_value = int(self.read_only_boxes[i].get())  # Get the old value
+                old_value = int(self.read_only_boxes[i].get().split()[0])  # Get the old value from the formatted string
                 if entry.get():  # If the entry is not empty
                     new_value = int(entry.get())
                     log_message(f" - Changing {self.labels[i]} from {old_value} to {new_value}")
