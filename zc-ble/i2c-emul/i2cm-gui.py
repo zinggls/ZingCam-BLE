@@ -109,7 +109,15 @@ class I2CMasterEmulatorApp:
 
     def update(self):
         try:
-            new_values = [int(entry.get()) for entry in self.write_only_boxes]
+            new_values = []
+            for entry in self.write_only_boxes:
+                if entry.get():  # If the entry is not empty
+                    new_values.append(int(entry.get()))
+                else:
+                    # Use the current value from the read-only box if the entry is empty
+                    current_value = int(self.read_only_boxes[self.write_only_boxes.index(entry)].get())
+                    new_values.append(current_value)
+
             # Check if all values are within the allowed range
             if all(0 <= value <= 255 for value in new_values):
                 self.scope.camera, self.scope.output, self.scope.mode, \
