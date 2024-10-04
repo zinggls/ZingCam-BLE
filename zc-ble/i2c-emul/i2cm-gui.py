@@ -110,11 +110,15 @@ class I2CMasterEmulatorApp:
     def update(self):
         try:
             new_values = [int(entry.get()) for entry in self.write_only_boxes]
-            self.scope.camera, self.scope.output, self.scope.mode, \
-            self.scope.battery_status, self.scope.ir_status, self.scope.eo_status = new_values
-            
-            write_to_i2c(self.scope)
-            messagebox.showinfo("Update", "Scope values updated successfully.")
+            # Check if all values are within the allowed range
+            if all(0 <= value <= 255 for value in new_values):
+                self.scope.camera, self.scope.output, self.scope.mode, \
+                self.scope.battery_status, self.scope.ir_status, self.scope.eo_status = new_values
+                
+                write_to_i2c(self.scope)
+                messagebox.showinfo("Update", "Scope values updated successfully.")
+            else:
+                messagebox.showerror("Input Error", "Please enter valid integers between 0 and 255.")
         except ValueError:
             messagebox.showerror("Input Error", "Please enter valid integers between 0 and 255.")
 
