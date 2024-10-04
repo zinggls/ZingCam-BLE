@@ -1,5 +1,7 @@
 ﻿import tkinter
 import em2890
+import aias
+import zingcam
 
 class Debug:
     def __init__(self, window, icd):
