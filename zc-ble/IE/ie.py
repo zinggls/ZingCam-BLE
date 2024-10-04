@@ -888,7 +888,8 @@ class IE:
         scope_camera_label.pack(side="left")
 
         scope_camera_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_camera)
-        scope_camera_dropdown.config(values=list(self.scope_camera_options.values()))
+        formatted_values = [f"{value} (0x{key:X})" for key, value in self.scope_camera_options.items()]
+        scope_camera_dropdown.config(values=formatted_values)
         scope_camera_dropdown.current(0)  # Set default selection
         scope_camera_dropdown.pack()
 
