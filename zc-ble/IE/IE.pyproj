@@ -22,6 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="aias.py" />
+    <Compile Include="Debug.py" />
     <Compile Include="em2890.py" />
     <Compile Include="I2C.py" />
     <Compile Include="ICD.py" />
