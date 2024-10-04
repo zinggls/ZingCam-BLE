@@ -2,6 +2,7 @@ import smbus
 import time
 import threading
 import tkinter as tk
+from tkinter import messagebox  # Import messagebox for pop-up messages
 
 # Define the Scope class
 class Scope:
@@ -31,8 +32,7 @@ def read_from_i2c():
         return Scope(camera=data[0], output=data[1], mode=data[2],
                      battery_status=data[3], ir_status=data[4], eo_status=data[5])
     except OSError as e:
-        log_message(f"Error reading from I2C device: {e}")
-        return None
+        return None  # Return None if there's an error
 
 # Function to write to the I2C slave
 def write_to_i2c(scope):
@@ -42,14 +42,7 @@ def write_to_i2c(scope):
         bus.write_i2c_block_data(I2C_SLAVE_ADDR, data[0], data[1:])
         time.sleep(0.01)  # Delay to allow the slave to process
     except OSError as e:
-        log_message(f"Error writing to I2C device: {e}")
-
-# Function to log messages in the log box
-def log_message(message):
-    app.log_box.config(state='normal')  # Enable editing
-    app.log_box.insert(tk.END, message + "\n")  # Add message to log
-    app.log_box.config(state='disabled')  # Disable editing
-    app.log_box.see(tk.END)  # Auto-scroll to the bottom
+        pass  # Ignore errors during writing for now
 
 # GUI Application Class
 class I2CMasterEmulatorApp:
@@ -58,12 +51,14 @@ class I2CMasterEmulatorApp:
         self.master.title("I2C Master Emulator")
         self.scope = read_from_i2c()  # Initialize by reading from I2C
 
+        # Create widgets before logging to avoid AttributeError
+        self.create_widgets()
+
         if self.scope is None:
-            log_message("Initialization failed. Exiting.")
+            self.log_message("Initialization failed. Exiting.")
             self.master.quit()
             return
 
-        self.create_widgets()
         self.update_display()
 
         # Start the continuous refresh in a separate thread
@@ -98,11 +93,15 @@ class I2CMasterEmulatorApp:
         self.update_button = tk.Button(self.master, text="Update", command=self.update)
         self.update_button.grid(row=len(self.labels), column=1, padx=10, pady=10)
 
-        # Remove the Quit button from the GUI
-
         # Create log box
         self.log_box = tk.Text(self.master, width=50, height=10, state='disabled')
         self.log_box.grid(row=len(self.labels)+1, column=0, columnspan=3, padx=10, pady=10)
+
+    def log_message(self, message):
+        self.log_box.config(state='normal')  # Enable editing
+        self.log_box.insert(tk.END, message + "\n")  # Add message to log
+        self.log_box.config(state='disabled')  # Disable editing
+        self.log_box.see(tk.END)  # Auto-scroll to the bottom
 
     def update_display(self):
         for read_only_box, value in zip(self.read_only_boxes, self.scope.display()):
@@ -124,17 +123,17 @@ class I2CMasterEmulatorApp:
     def update(self):
         try:
             new_values = []
-            log_message("Attempting to update values:")
+            self.log_message("Attempting to update values:")
             for i, entry in enumerate(self.write_only_boxes):
                 old_value = int(self.read_only_boxes[i].get().split()[0])  # Get the old value from the formatted string
                 if entry.get():  # If the entry is not empty
                     new_value = int(entry.get())
-                    log_message(f" - Changing {self.labels[i]} from {old_value} to {new_value}")
+                    self.log_message(f" - Changing {self.labels[i]} from {old_value} to {new_value}")
                     new_values.append(new_value)
                 else:
                     # Use the current value from the read-only box if the entry is empty
                     new_values.append(old_value)
-                    log_message(f" - Keeping {self.labels[i]} as {old_value}")
+                    self.log_message(f" - Keeping {self.labels[i]} as {old_value}")
 
             # Check if all values are within the allowed range
             if all(0 <= value <= 255 for value in new_values):
@@ -147,11 +146,15 @@ class I2CMasterEmulatorApp:
                 for entry in self.write_only_boxes:
                     entry.delete(0, tk.END)
                 
-                log_message("Scope values updated successfully.")
+                self.log_message("Scope values updated successfully.")
             else:
-                log_message("Input Error: Please enter valid integers between 0 and 255.")
+                self.show_error_message("Input Error: Please enter valid integers between 0 and 255.")
         except ValueError:
-            log_message("Input Error: Please enter valid integers between 0 and 255.")
+            self.show_error_message("Input Error: Please enter valid integers between 0 and 255.")
+
+    def show_error_message(self, message):
+        messagebox.showerror("Error", message)  # Show the error message
+        self.quit()  # Close the application after clicking OK
 
     def quit(self):
         self.stop_refresh = True  # Signal the thread to stop
