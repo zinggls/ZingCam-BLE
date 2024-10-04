@@ -124,7 +124,10 @@ class I2CMasterEmulatorApp:
                 self.scope.battery_status, self.scope.ir_status, self.scope.eo_status = new_values
                 
                 write_to_i2c(self.scope)
-                messagebox.showinfo("Update", "Scope values updated successfully.")
+                
+                # Clear the write-only boxes without a message box
+                for entry in self.write_only_boxes:
+                    entry.delete(0, tk.END)
             else:
                 messagebox.showerror("Input Error", "Please enter valid integers between 0 and 255.")
         except ValueError:
