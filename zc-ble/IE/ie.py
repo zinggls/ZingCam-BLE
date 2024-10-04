@@ -715,6 +715,8 @@ class IE:
         self.i2c = i2c
         self.icd = ICD()
         self.window = tkinter.Tk()
+        self.initialize_scope_camera_options()
+
         self.ports = tkinter.StringVar()
         self.connected = False
         self.tx_imu_type = 0
@@ -725,6 +727,10 @@ class IE:
 
         self.window.title("IE")
         self.window.mainloop()
+
+    def initialize_scope_camera_options(self):
+        self.scope_camera_options = aias.scope_camera
+        self.selected_scope_camera = tkinter.StringVar(value="0")  # Default value
 
     def create_connect_frame(self):
         ports_list = self.i2c.get_ports()
@@ -870,9 +876,21 @@ class IE:
         rx_imu_mag_cal_done_button = tkinter.Button(label_frame, text = "IR", width = 20, command = self.ir_camera)
         rx_imu_mag_cal_done_button.pack(padx = 5, pady = 5)
 
+        self.scope_camera_combo(label_frame)
+
         label_frame.pack(fill = tkinter.BOTH)
 
         self.main_frame.pack(fill = tkinter.BOTH, expand = tkinter.YES)
+
+    def scope_camera_combo(self,lframe):
+        # Combo box for selecting scope_camera
+        scope_camera_label = tkinter.Label(lframe, text="Scope Camera")
+        scope_camera_label.pack(side="left")
+
+        scope_camera_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_camera)
+        scope_camera_dropdown.config(values=list(self.scope_camera_options.values()))
+        scope_camera_dropdown.current(0)  # Set default selection
+        scope_camera_dropdown.pack()
 
     def i2c_read(self, device_addr):
         if (self.connected == True):
