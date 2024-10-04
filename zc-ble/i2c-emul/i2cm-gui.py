@@ -70,24 +70,34 @@ class I2CMasterEmulatorApp:
             "Camera", "Output", "Mode", 
             "Battery Status", "IR Status", "EO Status"
         ]
-        self.entries = []
+        self.read_only_boxes = []
+        self.write_only_boxes = []
 
         for i, label in enumerate(self.labels):
             tk.Label(self.master, text=label).grid(row=i, column=0, padx=10, pady=5)
-            entry = tk.Entry(self.master)
-            entry.grid(row=i, column=1, padx=10, pady=5)
-            self.entries.append(entry)
+            
+            # Read-only display box
+            read_only_box = tk.Entry(self.master, state='readonly', width=10)
+            read_only_box.grid(row=i, column=1, padx=10, pady=5)
+            self.read_only_boxes.append(read_only_box)
+
+            # Write-only input box
+            write_only_box = tk.Entry(self.master, width=10)
+            write_only_box.grid(row=i, column=2, padx=10, pady=5)
+            self.write_only_boxes.append(write_only_box)
 
         self.update_button = tk.Button(self.master, text="Update", command=self.update)
-        self.update_button.grid(row=len(self.labels), column=0, padx=10, pady=10)
+        self.update_button.grid(row=len(self.labels), column=1, padx=10, pady=10)
 
         self.quit_button = tk.Button(self.master, text="Quit", command=self.quit)
-        self.quit_button.grid(row=len(self.labels), column=1, padx=10, pady=10)
+        self.quit_button.grid(row=len(self.labels), column=2, padx=10, pady=10)
 
     def update_display(self):
-        for entry, value in zip(self.entries, self.scope.display()):
-            entry.delete(0, tk.END)
-            entry.insert(0, str(value))
+        for read_only_box, value in zip(self.read_only_boxes, self.scope.display()):
+            read_only_box.config(state='normal')  # Enable box to update
+            read_only_box.delete(0, tk.END)
+            read_only_box.insert(0, str(value))
+            read_only_box.config(state='readonly')  # Set back to readonly
 
     def continuous_refresh(self):
         while not self.stop_refresh:
@@ -99,7 +109,7 @@ class I2CMasterEmulatorApp:
 
     def update(self):
         try:
-            new_values = [int(entry.get()) for entry in self.entries]
+            new_values = [int(entry.get()) for entry in self.write_only_boxes]
             self.scope.camera, self.scope.output, self.scope.mode, \
             self.scope.battery_status, self.scope.ir_status, self.scope.eo_status = new_values
             
