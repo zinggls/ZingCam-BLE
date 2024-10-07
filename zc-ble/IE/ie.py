@@ -205,7 +205,7 @@ class IE:
         # Bind event to detect combo box value change
         self.scope_camera_dropdown.bind("<<ComboboxSelected>>", self.on_scope_camera_selected)
 
-    def get_scope_camera_value(self,scope_camera_combo_val):
+    def get_dec_from_hex(self,scope_camera_combo_val):
         hex_value = re.search(r'0x[0-9a-fA-F]+', scope_camera_combo_val)
         return int(hex_value.group(0), 16)
     
@@ -225,7 +225,7 @@ class IE:
         print(read_values)
 
         write_values = read_values
-        write_values[0] = self.get_scope_camera_value(selected_value)
+        write_values[0] = self.get_dec_from_hex(selected_value)
         print(write_values)
 
         self.i2c.send_use_addr(self.i2c.get_address(),write_values)
