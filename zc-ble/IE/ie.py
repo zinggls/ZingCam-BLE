@@ -27,7 +27,7 @@ class IE:
 
     def initialize_scope_camera_options(self):
         self.scope_camera_options = aias.scope_camera
-        self.selected_scope_camera = tkinter.StringVar(value="0")  # Default value
+        self.selected_scope_camera = tkinter.StringVar(value="EO")  # Set "EO" as the default
 
     def create_connect_frame(self):
         ports_list = self.i2c.get_ports()
@@ -187,8 +187,23 @@ class IE:
         self.scope_camera_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_camera)
         formatted_values = [f"{value} (0x{key:X})" for key, value in self.scope_camera_options.items()]
         self.scope_camera_dropdown.config(values=formatted_values)
-        self.scope_camera_dropdown.current(0)  # Set default selection
+
+        # Find the index of the initial value to set as the default
+        selected_value = self.selected_scope_camera.get()
+        initial_index = formatted_values.index(f"{selected_value} (0x{list(self.scope_camera_options.keys())[list(self.scope_camera_options.values()).index(selected_value)]:X})")
+
+        self.scope_camera_dropdown.current(initial_index)  # Set the default selection
         self.scope_camera_dropdown.pack()
+
+        # Bind event to detect combo box value change
+        self.scope_camera_dropdown.bind("<<ComboboxSelected>>", self.on_scope_camera_selected)
+
+    def on_scope_camera_selected(self, event):
+        # This method is called whenever the user selects a new item in the combobox
+        selected_value = self.scope_camera_dropdown.get()
+        # Store the new value in the selected_scope_camera
+        self.selected_scope_camera.set(selected_value)
+        print(f"Updated selected_scope_camera: {self.selected_scope_camera.get()}")
 
     def update_values(self):
         scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
