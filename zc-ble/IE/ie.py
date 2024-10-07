@@ -189,7 +189,7 @@ class IE:
     def scope_camera_combo(self,lframe):
         # Combo box for selecting scope_camera
         scope_camera_label = tkinter.Label(lframe, text="Scope Camera")
-        scope_camera_label.pack(side="left")
+        scope_camera_label.pack()
 
         self.scope_camera_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_camera)
         formatted_values = [f"{value} (0x{key:X})" for key, value in self.scope_camera_options.items()]
@@ -233,7 +233,7 @@ class IE:
     def scope_output_combo(self,lframe):
         # Combo box for selecting scope_output
         scope_output_label = tkinter.Label(lframe, text="Scope Output")
-        scope_output_label.pack(side="left")
+        scope_output_label.pack()
 
         self.scope_output_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_output)
         formatted_values = [f"{value} (0x{key:X})" for key, value in self.scope_output_options.items()]
