@@ -222,6 +222,8 @@ class IE:
         write_values[0] = self.get_scope_camera_value(selected_value)
         print(write_values)
 
+        self.i2c.send_use_addr(self.i2c.get_address(),write_values)
+
     def update_values(self):
         scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
         cur = self.scope_camera_dropdown.current()
