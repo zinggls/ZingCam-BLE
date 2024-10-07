@@ -14,6 +14,7 @@ class IE:
         self.icd = ICD.ICD()
         self.window = tkinter.Tk()
         self.initialize_scope_camera_options()
+        self.initialize_scope_output_options()
 
         self.ports = tkinter.StringVar()
         self.connected = False
@@ -29,6 +30,10 @@ class IE:
     def initialize_scope_camera_options(self):
         self.scope_camera_options = aias.scope_camera
         self.selected_scope_camera = tkinter.StringVar(value="EO")  # Set "EO" as the default
+
+    def initialize_scope_output_options(self):
+        self.scope_output_options = aias.scope_output
+        self.selected_scope_output = tkinter.StringVar(value="출력")  # Set "출력" as the default
 
     def create_connect_frame(self):
         ports_list = self.i2c.get_ports()
@@ -175,6 +180,7 @@ class IE:
         rx_imu_mag_cal_done_button.pack(padx = 5, pady = 5)
 
         self.scope_camera_combo(label_frame)
+        self.scope_output_combo(label_frame)
 
         label_frame.pack(fill = tkinter.BOTH)
 
@@ -223,6 +229,28 @@ class IE:
         print(write_values)
 
         self.i2c.send_use_addr(self.i2c.get_address(),write_values)
+
+    def scope_output_combo(self,lframe):
+        # Combo box for selecting scope_output
+        scope_output_label = tkinter.Label(lframe, text="Scope Output")
+        scope_output_label.pack(side="left")
+
+        self.scope_output_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_output)
+        formatted_values = [f"{value} (0x{key:X})" for key, value in self.scope_output_options.items()]
+        self.scope_output_dropdown.config(values=formatted_values)
+
+        # Find the index of the initial value to set as the default
+        selected_value = self.selected_scope_output.get()
+        initial_index = formatted_values.index(f"{selected_value} (0x{list(self.scope_output_options.keys())[list(self.scope_output_options.values()).index(selected_value)]:X})")
+
+        self.scope_output_dropdown.current(initial_index)  # Set the default selection
+        self.scope_output_dropdown.pack()
+
+        # Bind event to detect combo box value change
+        self.scope_output_dropdown.bind("<<ComboboxSelected>>", self.on_scope_output_selected)
+
+    def on_scope_output_selected(self, event):
+        print("on_scope_output_selected")
 
     def update_values(self):
         scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
