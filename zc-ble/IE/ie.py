@@ -250,7 +250,25 @@ class IE:
         self.scope_output_dropdown.bind("<<ComboboxSelected>>", self.on_scope_output_selected)
 
     def on_scope_output_selected(self, event):
-        print("on_scope_output_selected")
+        # This method is called whenever the user selects a new item in the combobox
+        selected_value = self.scope_output_dropdown.get()
+        # Store the new value in the selected_scope_camera
+        self.selected_scope_output.set(selected_value)
+        print(f"Updated selected_scope_output: {self.selected_scope_output.get()}")
+
+        read_values = []
+        for name in self.icd.icd_name_list[:11]:
+            index = self.icd.icd_name_list.index(name)
+            val = self.icd.icd_list[index]
+            read_values.append(val)
+            print(name, val)
+        print(read_values)
+
+        write_values = read_values
+        write_values[1] = self.get_dec_from_hex(selected_value)
+        print(write_values)
+
+        self.i2c.send_use_addr(self.i2c.get_address(),write_values)
 
     def update_values(self):
         scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
@@ -258,6 +276,12 @@ class IE:
         val = self.icd.icd_list[scope_camera_idx]
         if val != cur:
             self.scope_camera_dropdown.current(val)
+
+        scope_output_idx = self.icd.icd_name_list.index("화기조준경 영상 출력")
+        cur = self.scope_output_dropdown.current()
+        val = self.icd.icd_list[scope_output_idx]
+        if val != cur:
+            self.scope_output_dropdown.current(val)
 
     def i2c_read(self, device_addr):
         if (self.connected == True):
