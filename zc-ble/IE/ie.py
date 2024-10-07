@@ -6,6 +6,7 @@ import aias
 import I2C
 import ICD
 import Debug
+import re
 
 class IE:
     def __init__(self, i2c):
@@ -198,6 +199,10 @@ class IE:
         # Bind event to detect combo box value change
         self.scope_camera_dropdown.bind("<<ComboboxSelected>>", self.on_scope_camera_selected)
 
+    def get_scope_camera_value(self,scope_camera_combo_val):
+        hex_value = re.search(r'0x[0-9a-fA-F]+', scope_camera_combo_val)
+        return int(hex_value.group(0), 16)
+    
     def on_scope_camera_selected(self, event):
         # This method is called whenever the user selects a new item in the combobox
         selected_value = self.scope_camera_dropdown.get()
@@ -212,6 +217,10 @@ class IE:
             read_values.append(val)
             print(name, val)
         print(read_values)
+
+        write_values = read_values
+        write_values[0] = self.get_scope_camera_value(selected_value)
+        print(write_values)
 
     def update_values(self):
         scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
