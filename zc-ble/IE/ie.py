@@ -205,14 +205,13 @@ class IE:
         self.selected_scope_camera.set(selected_value)
         print(f"Updated selected_scope_camera: {self.selected_scope_camera.get()}")
 
-        read_values = {}
+        read_values = []
         for name in self.icd.icd_name_list[:11]:
             index = self.icd.icd_name_list.index(name)
             val = self.icd.icd_list[index]
-            read_values[index] = val
-            print(name, index, val)
-
-        print("read_values:",read_values)
+            read_values.append(val)
+            print(name, val)
+        print(read_values)
 
     def update_values(self):
         scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
