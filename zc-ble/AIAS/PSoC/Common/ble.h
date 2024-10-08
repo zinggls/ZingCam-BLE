@@ -17,27 +17,27 @@
     
 typedef struct
 {
-    uint8_t camera:4;
-    uint8_t output:4;
+    uint8_t camera;
+    uint8_t output;
 } ZCBLE_scope;
 
 typedef struct
 {
-    uint8_t mode:4;
-    uint8_t info:4;
+    uint8_t mode;
+    uint8_t info;
 } ZCBLE_wireless_channel;
 
 typedef struct
 {
-    uint8_t scope:4;
-    uint8_t transmitter:4;
+    uint8_t scope;
+    uint8_t transmitter;
 } ZCBLE_opmode;
 
 typedef struct
 {
     uint8_t status;
-    uint8_t type:4;
-    uint8_t calibrate:4;
+    uint8_t type;
+    uint8_t calibrate;
 } ZCBLE_transmitter_imu;
 
 typedef struct
@@ -48,14 +48,14 @@ typedef struct
 
 typedef struct
 {
-    uint8_t ir:4;
-    uint8_t eo:4;
+    uint8_t ir;
+    uint8_t eo;
 } ZCBLE_modules_status;
 
 typedef struct
 {
-    uint8_t transmitter:4;
-    uint8_t reserved:4;
+    uint8_t transmitter;
+    uint8_t reserved;
 } ZCBLE_modem;
 
 typedef struct
