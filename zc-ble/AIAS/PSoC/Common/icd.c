@@ -298,8 +298,8 @@ void AIAS_ICD_set_opmode(ZCBLE_opmode opmode)
             break;
     }
 #endif
-#if DBLE
     AIAS_ICD_set(SCOPE_OPERATION_MODE, opmode.scope);
+#if DBLE
     AIAS_ICD_set(WIRELESS_VIDEO_TRANSMITTER_OPERATION_MODE_STATUS, opmode.transmitter);
 #endif
 }
