@@ -231,6 +231,18 @@ class IE:
 
         self.i2c.send_use_addr(self.i2c.get_address(), read_values)
 
+    def  scope_operation_mode_val_to_index(self,val):
+        if val == 0:
+            return val  #0 : Power off
+        elif val == 1:
+            return val  #1 : 운용모드
+        elif val == 2:
+            return val  #2 : 대기모드
+        elif val == 4:
+            return 3    #4 : 절전모드
+        else:
+            return 4    #0xFF : Unknown
+
     def update_values(self):
         scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
         cur = self.scope_camera_dropdown.current()
@@ -247,8 +259,10 @@ class IE:
         scope_operation_mode_idx = self.icd.icd_name_list.index("화기조준경 운용모드 상태")
         cur = self.scope_operation_mode_dropdown.current()
         val = self.icd.icd_list[scope_operation_mode_idx]
+
+        print(f"화기조준경 운용모드 상태: cur={cur}, val={val}")
         if val != cur:
-            self.scope_operation_mode_dropdown.current(val)
+            self.scope_operation_mode_dropdown.current(self.scope_operation_mode_val_to_index(val))
 
     def i2c_read(self, device_addr):
         if (self.connected == True):
