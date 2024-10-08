@@ -15,6 +15,7 @@ class IE:
         self.window = tkinter.Tk()
         self.initialize_scope_camera_options()
         self.initialize_scope_output_options()
+        self.initialize_scope_operation_mode_options()
 
         self.ports = tkinter.StringVar()
         self.connected = False
@@ -34,6 +35,10 @@ class IE:
     def initialize_scope_output_options(self):
         self.scope_output_options = aias.scope_output
         self.selected_scope_output = tkinter.StringVar(value="출력")  # Set "출력" as the default
+
+    def initialize_scope_operation_mode_options(self):
+        self.scope_operation_mode_options = aias.scope_operation_mode
+        self.selected_scope_operation_mode = tkinter.StringVar(value="운용모드")  # Set "운용모드" as the default        
 
     def create_connect_frame(self):
         ports_list = self.i2c.get_ports()
@@ -181,6 +186,7 @@ class IE:
 
         self.scope_camera_combo(label_frame)
         self.scope_output_combo(label_frame)
+        self.scope_operation_mode_combo(label_frame)
 
         label_frame.pack(fill = tkinter.BOTH)
 
@@ -207,6 +213,9 @@ class IE:
     def scope_output_combo(self, lframe):
         self.scope_output_dropdown = self.create_combo_box(lframe, "Scope Output", self.scope_output_options, self.selected_scope_output, self.on_combo_selected)
 
+    def scope_operation_mode_combo(self, lframe):
+        self.scope_operation_mode_dropdown = self.create_combo_box(lframe, "Operation Mode", self.scope_operation_mode_options, self.selected_scope_operation_mode, self.on_combo_selected)
+
     def get_dec_from_hex(self, combo_val):
         return int(re.search(r'0x[0-9a-fA-F]+', combo_val).group(0), 16)
 
@@ -218,13 +227,19 @@ class IE:
         selected_value = dropdown.get()
         if selected_var == str(self.selected_scope_camera):  # Compare using variable names
              index = 0
+        elif selected_var == str(self.selected_scope_output):
+            index = 1
+        elif selected_var == str(self.selected_scope_operation_mode):
+            index = 4
         else:
-             index = 1
+             raise ValueError(f"Unexpected value: {selected_var}")
 
         print(f"Updated selection: {selected_value}")
 
         read_values = [self.icd.icd_list[self.icd.icd_name_list.index(name)] for name in self.icd.icd_name_list[:11]]
+        print(f"read   :{read_values}")
         read_values[index] = self.get_dec_from_hex(selected_value)
+        print(f"writing:{read_values}")
 
         self.i2c.send_use_addr(self.i2c.get_address(), read_values)
 
@@ -240,6 +255,12 @@ class IE:
         val = self.icd.icd_list[scope_output_idx]
         if val != cur:
             self.scope_output_dropdown.current(val)
+
+        scope_operation_mode_idx = self.icd.icd_name_list.index("화기조준경 운용모드 상태")
+        cur = self.scope_operation_mode_dropdown.current()
+        val = self.icd.icd_list[scope_operation_mode_idx]
+        if val != cur:
+            self.scope_operation_mode_dropdown.current(val)
 
     def i2c_read(self, device_addr):
         if (self.connected == True):
