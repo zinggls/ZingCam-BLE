@@ -186,89 +186,47 @@ class IE:
 
         self.main_frame.pack(fill = tkinter.BOTH, expand = tkinter.YES)
 
-    def scope_camera_combo(self,lframe):
-        # Combo box for selecting scope_camera
-        scope_camera_label = tkinter.Label(lframe, text="Scope Camera")
-        scope_camera_label.pack()
-
-        self.scope_camera_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_camera)
-        formatted_values = [f"{value} (0x{key:X})" for key, value in self.scope_camera_options.items()]
-        self.scope_camera_dropdown.config(values=formatted_values)
-
-        # Find the index of the initial value to set as the default
-        selected_value = self.selected_scope_camera.get()
-        initial_index = formatted_values.index(f"{selected_value} (0x{list(self.scope_camera_options.keys())[list(self.scope_camera_options.values()).index(selected_value)]:X})")
-
-        self.scope_camera_dropdown.current(initial_index)  # Set the default selection
-        self.scope_camera_dropdown.pack()
-
-        # Bind event to detect combo box value change
-        self.scope_camera_dropdown.bind("<<ComboboxSelected>>", self.on_scope_camera_selected)
-
-    def get_dec_from_hex(self,scope_camera_combo_val):
-        hex_value = re.search(r'0x[0-9a-fA-F]+', scope_camera_combo_val)
-        return int(hex_value.group(0), 16)
+    def create_combo_box(self, lframe, label_text, options, selected_var, on_selected):
+        tkinter.Label(lframe, text=label_text).pack()
     
-    def on_scope_camera_selected(self, event):
-        # This method is called whenever the user selects a new item in the combobox
-        selected_value = self.scope_camera_dropdown.get()
-        # Store the new value in the selected_scope_camera
-        self.selected_scope_camera.set(selected_value)
-        print(f"Updated selected_scope_camera: {self.selected_scope_camera.get()}")
+        dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=selected_var)
+        formatted_values = [f"{value} (0x{key:X})" for key, value in options.items()]
+        dropdown.config(values=formatted_values)
 
-        read_values = []
-        for name in self.icd.icd_name_list[:11]:
-            index = self.icd.icd_name_list.index(name)
-            val = self.icd.icd_list[index]
-            read_values.append(val)
-            print(name, val)
-        print(read_values)
+        # Set default selection
+        initial_index = formatted_values.index(f"{selected_var.get()} (0x{list(options.keys())[list(options.values()).index(selected_var.get())]:X})")
+        dropdown.current(initial_index)
+        dropdown.pack()
+        dropdown.bind("<<ComboboxSelected>>", on_selected)
 
-        write_values = read_values
-        write_values[0] = self.get_dec_from_hex(selected_value)
-        print(write_values)
+        return dropdown  # Return the created dropdown for reference if needed
 
-        self.i2c.send_use_addr(self.i2c.get_address(),write_values)
+    def scope_camera_combo(self, lframe):
+        self.scope_camera_dropdown = self.create_combo_box(lframe, "Scope Camera", self.scope_camera_options, self.selected_scope_camera, self.on_combo_selected)
 
-    def scope_output_combo(self,lframe):
-        # Combo box for selecting scope_output
-        scope_output_label = tkinter.Label(lframe, text="Scope Output")
-        scope_output_label.pack()
+    def scope_output_combo(self, lframe):
+        self.scope_output_dropdown = self.create_combo_box(lframe, "Scope Output", self.scope_output_options, self.selected_scope_output, self.on_combo_selected)
 
-        self.scope_output_dropdown = tkinter.ttk.Combobox(lframe, state="readonly", textvariable=self.selected_scope_output)
-        formatted_values = [f"{value} (0x{key:X})" for key, value in self.scope_output_options.items()]
-        self.scope_output_dropdown.config(values=formatted_values)
+    def get_dec_from_hex(self, combo_val):
+        return int(re.search(r'0x[0-9a-fA-F]+', combo_val).group(0), 16)
 
-        # Find the index of the initial value to set as the default
-        selected_value = self.selected_scope_output.get()
-        initial_index = formatted_values.index(f"{selected_value} (0x{list(self.scope_output_options.keys())[list(self.scope_output_options.values()).index(selected_value)]:X})")
+    def on_combo_selected(self, event):
+        dropdown = event.widget  # Get the dropdown widget that triggered the event
+        selected_var = dropdown.cget("textvariable")  # Get the associated variable for the dropdown
+    
+        # Update the selected value
+        selected_value = dropdown.get()
+        if selected_var == str(self.selected_scope_camera):  # Compare using variable names
+             index = 0
+        else:
+             index = 1
 
-        self.scope_output_dropdown.current(initial_index)  # Set the default selection
-        self.scope_output_dropdown.pack()
+        print(f"Updated selection: {selected_value}")
 
-        # Bind event to detect combo box value change
-        self.scope_output_dropdown.bind("<<ComboboxSelected>>", self.on_scope_output_selected)
+        read_values = [self.icd.icd_list[self.icd.icd_name_list.index(name)] for name in self.icd.icd_name_list[:11]]
+        read_values[index] = self.get_dec_from_hex(selected_value)
 
-    def on_scope_output_selected(self, event):
-        # This method is called whenever the user selects a new item in the combobox
-        selected_value = self.scope_output_dropdown.get()
-        # Store the new value in the selected_scope_camera
-        self.selected_scope_output.set(selected_value)
-        print(f"Updated selected_scope_output: {self.selected_scope_output.get()}")
-
-        read_values = []
-        for name in self.icd.icd_name_list[:11]:
-            index = self.icd.icd_name_list.index(name)
-            val = self.icd.icd_list[index]
-            read_values.append(val)
-            print(name, val)
-        print(read_values)
-
-        write_values = read_values
-        write_values[1] = self.get_dec_from_hex(selected_value)
-        print(write_values)
-
-        self.i2c.send_use_addr(self.i2c.get_address(),write_values)
+        self.i2c.send_use_addr(self.i2c.get_address(), read_values)
 
     def update_values(self):
         scope_camera_idx = self.icd.icd_name_list.index("화기조준경 영상 종류")
