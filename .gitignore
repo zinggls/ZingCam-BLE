@@ -1,1 +1,39 @@
-/examples/examples/*.rossi
+# Ignore build directories and generated files
+CortexM0
+Generated_Source
+Debug
+Release
+codegentemp
+Export
+
+# Ignore binaries and object files
+*.o
+*.elf
+*.hex
+*.bin
+*.cyacd
+
+# Ignore temporary and backup files
+*.bak
+*.log
+*.d
+*.a
+*.map
+*.dep
+
+# Ignore PSoC Creator IDE files
+*.cyprj.*
+*.cywrk.*
+*.cyprj.LastBuild*
+*.cywrk.Archive*
+
+# Ignore user-specific settings
+*.cyprj.cyprj.user
+*.cywrk.cywrk.user
+
+*.cycdx
+*.cyfit
+*.rpt
+*.svd
+*_timing.html
+*.log
