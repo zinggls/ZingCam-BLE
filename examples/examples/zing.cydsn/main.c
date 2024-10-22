@@ -13,6 +13,7 @@
 
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {   
+    UART_DBG_UartPutChar(UART_ZING_GetChar());
     return;
 }
 
@@ -29,7 +30,6 @@ int main(void)
     for(;;)
     {
         /* Place your application code here. */
-        UART_DBG_UartPutChar(UART_ZING_GetChar());
     }
 }
 
