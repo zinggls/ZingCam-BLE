@@ -14,6 +14,9 @@
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {   
     UART_DBG_UartPutChar(UART_ZING_GetChar());
+    
+    // Clear the interrupt to prevent it from retriggering
+    UART_ZING_RX_ClearInterrupt();
     return;
 }
 
