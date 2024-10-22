@@ -40,19 +40,33 @@ typedef enum {
 typedef struct {
     char usb[4];        // USB value, e.g., "2"
     char bnd[2];        // BND value, e.g., "L"
-    char ppid[8];       // PPID value, e.g., "0xABCD"
-    char devid[8];      // DeviceID, e.g., "0x3500"
+    char ppid[16];      // PPID value, e.g.,"0xABCD"
+    char devid[16];     // DeviceID, e.g.,  "0x3500"
     char trt[2];        // TRT value, e.g., "B"
     char ack[2];        // ACK value, e.g., "N"
     char ppc[2];        // PPC value, e.g., "P"
-    char txid[8];       // TXID value, e.g., "0x0"
-    char rxid[8];       // RXID value, e.g., "0x0"
+    char txid[16];      // TXID value, e.g.,"0x0"
+    char rxid[16];      // RXID value, e.g.,"0x0"
     char run[2];        // RUN value, e.g., "N"
     char cnt[4];        // CNT value, e.g., "0"
 } ZING_Data;
 
-static char zing_status[MAX_BUFFER_LENGTH];
-static uint8_t ZED = 0;
+// Define the type for the callback function
+typedef void (*EventCallback)(ZING_Data*);
+
+static EventCallback event_callback = NULL;
+static char msg[256];
+
+// Function to register a callback
+void RegisterEventCallback(EventCallback callback) {
+    event_callback = callback;
+}
+
+void OnDataReceived(ZING_Data* z) {
+    sprintf(msg, "USB:%s BND:%s PPID:%s DeviceID:%s TRT:%s ACK:%s PPC:%s TXID:%s RXID:%s RUN:%s CNT:%s\r\n",
+        z->usb, z->bnd, z->ppid, z->devid, z->trt, z->ack, z->ppc, z->txid, z->rxid, z->run, z->cnt);
+    UART_DBG_UartPutString(msg);
+}
 
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {
@@ -85,9 +99,9 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
                        zing_data.rxid,
                        zing_data.run,
                        zing_data.cnt) != 11) {
-                UART_DBG_UartPutString("x");
+                UART_DBG_UartPutString("Parsing Error\r\n");
             } else {
-                UART_DBG_UartPutString("o");
+                if (event_callback != NULL) event_callback(&zing_data);
             }
 
             // Reset buffer and counter for next message
@@ -100,62 +114,8 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
     UART_ZING_RX_ClearInterrupt();
 }
 
-uint8_t ZING_parse_host_status(uint8_t** status_values)
-{
-    char* status;
-    char* next_ptr;
-    uint8_t cnt;
-    uint8_t idx;
-    
-    cnt = 0;
-    idx = 0;
-    
-    status = strtok_r(zing_status, " :", &next_ptr);
-    
-    if (status == NULL)
-    {
-        return 0;
-    }
-    
-    if (strcmp(status, "ZED") == 0)
-    {
-        ZED = 1;
-    }
-    else
-    {
-        ZED = 0;
-    }
-    
-    while ((status = strtok_r(NULL, " :", &next_ptr)) != NULL)
-    {
-        if ((cnt % 2) == 1)
-        {
-            if (idx < NUM_HOST_STATUS)
-            {
-                if (strlen(status) < MAX_VALUE_LENGTH)
-                {                   
-                    memset(status_values[idx], 0, MAX_VALUE_LENGTH);
-                    memcpy(status_values[idx++], status, strlen(status));
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        
-        cnt = cnt + 1;
-    }
-    return 1;
-}
-
 int main(void)
 {
-    uint8_t** zing_host_status_values = 0;
     CyGlobalIntEnable; /* Enable global interrupts. */
 
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
@@ -163,11 +123,13 @@ int main(void)
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
 
+    // Register the event callback
+    RegisterEventCallback(OnDataReceived);
+    
     UART_DBG_UartPutString("Start\r\n");
     for(;;)
     {
         /* Place your application code here. */
-        ZING_parse_host_status(zing_host_status_values);
     }
 }
 
