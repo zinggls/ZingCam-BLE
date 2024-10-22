@@ -51,7 +51,6 @@ typedef struct {
     char cnt[4];        // CNT value, e.g., "0"
 } ZING_Data;
 
-static uint16_t uart_loop = 0;
 static char zing_status[MAX_BUFFER_LENGTH];
 static uint8_t ZED = 0;
 
@@ -72,39 +71,24 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
         if (ch == ASCII_LF) {
             zing_status[cnt] = '\0';  // Null-terminate the string
 
-            // Parse the zing_status buffer
-            UART_DBG_UartPutString("Received: ");
-            UART_DBG_UartPutString(zing_status);
-            UART_DBG_UartPutString("\r\n");
-
-            // Example of parsing the values into the structure
-            sscanf(zing_status, "ZED USB:%3s BND:%1s PPID:%7s DeviceID:%7s TRT:%1s ACK:%1s PPC:%1s TXID:%7s RXID:%7s RUN:%1s CNT:%3s",
-                zing_data.usb,
-                zing_data.bnd,
-                zing_data.ppid,
-                zing_data.devid,
-                zing_data.trt,
-                zing_data.ack,
-                zing_data.ppc,
-                zing_data.txid,
-                zing_data.rxid,
-                zing_data.run,
-                zing_data.cnt
-            );
-
-            // Debug output to verify parsing
-            UART_DBG_UartPutString("Parsed values:\r\n");
-            UART_DBG_UartPutString("USB: "); UART_DBG_UartPutString(zing_data.usb); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("BND: "); UART_DBG_UartPutString(zing_data.bnd); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("PPID: "); UART_DBG_UartPutString(zing_data.ppid); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("DeviceID: "); UART_DBG_UartPutString(zing_data.devid); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("TRT: "); UART_DBG_UartPutString(zing_data.trt); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("ACK: "); UART_DBG_UartPutString(zing_data.ack); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("PPC: "); UART_DBG_UartPutString(zing_data.ppc); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("TXID: "); UART_DBG_UartPutString(zing_data.txid); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("RXID: "); UART_DBG_UartPutString(zing_data.rxid); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("RUN: "); UART_DBG_UartPutString(zing_data.run); UART_DBG_UartPutString("\r\n");
-            UART_DBG_UartPutString("CNT: "); UART_DBG_UartPutString(zing_data.cnt); UART_DBG_UartPutString("\r\n");
+            // Parsing the values into the structure
+            if (sscanf(zing_status, 
+                       "ZED USB:%31s BND:%31s PPID:%31s DeviceID:%31s TRT:%31s ACK:%31s PPC:%31s TXID:%31s RXID:%31s RUN:%31s CNT:%31s",
+                       zing_data.usb,
+                       zing_data.bnd,
+                       zing_data.ppid,
+                       zing_data.devid,
+                       zing_data.trt,
+                       zing_data.ack,
+                       zing_data.ppc,
+                       zing_data.txid,
+                       zing_data.rxid,
+                       zing_data.run,
+                       zing_data.cnt) != 11) {
+                UART_DBG_UartPutString("x");
+            } else {
+                UART_DBG_UartPutString("o");
+            }
 
             // Reset buffer and counter for next message
             memset(zing_status, 0, sizeof(zing_status));
