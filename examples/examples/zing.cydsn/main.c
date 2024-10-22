@@ -11,9 +11,43 @@
 */
 #include "project.h"
 
+#define ASCII_HOST 'Z'
+#define ASCII_DEVICE 'Z'
+#define ASCII_LF '\n'
+#define MAX_BUFFER_LENGTH 256
+
+static uint16_t uart_loop = 0;
+static char zing_status[MAX_BUFFER_LENGTH];
+
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {   
-    UART_DBG_UartPutChar(UART_ZING_GetChar());
+    char ch;
+    uint16_t cnt;
+    
+    ch = UART_ZING_GetChar();
+    cnt = 0;
+    uart_loop = uart_loop + 1;
+    
+    if (ch == ASCII_HOST || ch == ASCII_DEVICE)
+    {
+        zing_status[cnt++] = ch;
+        
+        do
+        {
+            if ((ch = UART_ZING_GetChar()) != 0)
+            {
+                if (cnt < MAX_BUFFER_LENGTH)
+                {
+                    zing_status[cnt++] = ch;
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+        while (ch != ASCII_LF);
+    }
     
     // Clear the interrupt to prevent it from retriggering
     UART_ZING_RX_ClearInterrupt();
