@@ -38,17 +38,17 @@ typedef enum {
 } ZING_HOST_STATUS_NAME;
 
 typedef struct {
-    char usb[4];        // USB value, e.g., "2"
-    char bnd[2];        // BND value, e.g., "L"
-    char ppid[16];      // PPID value, e.g.,"0xABCD"
-    char devid[16];     // DeviceID, e.g.,  "0x3500"
-    char trt[2];        // TRT value, e.g., "B"
-    char ack[2];        // ACK value, e.g., "N"
-    char ppc[2];        // PPC value, e.g., "P"
-    char txid[16];      // TXID value, e.g.,"0x0"
-    char rxid[16];      // RXID value, e.g.,"0x0"
-    char run[2];        // RUN value, e.g., "N"
-    char cnt[4];        // CNT value, e.g., "0"
+    int usb;            // USB value, e.g., "2"
+    char bnd;           // BND value, e.g., "L"
+    unsigned int ppid;  // PPID value, e.g.,"0xABCD"
+    unsigned int devid; // DeviceID, e.g.,  "0x3500"
+    char trt;           // TRT value, e.g., "B"
+    char ack;           // ACK value, e.g., "N"
+    char ppc;           // PPC value, e.g., "P"
+    unsigned int txid;  // TXID value, e.g.,"0x0"
+    unsigned int rxid;  // RXID value, e.g.,"0x0"
+    char run;           // RUN value, e.g., "N"
+    unsigned int cnt;   // CNT value, e.g., "0"
 } ZING_Data;
 
 // Define the type for the callback function
@@ -63,7 +63,7 @@ void RegisterEventCallback(EventCallback callback) {
 }
 
 void OnDataReceived(ZING_Data* z) {
-    sprintf(msg, "USB:%s BND:%s PPID:%s DeviceID:%s TRT:%s ACK:%s PPC:%s TXID:%s RXID:%s RUN:%s CNT:%s\r\n",
+    sprintf(msg, "USB:%d BND:%c PPID:0x%x DeviceID:0x%x TRT:%c ACK:%c PPC:%c TXID:0x%x RXID:0x%x RUN:%c CNT:%d\r\n",
         z->usb, z->bnd, z->ppid, z->devid, z->trt, z->ack, z->ppc, z->txid, z->rxid, z->run, z->cnt);
     UART_DBG_UartPutString(msg);
 }
@@ -87,18 +87,18 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
 
             // Parsing the values into the structure
             if (sscanf(zing_status, 
-                       "ZED USB:%31s BND:%31s PPID:%31s DeviceID:%31s TRT:%31s ACK:%31s PPC:%31s TXID:%31s RXID:%31s RUN:%31s CNT:%31s",
-                       zing_data.usb,
-                       zing_data.bnd,
-                       zing_data.ppid,
-                       zing_data.devid,
-                       zing_data.trt,
-                       zing_data.ack,
-                       zing_data.ppc,
-                       zing_data.txid,
-                       zing_data.rxid,
-                       zing_data.run,
-                       zing_data.cnt) != 11) {
+                       "ZED USB:%d BND:%c PPID:0x%x DeviceID:0x%x TRT:%c ACK:%c PPC:%c TXID:0x%x RXID:0x%x RUN:%c CNT:%d",
+                       &zing_data.usb,
+                       &zing_data.bnd,
+                       &zing_data.ppid,
+                       &zing_data.devid,
+                       &zing_data.trt,
+                       &zing_data.ack,
+                       &zing_data.ppc,
+                       &zing_data.txid,
+                       &zing_data.rxid,
+                       &zing_data.run,
+                       &zing_data.cnt) != 11) {
                 UART_DBG_UartPutString("Parsing Error\r\n");
             } else {
                 if (event_callback != NULL) event_callback(&zing_data);
