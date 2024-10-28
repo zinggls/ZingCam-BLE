@@ -147,61 +147,12 @@ void IMU_set_output_format(uint8_t sof)
     UART_IMU_UartPutString(msg);
 }
 
-void IMU_set_output_gyro(uint8_t sog)
-{
-    char msg[6];
-    
-    sprintf(msg, "<sog%d>", sog);
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_set_output_accelero(uint8_t soa)
-{
-    char msg[6];
-    
-    sprintf(msg, "<soa%d>", soa);
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_set_output_mageneto(uint8_t som)
-{
-    char msg[6];
-    
-    sprintf(msg, "<som%d>", som);
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_set_output_temperature(uint8_t sot)
-{
-    char msg[6];
-    
-    sprintf(msg, "<sot%d>", sot);
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_set_output_timestamp(uint8_t sots)
-{
-    char msg[7];
-    
-    sprintf(msg, "<sots%d>", sots);
-    UART_IMU_UartPutString(msg);
-}
-
 void IMU_calibration_gyro(void)
 {
     char msg[4];
     
     calibrate = 1;
     sprintf(msg, "<cg>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_calibration_accelero_free(void)
-{
-    char msg[5];
-    
-    calibrate = 1;
-    sprintf(msg, "<caf>");
     UART_IMU_UartPutString(msg);
 }
 
@@ -220,93 +171,5 @@ void IMU_calibration_magneto_free(void)
     
     calibrate = 1;
     sprintf(msg, "<cmf>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_calibration_magneto_xy(void)
-{
-    char msg[6];
-
-    calibrate = 1;
-    sprintf(msg, "<cnxy>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_calibration_magneto_pxy(void)
-{
-    char msg[7];
-    
-    sprintf(msg, "<+cnxy>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_calibration_magneto_z(void)
-{
-    char msg[5];
-    
-    calibrate = 1;
-    sprintf(msg, "<cnz>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_calibration_magneto_pz(void)
-{
-    char msg[6];
-    
-    calibrate = 1;
-    sprintf(msg, "<+cnz>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_set_motion_offset(void)
-{
-    char msg[5];
-    
-    calibrate = 1;
-    sprintf(msg, "<cmo>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_set_motion_offset_x(void)
-{
-    char msg[6];
-    
-    sprintf(msg, "<cmox>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_set_motion_offset_y(void)
-{
-    char msg[6];
-    
-    calibrate = 1;
-    sprintf(msg, "<cmoy>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_set_motion_offset_z(void)
-{
-    char msg[6];
-
-    calibrate = 1;
-    sprintf(msg, "<cmoz>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_set_motion_offset_xy(void)
-{
-    char msg[7];
-    
-    calibrate = 1;
-    sprintf(msg, "<cmoxy>");
-    UART_IMU_UartPutString(msg);
-}
-
-void IMU_clear_motion_offset(void)
-{
-    char msg[6];
-    
-    calibrate = 1;
-    sprintf(msg, "<cmco>");
     UART_IMU_UartPutString(msg);
 }
