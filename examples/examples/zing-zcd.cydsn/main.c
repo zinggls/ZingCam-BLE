@@ -120,6 +120,9 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
                        &zing_data.mfir_sub,
                        &zing_data.cnt) != 20) {
                 UART_DBG_UartPutString("Parsing Error\r\n");
+                UART_DBG_UartPutString("Received: ");
+                UART_DBG_UartPutString(zing_status);
+                UART_DBG_UartPutString("\r\n");
             } else {
                 if (event_callback != NULL) event_callback(&zing_data);
             }
