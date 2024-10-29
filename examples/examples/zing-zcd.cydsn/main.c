@@ -65,12 +65,6 @@ typedef struct {
 
 static char msg[256];
 
-void PrintZingData(ZING_Data* z) {
-    sprintf(msg, "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d(%d) PHY_RX_FRAME_CNT:%d(%d) MFIR:%d/%d CNT:%u\r\n",
-        z->usb, z->ppid, z->devid, z->fmt, z->idx, z->fps, z->trt, z->ack, z->ppc, z->run, z->itf, z->txid, z->rxid, z->dest_err_cnt, z->dest_err_sub, z->phy_rx_frame_cnt, z->phy_rx_sub, z->mfir_main, z->mfir_sub, z->cnt);
-    UART_DBG_UartPutString(msg);
-}
-
 // Circular buffer for UART data
 static char uart_buffer[MAX_BUFFER_LENGTH];
 static uint16_t write_index = 0;
@@ -118,6 +112,12 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
 
     // Clear the interrupt to prevent retriggering
     UART_ZING_RX_ClearInterrupt();
+}
+
+void PrintZingData(ZING_Data* z) {
+    sprintf(msg, "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d(%d) PHY_RX_FRAME_CNT:%d(%d) MFIR:%d/%d CNT:%u\r\n",
+        z->usb, z->ppid, z->devid, z->fmt, z->idx, z->fps, z->trt, z->ack, z->ppc, z->run, z->itf, z->txid, z->rxid, z->dest_err_cnt, z->dest_err_sub, z->phy_rx_frame_cnt, z->phy_rx_sub, z->mfir_main, z->mfir_sub, z->cnt);
+    UART_DBG_UartPutString(msg);
 }
 
 // Function to process data when a complete message is available
