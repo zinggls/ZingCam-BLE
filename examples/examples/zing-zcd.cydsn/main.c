@@ -63,18 +63,9 @@ typedef struct {
     unsigned int cnt;       // CNT value, e.g., "30899"
 } ZING_Data;
 
-// Define the type for the callback function
-typedef void (*EventCallback)(ZING_Data*);
-
-static EventCallback event_callback = NULL;
 static char msg[256];
 
-// Function to register a callback
-void RegisterEventCallback(EventCallback callback) {
-    event_callback = callback;
-}
-
-void OnDataReceived(ZING_Data* z) {
+void PrintZingData(ZING_Data* z) {
     sprintf(msg, "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d(%d) PHY_RX_FRAME_CNT:%d(%d) MFIR:%d/%d CNT:%u\r\n",
         z->usb, z->ppid, z->devid, z->fmt, z->idx, z->fps, z->trt, z->ack, z->ppc, z->run, z->itf, z->txid, z->rxid, z->dest_err_cnt, z->dest_err_sub, z->phy_rx_frame_cnt, z->phy_rx_sub, z->mfir_main, z->mfir_sub, z->cnt);
     UART_DBG_UartPutString(msg);
@@ -172,8 +163,7 @@ void process_uart_data()
             UART_DBG_UartPutString(zing_status);
             UART_DBG_UartPutString("\r\n");
         } else {
-            // Process parsed data (e.g., call a callback)
-            if (event_callback != NULL) event_callback(&zing_data);
+            PrintZingData(&zing_data);
         }
     }
 }
@@ -186,9 +176,6 @@ int main(void)
     UART_DBG_Start();
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
-
-    // Register the event callback
-    RegisterEventCallback(OnDataReceived);
     
     UART_DBG_UartPutString("Start\r\n");
     for(;;)
