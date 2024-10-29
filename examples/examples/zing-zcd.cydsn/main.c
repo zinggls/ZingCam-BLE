@@ -73,24 +73,24 @@ static bool message_complete = false;
 ZING_Data zing_data;
 
 // Function to check if buffer is empty
-bool is_buffer_empty() {
+static bool is_buffer_empty() {
     return write_index == read_index;
 }
 
 // Function to check if buffer is full
-bool is_buffer_full() {
+static bool is_buffer_full() {
     return ((write_index + 1) % MAX_BUFFER_LENGTH) == read_index;
 }
 
 // Function to read one character from the circular buffer
-char buffer_read_char() {
+static char buffer_read_char() {
     char ch = uart_buffer[read_index];
     read_index = (read_index + 1) % MAX_BUFFER_LENGTH;
     return ch;
 }
 
 // Function to write one character to the circular buffer
-void buffer_write_char(char ch) {
+static void buffer_write_char(char ch) {
     uart_buffer[write_index] = ch;
     write_index = (write_index + 1) % MAX_BUFFER_LENGTH;
     if (write_index == read_index) {  // Buffer overflow, advance read_index
@@ -114,14 +114,14 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
     UART_ZING_RX_ClearInterrupt();
 }
 
-void PrintZingData(ZING_Data* z) {
+static void PrintZingData(ZING_Data* z) {
     sprintf(msg, "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d(%d) PHY_RX_FRAME_CNT:%d(%d) MFIR:%d/%d CNT:%u\r\n",
         z->usb, z->ppid, z->devid, z->fmt, z->idx, z->fps, z->trt, z->ack, z->ppc, z->run, z->itf, z->txid, z->rxid, z->dest_err_cnt, z->dest_err_sub, z->phy_rx_frame_cnt, z->phy_rx_sub, z->mfir_main, z->mfir_sub, z->cnt);
     UART_DBG_UartPutString(msg);
 }
 
 // Function to process data when a complete message is available
-void process_uart_data()
+static void process_uart_data()
 {
     if (message_complete) {
         // Extract complete message from buffer
