@@ -11,6 +11,7 @@
 */
 #include "project.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 #define ASCII_HOST 'Z'
 #define ASCII_DEVICE 'Z'
@@ -79,62 +80,102 @@ void OnDataReceived(ZING_Data* z) {
     UART_DBG_UartPutString(msg);
 }
 
+// Circular buffer for UART data
+static char uart_buffer[MAX_BUFFER_LENGTH];
+static uint16_t write_index = 0;
+static uint16_t read_index = 0;
+static bool message_complete = false;
+ZING_Data zing_data;
+
+// Function to check if buffer is empty
+bool is_buffer_empty() {
+    return write_index == read_index;
+}
+
+// Function to check if buffer is full
+bool is_buffer_full() {
+    return ((write_index + 1) % MAX_BUFFER_LENGTH) == read_index;
+}
+
+// Function to read one character from the circular buffer
+char buffer_read_char() {
+    char ch = uart_buffer[read_index];
+    read_index = (read_index + 1) % MAX_BUFFER_LENGTH;
+    return ch;
+}
+
+// Function to write one character to the circular buffer
+void buffer_write_char(char ch) {
+    uart_buffer[write_index] = ch;
+    write_index = (write_index + 1) % MAX_BUFFER_LENGTH;
+    if (write_index == read_index) {  // Buffer overflow, advance read_index
+        read_index = (read_index + 1) % MAX_BUFFER_LENGTH;
+    }
+}
+
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {
-    static uint16_t cnt = 0;
-    static char zing_status[MAX_BUFFER_LENGTH] = {0};  // Buffer to store the received data
-    ZING_Data zing_data;  // Structure to store parsed values
-
     char ch = UART_ZING_GetChar();
     if (ch != 0) {
-        // Add received character to zing_status buffer
-        if (cnt < MAX_BUFFER_LENGTH - 1) {
-            zing_status[cnt++] = ch;
-        }
+        buffer_write_char(ch);  // Write character to circular buffer
 
-        // Check if we've received the full string (terminated by newline)
+        // Check for end of message
         if (ch == ASCII_LF) {
-            zing_status[cnt] = '\0';  // Null-terminate the string
-
-            // Parsing the values into the structure
-            if (sscanf(zing_status, 
-                       "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d(%d) PHY_RX_FRAME_CNT:%d(%d) MFIR:%d/%d CNT:%u",
-                       &zing_data.usb,
-                       &zing_data.ppid,
-                       &zing_data.devid,
-                       &zing_data.fmt,
-                       &zing_data.idx,
-                       &zing_data.fps,
-                       &zing_data.trt,
-                       &zing_data.ack,
-                       &zing_data.ppc,
-                       &zing_data.run,
-                       &zing_data.itf,
-                       &zing_data.txid,
-                       &zing_data.rxid,
-                       &zing_data.dest_err_cnt,
-                       &zing_data.dest_err_sub,
-                       &zing_data.phy_rx_frame_cnt,
-                       &zing_data.phy_rx_sub,
-                       &zing_data.mfir_main,
-                       &zing_data.mfir_sub,
-                       &zing_data.cnt) != 20) {
-                UART_DBG_UartPutString("Parsing Error\r\n");
-                UART_DBG_UartPutString("Received: ");
-                UART_DBG_UartPutString(zing_status);
-                UART_DBG_UartPutString("\r\n");
-            } else {
-                if (event_callback != NULL) event_callback(&zing_data);
-            }
-
-            // Reset buffer and counter for next message
-            memset(zing_status, 0, sizeof(zing_status));
-            cnt = 0;
+            message_complete = true;
         }
     }
 
     // Clear the interrupt to prevent retriggering
     UART_ZING_RX_ClearInterrupt();
+}
+
+// Function to process data when a complete message is available
+void process_uart_data()
+{
+    if (message_complete) {
+        // Extract complete message from buffer
+        char zing_status[MAX_BUFFER_LENGTH] = {0};
+        uint16_t cnt = 0;
+        
+        while (!is_buffer_empty()) {
+            zing_status[cnt++] = buffer_read_char();
+        }
+        
+        zing_status[cnt] = '\0';  // Null-terminate the string
+        message_complete = false;
+
+        // Parse the message
+        if (sscanf(zing_status, 
+                   "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d(%d) PHY_RX_FRAME_CNT:%d(%d) MFIR:%d/%d CNT:%u",
+                   &zing_data.usb,
+                   &zing_data.ppid,
+                   &zing_data.devid,
+                   &zing_data.fmt,
+                   &zing_data.idx,
+                   &zing_data.fps,
+                   &zing_data.trt,
+                   &zing_data.ack,
+                   &zing_data.ppc,
+                   &zing_data.run,
+                   &zing_data.itf,
+                   &zing_data.txid,
+                   &zing_data.rxid,
+                   &zing_data.dest_err_cnt,
+                   &zing_data.dest_err_sub,
+                   &zing_data.phy_rx_frame_cnt,
+                   &zing_data.phy_rx_sub,
+                   &zing_data.mfir_main,
+                   &zing_data.mfir_sub,
+                   &zing_data.cnt) != 20) {
+            UART_DBG_UartPutString("Parsing Error\r\n");
+            UART_DBG_UartPutString("Received: ");
+            UART_DBG_UartPutString(zing_status);
+            UART_DBG_UartPutString("\r\n");
+        } else {
+            // Process parsed data (e.g., call a callback)
+            if (event_callback != NULL) event_callback(&zing_data);
+        }
+    }
 }
 
 int main(void)
@@ -153,6 +194,7 @@ int main(void)
     for(;;)
     {
         /* Place your application code here. */
+        process_uart_data();
     }
 }
 
