@@ -63,7 +63,7 @@ void RegisterEventCallback(EventCallback callback) {
 }
 
 void OnDataReceived(ZING_Data* z) {
-    sprintf(msg, "USB:%d BND:%c PPID:0x%x DeviceID:0x%x TRT:%c ACK:%c PPC:%c TXID:0x%x RXID:0x%x RUN:%c CNT:%d\r\n",
+    sprintf(msg, "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d\r\n",
         z->usb, z->bnd, z->ppid, z->devid, z->trt, z->ack, z->ppc, z->txid, z->rxid, z->run, z->cnt);
     UART_DBG_UartPutString(msg);
 }
@@ -87,7 +87,7 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
 
             // Parsing the values into the structure
             if (sscanf(zing_status, 
-                       "ZED USB:%d BND:%c PPID:0x%x DeviceID:0x%x TRT:%c ACK:%c PPC:%c TXID:0x%x RXID:0x%x RUN:%c CNT:%d",
+                       "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d",
                        &zing_data.usb,
                        &zing_data.bnd,
                        &zing_data.ppid,

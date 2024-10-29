@@ -3,13 +3,14 @@
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
 <CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="examples" persistent="examples.cywrk" platform="NOT_USED">
-<current_project name=".\zing.cydsn\zing.cyprj" />
+<current_project name=".\zing-zed.cydsn\zing-zed.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
 <v>.\uart.cydsn\uart.cyprj</v>
 <v>.\imu.cydsn\imu.cyprj</v>
 <v>.\zing.cydsn\zing.cyprj</v>
+<v>.\zing-zed.cydsn\zing-zed.cyprj</v>
 </projects>
 <workspace_id v="6ae5dda2-2a83-4a3f-8989-8eb17501abec" />
 <WriteAppVersionLastSavedWith v="4.4.0.80" />
