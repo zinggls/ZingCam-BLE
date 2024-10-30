@@ -39,18 +39,23 @@ typedef enum {
 } ZING_HOST_STATUS_NAME;
 
 typedef struct {
-    int usb;            // USB value, e.g., "2"
-    char bnd;           // BND value, e.g., "L"
-    unsigned int ppid;  // PPID value, e.g.,"0xABCD"
-    unsigned int devid; // DeviceID, e.g.,  "0x3500"
-    char trt;           // TRT value, e.g., "B"
-    char ack;           // ACK value, e.g., "N"
-    char ppc;           // PPC value, e.g., "P"
-    unsigned int txid;  // TXID value, e.g.,"0x0"
-    unsigned int rxid;  // RXID value, e.g.,"0x0"
-    char run;           // RUN value, e.g., "N"
-    unsigned int cnt;   // CNT value, e.g., "0"
+    int usb;             // USB field value (e.g., 2)
+    int vendor_id;       // VND field value (e.g., 0xEB1A)
+    int product_id;      // PRD field value (e.g., 0xB101)
+    char band;           // BND field value (e.g., 'L')
+    int ppid;            // PPID field value (e.g., 0xABCD)
+    int device_id;       // DeviceID field value (e.g., 0x3500)
+    int format;          // FMT field value (e.g., 1)
+    int index;           // IDX field value (e.g., 2)
+    char trt;            // TRT field value (e.g., 'B')
+    char ack;            // ACK field value (e.g., 'N')
+    char ppc;            // PPC field value (e.g., 'P')
+    int txid;            // TXID field value (e.g., 0x35ABCD)
+    int rxid;            // RXID field value (e.g., 0x0)
+    char run;            // RUN field value (e.g., 'Y')
+    unsigned int cnt;    // CNT field value (e.g., 36119)
 } ZING_Data;
+
 
 static char msg[256];
 
@@ -104,8 +109,8 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
 }
 
 static void PrintZingData(ZING_Data* z) {
-    sprintf(msg, "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d\r\n",
-        z->usb, z->bnd, z->ppid, z->devid, z->trt, z->ack, z->ppc, z->txid, z->rxid, z->run, z->cnt);
+    sprintf(msg,"ZCH USB:%d VND:0x%X PRD:0x%X BND:%c PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d\r\n",
+        z->usb, z->vendor_id, z->product_id, z->band, z->ppid, z->device_id, z->format, z->index, z->trt, z->ack, z->ppc, z->txid, z->rxid, z->run, z->cnt);
     UART_DBG_UartPutString(msg);
 }
 
@@ -126,18 +131,22 @@ static void process_uart_data()
 
         // Parsing the values into the structure
         if (sscanf(zing_status, 
-                   "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d",
+                   "ZCH USB:%d VND:0x%X PRD:0x%X BND:%c PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d",
                    &zing_data.usb,
-                   &zing_data.bnd,
+                   &zing_data.vendor_id,
+                   &zing_data.product_id,
+                   &zing_data.band,
                    &zing_data.ppid,
-                   &zing_data.devid,
+                   &zing_data.device_id,
+                   &zing_data.format,
+                   &zing_data.index,
                    &zing_data.trt,
                    &zing_data.ack,
                    &zing_data.ppc,
                    &zing_data.txid,
                    &zing_data.rxid,
                    &zing_data.run,
-                   &zing_data.cnt) != 11) {
+                   &zing_data.cnt) != 15) {
             UART_DBG_UartPutString("Parsing Error\r\n");
             UART_DBG_UartPutString("Received: ");
             UART_DBG_UartPutString(zing_status);
