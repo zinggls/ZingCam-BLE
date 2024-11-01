@@ -43,8 +43,17 @@ int main(void)
     
     UART_DBG_Start();
     UART_IMU_Start();
+    
+    UART_IMU_PutString("<lf>");
+    CyDelay(100);
+    UART_IMU_PutString("<sor1>");
+    CyDelay(100);
     UART_IMU_PutString("<soc2>");
-    UART_IMU_RX_INTR_StartEx(UART_IMU_RX_INTERRUPT);
+    CyDelay(100);
+    UART_IMU_PutString("<sots1>");
+    CyDelay(100);
+    
+    UART_IMU_RX_INTR_StartEx(UART_IMU_RX_INTERRUPT);    
     
     UART_DBG_UartPutString("Start\r\n");
     for(;;)
