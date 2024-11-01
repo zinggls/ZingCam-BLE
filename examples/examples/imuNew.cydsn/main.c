@@ -17,8 +17,7 @@ static UartBuf uBuf;    //Circular buffer for UART data
 
 CY_ISR(UART_IMU_RX_INTERRUPT)
 {
-    char ch = UART_IMU_GetChar();
-    UartBuf_write_char(&uBuf,ch);  // Write character to circular buffer
+    UartBuf_write_char(&uBuf,UART_IMU_GetChar());  // Write character to circular buffer
 
     // Clear the interrupt to prevent retriggering
     UART_IMU_RX_ClearInterrupt();
