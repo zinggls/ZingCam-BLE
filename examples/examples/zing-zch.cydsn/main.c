@@ -58,10 +58,8 @@ typedef struct {
 
 
 static char msg[256];
-
-// Circular buffer for UART data
-UartBuf uBuf;
-ZING_Data zing_data;
+static UartBuf uBuf;    //Circular buffer for UART data
+static ZING_Data zing_data;
 
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {
