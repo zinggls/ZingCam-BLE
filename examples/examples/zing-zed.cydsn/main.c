@@ -12,11 +12,11 @@
 #include "project.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <UartBuf.h>
 
 #define ASCII_HOST 'Z'
 #define ASCII_DEVICE 'Z'
 #define ASCII_LF '\n'
-#define MAX_BUFFER_LENGTH 256
 #define MAX_VALUE_LENGTH 32
 
 typedef enum { 
@@ -53,49 +53,18 @@ typedef struct {
 } ZING_Data;
 
 static char msg[256];
-
-// Circular buffer for UART data
-static char uart_buffer[MAX_BUFFER_LENGTH];
-static uint16_t write_index = 0;
-static uint16_t read_index = 0;
-static bool message_complete = false;
-ZING_Data zing_data;
-
-// Function to check if buffer is empty
-static bool is_buffer_empty() {
-    return write_index == read_index;
-}
-
-// Function to check if buffer is full
-static bool is_buffer_full() {
-    return ((write_index + 1) % MAX_BUFFER_LENGTH) == read_index;
-}
-
-// Function to read one character from the circular buffer
-static char buffer_read_char() {
-    char ch = uart_buffer[read_index];
-    read_index = (read_index + 1) % MAX_BUFFER_LENGTH;
-    return ch;
-}
-
-// Function to write one character to the circular buffer
-static void buffer_write_char(char ch) {
-    uart_buffer[write_index] = ch;
-    write_index = (write_index + 1) % MAX_BUFFER_LENGTH;
-    if (write_index == read_index) {  // Buffer overflow, advance read_index
-        read_index = (read_index + 1) % MAX_BUFFER_LENGTH;
-    }
-}
+static UartBuf uBuf;    //Circular buffer for UART data
+static ZING_Data zing_data;
 
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {
     char ch = UART_ZING_GetChar();
     if (ch != 0) {
-        buffer_write_char(ch);  // Write character to circular buffer
+        UartBuf_write_char(&uBuf,ch);  // Write character to circular buffer
 
         // Check for end of message
         if (ch == ASCII_LF) {
-            message_complete = true;
+            uBuf.message_complete = true;
         }
     }
 
@@ -112,17 +81,17 @@ static void PrintZingData(ZING_Data* z) {
 // Function to process data when a complete message is available
 static void process_uart_data()
 {
-    if (message_complete) {
+    if (uBuf.message_complete) {
         // Extract complete message from buffer
         char zing_status[MAX_BUFFER_LENGTH] = {0};
         uint16_t cnt = 0;
         
-        while (!is_buffer_empty()) {
-            zing_status[cnt++] = buffer_read_char();
+        while (!UartBuf_is_empty(&uBuf)) {
+            zing_status[cnt++] = UartBuf_read_char(&uBuf);
         }
         
         zing_status[cnt] = '\0';  // Null-terminate the string
-        message_complete = false;
+        uBuf.message_complete = false;
 
         // Parsing the values into the structure
         if (sscanf(zing_status, 
@@ -155,6 +124,7 @@ int main(void)
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     UART_DBG_Start();
     UART_ZING_Start();
+    UartBuf_init(&uBuf);
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     
     UART_DBG_UartPutString("Start\r\n");
