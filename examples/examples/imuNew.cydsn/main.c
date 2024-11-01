@@ -18,9 +18,7 @@ static UartBuf uBuf;    //Circular buffer for UART data
 CY_ISR(UART_IMU_RX_INTERRUPT)
 {
     char ch = UART_IMU_GetChar();
-    if (ch != 0) {
-        UartBuf_write_char(&uBuf,ch);  // Write character to circular buffer
-    }
+    UartBuf_write_char(&uBuf,ch);  // Write character to circular buffer
 
     // Clear the interrupt to prevent retriggering
     UART_IMU_RX_ClearInterrupt();
@@ -44,6 +42,8 @@ int main(void)
     UART_DBG_Start();
     UART_IMU_Start();
     
+    UART_IMU_RX_INTR_StartEx(UART_IMU_RX_INTERRUPT);    
+    
     UART_IMU_PutString("<lf>");
     CyDelay(100);
     UART_IMU_PutString("<sor1>");
@@ -52,8 +52,6 @@ int main(void)
     CyDelay(100);
     UART_IMU_PutString("<sots1>");
     CyDelay(100);
-    
-    UART_IMU_RX_INTR_StartEx(UART_IMU_RX_INTERRUPT);    
     
     UART_DBG_UartPutString("Start\r\n");
     for(;;)
