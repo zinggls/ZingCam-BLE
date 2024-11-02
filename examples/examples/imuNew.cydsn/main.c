@@ -74,15 +74,8 @@ static void process_uart_data()
     }
 }
 
-int main(void)
+static void UART_IMU_StartAndInitialize()
 {
-    CyGlobalIntEnable; /* Enable global interrupts. */
-
-    /* Place your initialization/startup code here (e.g. MyInst_Start()) */
-    UartBuf_init(&uBuf);
-    ImuFrame_init(&imu);
-    
-    UART_DBG_Start();
     UART_IMU_Start();
     
     UART_IMU_RX_INTR_StartEx(UART_IMU_RX_INTERRUPT);    
@@ -95,6 +88,18 @@ int main(void)
     CyDelay(100);
     UART_IMU_PutString("<sots1>");
     CyDelay(100);
+}
+
+int main(void)
+{
+    CyGlobalIntEnable; /* Enable global interrupts. */
+
+    /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+    UartBuf_init(&uBuf);
+    ImuFrame_init(&imu);
+    
+    UART_DBG_Start();
+    UART_IMU_StartAndInitialize();
     
     UART_DBG_UartPutString("Start\r\n");
     for(;;)
