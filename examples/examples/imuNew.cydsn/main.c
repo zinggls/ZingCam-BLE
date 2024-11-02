@@ -12,7 +12,7 @@
 #include "project.h"
 #include <stdio.h>
 #include <UartBuf.h>
-#include <Imu.h>
+#include <ImuFrame.h>
 
 static UartBuf uBuf;    //Circular buffer for UART data
 
@@ -25,7 +25,7 @@ CY_ISR(UART_IMU_RX_INTERRUPT)
 }
 
 static char msg[128];
-static Imu imu;
+static ImuFrame imu;
 
 // Function to process data when a complete message is available
 static void process_uart_data()
@@ -43,7 +43,7 @@ static void process_uart_data()
                     imu.data[++imu.index] = 0x55; //index=1
                 }else{
                     //imu 2nd byte must be 0x55, reset
-                    Imu_init(&imu);
+                    ImuFrame_init(&imu);
                     continue;
                 }
             }else if(imu.index>0 && imu.index<(IMU_FRAME_SIZE-1)){
@@ -51,11 +51,11 @@ static void process_uart_data()
             }else{
                 CYASSERT(imu.index==(IMU_FRAME_SIZE-1));
                 
-                if(Imu_integrity(&imu)) {
+                if(ImuFrame_integrity(&imu)) {
                     //valid checksum
                     imu.isFull = true;
                 }else{
-                    Imu_init(&imu);
+                    ImuFrame_init(&imu);
                     continue;
                 }
             }
@@ -69,7 +69,7 @@ static void process_uart_data()
             sprintf(msg, "\r\n");
             UART_DBG_UartPutString(msg);
             
-            Imu_init(&imu);
+            ImuFrame_init(&imu);
         }
     }
 }
@@ -80,7 +80,7 @@ int main(void)
 
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     UartBuf_init(&uBuf);
-    Imu_init(&imu);
+    ImuFrame_init(&imu);
     
     UART_DBG_Start();
     UART_IMU_Start();

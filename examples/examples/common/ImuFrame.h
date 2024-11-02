@@ -1,5 +1,5 @@
-#ifndef IMU_H
-#define IMU_H
+#ifndef IMU_FRAME_H
+#define IMU_FRAME_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -12,9 +12,9 @@ typedef struct {
     int index;
     bool isEmpty;
     bool isFull;
-}Imu;
+}ImuFrame;
 
-void Imu_init(Imu *im)
+void ImuFrame_init(ImuFrame *im)
 {
     memset(im->data,0,IMU_FRAME_SIZE);
     im->index = -1;
@@ -22,16 +22,16 @@ void Imu_init(Imu *im)
     im->isFull = false;
 }
 
-uint16_t Imu_checksum(Imu *im)
+uint16_t ImuFrame_checksum(ImuFrame *im)
 {
     uint16_t checksum = 0;
     for (uint8_t i = 0; i < (IMU_FRAME_SIZE-2); i++) checksum += (im->data[i]);
     return checksum;
 }
 
-int Imu_integrity(Imu *im)
+int ImuFrame_integrity(ImuFrame *im)
 {
-    uint16_t checksum = Imu_checksum(im);
+    uint16_t checksum = ImuFrame_checksum(im);
     uint8_t high = (checksum&0xff00)>>8;
     uint8_t low = checksum&0xff;
 
@@ -40,4 +40,4 @@ int Imu_integrity(Imu *im)
     return 1;
 }
 
-#endif /* IMU_H */
+#endif /* IMU_FRAME_H */
