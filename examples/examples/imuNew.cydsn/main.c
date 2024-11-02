@@ -90,7 +90,7 @@ static void UART_IMU_StartAndInitialize()
     
     UART_IMU_PutString("<lf>");
     CyDelay(1000);
-    UART_IMU_PutString("<sor10>");
+    UART_IMU_PutString("<sor1>");
     CyDelay(100);
     UART_IMU_PutString("<soc2>");
     CyDelay(100);
