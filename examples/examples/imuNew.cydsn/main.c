@@ -14,6 +14,8 @@
 #include <UartBuf.h>
 #include <ImuFrame.h>
 
+typedef void (*ImuFrameCallback)(const ImuFrame *imu);
+
 static UartBuf uBuf;    //Circular buffer for UART data
 static char msg[128];
 static ImuFrame imu;
@@ -26,8 +28,18 @@ CY_ISR(UART_IMU_RX_INTERRUPT)
     UART_IMU_RX_ClearInterrupt();
 }
 
+static void onImuFrame(const ImuFrame *imu)
+{
+    for(int i=0;i<IMU_FRAME_SIZE;i++) {
+        sprintf(msg, "%X ", imu->data[i]);
+        UART_DBG_UartPutString(msg);
+    }
+    sprintf(msg, "\r\n");
+    UART_DBG_UartPutString(msg);
+}
+
 // Function to process data when a complete message is available
-static void process_uart_data()
+static void process_uart_data(ImuFrameCallback cb)
 {
     while (!UartBuf_is_empty(&uBuf)) {
         char ch = UartBuf_read_char(&uBuf);
@@ -61,13 +73,7 @@ static void process_uart_data()
         }
         
         if(imu.isFull) {
-            for(int i=0;i<IMU_FRAME_SIZE;i++) {
-                sprintf(msg, "%X ", imu.data[i]);
-                UART_DBG_UartPutString(msg);
-            }
-            sprintf(msg, "\r\n");
-            UART_DBG_UartPutString(msg);
-            
+            cb(&imu);
             ImuFrame_init(&imu);
         }
     }
@@ -104,7 +110,7 @@ int main(void)
     for(;;)
     {
         /* Place your application code here. */
-        process_uart_data();
+        process_uart_data(onImuFrame);
     }
 }
 
