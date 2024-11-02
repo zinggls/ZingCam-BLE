@@ -23,11 +23,15 @@ CY_ISR(UART_IMU_RX_INTERRUPT)
     UART_IMU_RX_ClearInterrupt();
 }
 
+static char msg[128];
+
 // Function to process data when a complete message is available
 static void process_uart_data()
 {
     while (!UartBuf_is_empty(&uBuf)) {
-        UART_DBG_UartPutChar(UartBuf_read_char(&uBuf));
+        char ch = UartBuf_read_char(&uBuf);
+        sprintf(msg, "%X ", ch);
+        UART_DBG_UartPutString(msg);
     }
 }
 
