@@ -15,6 +15,8 @@
 #include <ImuFrame.h>
 
 static UartBuf uBuf;    //Circular buffer for UART data
+static char msg[128];
+static ImuFrame imu;
 
 CY_ISR(UART_IMU_RX_INTERRUPT)
 {
@@ -23,9 +25,6 @@ CY_ISR(UART_IMU_RX_INTERRUPT)
     // Clear the interrupt to prevent retriggering
     UART_IMU_RX_ClearInterrupt();
 }
-
-static char msg[128];
-static ImuFrame imu;
 
 // Function to process data when a complete message is available
 static void process_uart_data()
