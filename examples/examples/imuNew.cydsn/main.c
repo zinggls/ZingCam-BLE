@@ -44,8 +44,8 @@ int main(void)
     UART_IMU_RX_INTR_StartEx(UART_IMU_RX_INTERRUPT);    
     
     UART_IMU_PutString("<lf>");
-    CyDelay(100);
-    UART_IMU_PutString("<sor1>");
+    CyDelay(1000);
+    UART_IMU_PutString("<sor10>");
     CyDelay(100);
     UART_IMU_PutString("<soc2>");
     CyDelay(100);
