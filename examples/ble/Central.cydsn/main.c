@@ -88,7 +88,7 @@ void ble_callback(uint32 evt, void* param)
         case CYBLE_EVT_STACK_ON:
             // start scanning when ble stack is available
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
-        break;
+            break;
         // callback when ble is disconnected
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             // start scanning when ble disconnected
@@ -97,7 +97,7 @@ void ble_callback(uint32 evt, void* param)
             sprintf(msg, "GAP REMOVE BONDED DEVICE RET=%X\n", res);
             UART_DBG_PutString(msg);
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
-        break;
+            break;
         // callback when scanning is progressing
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
             // receive device's information in param
@@ -110,53 +110,52 @@ void ble_callback(uint32 evt, void* param)
                 addr.type = advertisement_report.peerAddrType;
                 memcpy(addr.bdAddr, advertisement_report.peerBdAddr, CYBLE_GAP_BD_ADDR_SIZE);
             }
-        break;
+            break;
         // callback when scanning is done
         case CYBLE_EVT_GAPC_SCAN_START_STOP:
             if (cyBle_state == CYBLE_STATE_DISCONNECTED)
             {
                 CyBle_GapcConnectDevice(&addr);
             }
-        break;
+            break;
         case CYBLE_EVT_GAP_AUTH_FAILED:
             sprintf(msg, "AUTH FAILED=%X\n", *(uint32_t*)param);
             UART_DBG_PutString(msg);
             break;
         // callback when ble is connected in application layer
         case CYBLE_EVT_GATT_CONNECT_IND:
-        break;
+            break;
         // callback when ble is connected in link layer
         case CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE:
             CyBle_GapAuthReq(cyBle_connHandle.bdHandle, &cyBle_authInfo);
-        break;
+            break;
         // callback when ble is authenticated in link layer
         case CYBLE_EVT_GAP_AUTH_COMPLETE:
-
-        break;
+            break;
         // callback when ble is discovered device
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
-        break;
+            break;
         // callback when receive mtu request
         case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
             CyBle_GattsExchangeMtuRsp(cyBle_connHandle, 200);
             UART_DBG_PutString("MTU REQ\r\n");
-        break;
+            break;
         // callback when receive mtu response
         case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
-        break;
+            break;
         // callback when receive write request
         case CYBLE_EVT_GATTS_WRITE_REQ:
             CyBle_GattsWriteRsp(cyBle_connHandle);
-        break;
+            break;
         // callback when receive write response
         case CYBLE_EVT_GATTC_WRITE_RSP:
-        break;
+            break;
         // callback when receive notification
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
             memcpy(&recv, param, sizeof(CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T));
             sprintf(msg, "receive data = %d, (rssi = %d)\r\n", *recv.handleValPair.value.val, CyBle_GetRssi());
             UART_DBG_PutString(msg);
-        break;
+            break;
     }
 }
 
