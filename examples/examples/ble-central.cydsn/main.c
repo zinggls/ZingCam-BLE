@@ -35,8 +35,33 @@ int main(void)
 
 void ble_callback(uint32 evt, void* param)
 {
-    (void)evt;
-    (void)param;
+    char state[13];
+
+    switch (cyBle_state)
+    {
+        case CYBLE_STATE_STOPPED:
+            sprintf(state, "stopped");
+            break;
+        case CYBLE_STATE_INITIALIZING:
+            sprintf(state, "initializing");
+            break;
+        case CYBLE_STATE_CONNECTED:
+            sprintf(state, "connected");
+            break;
+        case CYBLE_STATE_SCANNING:
+            sprintf(state, "scanning");
+            break;
+        case CYBLE_STATE_CONNECTING:
+            sprintf(state, "connecting");
+            break;
+        case CYBLE_STATE_DISCONNECTED:
+            sprintf(state, "disconnected");
+            break;
+    }
+    sprintf(msg, "BLE state = %s\r\n", state);
+    UART_DBG_UartPutString(msg);
+    
+    ble_events(evt,param);
 }
 
 void ble_events(uint32 evt, void* param)
