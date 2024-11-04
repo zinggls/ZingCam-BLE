@@ -25,7 +25,7 @@ int main(void)
     CyBle_Start(ble_callback);
     UART_DBG_Start();
 
-    UART_DBG_UartPutString("ble-peripheral Start\r\n");
+    UART_DBG_UartPutString("ble-peripheral/server Start\r\n");
     for(;;)
     {
         /* Place your application code here. */
