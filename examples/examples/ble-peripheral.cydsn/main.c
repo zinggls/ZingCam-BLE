@@ -12,7 +12,10 @@
 #include "project.h"
 #include <stdio.h>
 
+static char msg[128];
+
 void ble_callback(uint32 evt, void* param);
+void ble_events(uint32 evt, void* param);
 
 int main(void)
 {
@@ -32,7 +35,34 @@ int main(void)
 
 void ble_callback(uint32 evt, void* param)
 {
-    UART_DBG_UartPutString("ble_callback\r\n");
+    char state[13];
+
+    switch (cyBle_state)
+    {
+        case CYBLE_STATE_STOPPED:
+            sprintf(state, "stopped");
+            break;
+        case CYBLE_STATE_INITIALIZING:
+            sprintf(state, "initializing");
+            break;
+        case CYBLE_STATE_CONNECTED:
+            sprintf(state, "connected");
+            break;
+        case CYBLE_STATE_ADVERTISING:
+            sprintf(state, "advertising");
+            break;
+        case CYBLE_STATE_DISCONNECTED:
+            sprintf(state, "disconnected");
+            break;
+    }
+    sprintf(msg, "BLE state = %s\r\n", state);
+    UART_DBG_UartPutString(msg);
+    
+    ble_events(evt,param);
+}
+
+void ble_events(uint32 evt, void* param)
+{
 }
 
 /* [] END OF FILE */
