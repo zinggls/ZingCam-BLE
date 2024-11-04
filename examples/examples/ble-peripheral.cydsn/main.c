@@ -63,6 +63,8 @@ void ble_callback(uint32 evt, void* param)
 
 void ble_events(uint32 evt, void* param)
 {
+    (void)param;
+    
     switch (evt)
     {
         // callback when stack is available

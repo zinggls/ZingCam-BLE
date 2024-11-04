@@ -35,10 +35,14 @@ int main(void)
 
 void ble_callback(uint32 evt, void* param)
 {
+    (void)evt;
+    (void)param;
 }
 
 void ble_events(uint32 evt, void* param)
 {
+    (void)evt;
+    (void)param;
 }
 
 /* [] END OF FILE */
