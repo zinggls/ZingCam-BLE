@@ -13,6 +13,9 @@
 #include <stdio.h>
 
 static char msg[128];
+static CYBLE_GAP_BD_ADDR_T addr;
+static CYBLE_GAPC_ADV_REPORT_T advertisement_report;
+static const uint8_t peripheral_addr[CYBLE_GAP_BD_ADDR_SIZE] = { 0x01, 0x00, 0x00, 0x50, 0xA0, 0x00 };
 
 void ble_callback(uint32 evt, void* param);
 void ble_events(uint32 evt, void* param);
@@ -66,27 +69,46 @@ void ble_callback(uint32 evt, void* param)
 
 void ble_events(uint32 evt, void* param)
 {
-    (void)param;
+    uint32_t res;
     
     switch (evt)
     {
         // callback when stack is available
         case CYBLE_EVT_STACK_ON:
+            CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
             UART_DBG_UartPutString("CYBLE_EVT_STACK_ON\r\n");
             break;
         // callback when ble is disconnected
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
+            res = CyBle_GapRemoveDeviceFromWhiteList(&addr);
+            sprintf(msg, "GAP REMOVE BONDED DEVICE RET=%X\n", res);
+            UART_DBG_UartPutString(msg);
+            CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
             UART_DBG_UartPutString("CYBLE_EVT_GAP_DEVICE_DISCONNECTED\r\n");
             break;
         // callback when scanning is progressing
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
+            memcpy(&advertisement_report, param, sizeof(CYBLE_GAPC_ADV_REPORT_T));
+            
+            if (memcmp(peripheral_addr, advertisement_report.peerBdAddr, CYBLE_GAP_BD_ADDR_SIZE) == 0)
+            {
+                CyBle_GapcStopScan();
+                addr.type = advertisement_report.peerAddrType;
+                memcpy(addr.bdAddr, advertisement_report.peerBdAddr, CYBLE_GAP_BD_ADDR_SIZE);
+            }
             UART_DBG_UartPutString("CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\r\n");
             break;
         // callback when scanning is done
         case CYBLE_EVT_GAPC_SCAN_START_STOP:
+            if (cyBle_state == CYBLE_STATE_DISCONNECTED)
+            {
+                CyBle_GapcConnectDevice(&addr);
+            }
             UART_DBG_UartPutString("CYBLE_EVT_GAPC_SCAN_START_STOP\r\n");
             break;
         case CYBLE_EVT_GAP_AUTH_FAILED:
+            sprintf(msg, "AUTH FAILED=%X\n", *(uint32_t*)param);
+            UART_DBG_UartPutString(msg);
             UART_DBG_UartPutString("CYBLE_EVT_GAP_AUTH_FAILED\r\n");
             break;
         // callback when ble is connected in application layer
@@ -95,6 +117,7 @@ void ble_events(uint32 evt, void* param)
             break;
         // callback when ble is connected in link layer
         case CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE:
+            CyBle_GapAuthReq(cyBle_connHandle.bdHandle, &cyBle_authInfo);
             UART_DBG_UartPutString("CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE\r\n");
             break;
         // callback when ble is authenticated in link layer

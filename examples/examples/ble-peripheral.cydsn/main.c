@@ -69,10 +69,12 @@ void ble_events(uint32 evt, void* param)
     {
         // callback when stack is available
         case CYBLE_EVT_STACK_ON:
+            CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
             UART_DBG_UartPutString("CYBLE_EVT_STACK_ON\r\n");
             break;
         // callback when ble is disconnected
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
+            CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
             UART_DBG_UartPutString("CYBLE_EVT_GAP_DEVICE_DISCONNECTED\r\n");
             break;
         // callback when ble is connected in application layer
