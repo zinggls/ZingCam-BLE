@@ -37,3 +37,4 @@ Export
 *.svd
 *_timing.html
 *.log
+/examples/ble/ComponentUpdateLog.txt
