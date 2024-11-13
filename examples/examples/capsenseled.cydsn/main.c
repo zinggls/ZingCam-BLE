@@ -59,14 +59,14 @@ void BleCallBack(uint32 event, void* eventParam)
             capsenseNotify = 0;
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
             pwm_Start();
-        break;
+            break;
         
         /* when a connection is made, update the LED and Capsense states in the GATT database and stop blinking the LED */    
         case CYBLE_EVT_GATT_CONNECT_IND:
             updateLed();
             updateCapsense();  
             pwm_Stop();
-		break;
+		    break;
 
         /* handle a write request */
         case CYBLE_EVT_GATTS_WRITE_REQ:
