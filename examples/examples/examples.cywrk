@@ -3,7 +3,7 @@
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
 <CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="examples" persistent="examples.cywrk" platform="NOT_USED">
-<current_project name=".\ble-central.cydsn\ble-central.cyprj" />
+<current_project name=".\centralled.cydsn\centralled.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
@@ -16,6 +16,8 @@
 <v>.\imuNew.cydsn\imuNew.cyprj</v>
 <v>.\ble-peripheral.cydsn\ble-peripheral.cyprj</v>
 <v>.\ble-central.cydsn\ble-central.cyprj</v>
+<v>.\capsenseled.cydsn\capsenseled.cyprj</v>
+<v>.\centralled.cydsn\centralled.cyprj</v>
 </projects>
 <workspace_id v="6ae5dda2-2a83-4a3f-8989-8eb17501abec" />
 <WriteAppVersionLastSavedWith v="4.4.0.80" />
