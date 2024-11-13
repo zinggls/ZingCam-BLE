@@ -103,7 +103,8 @@ void BleCallBack(uint32 event, void* eventParam)
 int main()
 {
     CyGlobalIntEnable; 
-    
+ 
+    UART_Start();
     capsense_Start();
     capsense_InitializeEnabledBaselines();
     
