@@ -72,6 +72,10 @@ void BleCallBack(uint32 event, void* eventParam)
             pwm_Start();
             UART_UartPutString("Advertising fast\r\n");
             break;
+            
+        case CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP:
+            UART_UartPutString("CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\r\n");
+            break;
         
         /* when a connection is made, update the LED and Capsense states in the GATT database and stop blinking the LED */    
         case CYBLE_EVT_GATT_CONNECT_IND:
@@ -80,6 +84,10 @@ void BleCallBack(uint32 event, void* eventParam)
             updateCapsense();  
             pwm_Stop();
 		    break;
+            
+        case CYBLE_EVT_GAP_DEVICE_CONNECTED:
+            UART_UartPutString("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
+            break;
 
         /* handle a write request */
         case CYBLE_EVT_GATTS_WRITE_REQ:
