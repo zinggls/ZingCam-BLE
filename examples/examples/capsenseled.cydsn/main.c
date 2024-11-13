@@ -122,6 +122,10 @@ void BleCallBack(uint32 event, void* eventParam)
             }
             UART_UartPutString("\r\n");
 			break;  
+            
+        case CYBLE_EVT_GATT_DISCONNECT_IND:
+            UART_UartPutString("CYBLE_EVT_GATT_DISCONNECT_IND\r\n");
+            break;
         
         default:
             sprintf(msg,"unhandled BLE event = 0x%lx\r\n",event);
