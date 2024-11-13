@@ -84,14 +84,13 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             break;
 
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:                     // Advertising packet
-            UART_UartPutString("CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT...");
             scanReport = (CYBLE_GAPC_ADV_REPORT_T*)eventParam;
             if(scanReport->dataLen != 29) {                             // Number of bytes in ledcapsense advertising packet
-                UART_UartPutString("scanReport->dataLen != 29\r\n");
+                UART_UartPutString("x");
                 break;
             }
             if(memcmp(&CapLedService,&scanReport->data[11],sizeof(CapLedService))) { // if service is in packet
-                UART_UartPutString("memcmp(&CapLedService,&scanReport->data[11],sizeof(CapLedService))\r\n");
+                UART_UartPutString("m");
                 return;
             }
                   
@@ -100,7 +99,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             memcpy(&remoteDevice.bdAddr,scanReport->peerBdAddr,6); // 6 bytes in BD addr
             systemMode = SM_CONNECTING;
             CyBle_GapcStopScan();                                  // stop scanning for peripherals
-            UART_UartPutString("Stop scan\r\n");
+            UART_UartPutString(" Stop scan\r\n");
             break;
 
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
