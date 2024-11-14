@@ -20,31 +20,6 @@ char buff[128];                                 // A scratch buffer
 const uint8 CapLedService[] = { 0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,
     0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00};
 
-
-/***************************************************************
- * Function to update the LED state in the GATT database
- * Based on state of swtich
- **************************************************************/
-void updateLed()
-{
-    static int previousState = 10;       // The first time it is called send the data
-    uint8 state;                         // A place to hold the state of the switch
-    CYBLE_GATTC_WRITE_REQ_T tempHandle;  // A handle to call the BLE API
-    
-    state = !SW1_Read();                 // Active low switch
-    if(state == previousState)           // If nothing has changed dont send anythign
-        return;
-    
-    previousState = state;
-    tempHandle.attrHandle = cyBle_customCServ[CYBLE_CUSTOMC_LEDCAPSENSE_SERVICE_INDEX]
-        .customServChar[CYBLE_CUSTOMC_LEDCAPSENSE_LED_CHAR_INDEX]
-        .customServCharHandle;
-        
-  	tempHandle.value.val = (uint8 *) &state;
-    tempHandle.value.len = 1;
-    
-    CyBle_GattcWriteCharacteristicValue(cyBle_connHandle,&tempHandle);
-}
 /***************************************************************
  * Function to set the Capsense CCCD to get notifications
  **************************************************************/
@@ -79,7 +54,6 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             systemMode = SM_SCANNING;
             enabledCapsenseNotifications = 0;
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST); // Start scanning for peripherals
-            PWM_WriteCompare(0); PWM_Stop();          // Turn off the LED
             UART_UartPutString("Scanning...\r\n");
             break;
 
@@ -122,17 +96,14 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:  // Once you have a conenction set the CCCD and turn on the PWM
             systemMode = SM_CONNECTED;
             updateCapsenseNotification();
-            PWM_Start();
             UART_UartPutString("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\r\n");
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
             capsenseNTF = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *)eventParam;
             if(capsenseNTF->handleValPair.value.val[0] == 0xFF) {               // Turn off the LED in no touch
-                PWM_WriteCompare(0);
                 sprintf(buff,"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF, val=0xff(0)\r\n");
             }else{
-                PWM_WriteCompare(capsenseNTF->handleValPair.value.val[0]);
                 sprintf(buff,"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF, val=0x%x\r\n",capsenseNTF->handleValPair.value.val[0]);
             }
             UART_UartPutString(buff);
@@ -154,23 +125,10 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     UART_Start();
-    PWM_Start();
     CyBle_Start( CyBle_AppCallback );
     
     for(;;)
-    { 
-        switch(systemMode)
-        {
-            case SM_INITIALIZE:
-            case SM_SCANNING:
-            case SM_CONNECTING:
-            case SM_SERVICEDISCOVERY:
-            break;
-            case SM_CONNECTED:
-                updateLed();
-            break;
-        }
-         
+    {          
         CyBle_ProcessEvents();
         CyBle_EnterLPM(CYBLE_BLESS_DEEPSLEEP);    
     }

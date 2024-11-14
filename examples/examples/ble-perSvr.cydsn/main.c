@@ -9,27 +9,6 @@ uint16 fingerPosOld = 0xFFFF;
 int capsenseNotify;
 
 /***************************************************************
- * Function to update the LED state in the GATT database
- **************************************************************/
-void updateLed()
-{
-    CYBLE_GATTS_HANDLE_VALUE_NTF_T 	tempHandle;
-   
-    uint8 red_State = !red_Read();
-    
-    if(CyBle_GetState() != CYBLE_STATE_CONNECTED)
-        return;
-    
-    tempHandle.attrHandle = CYBLE_LEDCAPSENSE_LED_CHAR_HANDLE;
-  	tempHandle.value.val = (uint8 *) &red_State;
-    tempHandle.value.len = 1;
-    CyBle_GattsWriteAttributeValue(&tempHandle,0,&cyBle_connHandle,CYBLE_GATT_DB_LOCALLY_INITIATED);  
-    
-    sprintf(msg,"updateLed, CyBle_GattsWriteAttributeValue, red state=%d\r\n",red_State);
-    UART_UartPutString(msg);
-}
-
-/***************************************************************
  * Function to update the CapSesnse state in the GATT database
  **************************************************************/
 void updateCapsense()
@@ -69,7 +48,6 @@ void BleCallBack(uint32 event, void* eventParam)
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             capsenseNotify = 0;
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
-            pwm_Start();
             UART_UartPutString("Advertising fast\r\n");
             break;
             
@@ -80,9 +58,7 @@ void BleCallBack(uint32 event, void* eventParam)
         /* when a connection is made, update the LED and Capsense states in the GATT database and stop blinking the LED */    
         case CYBLE_EVT_GATT_CONNECT_IND:
             UART_UartPutString("CYBLE_EVT_GATT_CONNECT_IND\r\n");
-            updateLed();
             updateCapsense();  
-            pwm_Stop();
 		    break;
             
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:
@@ -102,7 +78,6 @@ void BleCallBack(uint32 event, void* eventParam)
                 /* only update the value and write the response if the requested write is allowed */
                 if(CYBLE_GATT_ERR_NONE == CyBle_GattsWriteAttributeValue(&wrReqParam->handleValPair, 0, &cyBle_connHandle, CYBLE_GATT_DB_PEER_INITIATED))
                 {
-                    red_Write(!wrReqParam->handleValPair.value.val[0]);
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                     UART_UartPutString(",CyBle_GattsWriteRsp");
                 }
