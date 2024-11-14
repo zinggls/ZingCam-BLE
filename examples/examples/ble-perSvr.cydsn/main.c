@@ -26,7 +26,7 @@ void updateCapsense()
     /* send notification to client if notifications are enabled and finger location has changed */
     if (capsenseNotify && (fingerPos != fingerPosOld) ) {
         CyBle_GattsNotification(cyBle_connHandle,&tempHandle);
-        sprintf(msg,"updateCapsense, CyBle_GattsNotification, pos=%d\r\n",fingerPos);
+        sprintf(msg,"updateCapsense, CyBle_GattsNotification, pos=0x%x\r\n",fingerPos);
         UART_UartPutString(msg);
     }
     
