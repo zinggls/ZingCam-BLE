@@ -8,6 +8,19 @@ uint16 fingerPosOld = 0xFFFF;
 
 int capsenseNotify;
 
+typedef struct
+{
+    uint8_t val1;
+    uint8_t val2;    
+    uint16_t values[3];
+} MyData;
+
+MyData data = {
+    .val1 = 10,        // Assign an appropriate value for val1 (e.g., 10)
+    .val2 = 20,        // Assign an appropriate value for val2 (e.g., 20)
+    .values = {300, 400, 500}  // Initialize the values array with specific values
+};
+
 /***************************************************************
  * Function to update the CapSesnse state in the GATT database
  **************************************************************/
@@ -132,6 +145,16 @@ int main()
             capsense_UpdateEnabledBaselines();
             capsense_ScanEnabledWidgets();
             updateCapsense();
+            
+            CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
+            myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
+            data.val1 = fingerPos;
+            myDataHandle.value.val = (uint8_t*)&data;
+            myDataHandle.value.len = sizeof(MyData);
+            CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
+            
+            if (capsenseNotify)
+                CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
         }
    
         CyBle_ProcessEvents();
