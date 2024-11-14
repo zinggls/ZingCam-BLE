@@ -17,8 +17,8 @@ static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
 char buff[128];                                 // A scratch buffer
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
-const uint8 CapLedService[] = { 0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,
-    0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00};
+const uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
+	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
 
 /***************************************************************
  * Function to set the Capsense CCCD to get notifications
@@ -59,11 +59,11 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:                     // Advertising packet
             scanReport = (CYBLE_GAPC_ADV_REPORT_T*)eventParam;
-            if(scanReport->dataLen != 29) {                             // Number of bytes in ledcapsense advertising packet
+            if(scanReport->dataLen != 31) {                             // Number of bytes in ledcapsense advertising packet
                 UART_UartPutString("x");
                 break;
             }
-            if(memcmp(&CapLedService,&scanReport->data[11],sizeof(CapLedService))) { // if service is in packet
+            if(memcmp(&CapLedService,&scanReport->data[9],sizeof(CapLedService))) { // if service is in packet
                 UART_UartPutString("m");
                 return;
             }
