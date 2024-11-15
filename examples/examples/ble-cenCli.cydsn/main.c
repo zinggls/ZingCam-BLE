@@ -33,6 +33,10 @@ MyData data = {
     .values = {300, 400, 500}  // Initialize the values array with specific values
 };
 
+ulong writeCharVal = 0;
+ulong notifiedCustom = 0;
+ulong writeRsp = 0;
+
 /***************************************************************
  * Function to set the Capsense CCCD to get notifications
  **************************************************************/
@@ -117,17 +121,23 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             notificationParam = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T*)eventParam;
             
             if(notificationParam->handleValPair.value.len == sizeof(MyData)) {
+                notifiedCustom++;
+#if _VERBOSE  
                 MyData* receivedData = (MyData*)notificationParam->handleValPair.value.val;
                 // Process the received data
                 uint8_t val1 = receivedData->val1;
                 uint8_t val2 = receivedData->val2;
                 sprintf(buff,"val1=0x%x val2=0x%x \r\n",val1,val2);
                 UART_UartPutString(buff);
+#endif
             }
             break;
             
         case CYBLE_EVT_GATTC_WRITE_RSP: // Sucesfull write - nothing to do
+#if _VERBOSE
             UART_UartPutString("CYBLE_EVT_GATTC_WRITE_RSP (do nothing)\r\n");
+#endif
+            writeRsp++;
             break;
 
         default:
@@ -151,10 +161,15 @@ void SendCommandToPeripheral(uint8_t command) {
 
     CYBLE_API_RESULT_T res = CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq);
     if(res!=CYBLE_ERROR_OK){
+#if _VERBOSE
         sprintf(buff,"CyBle_GattcWriteCharacteristicValue error=0x%x\r\n",res);
         UART_UartPutString(buff);
+#endif
     }else{
+        writeCharVal++;
+#if _VERBOSE
         UART_UartPutString("SendCommandToPeripheral\r\n");
+#endif
     }
 }
 
@@ -168,6 +183,9 @@ int main(void)
     {          
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
+        
+        sprintf(buff,"[ble-cenCli] OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu }\r\n", writeCharVal ,notifiedCustom,writeRsp);
+        UART_UartPutString(buff);        
         CyDelay(100);
     }
 }
