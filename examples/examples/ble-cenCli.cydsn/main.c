@@ -161,6 +161,6 @@ int main(void)
     {          
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
-        CyBle_EnterLPM(CYBLE_BLESS_DEEPSLEEP);    
+        CyDelay(100);
     }
 }
