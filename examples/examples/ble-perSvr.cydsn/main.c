@@ -7,6 +7,11 @@ uint16 fingerPos    = 0xFFFF;
 uint16 fingerPosOld = 0xFFFF;
 uint8_t isStackBusy = 0;
 
+ulong notifyCustom = 0;
+ulong notifyCapsense = 0;
+ulong writereqCustom = 0;
+ulong writereqCapsense = 0;
+
 int capsenseNotify;
 
 typedef struct
@@ -39,9 +44,14 @@ void updateCapsense()
     
     /* send notification to client if notifications are enabled and finger location has changed */
     if (capsenseNotify && (fingerPos != fingerPosOld) ) {
-        CyBle_GattsNotification(cyBle_connHandle,&tempHandle);
-        sprintf(msg,"updateCapsense, CyBle_GattsNotification, pos=0x%x\r\n",fingerPos);
-        UART_UartPutString(msg);
+        CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&tempHandle);
+        if(res==CYBLE_ERROR_OK) {
+            notifyCapsense++;
+#if _VERBOSE            
+            sprintf(msg,"updateCapsense, CyBle_GattsNotification, pos=0x%x\r\n",fingerPos);
+            UART_UartPutString(msg);
+#endif
+        }
     }
     
     fingerPosOld = fingerPos;
@@ -81,34 +91,45 @@ void BleCallBack(uint32 event, void* eventParam)
 
         /* handle a write request */
         case CYBLE_EVT_GATTS_WRITE_REQ:
+#if _VERBOSE
             UART_UartPutString("CYBLE_EVT_GATTS_WRITE_REQ");
+#endif
             wrReqParam = (CYBLE_GATTS_WRITE_REQ_PARAM_T *) eventParam;
             
             if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE) {
                 if (wrReqParam->handleValPair.value.len == sizeof(MyData)) {
-                    MyData* receivedData = (MyData*)wrReqParam->handleValPair.value.val;
-                    
-                    uint8_t command = receivedData->val1;
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
+                    writereqCustom++;
+#if _VERBOSE    
+                    MyData* receivedData = (MyData*)wrReqParam->handleValPair.value.val;
+                    uint8_t command = receivedData->val1;
                     sprintf(msg,",custom request from the central, command=%d",command);
                     UART_UartPutString(msg);
+#endif
                 }
             }
             
             /* request to update the CapSense notification */
             if(wrReqParam->handleValPair.attrHandle == CYBLE_LEDCAPSENSE_CAPSENSE_CAPSENSECCCD_DESC_HANDLE) 
             {
+#if _VERBOSE
                 UART_UartPutString(",request update CapSense notification");
+#endif
                 
                 CyBle_GattsWriteAttributeValue(&wrReqParam->handleValPair, 0, &cyBle_connHandle, CYBLE_GATT_DB_PEER_INITIATED);
                 capsenseNotify = wrReqParam->handleValPair.value.val[0] & 0x01;
                 CyBle_GattsWriteRsp(cyBle_connHandle);
                 
+                writereqCapsense++;
+#if _VERBOSE
                 sprintf(msg,",capsenseNotity=%d",capsenseNotify);
                 UART_UartPutString(msg);
+#endif
             }
+#if _VERBOSE
             UART_UartPutString("\r\n");
+#endif
 			break;  
             
         case CYBLE_EVT_GATT_DISCONNECT_IND:
@@ -158,9 +179,14 @@ int main()
                 myDataHandle.value.len = sizeof(MyData);
                 CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
                 
-                if (capsenseNotify)
-                    CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
+                if (capsenseNotify) {
+                    CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
+                    if(res==CYBLE_ERROR_OK) notifyCustom++;
+                }
             }
+            sprintf(msg,"[ble-perSvr] OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
+                notifyCustom,notifyCapsense,writereqCustom,writereqCapsense);
+            UART_UartPutString(msg);
         }
    
         CyBle_ProcessEvents();
