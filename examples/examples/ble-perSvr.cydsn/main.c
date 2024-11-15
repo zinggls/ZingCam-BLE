@@ -84,6 +84,14 @@ void BleCallBack(uint32 event, void* eventParam)
             UART_UartPutString("CYBLE_EVT_GATTS_WRITE_REQ");
             wrReqParam = (CYBLE_GATTS_WRITE_REQ_PARAM_T *) eventParam;
             
+            if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE) {
+                uint8_t command = wrReqParam->handleValPair.value.val[0];
+                CyBle_GattsWriteRsp(cyBle_connHandle);
+                
+                sprintf(msg,",custom request from the central, command=%d",command);
+                UART_UartPutString(msg);
+            }
+            
             /* request to update the CapSense notification */
             if(wrReqParam->handleValPair.attrHandle == CYBLE_LEDCAPSENSE_CAPSENSE_CAPSENSECCCD_DESC_HANDLE) 
             {

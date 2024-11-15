@@ -131,6 +131,25 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
     }
 }
 
+void SendCommandToPeripheral(uint8_t command) {
+    // Use the characteristic index to obtain the attribute handle    
+    CYBLE_GATT_DB_ATTR_HANDLE_T attrHandle = cyBle_customCServ[CYBLE_CUSTOMC_CUSTOM_SERVICE_SERVICE_INDEX]
+                                                .customServChar[CYBLE_CUSTOMC_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_INDEX]
+                                                .customServCharHandle;
+
+    CYBLE_GATTC_WRITE_REQ_T writeReq;
+    writeReq.attrHandle = attrHandle;
+    writeReq.value.val = &command;
+    writeReq.value.len = 1;
+
+    CYBLE_API_RESULT_T res = CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq);
+    if(res!=CYBLE_ERROR_OK){
+        sprintf(buff,"CyBle_GattcWriteCharacteristicValue error=0x%x\r\n",res);
+        UART_UartPutString(buff);
+    }else{
+        UART_UartPutString("SendCommandToPeripheral\r\n");
+    }
+}
 
 int main(void)
 {
@@ -141,6 +160,7 @@ int main(void)
     for(;;)
     {          
         CyBle_ProcessEvents();
+        SendCommandToPeripheral(123);
         CyBle_EnterLPM(CYBLE_BLESS_DEEPSLEEP);    
     }
 }
