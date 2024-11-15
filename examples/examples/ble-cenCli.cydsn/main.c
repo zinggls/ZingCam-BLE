@@ -20,6 +20,13 @@ char buff[128];                                 // A scratch buffer
 const uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
 
+typedef struct
+{
+    uint8_t val1;
+    uint8_t val2;    
+    uint16_t values[3];
+} MyData;
+
 /***************************************************************
  * Function to set the Capsense CCCD to get notifications
  **************************************************************/
@@ -41,6 +48,7 @@ void updateCapsenseNotification()
 
 CYBLE_GAPC_ADV_REPORT_T* scanReport;
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *capsenseNTF;    
+CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
@@ -100,13 +108,16 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
-            capsenseNTF = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *)eventParam;
-            if(capsenseNTF->handleValPair.value.val[0] == 0xFF) {               // Turn off the LED in no touch
-                sprintf(buff,"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF, val=0xff(0)\r\n");
-            }else{
-                sprintf(buff,"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF, val=0x%x\r\n",capsenseNTF->handleValPair.value.val[0]);
+            notificationParam = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T*)eventParam;
+            
+            if(notificationParam->handleValPair.value.len == sizeof(MyData)) {
+                MyData* receivedData = (MyData*)notificationParam->handleValPair.value.val;
+                // Process the received data
+                uint8_t val1 = receivedData->val1;
+                uint8_t val2 = receivedData->val2;
+                sprintf(buff,"val1=0x%x val2=0x%x \r\n",val1,val2);
+                UART_UartPutString(buff);
             }
-            UART_UartPutString(buff);
             break;
             
         case CYBLE_EVT_GATTC_WRITE_RSP: // Sucesfull write - nothing to do
