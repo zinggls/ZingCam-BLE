@@ -158,6 +158,5 @@ int main()
         }
    
         CyBle_ProcessEvents();
-        CyBle_EnterLPM(CYBLE_BLESS_DEEPSLEEP);    
     }
 }
