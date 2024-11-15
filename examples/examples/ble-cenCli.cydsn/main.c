@@ -184,8 +184,10 @@ int main(void)
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
         
+#ifndef _VERBOSE
         sprintf(buff,"[ble-cenCli] OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu }\r\n", writeCharVal ,notifiedCustom,writeRsp);
         UART_UartPutString(buff);        
+#endif
         CyDelay(100);
     }
 }

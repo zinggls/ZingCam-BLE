@@ -184,9 +184,11 @@ int main()
                     if(res==CYBLE_ERROR_OK) notifyCustom++;
                 }
             }
+#ifndef _VERBOSE
             sprintf(msg,"[ble-perSvr] OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
                 notifyCustom,notifyCapsense,writereqCustom,writereqCapsense);
             UART_UartPutString(msg);
+#endif
         }
    
         CyBle_ProcessEvents();
