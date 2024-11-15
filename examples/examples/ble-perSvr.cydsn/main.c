@@ -5,6 +5,7 @@ static char msg[128];
 
 uint16 fingerPos    = 0xFFFF;
 uint16 fingerPosOld = 0xFFFF;
+uint8_t isStackBusy = 0;
 
 int capsenseNotify;
 
@@ -114,6 +115,10 @@ void BleCallBack(uint32 event, void* eventParam)
         case CYBLE_EVT_GATT_DISCONNECT_IND:
             UART_UartPutString("CYBLE_EVT_GATT_DISCONNECT_IND\r\n");
             break;
+            
+        case CYBLE_EVT_STACK_BUSY_STATUS:
+            isStackBusy = *(uint8_t *)eventParam;
+            break;
         
         default:
             sprintf(msg,"unhandled BLE event = 0x%lx\r\n",event);
@@ -146,15 +151,17 @@ int main()
             capsense_ScanEnabledWidgets();
             updateCapsense();
             
-            CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
-            myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
-            data.val1 = fingerPos;
-            myDataHandle.value.val = (uint8_t*)&data;
-            myDataHandle.value.len = sizeof(MyData);
-            CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
-            
-            if (capsenseNotify)
-                CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
+            if(isStackBusy==CYBLE_STACK_STATE_FREE) {
+                CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
+                myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
+                data.val1 = fingerPos;
+                myDataHandle.value.val = (uint8_t*)&data;
+                myDataHandle.value.len = sizeof(MyData);
+                CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
+                
+                if (capsenseNotify)
+                    CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
+            }
         }
    
         CyBle_ProcessEvents();
