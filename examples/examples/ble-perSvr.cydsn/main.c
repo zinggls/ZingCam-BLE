@@ -83,19 +83,6 @@ void BleCallBack(uint32 event, void* eventParam)
         case CYBLE_EVT_GATTS_WRITE_REQ:
             UART_UartPutString("CYBLE_EVT_GATTS_WRITE_REQ");
             wrReqParam = (CYBLE_GATTS_WRITE_REQ_PARAM_T *) eventParam;
-			      
-            /* request write the LED value */
-            if(wrReqParam->handleValPair.attrHandle == CYBLE_LEDCAPSENSE_LED_CHAR_HANDLE)
-            {
-                UART_UartPutString(",request write LED value");
-                
-                /* only update the value and write the response if the requested write is allowed */
-                if(CYBLE_GATT_ERR_NONE == CyBle_GattsWriteAttributeValue(&wrReqParam->handleValPair, 0, &cyBle_connHandle, CYBLE_GATT_DB_PEER_INITIATED))
-                {
-                    CyBle_GattsWriteRsp(cyBle_connHandle);
-                    UART_UartPutString(",CyBle_GattsWriteRsp");
-                }
-            }
             
             /* request to update the CapSense notification */
             if(wrReqParam->handleValPair.attrHandle == CYBLE_LEDCAPSENSE_CAPSENSE_CAPSENSECCCD_DESC_HANDLE) 
