@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CyProfileTreeItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CyService" ID="24" DisplayName="Custom Service" Name="Custom Service" Type="org.bluetooth.service.custom" UUID="2C9B">
+  <CyCharacteristic ID="25" DisplayName="Custom Characteristic" Name="Custom Characteristic" Type="org.bluetooth.characteristic.custom" UUID="1763">
+    <CyDescriptor ID="26" DisplayName="Custom Descriptor" Name="Custom Descriptor" Type="org.bluetooth.descriptor.custom" UUID="DFE7">
+      <Field Name="New field">
+        <DataFormat>uint8</DataFormat>
+        <ByteLength>1</ByteLength>
+        <ValueType>BASIC</ValueType>
+        <ArrayValue />
+      </Field>
+      <Properties>
+        <Property Type="READ" Present="false" Mandatory="false" />
+        <Property Type="WRITE" Present="false" Mandatory="false" />
+      </Properties>
+      <Permission />
+    </CyDescriptor>
+    <Field Name="New field">
+      <DataFormat>uint8</DataFormat>
+      <ByteLength>1</ByteLength>
+      <ValueType>BASIC</ValueType>
+      <ArrayValue />
+    </Field>
+    <Properties>
+      <Property Type="BROADCAST" Present="false" Mandatory="false" />
+      <Property Type="READ" Present="false" Mandatory="false" />
+      <Property Type="WRITE" Present="false" Mandatory="false" />
+      <Property Type="WRITE_WITHOUT_RESPONSE" Present="false" Mandatory="false" />
+      <Property Type="NOTIFY" Present="false" Mandatory="false" />
+      <Property Type="INDICATE" Present="false" Mandatory="false" />
+      <Property Type="AUTHENTICATED_SIGNED_WRITES" Present="false" Mandatory="false" />
+      <Property Type="RELIABLE_WRITE" Present="false" Mandatory="false" />
+      <Property Type="WRITABLE_AUXILIARIES" Present="false" Mandatory="false" />
+    </Properties>
+    <Permission>
+      <AccessPermission>NONE</AccessPermission>
+    </Permission>
+  </CyCharacteristic>
+  <Declaration>PrimarySingleInstance</Declaration>
+  <IncludedServices />
+</CyProfileTreeItem>
