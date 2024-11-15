@@ -37,6 +37,8 @@ ulong writeCharVal = 0;
 ulong notifiedCustom = 0;
 ulong writeRsp = 0;
 
+uint8_t capsensePos = 0xFF;
+
 /***************************************************************
  * Function to set the Capsense CCCD to get notifications
  **************************************************************/
@@ -122,10 +124,11 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             
             if(notificationParam->handleValPair.value.len == sizeof(MyData)) {
                 notifiedCustom++;
-#if _VERBOSE  
+                
                 MyData* receivedData = (MyData*)notificationParam->handleValPair.value.val;
                 // Process the received data
-                uint8_t val1 = receivedData->val1;
+                capsensePos = receivedData->val1;
+#if _VERBOSE  
                 uint8_t val2 = receivedData->val2;
                 sprintf(buff,"val1=0x%x val2=0x%x \r\n",val1,val2);
                 UART_UartPutString(buff);
@@ -185,7 +188,7 @@ int main(void)
         SendCommandToPeripheral(123);
         
 #ifndef _VERBOSE
-        sprintf(buff,"[ble-cenCli] OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu }\r\n", writeCharVal ,notifiedCustom,writeRsp);
+        sprintf(buff,"[ble-cenCli] OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,capSense=%d }\r\n", writeCharVal ,notifiedCustom,writeRsp,capsensePos);
         UART_UartPutString(buff);        
 #endif
         CyDelay(100);
