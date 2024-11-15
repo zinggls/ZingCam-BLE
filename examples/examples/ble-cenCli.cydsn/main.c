@@ -27,6 +27,12 @@ typedef struct
     uint16_t values[3];
 } MyData;
 
+MyData data = {
+    .val1 = 10,        // Assign an appropriate value for val1 (e.g., 10)
+    .val2 = 20,        // Assign an appropriate value for val2 (e.g., 20)
+    .values = {300, 400, 500}  // Initialize the values array with specific values
+};
+
 /***************************************************************
  * Function to set the Capsense CCCD to get notifications
  **************************************************************/
@@ -138,9 +144,10 @@ void SendCommandToPeripheral(uint8_t command) {
                                                 .customServCharHandle;
 
     CYBLE_GATTC_WRITE_REQ_T writeReq;
+    data.val1 = command;
     writeReq.attrHandle = attrHandle;
-    writeReq.value.val = &command;
-    writeReq.value.len = 1;
+    writeReq.value.val = (uint8_t*)&data;
+    writeReq.value.len = sizeof(MyData);
 
     CYBLE_API_RESULT_T res = CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq);
     if(res!=CYBLE_ERROR_OK){

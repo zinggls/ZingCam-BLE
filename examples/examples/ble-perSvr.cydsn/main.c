@@ -85,11 +85,15 @@ void BleCallBack(uint32 event, void* eventParam)
             wrReqParam = (CYBLE_GATTS_WRITE_REQ_PARAM_T *) eventParam;
             
             if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE) {
-                uint8_t command = wrReqParam->handleValPair.value.val[0];
-                CyBle_GattsWriteRsp(cyBle_connHandle);
+                if (wrReqParam->handleValPair.value.len == sizeof(MyData)) {
+                    MyData* receivedData = (MyData*)wrReqParam->handleValPair.value.val;
+                    
+                    uint8_t command = receivedData->val1;
+                    CyBle_GattsWriteRsp(cyBle_connHandle);
                 
-                sprintf(msg,",custom request from the central, command=%d",command);
-                UART_UartPutString(msg);
+                    sprintf(msg,",custom request from the central, command=%d",command);
+                    UART_UartPutString(msg);
+                }
             }
             
             /* request to update the CapSense notification */
