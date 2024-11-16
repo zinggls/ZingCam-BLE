@@ -191,6 +191,6 @@ int main(void)
         sprintf(buff,"[ble-cenCli] SM:%d OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
         UART_UartPutString(buff);        
 #endif
-        CyDelay(100);
+        CyDelay(10);
     }
 }
