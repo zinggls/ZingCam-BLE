@@ -1,7 +1,6 @@
 #include <project.h>
 #include <stdio.h>
-
-static char msg[128];
+#include <Log.h>
 
 uint16 fingerPos    = 0xFFFF;
 uint16 fingerPosOld = 0xFFFF;
@@ -68,25 +67,25 @@ void BleCallBack(uint32 event, void* eventParam)
     {
         /* if there is a disconnect or the stack just turned on from a reset then start the advertising and turn on the LED blinking */
         case CYBLE_EVT_STACK_ON:
-        UART_DBG_UartPutString("CYBLE_EVT_STACK_ON\r\n");
+        L("CYBLE_EVT_STACK_ON\r\n");
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             capsenseNotify = 0;
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
-            UART_DBG_UartPutString("Advertising fast\r\n");
+            L("Advertising fast\r\n");
             break;
             
         case CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP:
-            UART_DBG_UartPutString("CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\r\n");
+            L("CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\r\n");
             break;
         
         /* when a connection is made, update the LED and Capsense states in the GATT database and stop blinking the LED */    
         case CYBLE_EVT_GATT_CONNECT_IND:
-            UART_DBG_UartPutString("CYBLE_EVT_GATT_CONNECT_IND\r\n");
+            L("CYBLE_EVT_GATT_CONNECT_IND\r\n");
             updateCapsense();  
 		    break;
             
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:
-            UART_DBG_UartPutString("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
+            L("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
             break;
 
         /* handle a write request */
@@ -133,7 +132,7 @@ void BleCallBack(uint32 event, void* eventParam)
 			break;  
             
         case CYBLE_EVT_GATT_DISCONNECT_IND:
-            UART_DBG_UartPutString("CYBLE_EVT_GATT_DISCONNECT_IND\r\n");
+            L("CYBLE_EVT_GATT_DISCONNECT_IND\r\n");
             break;
             
         case CYBLE_EVT_STACK_BUSY_STATUS:
@@ -141,8 +140,7 @@ void BleCallBack(uint32 event, void* eventParam)
             break;
         
         default:
-            sprintf(msg,"unhandled BLE event = 0x%lx\r\n",event);
-            UART_DBG_UartPutString(msg);
+            L("unhandled BLE event = 0x%lx\r\n",event);
             break;
     }
 } 
@@ -185,9 +183,8 @@ int main()
                 }
             }
 #ifndef _VERBOSE
-            sprintf(msg,"[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
+            L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
                 cyBle_state,notifyCustom,notifyCapsense,writereqCustom,writereqCapsense);
-            UART_DBG_UartPutString(msg);
 #endif
         }
    
