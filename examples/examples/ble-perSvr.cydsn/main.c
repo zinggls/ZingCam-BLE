@@ -185,8 +185,8 @@ int main()
                 }
             }
 #ifndef _VERBOSE
-            sprintf(msg,"[ble-perSvr] OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
-                notifyCustom,notifyCapsense,writereqCustom,writereqCapsense);
+            sprintf(msg,"[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
+                cyBle_state,notifyCustom,notifyCapsense,writereqCustom,writereqCapsense);
             UART_UartPutString(msg);
 #endif
         }
