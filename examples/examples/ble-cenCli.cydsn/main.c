@@ -188,7 +188,7 @@ int main(void)
         SendCommandToPeripheral(123);
         
 #ifndef _VERBOSE
-        sprintf(buff,"[ble-cenCli] SM:%d OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
+        sprintf(buff,"[ble-cenCli] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
         UART_UartPutString(buff);        
 #endif
         CyDelay(10);
