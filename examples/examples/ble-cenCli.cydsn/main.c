@@ -1,6 +1,7 @@
 
 #include "project.h"
 #include <stdio.h>
+#include <Log.h>
 
 // Modes for a statemachine
 typedef enum SystemMode {
@@ -14,7 +15,6 @@ typedef enum SystemMode {
 static SystemMode_t systemMode = SM_INITIALIZE; // Starting mode of statemachine 
 static int enabledCapsenseNotifications = 0;    // Have you enabled the notifiation for CapSense
 static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
-char buff[128];                                 // A scratch buffer
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
 const uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
@@ -69,22 +69,22 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
     switch( eventCode )
     {
         case CYBLE_EVT_STACK_ON:
-            UART_DBG_UartPutString("CYBLE_EVT_STACK_ON\r\n");
+            L("CYBLE_EVT_STACK_ON\r\n");
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             systemMode = SM_SCANNING;
             enabledCapsenseNotifications = 0;
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST); // Start scanning for peripherals
-            UART_DBG_UartPutString("Scanning...\r\n");
+            L("Scanning...\r\n");
             break;
 
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:                     // Advertising packet
             scanReport = (CYBLE_GAPC_ADV_REPORT_T*)eventParam;
             if(scanReport->dataLen != 31) {                             // Number of bytes in ledcapsense advertising packet
-                UART_DBG_UartPutString("x");
+                L("x");
                 break;
             }
             if(memcmp(&CapLedService,&scanReport->data[9],sizeof(CapLedService))) { // if service is in packet
-                UART_DBG_UartPutString("m");
+                L("m");
                 return;
             }
                   
@@ -93,30 +93,30 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             memcpy(&remoteDevice.bdAddr,scanReport->peerBdAddr,6); // 6 bytes in BD addr
             systemMode = SM_CONNECTING;
             CyBle_GapcStopScan();                                  // stop scanning for peripherals
-            UART_DBG_UartPutString(" Stop scan\r\n");
+            L(" Stop scan\r\n");
             break;
 
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
             if(systemMode == SM_CONNECTING ) 
                 CyBle_GapcConnectDevice(&remoteDevice);
                 
-            UART_DBG_UartPutString("CYBLE_EVT_GAPC_SCAN_START_STOP\r\n");
+            L("CYBLE_EVT_GAPC_SCAN_START_STOP\r\n");
             break;
 
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:              // Connection request is complete
             CyBle_GattcStartDiscovery(cyBle_connHandle);  // Discover the services on the GATT Server
             systemMode = SM_SERVICEDISCOVERY;
-            UART_DBG_UartPutString("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
+            L("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
             break;
             
         case CYBLE_EVT_GATT_CONNECT_IND: // nothing to do
-            UART_DBG_UartPutString("CYBLE_EVT_GATT_CONNECT_IND (do nothing)\r\n");
+            L("CYBLE_EVT_GATT_CONNECT_IND (do nothing)\r\n");
             break;
 
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:  // Once you have a conenction set the CCCD and turn on the PWM
             systemMode = SM_CONNECTED;
             updateCapsenseNotification();
-            UART_DBG_UartPutString("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\r\n");
+            L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\r\n");
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
@@ -144,8 +144,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             break;
 
         default:
-            sprintf(buff,"BLE: Unhandled event(0x%lx)\r\n",eventCode);
-            UART_DBG_UartPutString(buff);
+            L("BLE: Unhandled event(0x%lx)\r\n",eventCode);
             break;
     }
 }
@@ -188,8 +187,7 @@ int main(void)
         SendCommandToPeripheral(123);
         
 #ifndef _VERBOSE
-        sprintf(buff,"[ble-cenCli] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
-        UART_DBG_UartPutString(buff);        
+        L("[ble-cenCli] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
 #endif
         CyDelay(10);
     }
