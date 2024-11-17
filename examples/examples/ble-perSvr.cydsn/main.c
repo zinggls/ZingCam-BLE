@@ -68,25 +68,25 @@ void BleCallBack(uint32 event, void* eventParam)
     {
         /* if there is a disconnect or the stack just turned on from a reset then start the advertising and turn on the LED blinking */
         case CYBLE_EVT_STACK_ON:
-        UART_UartPutString("CYBLE_EVT_STACK_ON\r\n");
+        UART_DBG_UartPutString("CYBLE_EVT_STACK_ON\r\n");
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             capsenseNotify = 0;
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
-            UART_UartPutString("Advertising fast\r\n");
+            UART_DBG_UartPutString("Advertising fast\r\n");
             break;
             
         case CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP:
-            UART_UartPutString("CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\r\n");
+            UART_DBG_UartPutString("CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\r\n");
             break;
         
         /* when a connection is made, update the LED and Capsense states in the GATT database and stop blinking the LED */    
         case CYBLE_EVT_GATT_CONNECT_IND:
-            UART_UartPutString("CYBLE_EVT_GATT_CONNECT_IND\r\n");
+            UART_DBG_UartPutString("CYBLE_EVT_GATT_CONNECT_IND\r\n");
             updateCapsense();  
 		    break;
             
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:
-            UART_UartPutString("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
+            UART_DBG_UartPutString("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
             break;
 
         /* handle a write request */
@@ -133,7 +133,7 @@ void BleCallBack(uint32 event, void* eventParam)
 			break;  
             
         case CYBLE_EVT_GATT_DISCONNECT_IND:
-            UART_UartPutString("CYBLE_EVT_GATT_DISCONNECT_IND\r\n");
+            UART_DBG_UartPutString("CYBLE_EVT_GATT_DISCONNECT_IND\r\n");
             break;
             
         case CYBLE_EVT_STACK_BUSY_STATUS:
@@ -142,7 +142,7 @@ void BleCallBack(uint32 event, void* eventParam)
         
         default:
             sprintf(msg,"unhandled BLE event = 0x%lx\r\n",event);
-            UART_UartPutString(msg);
+            UART_DBG_UartPutString(msg);
             break;
     }
 } 
@@ -154,7 +154,7 @@ int main()
 {
     CyGlobalIntEnable; 
  
-    UART_Start();
+    UART_DBG_Start();
     capsense_Start();
     capsense_InitializeEnabledBaselines();
     
@@ -187,7 +187,7 @@ int main()
 #ifndef _VERBOSE
             sprintf(msg,"[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
                 cyBle_state,notifyCustom,notifyCapsense,writereqCustom,writereqCapsense);
-            UART_UartPutString(msg);
+            UART_DBG_UartPutString(msg);
 #endif
         }
    

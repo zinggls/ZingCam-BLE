@@ -69,22 +69,22 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
     switch( eventCode )
     {
         case CYBLE_EVT_STACK_ON:
-            UART_UartPutString("CYBLE_EVT_STACK_ON\r\n");
+            UART_DBG_UartPutString("CYBLE_EVT_STACK_ON\r\n");
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             systemMode = SM_SCANNING;
             enabledCapsenseNotifications = 0;
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST); // Start scanning for peripherals
-            UART_UartPutString("Scanning...\r\n");
+            UART_DBG_UartPutString("Scanning...\r\n");
             break;
 
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:                     // Advertising packet
             scanReport = (CYBLE_GAPC_ADV_REPORT_T*)eventParam;
             if(scanReport->dataLen != 31) {                             // Number of bytes in ledcapsense advertising packet
-                UART_UartPutString("x");
+                UART_DBG_UartPutString("x");
                 break;
             }
             if(memcmp(&CapLedService,&scanReport->data[9],sizeof(CapLedService))) { // if service is in packet
-                UART_UartPutString("m");
+                UART_DBG_UartPutString("m");
                 return;
             }
                   
@@ -93,30 +93,30 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             memcpy(&remoteDevice.bdAddr,scanReport->peerBdAddr,6); // 6 bytes in BD addr
             systemMode = SM_CONNECTING;
             CyBle_GapcStopScan();                                  // stop scanning for peripherals
-            UART_UartPutString(" Stop scan\r\n");
+            UART_DBG_UartPutString(" Stop scan\r\n");
             break;
 
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
             if(systemMode == SM_CONNECTING ) 
                 CyBle_GapcConnectDevice(&remoteDevice);
                 
-            UART_UartPutString("CYBLE_EVT_GAPC_SCAN_START_STOP\r\n");
+            UART_DBG_UartPutString("CYBLE_EVT_GAPC_SCAN_START_STOP\r\n");
             break;
 
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:              // Connection request is complete
             CyBle_GattcStartDiscovery(cyBle_connHandle);  // Discover the services on the GATT Server
             systemMode = SM_SERVICEDISCOVERY;
-            UART_UartPutString("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
+            UART_DBG_UartPutString("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
             break;
             
         case CYBLE_EVT_GATT_CONNECT_IND: // nothing to do
-            UART_UartPutString("CYBLE_EVT_GATT_CONNECT_IND (do nothing)\r\n");
+            UART_DBG_UartPutString("CYBLE_EVT_GATT_CONNECT_IND (do nothing)\r\n");
             break;
 
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:  // Once you have a conenction set the CCCD and turn on the PWM
             systemMode = SM_CONNECTED;
             updateCapsenseNotification();
-            UART_UartPutString("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\r\n");
+            UART_DBG_UartPutString("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\r\n");
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
@@ -145,7 +145,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 
         default:
             sprintf(buff,"BLE: Unhandled event(0x%lx)\r\n",eventCode);
-            UART_UartPutString(buff);
+            UART_DBG_UartPutString(buff);
             break;
     }
 }
@@ -179,7 +179,7 @@ void SendCommandToPeripheral(uint8_t command) {
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
-    UART_Start();
+    UART_DBG_Start();
     CyBle_Start( CyBle_AppCallback );
     
     for(;;)
@@ -189,7 +189,7 @@ int main(void)
         
 #ifndef _VERBOSE
         sprintf(buff,"[ble-cenCli] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
-        UART_UartPutString(buff);        
+        UART_DBG_UartPutString(buff);        
 #endif
         CyDelay(10);
     }
