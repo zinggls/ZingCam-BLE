@@ -96,12 +96,12 @@ static void process_uart_data()
                    &zing_data.rxid,
                    &zing_data.run,
                    &zing_data.cnt) != 11) {
-            UART_DBG_UartPutString("Parsing Error\r\n");
-            UART_DBG_UartPutString("Received: ");
-            UART_DBG_UartPutString(zing_status);
-            UART_DBG_UartPutString("\r\n");
+//            UART_DBG_UartPutString("Parsing Error\r\n");
+//            UART_DBG_UartPutString("Received: ");
+//            UART_DBG_UartPutString(zing_status);
+//            UART_DBG_UartPutString("\r\n");
         } else {
-            PrintZingData(&zing_data);
+//            PrintZingData(&zing_data);
         }
     }
 }
@@ -262,12 +262,15 @@ int main()
                 
                 if (capsenseNotify) {
                     CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
-                    if(res==CYBLE_ERROR_OK) notifyCustom++;
+                    if(res==CYBLE_ERROR_OK)
+                        notifyCustom++;
+                    else
+                        L("CyBle_GattsNotification error=0x%x\r\n",res);
                 }
             }
 #ifndef _VERBOSE
-//            L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
-//                cyBle_state,notifyCustom,notifyCapsense,writereqCustom,writereqCapsense);
+            L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
+                cyBle_state,notifyCustom,notifyCapsense,writereqCustom,writereqCapsense);
 #endif
         }
    
