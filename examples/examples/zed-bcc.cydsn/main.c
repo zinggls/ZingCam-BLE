@@ -117,6 +117,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:  // Once you have a conenction set the CCCD and turn on the PWM
             systemMode = SM_CONNECTED;
+            CyBle_GattcExchangeMtuReq(cyBle_connHandle, CYBLE_GATT_MTU);
             updateCapsenseNotification();
             L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\r\n");
             break;
