@@ -40,6 +40,7 @@ ulong notifiedCustom = 0;
 ulong writeRsp = 0;
 
 uint8_t capsensePos = 0xFF;
+CYBLE_API_RESULT_T apiRes = CYBLE_ERROR_OK;
 
 /***************************************************************
  * Function to set the Capsense CCCD to get notifications
@@ -57,7 +58,8 @@ void updateCapsenseNotification()
   	tempHandle.value.val = (uint8 *) &cccd;
     tempHandle.value.len = 1;
     
-    CyBle_GattcWriteCharacteristicValue(cyBle_connHandle,&tempHandle);
+    CYBLE_API_RESULT_T res = CyBle_GattcWriteCharacteristicValue(cyBle_connHandle,&tempHandle);
+    if(res!=CYBLE_ERROR_OK) L("updateCapsenseNotification::CyBle_GattcWriteCharacteristicValue error=0x%x\r\n",res);
 }
 
 CYBLE_GAPC_ADV_REPORT_T* scanReport;
@@ -117,9 +119,9 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:  // Once you have a conenction set the CCCD and turn on the PWM
             systemMode = SM_CONNECTED;
-            CyBle_GattcExchangeMtuReq(cyBle_connHandle, CYBLE_GATT_MTU);
             updateCapsenseNotification();
-            L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\r\n");
+            apiRes = CyBle_GattcExchangeMtuReq(cyBle_connHandle, CYBLE_GATT_MTU);            
+            L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE, CyBle_GattcExchangeMtuReq=0x%x\r\n",apiRes);
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
