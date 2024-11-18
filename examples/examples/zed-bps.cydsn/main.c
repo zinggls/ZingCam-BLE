@@ -21,7 +21,7 @@ typedef struct
     uint8_t val1;
     uint8_t val2;    
     uint16_t values[2]; // 4 bytes (reduced from 3 to fit the 20-byte MTU limit)
-    uint8_t reserved[15]; // Padding to fill up remaining bytes (to make a total of 20 bytes)
+    uint8_t reserved[14]; // Padding to fill up remaining bytes (to make a total of 20 bytes)
 } MyData;
 
 MyData data = {
