@@ -24,13 +24,15 @@ typedef struct
 {
     uint8_t val1;
     uint8_t val2;    
-    uint16_t values[3];
+    uint16_t values[2]; // 4 bytes (reduced from 3 to fit the 20-byte MTU limit)
+    uint8_t reserved[12]; // Padding to fill up remaining bytes (to make a total of 20 bytes)
 } MyData;
 
 MyData data = {
     .val1 = 10,        // Assign an appropriate value for val1 (e.g., 10)
     .val2 = 20,        // Assign an appropriate value for val2 (e.g., 20)
-    .values = {300, 400, 500}  // Initialize the values array with specific values
+    .values = {300, 400},  // Initialize the values array with specific values
+    .reserved = {0}    // Initialize reserved to 0
 };
 
 ulong writeCharVal = 0;
