@@ -3,13 +3,14 @@
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
 <CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="ble" persistent="ble.cywrk" platform="NOT_USED">
-<current_project name=".\bps-zed.cydsn\bps-zed.cyprj" />
+<current_project name=".\bcc-zed.cydsn\bcc-zed.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
 <v>.\ble-cenCli.cydsn\ble-cenCli.cyprj</v>
 <v>.\ble-perSvr.cydsn\ble-perSvr.cyprj</v>
 <v>.\bps-zed.cydsn\bps-zed.cyprj</v>
+<v>.\bcc-zed.cydsn\bcc-zed.cyprj</v>
 </projects>
 <workspace_id v="4aef5c31-0c88-4917-b139-a35a26409be5" />
 <WriteAppVersionLastSavedWith v="4.4.0.80" />
