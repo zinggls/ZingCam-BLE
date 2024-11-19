@@ -33,9 +33,9 @@ typedef struct
     unsigned int rxid;  // RXID value, e.g.,"0x0"
     char run;           // RUN value, e.g., "N"
     unsigned int cnt;   // CNT value, e.g., "0"
-} MyData;
+} ZED_FRAME;
 
-MyData data = {
+ZED_FRAME data = {
     .usb = 0,
     .bnd = 0,
     .ppid = 0,
@@ -141,10 +141,10 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
             notificationParam = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T*)eventParam;
             
-            if(notificationParam->handleValPair.value.len == sizeof(MyData)) {
+            if(notificationParam->handleValPair.value.len == sizeof(ZED_FRAME)) {
                 notifiedCustom++;
                 
-                MyData* receivedData = (MyData*)notificationParam->handleValPair.value.val;
+                ZED_FRAME* receivedData = (ZED_FRAME*)notificationParam->handleValPair.value.val;
 #if _VERBOSE  
                 uint8_t val2 = receivedData->val2;
                 sprintf(buff,"val1=0x%x val2=0x%x \r\n",val1,val2);
@@ -197,7 +197,7 @@ void SendCommandToPeripheral(uint8_t command) {
     CYBLE_GATTC_WRITE_REQ_T writeReq;
     writeReq.attrHandle = attrHandle;
     writeReq.value.val = (uint8_t*)&data;
-    writeReq.value.len = sizeof(MyData);
+    writeReq.value.len = sizeof(ZED_FRAME);
 
     CYBLE_API_RESULT_T res = CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq);
     if(res!=CYBLE_ERROR_OK){

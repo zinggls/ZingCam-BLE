@@ -29,9 +29,9 @@ typedef struct
     unsigned int rxid;  // RXID value, e.g.,"0x0"
     char run;           // RUN value, e.g., "N"
     unsigned int cnt;   // CNT value, e.g., "0"
-} MyData;
+} ZED_FRAME;
 
-MyData data = {
+ZED_FRAME data = {
     .usb = 0,
     .bnd = 0,
     .ppid = 0,
@@ -192,7 +192,7 @@ void BleCallBack(uint32 event, void* eventParam)
             wrReqParam = (CYBLE_GATTS_WRITE_REQ_PARAM_T *) eventParam;
             
             if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE) {
-                if (wrReqParam->handleValPair.value.len == sizeof(MyData)) {
+                if (wrReqParam->handleValPair.value.len == sizeof(ZED_FRAME)) {
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
                     writereqCustom++;
@@ -294,7 +294,7 @@ int main()
             CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
             myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
             myDataHandle.value.val = (uint8_t*)&data;
-            myDataHandle.value.len = sizeof(MyData);
+            myDataHandle.value.len = sizeof(ZED_FRAME);
             CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
             
             CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
