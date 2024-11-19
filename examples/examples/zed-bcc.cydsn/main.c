@@ -119,9 +119,9 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:  // Once you have a conenction set the CCCD and turn on the PWM
             systemMode = SM_CONNECTED;
-            updateCapsenseNotification();
             apiRes = CyBle_GattcExchangeMtuReq(cyBle_connHandle, CYBLE_GATT_MTU);            
             L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE, CyBle_GattcExchangeMtuReq=0x%x\r\n",apiRes);
+            updateCapsenseNotification();
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
@@ -146,6 +146,28 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             UART_UartPutString("CYBLE_EVT_GATTC_WRITE_RSP (do nothing)\r\n");
 #endif
             writeRsp++;
+            break;
+
+        case CYBLE_EVT_GATTC_XCHNG_MTU_RSP:
+            // MTU exchange response received
+            {
+                CYBLE_GATT_XCHG_MTU_PARAM_T* mtuRsp = (CYBLE_GATT_XCHG_MTU_PARAM_T*)eventParam;
+                L("Negotiated MTU size: %d\n", mtuRsp->mtu);
+            }
+            break;
+            
+        case CYBLE_EVT_GAP_DATA_LENGTH_CHANGE:
+            // Data length parameters changed
+            {
+                CYBLE_GAP_DATA_LENGTH_T* dataLength = (CYBLE_GAP_DATA_LENGTH_T*)eventParam;
+
+                // Log the updated parameters
+                L("Data Length Change Event:\n");
+                L("  Max TX Octets: %d\n", dataLength->maxTxOctets);
+                L("  Max RX Octets: %d\n", dataLength->maxRxOctets);
+                L("  Max TX Time: %d us\n", dataLength->maxTxTime);
+                L("  Max RX Time: %d us\n", dataLength->maxRxTime);
+            }
             break;
 
         default:

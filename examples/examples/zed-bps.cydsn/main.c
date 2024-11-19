@@ -220,7 +220,16 @@ void BleCallBack(uint32 event, void* eventParam)
         case CYBLE_EVT_STACK_BUSY_STATUS:
             isStackBusy = *(uint8_t *)eventParam;
             break;
-        
+            
+        case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
+            {
+                // Respond to MTU exchange request from Central
+                CYBLE_GATT_XCHG_MTU_PARAM_T mtuExchgParam = *(CYBLE_GATT_XCHG_MTU_PARAM_T*)eventParam;
+                CYBLE_API_RESULT_T res = CyBle_GattsExchangeMtuRsp(cyBle_connHandle, mtuExchgParam.mtu);
+                L("MTU Exchange Request Handled, MTU size: %d, CyBle_GattsExchangeMtuRsp=0x%x\r\n", mtuExchgParam.mtu,res);
+            }
+            break;
+            
         default:
             L("unhandled BLE event = 0x%lx\r\n",event);
             break;
@@ -254,21 +263,15 @@ int main()
             capsense_ScanEnabledWidgets();
             updateCapsense();
             
-            if(isStackBusy==CYBLE_STACK_STATE_FREE) {
-                CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
-                myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
-                data.val1 = fingerPos;
-                myDataHandle.value.val = (uint8_t*)&data;
-                myDataHandle.value.len = sizeof(MyData);
-                CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
-                
-                if (capsenseNotify) {
-                    CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
-                    if(res==CYBLE_ERROR_OK)
-                        notifyCustom++;
-                    else
-                        L("CyBle_GattsNotification error=0x%x\r\n",res);
-                }
+            CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
+            myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
+            data.val1 = fingerPos;
+            myDataHandle.value.val = (uint8_t*)&data;
+            myDataHandle.value.len = sizeof(MyData);
+            CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
+            
+            CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
+            if(res==CYBLE_ERROR_OK) notifyCustom++;
             }
 #ifndef _VERBOSE
             L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
