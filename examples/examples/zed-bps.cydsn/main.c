@@ -230,6 +230,20 @@ void BleCallBack(uint32 event, void* eventParam)
             }
             break;
             
+        case CYBLE_EVT_GAP_DATA_LENGTH_CHANGE:
+            // Data length parameters changed
+            {
+                CYBLE_GAP_DATA_LENGTH_T* dataLength = (CYBLE_GAP_DATA_LENGTH_T*)eventParam;
+
+                // Log the updated parameters
+                L("Data Length Change Event:\n");
+                L("  Max TX Octets: %d\n", dataLength->maxTxOctets);
+                L("  Max RX Octets: %d\n", dataLength->maxRxOctets);
+                L("  Max TX Time: %d us\n", dataLength->maxTxTime);
+                L("  Max RX Time: %d us\n", dataLength->maxRxTime);
+            }
+            break;
+            
         default:
             L("unhandled BLE event = 0x%lx\r\n",event);
             break;
@@ -272,7 +286,7 @@ int main()
             
             CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
             if(res==CYBLE_ERROR_OK) notifyCustom++;
-            }
+
 #ifndef _VERBOSE
             L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu, Capsense=%lu }\r\n",
                 cyBle_state,notifyCustom,notifyCapsense,writereqCustom,writereqCapsense);
