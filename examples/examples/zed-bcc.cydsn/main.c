@@ -39,7 +39,7 @@ ulong writeCharVal = 0;
 ulong notifiedCustom = 0;
 ulong writeRsp = 0;
 
-uint8_t capsensePos = 0xFF;
+uint16_t capsensePos = 0xFFFF;
 CYBLE_API_RESULT_T apiRes = CYBLE_ERROR_OK;
 
 /***************************************************************
@@ -65,6 +65,7 @@ void updateCapsenseNotification()
 CYBLE_GAPC_ADV_REPORT_T* scanReport;
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *capsenseNTF;    
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
+ZED_FRAME zedFrame;
 
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
@@ -130,7 +131,9 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             if(notificationParam->handleValPair.value.len == sizeof(ZED_FRAME)) {
                 notifiedCustom++;
                 
-                ZED_FRAME* receivedData = (ZED_FRAME*)notificationParam->handleValPair.value.val;
+                // Process the received data
+                memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                capsensePos = zedFrame.pos;
 #if _VERBOSE  
                 uint8_t val2 = receivedData->val2;
                 sprintf(buff,"val1=0x%x val2=0x%x \r\n",val1,val2);

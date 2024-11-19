@@ -13,7 +13,7 @@ typedef struct {
     unsigned int rxid;  // RXID value, e.g.,"0x0"
     char run;           // RUN value, e.g., "N"
     unsigned int cnt;   // CNT value, e.g., "0"
-	int pos;			// CapSense Position for debugging
+	unsigned int pos;	// CapSense Position for debugging
 } ZED_FRAME;
 
 #endif /* ZED_FRAME_H */

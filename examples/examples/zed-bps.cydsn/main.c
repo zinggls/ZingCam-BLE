@@ -28,7 +28,8 @@ ZED_FRAME data = {
     .txid = 0,
     .rxid = 0,
     .run = 0,
-    .cnt = 0
+    .cnt = 0,
+    .pos = 0
 };
 
 typedef struct {
@@ -104,6 +105,18 @@ static void process_uart_data()
 //            UART_DBG_UartPutString("\r\n");
         } else {
 //            PrintZingData(&zing_data);
+            data.usb = zing_data.usb;
+            data.bnd = zing_data.bnd;
+            data.ppid = zing_data.ppid;
+            data.devid = zing_data.devid;
+            data.trt = zing_data.trt;
+            data.ack = zing_data.ack;
+            data.ppc = zing_data.ppc;
+            data.txid = zing_data.txid;
+            data.rxid = zing_data.rxid;
+            data.run = zing_data.run;
+            data.cnt = zing_data.cnt;
+            data.pos = 0;
         }
     }
 }
@@ -279,6 +292,7 @@ int main()
             
             CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
             myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
+            data.pos = fingerPos;
             myDataHandle.value.val = (uint8_t*)&data;
             myDataHandle.value.len = sizeof(ZED_FRAME);
             CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
