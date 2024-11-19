@@ -22,17 +22,31 @@ const uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 
 typedef struct
 {
-    uint8_t val1;
-    uint8_t val2;    
-    uint16_t values[2]; // 4 bytes (reduced from 3 to fit the 20-byte MTU limit)
-    uint8_t reserved[120]; // Padding to fill up remaining bytes (to make a total of 20 bytes)
+    int usb;            // USB value, e.g., "2"
+    char bnd;           // BND value, e.g., "L"
+    unsigned int ppid;  // PPID value, e.g.,"0xABCD"
+    unsigned int devid; // DeviceID, e.g.,  "0x3500"
+    char trt;           // TRT value, e.g., "B"
+    char ack;           // ACK value, e.g., "N"
+    char ppc;           // PPC value, e.g., "P"
+    unsigned int txid;  // TXID value, e.g.,"0x0"
+    unsigned int rxid;  // RXID value, e.g.,"0x0"
+    char run;           // RUN value, e.g., "N"
+    unsigned int cnt;   // CNT value, e.g., "0"
 } MyData;
 
 MyData data = {
-    .val1 = 10,        // Assign an appropriate value for val1 (e.g., 10)
-    .val2 = 20,        // Assign an appropriate value for val2 (e.g., 20)
-    .values = {300, 400},  // Initialize the values array with specific values
-    .reserved = {0}    // Initialize reserved to 0
+    .usb = 0,
+    .bnd = 0,
+    .ppid = 0,
+    .devid = 0,
+    .trt = 0,
+    .ack = 0,
+    .ppc = 0,
+    .txid = 0,
+    .rxid = 0,
+    .run = 0,
+    .cnt = 0
 };
 
 ulong writeCharVal = 0;
@@ -131,8 +145,6 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 notifiedCustom++;
                 
                 MyData* receivedData = (MyData*)notificationParam->handleValPair.value.val;
-                // Process the received data
-                capsensePos = receivedData->val1;
 #if _VERBOSE  
                 uint8_t val2 = receivedData->val2;
                 sprintf(buff,"val1=0x%x val2=0x%x \r\n",val1,val2);
@@ -183,7 +195,6 @@ void SendCommandToPeripheral(uint8_t command) {
                                                 .customServCharHandle;
 
     CYBLE_GATTC_WRITE_REQ_T writeReq;
-    data.val1 = command;
     writeReq.attrHandle = attrHandle;
     writeReq.value.val = (uint8_t*)&data;
     writeReq.value.len = sizeof(MyData);
