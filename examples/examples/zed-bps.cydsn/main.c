@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <Log.h>
 #include <UartBuf.h>
+#include <ZedFrame.h>
 
 #define ASCII_LF '\n'
 
@@ -15,21 +16,6 @@ ulong writereqCustom = 0;
 ulong writereqCapsense = 0;
 
 int capsenseNotify;
-
-typedef struct
-{
-    int usb;            // USB value, e.g., "2"
-    char bnd;           // BND value, e.g., "L"
-    unsigned int ppid;  // PPID value, e.g.,"0xABCD"
-    unsigned int devid; // DeviceID, e.g.,  "0x3500"
-    char trt;           // TRT value, e.g., "B"
-    char ack;           // ACK value, e.g., "N"
-    char ppc;           // PPC value, e.g., "P"
-    unsigned int txid;  // TXID value, e.g.,"0x0"
-    unsigned int rxid;  // RXID value, e.g.,"0x0"
-    char run;           // RUN value, e.g., "N"
-    unsigned int cnt;   // CNT value, e.g., "0"
-} ZED_FRAME;
 
 ZED_FRAME data = {
     .usb = 0,

@@ -2,6 +2,7 @@
 #include "project.h"
 #include <stdio.h>
 #include <Log.h>
+#include <ZedFrame.h>
 
 // Modes for a statemachine
 typedef enum SystemMode {
@@ -19,21 +20,6 @@ static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
 const uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
-
-typedef struct
-{
-    int usb;            // USB value, e.g., "2"
-    char bnd;           // BND value, e.g., "L"
-    unsigned int ppid;  // PPID value, e.g.,"0xABCD"
-    unsigned int devid; // DeviceID, e.g.,  "0x3500"
-    char trt;           // TRT value, e.g., "B"
-    char ack;           // ACK value, e.g., "N"
-    char ppc;           // PPC value, e.g., "P"
-    unsigned int txid;  // TXID value, e.g.,"0x0"
-    unsigned int rxid;  // RXID value, e.g.,"0x0"
-    char run;           // RUN value, e.g., "N"
-    unsigned int cnt;   // CNT value, e.g., "0"
-} ZED_FRAME;
 
 ZED_FRAME data = {
     .usb = 0,
