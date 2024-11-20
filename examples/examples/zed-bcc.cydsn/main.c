@@ -173,7 +173,7 @@ int main(void)
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
         
-        L("[cc %s] st:%d O>WRC:%lu I>NC:%lu(%d)/WRSP:%lu, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->cnt);
+        L("[cc %s] st:%d O>WRC:%lu I>NC:%lu(%04X)/WRSP:%lu, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->cnt);
         CyDelay(10);
     }
 }

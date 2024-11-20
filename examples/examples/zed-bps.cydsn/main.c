@@ -203,7 +203,7 @@ int main()
         
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
 
-        L("[ps %s] st:%d O>NC:%lu(%d) I>WRC=%lu, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->cnt);
+        L("[ps %s] st:%d O>NC:%lu(%04X) I>WRC=%lu, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->cnt);
    
         CyBle_ProcessEvents();
         process_uart_data();
