@@ -167,18 +167,7 @@ void SendCommandToPeripheral(uint8_t command) {
     writeReq.value.val = (uint8_t*)&data;
     writeReq.value.len = sizeof(ZED_FRAME);
 
-    CYBLE_API_RESULT_T res = CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq);
-    if(res!=CYBLE_ERROR_OK){
-#if _VERBOSE
-        sprintf(buff,"CyBle_GattcWriteCharacteristicValue error=0x%x\r\n",res);
-        UART_UartPutString(buff);
-#endif
-    }else{
-        writeCharVal++;
-#if _VERBOSE
-        UART_UartPutString("SendCommandToPeripheral\r\n");
-#endif
-    }
+    if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeCharVal++;
 }
 
 int main(void)
