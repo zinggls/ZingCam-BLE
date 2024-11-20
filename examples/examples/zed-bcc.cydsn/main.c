@@ -40,7 +40,6 @@ ulong writeCharVal = 0;
 ulong notifiedCustom = 0;
 ulong writeRsp = 0;
 
-uint16_t capsensePos = 0xFFFF;
 CYBLE_API_RESULT_T apiRes = CYBLE_ERROR_OK;
 
 CYBLE_GAPC_ADV_REPORT_T* scanReport;
@@ -113,7 +112,6 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 
                 // Process the received data
                 memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-                capsensePos = zedFrame.pos;
 #if _VERBOSE  
                 uint8_t val2 = receivedData->val2;
                 sprintf(buff,"val1=0x%x val2=0x%x \r\n",val1,val2);
