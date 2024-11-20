@@ -244,8 +244,7 @@ int main()
         data.pos = fingerPos;
         CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
         
-        CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
-        if(res==CYBLE_ERROR_OK) notifyCustom++;
+        if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
 
 #ifndef _VERBOSE
         L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu }    IN:WriteReq{ Custom=%lu }\r\n",
