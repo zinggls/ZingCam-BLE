@@ -226,6 +226,11 @@ int main()
     /* Start BLE stack and register the callback function */
     CyBle_Start(BleCallBack);
 
+    CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
+    myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
+    myDataHandle.value.val = (uint8_t*)&data;
+    myDataHandle.value.len = sizeof(ZED_FRAME);
+    
     for(;;)
     {        
         /* if Capsense scan is done, read the value and start another scan */
@@ -234,22 +239,18 @@ int main()
             fingerPos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
             capsense_UpdateEnabledBaselines();
             capsense_ScanEnabledWidgets();
-            
-            CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
-            myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
-            data.pos = fingerPos;
-            myDataHandle.value.val = (uint8_t*)&data;
-            myDataHandle.value.len = sizeof(ZED_FRAME);
-            CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
-            
-            CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
-            if(res==CYBLE_ERROR_OK) notifyCustom++;
+        }
+        
+        data.pos = fingerPos;
+        CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
+        
+        CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&myDataHandle);
+        if(res==CYBLE_ERROR_OK) notifyCustom++;
 
 #ifndef _VERBOSE
-            L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu }    IN:WriteReq{ Custom=%lu }\r\n",
-                cyBle_state,notifyCustom,writereqCustom);
+        L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu }    IN:WriteReq{ Custom=%lu }\r\n",
+            cyBle_state,notifyCustom,writereqCustom);
 #endif
-        }
    
         CyBle_ProcessEvents();
         process_uart_data();
