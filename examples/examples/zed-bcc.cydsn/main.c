@@ -15,7 +15,6 @@ typedef enum SystemMode {
 } SystemMode_t;
 
 static SystemMode_t systemMode = SM_INITIALIZE; // Starting mode of statemachine 
-static int enabledCapsenseNotifications = 0;    // Have you enabled the notifiation for CapSense
 static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
@@ -56,7 +55,6 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             L("CYBLE_EVT_STACK_ON\r\n");
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             systemMode = SM_SCANNING;
-            enabledCapsenseNotifications = 0;
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST); // Start scanning for peripherals
             L("Scanning...\r\n");
             break;
