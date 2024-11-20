@@ -25,22 +25,7 @@ ZED_FRAME data = {
     .pos = 0
 };
 
-typedef struct {
-    int usb;            // USB value, e.g., "2"
-    char bnd;           // BND value, e.g., "L"
-    unsigned int ppid;  // PPID value, e.g.,"0xABCD"
-    unsigned int devid; // DeviceID, e.g.,  "0x3500"
-    char trt;           // TRT value, e.g., "B"
-    char ack;           // ACK value, e.g., "N"
-    char ppc;           // PPC value, e.g., "P"
-    unsigned int txid;  // TXID value, e.g.,"0x0"
-    unsigned int rxid;  // RXID value, e.g.,"0x0"
-    char run;           // RUN value, e.g., "N"
-    unsigned int cnt;   // CNT value, e.g., "0"
-} ZING_Data;
-
 static UartBuf uBuf;    //Circular buffer for UART data
-static ZING_Data zing_data;
 
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {
@@ -58,9 +43,9 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
     UART_ZING_RX_ClearInterrupt();
 }
 
-static void PrintZingData(ZING_Data* z) {
-    L("ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d\r\n",
-        z->usb, z->bnd, z->ppid, z->devid, z->trt, z->ack, z->ppc, z->txid, z->rxid, z->run, z->cnt);
+static void PrintFrame(ZED_FRAME *z) {
+    L("ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d Pos:0x%x\r\n",
+        z->usb, z->bnd, z->ppid, z->devid, z->trt, z->ack, z->ppc, z->txid, z->rxid, z->run, z->cnt, z->pos);
 }
 
 // Function to process data when a complete message is available
@@ -81,34 +66,22 @@ static void process_uart_data()
         // Parsing the values into the structure
         if (sscanf(zing_status, 
                    "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d",
-                   &zing_data.usb,
-                   &zing_data.bnd,
-                   &zing_data.ppid,
-                   &zing_data.devid,
-                   &zing_data.trt,
-                   &zing_data.ack,
-                   &zing_data.ppc,
-                   &zing_data.txid,
-                   &zing_data.rxid,
-                   &zing_data.run,
-                   &zing_data.cnt) != 11) {
+                   &data.usb,
+                   &data.bnd,
+                   &data.ppid,
+                   &data.devid,
+                   &data.trt,
+                   &data.ack,
+                   &data.ppc,
+                   &data.txid,
+                   &data.rxid,
+                   &data.run,
+                   &data.cnt) != 11) {
 //            UART_DBG_UartPutString("Parsing Error\r\n");
 //            UART_DBG_UartPutString("Received: ");
 //            UART_DBG_UartPutString(zing_status);
 //            UART_DBG_UartPutString("\r\n");
         } else {
-//            PrintZingData(&zing_data);
-            data.usb = zing_data.usb;
-            data.bnd = zing_data.bnd;
-            data.ppid = zing_data.ppid;
-            data.devid = zing_data.devid;
-            data.trt = zing_data.trt;
-            data.ack = zing_data.ack;
-            data.ppc = zing_data.ppc;
-            data.txid = zing_data.txid;
-            data.rxid = zing_data.rxid;
-            data.run = zing_data.run;
-            data.cnt = zing_data.cnt;
             data.pos = 0;
         }
     }
