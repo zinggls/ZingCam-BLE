@@ -39,8 +39,6 @@ ulong writeCharVal = 0;
 ulong notifiedCustom = 0;
 ulong writeRsp = 0;
 
-CYBLE_API_RESULT_T apiRes = CYBLE_ERROR_OK;
-
 CYBLE_GAPC_ADV_REPORT_T* scanReport;
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 ZED_FRAME zedFrame;
@@ -96,9 +94,11 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             break;
 
         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:  // Once you have a conenction set the CCCD and turn on the PWM
-            systemMode = SM_CONNECTED;
-            apiRes = CyBle_GattcExchangeMtuReq(cyBle_connHandle, CYBLE_GATT_MTU);            
-            L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE, CyBle_GattcExchangeMtuReq=0x%x\r\n",apiRes);
+            {
+                systemMode = SM_CONNECTED;
+                CYBLE_API_RESULT_T apiRes = CyBle_GattcExchangeMtuReq(cyBle_connHandle, CYBLE_GATT_MTU);            
+                L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE, CyBle_GattcExchangeMtuReq=0x%x\r\n",apiRes);
+            }
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
