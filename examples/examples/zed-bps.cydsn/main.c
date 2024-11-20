@@ -199,6 +199,7 @@ int main()
     myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
     myDataHandle.value.val = (uint8_t*)&data;
     myDataHandle.value.len = sizeof(ZED_FRAME);
+    ZED_FRAME *z = &data;
     
     for(;;)
     {        
@@ -215,7 +216,7 @@ int main()
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
 
 #ifndef _VERBOSE
-        L("[perSvr %s] state:0x%x OUT:NtfCustom=%lu IN:wReqCustom=%lu\r\n", GIT_INFO,cyBle_state,notifyCustom,writereqCustom);
+        L("[perSvr %s] state:0x%x OUT:NtfCustom=%lu IN:wReqCustom=%lu ZED CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,writereqCustom,z->cnt);
 #endif
    
         CyBle_ProcessEvents();
