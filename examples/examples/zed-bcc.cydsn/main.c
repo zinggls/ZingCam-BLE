@@ -42,26 +42,6 @@ ulong writeRsp = 0;
 uint16_t capsensePos = 0xFFFF;
 CYBLE_API_RESULT_T apiRes = CYBLE_ERROR_OK;
 
-/***************************************************************
- * Function to set the Capsense CCCD to get notifications
- **************************************************************/
-void updateCapsenseNotification()
-{
-    CYBLE_GATTC_WRITE_REQ_T 	tempHandle;
-    uint8 cccd=1;  
-    enabledCapsenseNotifications = 1;
-    
-    tempHandle.attrHandle = cyBle_customCServ[CYBLE_CUSTOMC_LEDCAPSENSE_SERVICE_INDEX]
-    .customServChar[CYBLE_CUSTOMC_LEDCAPSENSE_CAPSENSE_CHAR_INDEX]
-    .customServCharDesc[CYBLE_CUSTOMC_LEDCAPSENSE_CAPSENSE_CAPSENSECCCD_DESC_INDEX].descHandle;
-    
-  	tempHandle.value.val = (uint8 *) &cccd;
-    tempHandle.value.len = 1;
-    
-    CYBLE_API_RESULT_T res = CyBle_GattcWriteCharacteristicValue(cyBle_connHandle,&tempHandle);
-    if(res!=CYBLE_ERROR_OK) L("updateCapsenseNotification::CyBle_GattcWriteCharacteristicValue error=0x%x\r\n",res);
-}
-
 CYBLE_GAPC_ADV_REPORT_T* scanReport;
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *capsenseNTF;    
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
@@ -122,7 +102,6 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             systemMode = SM_CONNECTED;
             apiRes = CyBle_GattcExchangeMtuReq(cyBle_connHandle, CYBLE_GATT_MTU);            
             L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE, CyBle_GattcExchangeMtuReq=0x%x\r\n",apiRes);
-            updateCapsenseNotification();
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
