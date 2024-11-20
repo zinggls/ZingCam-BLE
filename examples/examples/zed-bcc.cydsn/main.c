@@ -176,6 +176,7 @@ int main(void)
     CyGlobalIntEnable; /* Enable global interrupts. */
     UART_DBG_Start();
     CyBle_Start( CyBle_AppCallback );
+    ZED_FRAME *z = &zedFrame;
     
     for(;;)
     {          
@@ -183,7 +184,7 @@ int main(void)
         SendCommandToPeripheral(123);
         
 #ifndef _VERBOSE
-        L("[cenCli %s] SM:%d state:0x%x OUT:wrCharVal=%lu IN:NtfCustom=%lu,wrRsp=%lu,Pos=%d\r\n", GIT_INFO,systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
+        L("[cc %s] st:%d O>WRC:%lu I>NC:%lu(%d)/WRSP:%lu, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->cnt);
 #endif
         CyDelay(10);
     }
