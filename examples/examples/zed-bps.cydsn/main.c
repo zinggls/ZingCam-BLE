@@ -6,6 +6,7 @@
 #include <gitcommit.h>
 
 #define ASCII_LF '\n'
+#define ZED_NUM  11
 
 ulong notifyCustom = 0;
 ulong writereqCustom = 0;
@@ -76,13 +77,13 @@ static void process_uart_data()
                    &data.txid,
                    &data.rxid,
                    &data.run,
-                   &data.cnt) != 11) {
-//            UART_DBG_UartPutString("Parsing Error\r\n");
-//            UART_DBG_UartPutString("Received: ");
-//            UART_DBG_UartPutString(zing_status);
-//            UART_DBG_UartPutString("\r\n");
-        } else {
-            //do nothing
+                   &data.cnt) != ZED_NUM) {
+#ifdef ZED_DEBUG
+            UART_DBG_UartPutString("Parsing Error\r\n");
+            UART_DBG_UartPutString("Received: ");
+            UART_DBG_UartPutString(zing_status);
+            UART_DBG_UartPutString("\r\n");
+#endif
         }
     }
 }
