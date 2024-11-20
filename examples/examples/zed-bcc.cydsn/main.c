@@ -43,7 +43,6 @@ ulong writeRsp = 0;
 CYBLE_API_RESULT_T apiRes = CYBLE_ERROR_OK;
 
 CYBLE_GAPC_ADV_REPORT_T* scanReport;
-CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *capsenseNTF;    
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 ZED_FRAME zedFrame;
 
