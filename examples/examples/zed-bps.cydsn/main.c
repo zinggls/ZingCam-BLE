@@ -7,8 +7,6 @@
 
 #define ASCII_LF '\n'
 
-uint8_t isStackBusy = 0;
-
 ulong notifyCustom = 0;
 ulong writereqCustom = 0;
 
@@ -176,7 +174,6 @@ void BleCallBack(uint32 event, void* eventParam)
             break;
             
         case CYBLE_EVT_STACK_BUSY_STATUS:
-            isStackBusy = *(uint8_t *)eventParam;
             break;
             
         case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
