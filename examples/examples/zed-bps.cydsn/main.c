@@ -119,9 +119,6 @@ void BleCallBack(uint32 event, void* eventParam)
 
         /* handle a write request */
         case CYBLE_EVT_GATTS_WRITE_REQ:
-#if _VERBOSE
-            UART_UartPutString("CYBLE_EVT_GATTS_WRITE_REQ");
-#endif
             wrReqParam = (CYBLE_GATTS_WRITE_REQ_PARAM_T *) eventParam;
             
             if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE) {
@@ -129,17 +126,8 @@ void BleCallBack(uint32 event, void* eventParam)
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
                     writereqCustom++;
-#if _VERBOSE    
-                    MyData* receivedData = (MyData*)wrReqParam->handleValPair.value.val;
-                    uint8_t command = receivedData->val1;
-                    sprintf(msg,",custom request from the central, command=%d",command);
-                    UART_UartPutString(msg);
-#endif
                 }
             }
-#if _VERBOSE
-            UART_UartPutString("\r\n");
-#endif
 			break;  
             
         case CYBLE_EVT_GATT_DISCONNECT_IND:
@@ -215,9 +203,7 @@ int main()
         
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
 
-#ifndef _VERBOSE
         L("[ps %s] st:%d O>NC:%lu(%d) I>WRC=%lu, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->cnt);
-#endif
    
         CyBle_ProcessEvents();
         process_uart_data();

@@ -112,18 +112,10 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 
                 // Process the received data
                 memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-#if _VERBOSE  
-                uint8_t val2 = receivedData->val2;
-                sprintf(buff,"val1=0x%x val2=0x%x \r\n",val1,val2);
-                UART_UartPutString(buff);
-#endif
             }
             break;
             
         case CYBLE_EVT_GATTC_WRITE_RSP: // Sucesfull write - nothing to do
-#if _VERBOSE
-            UART_UartPutString("CYBLE_EVT_GATTC_WRITE_RSP (do nothing)\r\n");
-#endif
             writeRsp++;
             break;
 
@@ -181,9 +173,7 @@ int main(void)
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
         
-#ifndef _VERBOSE
         L("[cc %s] st:%d O>WRC:%lu I>NC:%lu(%d)/WRSP:%lu, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->cnt);
-#endif
         CyDelay(10);
     }
 }
