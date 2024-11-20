@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <Log.h>
 #include <ZedFrame.h>
+#include <gitcommit.h>
 
 // Modes for a statemachine
 typedef enum SystemMode {
@@ -182,7 +183,7 @@ int main(void)
         SendCommandToPeripheral(123);
         
 #ifndef _VERBOSE
-        L("[ble-cenCli] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
+        L("[ble-cenCli %s] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", GIT_INFO,systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
 #endif
         CyDelay(10);
     }

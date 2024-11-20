@@ -3,6 +3,7 @@
 #include <Log.h>
 #include <UartBuf.h>
 #include <ZedFrame.h>
+#include <gitcommit.h>
 
 #define ASCII_LF '\n'
 
@@ -247,8 +248,8 @@ int main()
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
 
 #ifndef _VERBOSE
-        L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu }    IN:WriteReq{ Custom=%lu }\r\n",
-            cyBle_state,notifyCustom,writereqCustom);
+        L("[ble-perSvr %s] cyBle_state:0x%x OUT:Notify{ Custom=%lu }    IN:WriteReq{ Custom=%lu }\r\n",
+            GIT_INFO,cyBle_state,notifyCustom,writereqCustom);
 #endif
    
         CyBle_ProcessEvents();

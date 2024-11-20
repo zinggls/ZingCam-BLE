@@ -38,3 +38,4 @@ Export
 *_timing.html
 *.log
 /examples/ble/ComponentUpdateLog.txt
+gitcommit.h

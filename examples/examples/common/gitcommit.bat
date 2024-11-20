@@ -1,0 +1,1 @@
+git log --pretty=format:"#define GIT_INFO_PRESENT %%nstatic const char* GIT_INFO = \"%%h\"; " -n 1 > gitcommit.h
