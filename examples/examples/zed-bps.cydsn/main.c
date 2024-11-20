@@ -234,11 +234,12 @@ int main()
         {
             data.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
             CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
-            if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
             
             capsense_UpdateEnabledBaselines();
             capsense_ScanEnabledWidgets();
         }
+        
+        if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
 
 #ifndef _VERBOSE
         L("[perSvr %s] state:0x%x OUT:NtfCustom=%lu IN:wReqCustom=%lu }\r\n", GIT_INFO,cyBle_state,notifyCustom,writereqCustom);
