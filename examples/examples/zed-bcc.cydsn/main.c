@@ -16,12 +16,18 @@ typedef enum SystemMode {
 
 static SystemMode_t systemMode = SM_INITIALIZE; // Starting mode of statemachine 
 static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
+static ulong writeCharVal = 0;
+static ulong notifiedCustom = 0;
+static ulong writeRsp = 0;
+static CYBLE_GAPC_ADV_REPORT_T* scanReport;
+static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
+static ZED_FRAME zedFrame;
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
-const uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
+const static uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
 
-ZED_FRAME data = {
+static ZED_FRAME data = {
     .usb = 0,
     .bnd = 0,
     .ppid = 0,
@@ -34,14 +40,6 @@ ZED_FRAME data = {
     .run = 0,
     .cnt = 0
 };
-
-ulong writeCharVal = 0;
-ulong notifiedCustom = 0;
-ulong writeRsp = 0;
-
-CYBLE_GAPC_ADV_REPORT_T* scanReport;
-CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
-ZED_FRAME zedFrame;
 
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
