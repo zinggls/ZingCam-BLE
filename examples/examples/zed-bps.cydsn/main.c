@@ -82,7 +82,7 @@ static void process_uart_data()
 //            UART_DBG_UartPutString(zing_status);
 //            UART_DBG_UartPutString("\r\n");
         } else {
-            data.pos = 0;
+            //do nothing
         }
     }
 }
