@@ -7,7 +7,6 @@
 
 #define ASCII_LF '\n'
 
-uint16 fingerPosOld = 0xFFFF;
 uint8_t isStackBusy = 0;
 
 ulong notifyCustom = 0;
