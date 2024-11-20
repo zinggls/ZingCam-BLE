@@ -8,8 +8,9 @@
 #define ASCII_LF '\n'
 #define ZED_NUM  11
 
-ulong notifyCustom = 0;
-ulong writereqCustom = 0;
+static ulong notifyCustom = 0;
+static ulong writereqCustom = 0;
+static UartBuf uBuf;    //Circular buffer for UART data
 
 ZED_FRAME data = {
     .usb = 0,
@@ -25,8 +26,6 @@ ZED_FRAME data = {
     .cnt = 0,
     .pos = 0
 };
-
-static UartBuf uBuf;    //Circular buffer for UART data
 
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {
