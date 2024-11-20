@@ -11,10 +11,7 @@ uint16 fingerPosOld = 0xFFFF;
 uint8_t isStackBusy = 0;
 
 ulong notifyCustom = 0;
-ulong notifyCapsense = 0;
 ulong writereqCustom = 0;
-
-int capsenseNotify;
 
 ZED_FRAME data = {
     .usb = 0,
@@ -121,36 +118,6 @@ static void process_uart_data()
 }
 
 /***************************************************************
- * Function to update the CapSesnse state in the GATT database
- **************************************************************/
-void updateCapsense()
-{
-    if(CyBle_GetState() != CYBLE_STATE_CONNECTED)
-        return;
-    
-	CYBLE_GATTS_HANDLE_VALUE_NTF_T 	tempHandle;
-    
-    tempHandle.attrHandle = CYBLE_LEDCAPSENSE_CAPSENSE_CHAR_HANDLE;
-  	tempHandle.value.val = (uint8 *)&fingerPos;
-    tempHandle.value.len = 2; 
-    CyBle_GattsWriteAttributeValue(&tempHandle,0,&cyBle_connHandle,CYBLE_GATT_DB_LOCALLY_INITIATED );  
-    
-    /* send notification to client if notifications are enabled and finger location has changed */
-    if (capsenseNotify && (fingerPos != fingerPosOld) ) {
-        CYBLE_API_RESULT_T res = CyBle_GattsNotification(cyBle_connHandle,&tempHandle);
-        if(res==CYBLE_ERROR_OK) {
-            notifyCapsense++;
-#if _VERBOSE            
-            sprintf(msg,"updateCapsense, CyBle_GattsNotification, pos=0x%x\r\n",fingerPos);
-            UART_UartPutString(msg);
-#endif
-        }
-    }
-    
-    fingerPosOld = fingerPos;
-}
-
-/***************************************************************
  * Function to handle the BLE stack
  **************************************************************/
 void BleCallBack(uint32 event, void* eventParam)
@@ -163,7 +130,6 @@ void BleCallBack(uint32 event, void* eventParam)
         case CYBLE_EVT_STACK_ON:
         L("CYBLE_EVT_STACK_ON\r\n");
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
-            capsenseNotify = 0;
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
             L("Advertising fast\r\n");
             break;
@@ -175,7 +141,6 @@ void BleCallBack(uint32 event, void* eventParam)
         /* when a connection is made, update the LED and Capsense states in the GATT database and stop blinking the LED */    
         case CYBLE_EVT_GATT_CONNECT_IND:
             L("CYBLE_EVT_GATT_CONNECT_IND\r\n");
-            updateCapsense();  
 		    break;
             
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:
@@ -269,7 +234,6 @@ int main()
             fingerPos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
             capsense_UpdateEnabledBaselines();
             capsense_ScanEnabledWidgets();
-            updateCapsense();
             
             CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
             myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
@@ -282,8 +246,8 @@ int main()
             if(res==CYBLE_ERROR_OK) notifyCustom++;
 
 #ifndef _VERBOSE
-            L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu, Capsense=%lu }    IN:WriteReq{ Custom=%lu }\r\n",
-                cyBle_state,notifyCustom,notifyCapsense,writereqCustom);
+            L("[ble-perSvr] cyBle_state:0x%x OUT:Notify{ Custom=%lu }    IN:WriteReq{ Custom=%lu }\r\n",
+                cyBle_state,notifyCustom,writereqCustom);
 #endif
         }
    
