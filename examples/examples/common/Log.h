@@ -4,7 +4,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#define LOG_BUFFER_SIZE 128
+#define LOG_BUFFER_SIZE 1024
 
 static char buffer[LOG_BUFFER_SIZE];
 
