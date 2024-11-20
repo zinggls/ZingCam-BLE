@@ -215,7 +215,7 @@ int main()
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
 
 #ifndef _VERBOSE
-        L("[perSvr %s] state:0x%x OUT:NtfCustom=%lu IN:wReqCustom=%lu }\r\n", GIT_INFO,cyBle_state,notifyCustom,writereqCustom);
+        L("[perSvr %s] state:0x%x OUT:NtfCustom=%lu IN:wReqCustom=%lu\r\n", GIT_INFO,cyBle_state,notifyCustom,writereqCustom);
 #endif
    
         CyBle_ProcessEvents();
