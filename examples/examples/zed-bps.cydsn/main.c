@@ -44,11 +44,6 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
     UART_ZING_RX_ClearInterrupt();
 }
 
-static void PrintFrame(ZED_FRAME *z) {
-    L("ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d Pos:0x%x\r\n",
-        z->usb, z->bnd, z->ppid, z->devid, z->trt, z->ack, z->ppc, z->txid, z->rxid, z->run, z->cnt, z->pos);
-}
-
 // Function to process data when a complete message is available
 static void process_uart_data()
 {
