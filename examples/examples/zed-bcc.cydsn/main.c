@@ -183,7 +183,7 @@ int main(void)
         SendCommandToPeripheral(123);
         
 #ifndef _VERBOSE
-        L("[ble-cenCli %s] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", GIT_INFO,systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
+        L("[cenCli %s] SM:%d state:0x%x OUT:wrCharVal=%lu IN:NtfCustom=%lu,wrRsp=%lu,Pos=%d\r\n", GIT_INFO,systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
 #endif
         CyDelay(10);
     }
