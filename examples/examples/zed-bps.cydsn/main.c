@@ -8,8 +8,8 @@
 #define ASCII_LF '\n'
 #define ZED_NUM  11
 
-static ulong notifyCustom = 0;
-static ulong writereqCustom = 0;
+static uint16 notifyCustom = 0;
+static uint16 writereqCustom = 0;
 static UartBuf uBuf;    //Circular buffer for UART data
 
 ZED_FRAME data = {
@@ -198,7 +198,7 @@ int main()
         
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
 
-        L("[ps %s] st:%d O>NC:%lu(%04X) I>WRC=%lu, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->cnt);
+        L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->cnt);
    
         CyBle_ProcessEvents();
         process_uart_data();

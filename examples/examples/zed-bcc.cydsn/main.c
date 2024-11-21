@@ -16,9 +16,9 @@ typedef enum SystemMode {
 
 static SystemMode_t systemMode = SM_INITIALIZE; // Starting mode of statemachine 
 static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
-static ulong writeCharVal = 0;
-static ulong notifiedCustom = 0;
-static ulong writeRsp = 0;
+static uint16 writeCharVal = 0;
+static uint16 notifiedCustom = 0;
+static uint16 writeRsp = 0;
 static CYBLE_GAPC_ADV_REPORT_T* scanReport;
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 static ZED_FRAME zedFrame;
@@ -168,7 +168,7 @@ int main(void)
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
         
-        L("[cc %s] st:%d O>WRC:%lu I>NC:%lu(%04X)/WRSP:%lu, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->cnt);
+        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->cnt);
         CyDelay(10);
     }
 }
