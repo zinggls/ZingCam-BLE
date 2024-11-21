@@ -198,7 +198,7 @@ int main()
         
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
 
-        L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->cnt);
+        L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->usb,z->cnt);
    
         CyBle_ProcessEvents();
         process_uart_data();

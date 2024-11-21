@@ -168,7 +168,7 @@ int main(void)
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
         
-        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZED CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->cnt);
+        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt);
         CyDelay(10);
     }
 }
