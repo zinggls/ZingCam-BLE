@@ -2,13 +2,13 @@
 <CyXmlSerializer>
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
-<CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="zed" persistent="zed.cywrk" platform="NOT_USED">
-<current_project name=".\zed-bcc.cydsn\zed-bcc.cyprj" />
+<CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="zxx" persistent="zxx.cywrk" platform="NOT_USED">
+<current_project name=".\zxx-bcc.cydsn\zxx-bcc.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
-<v>.\zed-bps.cydsn\zed-bps.cyprj</v>
-<v>.\zed-bcc.cydsn\zed-bcc.cyprj</v>
+<v>.\zxx-bps.cydsn\zxx-bps.cyprj</v>
+<v>.\zxx-bcc.cydsn\zxx-bcc.cyprj</v>
 </projects>
 <workspace_id v="210f86b1-606b-4632-a610-5ba014d2be50" />
 <WriteAppVersionLastSavedWith v="4.4.0.80" />
