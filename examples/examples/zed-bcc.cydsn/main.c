@@ -2,7 +2,7 @@
 #include "project.h"
 #include <stdio.h>
 #include <Log.h>
-#include <ZedFrame.h>
+#include <ZFrame.h>
 #include <gitcommit.h>
 
 // Modes for a statemachine

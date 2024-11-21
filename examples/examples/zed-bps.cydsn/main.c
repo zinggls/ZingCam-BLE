@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <Log.h>
 #include <UartBuf.h>
-#include <ZedFrame.h>
+#include <ZFrame.h>
 #include <gitcommit.h>
 
 #define ASCII_LF '\n'
