@@ -6,13 +6,12 @@
 #include <gitcommit.h>
 
 #define ASCII_LF '\n'
-#define ZED_NUM  11
 
 static uint16 notifyCustom = 0;
 static uint16 writereqCustom = 0;
 static UartBuf uBuf;    //Circular buffer for UART data
 
-ZED_FRAME data = {
+ZED_FRAME zedFrame = {
     .usb = 0,
     .bnd = 0,
     .ppid = 0,
@@ -26,6 +25,8 @@ ZED_FRAME data = {
     .cnt = 0,
     .pos = 0
 };
+
+ZCH_FRAME zchFrame;
 
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {
@@ -47,7 +48,7 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
 static void process_uart_data()
 {
     if (uBuf.message_complete) {
-        // Extract complete message from buffer
+        // Extract complete message from buffer        
         char zing_status[MAX_BUFFER_LENGTH] = {0};
         uint16_t cnt = 0;
         
@@ -57,22 +58,15 @@ static void process_uart_data()
         
         zing_status[cnt] = '\0';  // Null-terminate the string
         uBuf.message_complete = false;
+        
+        if(zxxKind==Unknown) zxxKind = detectZxx(zing_status);
+        if(zxxKind!=ZED && zxxKind!=ZCH) return;
 
         // Parsing the values into the structure
-        if (sscanf(zing_status, 
-                   "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d",
-                   &data.usb,
-                   &data.bnd,
-                   &data.ppid,
-                   &data.devid,
-                   &data.trt,
-                   &data.ack,
-                   &data.ppc,
-                   &data.txid,
-                   &data.rxid,
-                   &data.run,
-                   &data.cnt) != ZED_NUM) {
-#ifdef ZED_DEBUG
+        void *frame = getFrame(&zedFrame,&zchFrame);
+        CYASSERT(frame);
+        if (!parse(zxxKind,frame,zing_status)) {
+#ifdef ZXX_DEBUG
             UART_DBG_UartPutString("Parsing Error\r\n");
             UART_DBG_UartPutString("Received: ");
             UART_DBG_UartPutString(zing_status);
@@ -161,6 +155,19 @@ void BleCallBack(uint32 event, void* eventParam)
     }
 } 
 
+static void zxxLog()
+{
+    if(zxxKind==ZED) {
+        ZED_FRAME *z = &zedFrame;
+        L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->usb,z->cnt);
+    }
+    
+    if(zxxKind==ZCH) {
+        ZCH_FRAME *z = &zchFrame;
+        L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZCH USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->usb,z->cnt);
+    }
+}
+
 /***************************************************************
  * Main
  **************************************************************/
@@ -180,25 +187,27 @@ int main()
 
     CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
     myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
-    myDataHandle.value.val = (uint8_t*)&data;
-    myDataHandle.value.len = sizeof(ZED_FRAME);
-    ZED_FRAME *z = &data;
     
     for(;;)
     {        
         /* if Capsense scan is done, read the value and start another scan */
         if(!capsense_IsBusy())
         {
-            data.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
-            CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
-            
+            if(zxxKind==ZED) zedFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
+            if(zxxKind==ZCH) zchFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
             capsense_UpdateEnabledBaselines();
             capsense_ScanEnabledWidgets();
         }
         
-        if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
-
-        L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,writereqCustom,z->usb,z->cnt);
+        uint8_t *frame = (uint8_t *)getFrame(&zedFrame,&zchFrame);
+        if(frame) {
+            myDataHandle.value.val = frame;
+            myDataHandle.value.len = getFrameSize();
+            CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
+            if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
+        }
+        
+        zxxLog();
    
         CyBle_ProcessEvents();
         process_uart_data();

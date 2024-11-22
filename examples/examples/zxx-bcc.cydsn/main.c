@@ -27,7 +27,7 @@ static ZED_FRAME zedFrame;
 const static uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
 
-static ZED_FRAME data = {
+static ZED_FRAME zedFrame = {
     .usb = 0,
     .bnd = 0,
     .ppid = 0,
@@ -40,6 +40,8 @@ static ZED_FRAME data = {
     .run = 0,
     .cnt = 0
 };
+
+static ZCH_FRAME zchFrame;
 
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
@@ -102,11 +104,14 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
             notificationParam = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T*)eventParam;
             
-            if(notificationParam->handleValPair.value.len == sizeof(ZED_FRAME)) {
+            if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
+            
+            if(notificationParam->handleValPair.value.len == getFrameSize()) {
                 notifiedCustom++;
                 
-                // Process the received data
-                memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                // Process the received data                                
+                if(zxxKind==ZED) memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                if(zxxKind==ZCH) memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
             }
             break;
             
@@ -150,10 +155,23 @@ void SendCommandToPeripheral(uint8_t command) {
 
     CYBLE_GATTC_WRITE_REQ_T writeReq;
     writeReq.attrHandle = attrHandle;
-    writeReq.value.val = (uint8_t*)&data;
+    writeReq.value.val = (uint8_t*)&zedFrame;
     writeReq.value.len = sizeof(ZED_FRAME);
 
     if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeCharVal++;
+}
+
+static void zxxLog()
+{
+    if(zxxKind==ZED) {
+        ZED_FRAME *z = &zedFrame;
+        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt);
+    }
+    
+    if(zxxKind==ZCH) {
+        ZCH_FRAME *z = &zchFrame;
+        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZCH USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt);
+    }
 }
 
 int main(void)
@@ -161,14 +179,13 @@ int main(void)
     CyGlobalIntEnable; /* Enable global interrupts. */
     UART_DBG_Start();
     CyBle_Start( CyBle_AppCallback );
-    ZED_FRAME *z = &zedFrame;
     
     for(;;)
     {          
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
         
-        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt);
+        zxxLog();
         CyDelay(10);
     }
 }
