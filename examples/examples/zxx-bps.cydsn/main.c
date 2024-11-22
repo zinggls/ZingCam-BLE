@@ -11,22 +11,8 @@ static uint16 notifyCustom = 0;
 static uint16 writereqCustom = 0;
 static UartBuf uBuf;    //Circular buffer for UART data
 
-ZED_FRAME zedFrame = {
-    .usb = 0,
-    .bnd = 0,
-    .ppid = 0,
-    .devid = 0,
-    .trt = 0,
-    .ack = 0,
-    .ppc = 0,
-    .txid = 0,
-    .rxid = 0,
-    .run = 0,
-    .cnt = 0,
-    .pos = 0
-};
-
-ZCH_FRAME zchFrame;
+static ZED_FRAME zedFrame;
+static ZCH_FRAME zchFrame;
 
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {

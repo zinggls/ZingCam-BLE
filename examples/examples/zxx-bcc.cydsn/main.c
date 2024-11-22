@@ -27,20 +27,7 @@ static ZED_FRAME zedFrame;
 const static uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
 
-static ZED_FRAME zedFrame = {
-    .usb = 0,
-    .bnd = 0,
-    .ppid = 0,
-    .devid = 0,
-    .trt = 0,
-    .ack = 0,
-    .ppc = 0,
-    .txid = 0,
-    .rxid = 0,
-    .run = 0,
-    .cnt = 0
-};
-
+static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
 
 /* BLE App Callback Function */
