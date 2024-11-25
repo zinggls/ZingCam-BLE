@@ -4,6 +4,9 @@
 #include <Log.h>
 #include <ZFrame.h>
 #include <gitcommit.h>
+#include <UartBuf.h>
+
+#define ASCII_LF '\n'
 
 // Modes for a statemachine
 typedef enum SystemMode {
@@ -23,10 +26,55 @@ static CYBLE_GAPC_ADV_REPORT_T* scanReport;
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
+static ZCD_FRAME zcdFrame;
+static UartBuf uBuf;    //Circular buffer for UART data
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
 const static uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
+
+CY_ISR(UART_ZING_RX_INTERRUPT)
+{
+    char ch = UART_ZING_GetChar();
+    if (ch != 0) {
+        UartBuf_write_char(&uBuf,ch);  // Write character to circular buffer
+
+        // Check for end of message
+        if (ch == ASCII_LF) {
+            uBuf.message_complete = true;
+        }
+    }
+
+    // Clear the interrupt to prevent retriggering
+    UART_ZING_RX_ClearInterrupt();
+}
+
+// Function to process data when a complete message is available
+static void process_uart_data()
+{
+    if (uBuf.message_complete) {
+        // Extract complete message from buffer        
+        char zing_status[MAX_BUFFER_LENGTH] = {0};
+        uint16_t cnt = 0;
+        
+        while (!UartBuf_is_empty(&uBuf)) {
+            zing_status[cnt++] = UartBuf_read_char(&uBuf);
+        }
+        
+        zing_status[cnt] = '\0';  // Null-terminate the string
+        uBuf.message_complete = false;
+
+        // Parsing the values into the structure
+        if (!parse(ZCD,&zcdFrame,zing_status)) {
+#ifdef ZXX_DEBUG
+            UART_DBG_UartPutString("Parsing Error\r\n");
+            UART_DBG_UartPutString("Received: ");
+            UART_DBG_UartPutString(zing_status);
+            UART_DBG_UartPutString("\r\n");
+#endif
+        }
+    }
+}
 
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
@@ -148,14 +196,16 @@ void SendCommandToPeripheral(uint8_t command) {
 
 static void zxxLog()
 {
+    ZCD_FRAME *zc = &zcdFrame;
+    
     if(zxxKind==ZED) {
         ZED_FRAME *z = &zedFrame;
-        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt);
+        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZED USB:%d CNT:%d, ZCD USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt,zc->usb,zc->cnt);
     }
     
     if(zxxKind==ZCH) {
         ZCH_FRAME *z = &zchFrame;
-        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZCH USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt);
+        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZCH USB:%d CNT, ZCD USB:%d CNT:%d:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt,zc->usb,zc->cnt);
     }
 }
 
@@ -163,11 +213,15 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     UART_DBG_Start();
+    UART_ZING_Start();
+    UartBuf_init(&uBuf);
+    UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     CyBle_Start( CyBle_AppCallback );
     
     for(;;)
     {          
         CyBle_ProcessEvents();
+        process_uart_data();
         SendCommandToPeripheral(123);
         
         zxxLog();
