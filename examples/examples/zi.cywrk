@@ -3,11 +3,11 @@
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
 <CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="zi" persistent="zi.cywrk" platform="NOT_USED">
-<current_project name=".\zi-bps.cydsn\zi-bps.cyprj" />
+<current_project name=".\zi-bps_swTxUart.cydsn\zi-bps_swTxUart.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
-<v>.\zi-bps.cydsn\zi-bps.cyprj</v>
+<v>.\zi-bps_swTxUart.cydsn\zi-bps_swTxUart.cyprj</v>
 </projects>
 <workspace_id v="e3036710-0fc4-43a2-bd7e-26dd6064663e" />
 <WriteAppVersionLastSavedWith v="4.4.0.80" />
