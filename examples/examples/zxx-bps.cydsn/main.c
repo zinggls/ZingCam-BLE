@@ -4,31 +4,13 @@
 #include <UartBuf.h>
 #include <ZFrame.h>
 #include <gitcommit.h>
-
-#define ASCII_LF '\n'
+#include <ZingUart.h>
 
 static uint16 notifyCustom = 0;
 static uint16 writereqCustom = 0;
-static UartBuf uBuf;    //Circular buffer for UART data
 
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
-
-CY_ISR(UART_ZING_RX_INTERRUPT)
-{
-    char ch = UART_ZING_GetChar();
-    if (ch != 0) {
-        UartBuf_write_char(&uBuf,ch);  // Write character to circular buffer
-
-        // Check for end of message
-        if (ch == ASCII_LF) {
-            uBuf.message_complete = true;
-        }
-    }
-
-    // Clear the interrupt to prevent retriggering
-    UART_ZING_RX_ClearInterrupt();
-}
 
 // Function to process data when a complete message is available
 static void process_uart_data()

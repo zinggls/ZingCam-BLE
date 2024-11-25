@@ -5,8 +5,7 @@
 #include <ZFrame.h>
 #include <gitcommit.h>
 #include <UartBuf.h>
-
-#define ASCII_LF '\n'
+#include <ZingUart.h>
 
 // Modes for a statemachine
 typedef enum SystemMode {
@@ -27,27 +26,10 @@ static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
 static ZCD_FRAME zcdFrame;
-static UartBuf uBuf;    //Circular buffer for UART data
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
 const static uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
-
-CY_ISR(UART_ZING_RX_INTERRUPT)
-{
-    char ch = UART_ZING_GetChar();
-    if (ch != 0) {
-        UartBuf_write_char(&uBuf,ch);  // Write character to circular buffer
-
-        // Check for end of message
-        if (ch == ASCII_LF) {
-            uBuf.message_complete = true;
-        }
-    }
-
-    // Clear the interrupt to prevent retriggering
-    UART_ZING_RX_ClearInterrupt();
-}
 
 // Function to process data when a complete message is available
 static void process_uart_data()
