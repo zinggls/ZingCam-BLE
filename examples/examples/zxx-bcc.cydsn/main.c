@@ -183,11 +183,9 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
-    zingRxCb = ZingCB;
-    
     UART_DBG_Start();
+    ZingUart_Init(ZingCB);
     UART_ZING_Start();
-    UartBuf_init(&uBuf);
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     CyBle_Start( CyBle_AppCallback );
     

@@ -9,6 +9,12 @@
 static UartBuf uBuf;    //Circular buffer for UART data
 typedef void (*ZingRxCallback)(const char *buf);
 ZingRxCallback zingRxCb = NULL;
+
+void ZingUart_Init(ZingRxCallback cb)
+{
+    UartBuf_init(&uBuf);
+    zingRxCb = cb;
+}
     
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {

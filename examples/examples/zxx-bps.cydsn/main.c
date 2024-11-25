@@ -130,12 +130,10 @@ static void zxxLog()
 int main()
 {
     CyGlobalIntEnable; 
-    
-    zingRxCb = ZingCB;
- 
+
     UART_DBG_Start();
+    ZingUart_Init(ZingCB);
     UART_ZING_Start();
-    UartBuf_init(&uBuf);
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     capsense_Start();
     capsense_InitializeEnabledBaselines();
