@@ -11,36 +11,24 @@ static uint16 writereqCustom = 0;
 
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
+extern ZingRxCallback zingRxCb;
 
 // Function to process data when a complete message is available
-static void process_uart_data()
+static void ZingCB(const char *buf)
 {
-    if (uBuf.message_complete) {
-        // Extract complete message from buffer        
-        char zing_status[MAX_BUFFER_LENGTH] = {0};
-        uint16_t cnt = 0;
-        
-        while (!UartBuf_is_empty(&uBuf)) {
-            zing_status[cnt++] = UartBuf_read_char(&uBuf);
-        }
-        
-        zing_status[cnt] = '\0';  // Null-terminate the string
-        uBuf.message_complete = false;
-        
-        if(zxxKind==Unknown) zxxKind = detectZxx(zing_status);
-        if(zxxKind!=ZED && zxxKind!=ZCH) return;
+    if(zxxKind==Unknown) zxxKind = detectZxx(buf);
+    if(zxxKind!=ZED && zxxKind!=ZCH) return;
 
-        // Parsing the values into the structure
-        void *frame = getFrame(&zedFrame,&zchFrame);
-        CYASSERT(frame);
-        if (!parse(zxxKind,frame,zing_status)) {
+    // Parsing the values into the structure
+    void *frame = getFrame(&zedFrame,&zchFrame);
+    CYASSERT(frame);
+    if (!parse(zxxKind,frame,buf)) {
 #ifdef ZXX_DEBUG
-            UART_DBG_UartPutString("Parsing Error\r\n");
-            UART_DBG_UartPutString("Received: ");
-            UART_DBG_UartPutString(zing_status);
-            UART_DBG_UartPutString("\r\n");
+        UART_DBG_UartPutString("Parsing Error\r\n");
+        UART_DBG_UartPutString("Received: ");
+        UART_DBG_UartPutString(zing_status);
+        UART_DBG_UartPutString("\r\n");
 #endif
-        }
     }
 }
 
@@ -142,6 +130,8 @@ static void zxxLog()
 int main()
 {
     CyGlobalIntEnable; 
+    
+    zingRxCb = ZingCB;
  
     UART_DBG_Start();
     UART_ZING_Start();

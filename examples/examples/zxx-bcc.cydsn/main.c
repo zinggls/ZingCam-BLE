@@ -26,35 +26,23 @@ static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
 static ZCD_FRAME zcdFrame;
+extern ZingRxCallback zingRxCb;
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
 const static uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
 
 // Function to process data when a complete message is available
-static void process_uart_data()
+static void ZingCB(const char *buf)
 {
-    if (uBuf.message_complete) {
-        // Extract complete message from buffer        
-        char zing_status[MAX_BUFFER_LENGTH] = {0};
-        uint16_t cnt = 0;
-        
-        while (!UartBuf_is_empty(&uBuf)) {
-            zing_status[cnt++] = UartBuf_read_char(&uBuf);
-        }
-        
-        zing_status[cnt] = '\0';  // Null-terminate the string
-        uBuf.message_complete = false;
-
-        // Parsing the values into the structure
-        if (!parse(ZCD,&zcdFrame,zing_status)) {
+    // Parsing the values into the structure
+    if (!parse(ZCD,&zcdFrame,buf)) {
 #ifdef ZXX_DEBUG
-            UART_DBG_UartPutString("Parsing Error\r\n");
-            UART_DBG_UartPutString("Received: ");
-            UART_DBG_UartPutString(zing_status);
-            UART_DBG_UartPutString("\r\n");
+        UART_DBG_UartPutString("Parsing Error\r\n");
+        UART_DBG_UartPutString("Received: ");
+        UART_DBG_UartPutString(zing_status);
+        UART_DBG_UartPutString("\r\n");
 #endif
-        }
     }
 }
 
@@ -194,6 +182,9 @@ static void zxxLog()
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
+    
+    zingRxCb = ZingCB;
+    
     UART_DBG_Start();
     UART_ZING_Start();
     UartBuf_init(&uBuf);

@@ -7,6 +7,8 @@
 #define ASCII_LF '\n'
     
 static UartBuf uBuf;    //Circular buffer for UART data
+typedef void (*ZingRxCallback)(const char *buf);
+ZingRxCallback zingRxCb = NULL;
     
 CY_ISR(UART_ZING_RX_INTERRUPT)
 {
@@ -22,6 +24,26 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
 
     // Clear the interrupt to prevent retriggering
     UART_ZING_RX_ClearInterrupt();
+}
+
+// Function to process data when a complete message is available
+void process_uart_data()
+{
+    if (uBuf.message_complete) {
+        // Extract complete message from buffer        
+        char zing_status[MAX_BUFFER_LENGTH] = {0};
+        uint16_t cnt = 0;
+        
+        while (!UartBuf_is_empty(&uBuf)) {
+            zing_status[cnt++] = UartBuf_read_char(&uBuf);
+        }
+        
+        zing_status[cnt] = '\0';  // Null-terminate the string
+        uBuf.message_complete = false;
+        
+        CYASSERT(zingRxCb);
+        zingRxCb(zing_status);
+    }
 }
 
 #endif /* ZING_UART_H */
