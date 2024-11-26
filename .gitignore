@@ -39,3 +39,5 @@ Export
 *.log
 /examples/ble/ComponentUpdateLog.txt
 gitcommit.h
+.vs
+*.user
