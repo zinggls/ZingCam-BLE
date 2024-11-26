@@ -247,8 +247,8 @@ long OpenPort()
 	//if programmer was physically reconnected to USB-port.
 
 	std::wstring portName = ports[0];
-	hr = ppOpenPort(portName, sErrorMsg);
-	return hr;
+	wcout << "Port name:" << portName << endl;
+	return ppOpenPort(portName, sErrorMsg);
 }
 
 long ppClosePort(std::wstring& strError)
