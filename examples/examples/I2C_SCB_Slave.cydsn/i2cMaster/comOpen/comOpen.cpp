@@ -29,63 +29,63 @@ int GetDispIDsByName()
 	int hr = S_OK;
 	LPOLESTR functionName;
 	//_StartSelfTerminator
-	functionName = L"_StartSelfTerminator";
+	functionName = const_cast <LPOLESTR>(L"_StartSelfTerminator");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID__StartSelfTerminator);
 	if (FAILED(hr)) return hr;
 	//OpenPort
-	functionName = L"OpenPort";
+	functionName = const_cast <LPOLESTR>(L"OpenPort");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_OpenPort);
 	if (FAILED(hr)) return hr;
 	//ClosePort
-	functionName = L"ClosePort";
+	functionName = const_cast <LPOLESTR>(L"ClosePort");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_ClosePort);
 	if (FAILED(hr)) return hr;
 	//GetPorts
-	functionName = L"GetPorts";
+	functionName = const_cast <LPOLESTR>(L"GetPorts");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_GetPorts);
 	if (FAILED(hr)) return hr;
 	//SetPowerVoltage
-	functionName = L"SetPowerVoltage";
+	functionName = const_cast <LPOLESTR>(L"SetPowerVoltage");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_SetPowerVoltage);
 	if (FAILED(hr)) return hr;
 	//PowerOn
-	functionName = L"PowerOn";
+	functionName = const_cast <LPOLESTR>(L"PowerOn");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_PowerOn);
 	if (FAILED(hr)) return hr;
 	//SetProtocol
-	functionName = L"SetProtocol";
+	functionName = const_cast <LPOLESTR>(L"SetProtocol");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_SetProtocol);
 	if (FAILED(hr)) return hr;
 	//Reset Bus
-	functionName = L"I2C_ResetBus";
+	functionName = const_cast <LPOLESTR>(L"I2C_ResetBus");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_ResetBus);
 	if (FAILED(hr)) return hr;
 	//I2C_GetDeviceList
-	functionName = L"I2C_GetDeviceList";
+	functionName = const_cast <LPOLESTR>(L"I2C_GetDeviceList");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_GetDeviceList);
 	if (FAILED(hr)) return hr;
 	//I2C_SetSpeed
-	functionName = L"I2C_SetSpeed";
+	functionName = const_cast <LPOLESTR>(L"I2C_SetSpeed");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_SetSpeed);
 	if (FAILED(hr)) return hr;
 	//I2C_GetSpeed
-	functionName = L"I2C_GetSpeed";
+	functionName = const_cast <LPOLESTR>(L"I2C_GetSpeed");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_GetSpeed);
 	if (FAILED(hr)) return hr;
 	//I2C_DataTransfer
-	functionName = L"I2C_DataTransfer";
+	functionName = const_cast <LPOLESTR>(L"I2C_DataTransfer");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_DataTransfer);
 	if (FAILED(hr)) return hr;
 	//I2C_SendData
-	functionName = L"I2C_SendData";
+	functionName = const_cast <LPOLESTR>(L"I2C_SendData");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_SendData);
 	if (FAILED(hr)) return hr;
 	//I2C_ReadData
-	functionName = L"I2C_ReadData";
+	functionName = const_cast <LPOLESTR>(L"I2C_ReadData");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_ReadData);
 	if (FAILED(hr)) return hr;
 	//I2C_ReadDataFromReg
-	functionName = L"I2C_ReadDataFromReg";
+	functionName = const_cast <LPOLESTR>(L"I2C_ReadDataFromReg");
 	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_ReadDataFromReg);
 	if (FAILED(hr)) return hr;
 	return hr;
