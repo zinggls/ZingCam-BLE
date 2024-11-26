@@ -4,6 +4,8 @@
 
 using namespace std;
 
+static IDispatch* pIDispatch = NULL;
+
 int main()
 {
 	HRESULT hr = 0;
@@ -26,6 +28,13 @@ int main()
 		goto cleanup;
 	}
 	wcout << L"Class ID Obtained from Version Independent Prod ID: " << progid << endl;
+
+	hr = ::CoCreateInstance(clsid, NULL, CLSCTX_SERVER, IID_IDispatch, (void**)&pIDispatch);
+	if (FAILED(hr))
+	{
+		wcout << "Failed to create instance of PSoC Programmer COM object !" << endl;
+		goto cleanup;
+	}
 
 cleanup:
 	wcout << "Shutting down COM" << endl;
