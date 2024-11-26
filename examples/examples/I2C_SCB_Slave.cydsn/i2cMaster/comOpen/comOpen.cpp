@@ -1,6 +1,9 @@
 ﻿#include "pch.h"
 #include <iostream>
 #include <windows.h>
+#include <vector>
+#include <atlbase.h>
+#include <comdef.h>
 
 using namespace std;
 
@@ -122,9 +125,182 @@ long ppStartSelfTerminator(long ClientProcessID)
 	return vaResult.lVal;
 }
 
+std::wstring BSTRToWString(BSTR bstr)
+{
+	if (bstr == nullptr)
+	{
+		return L""; // Return an empty string for null BSTR
+	}
+
+	// Use _bstr_t for conversion
+	_bstr_t bstrWrapper(bstr);
+	return static_cast<wchar_t*>(bstrWrapper);
+}
+
+long ppGetPorts(std::vector<std::wstring>& portNames, std::wstring& strError)
+{
+	DISPID dispid = dispID_GetPorts;
+	// Set up parameters
+	DISPPARAMS dispparams;
+	memset(&dispparams, 0, sizeof(DISPPARAMS));
+	dispparams.cArgs = 2;
+	// Allocate memory for parameters
+	VARIANTARG* pArg = new VARIANTARG[dispparams.cArgs];
+	dispparams.rgvarg = pArg;
+	memset(pArg, 0, sizeof(VARIANT) * dispparams.cArgs);
+	//Initialize parameters
+	VARIANT varPorts;
+	VariantInit(&varPorts);
+	BSTR bstrError = 0;
+	dispparams.rgvarg[0].vt = VT_BSTR | VT_BYREF;
+	dispparams.rgvarg[0].pbstrVal = &bstrError;
+	dispparams.rgvarg[1].vt = VT_VARIANT | VT_BYREF;
+	dispparams.rgvarg[1].pvarVal = &varPorts;
+	//Init Result (Return Value)
+	VARIANTARG vaResult;
+	VariantInit(&vaResult);
+
+	HRESULT hr;
+	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+		&dispparams, &vaResult, NULL, NULL);
+	USES_CONVERSION;
+	strError = BSTRToWString(bstrError);
+	//Translate Result into std::vector<std::string>
+	long lLBound, lUBound;
+	SAFEARRAY* psa = varPorts.parray;
+	SafeArrayGetLBound(psa, 1, &lLBound);
+	SafeArrayGetUBound(psa, 1, &lUBound);
+	int size = lUBound - lLBound + 1;
+	portNames.resize(size);
+	long i, j;
+	for (j = 0, i = lLBound; i <= lUBound; i++, j++) {
+		BSTR bPort;
+		SafeArrayGetElement(psa, &i, &bPort);
+		USES_CONVERSION;
+		portNames[j] = BSTRToWString(bPort);
+	}
+	//Free allocated resources
+	delete[] pArg;
+	VariantClear(&varPorts);
+	::SysFreeString(bstrError);
+
+	return vaResult.lVal;
+}
+
+long ppOpenPort(std::wstring portName, std::wstring& strError)
+{
+	DISPID dispid = dispID_OpenPort;
+	// Set up parameters
+	DISPPARAMS dispparams;
+	memset(&dispparams, 0, sizeof(DISPPARAMS));
+	dispparams.cArgs = 2;
+	// Allocate memory for parameters
+	VARIANTARG* pArg = new VARIANTARG[dispparams.cArgs];
+	dispparams.rgvarg = pArg;
+	memset(pArg, 0, sizeof(VARIANT) * dispparams.cArgs);
+	//Initialize parameters
+	USES_CONVERSION;
+	BSTR bstrPort = ::SysAllocString(portName.c_str());
+	BSTR bstrError = 0;
+	dispparams.rgvarg[0].vt = VT_BSTR | VT_BYREF;
+	dispparams.rgvarg[0].pbstrVal = &bstrError;
+	dispparams.rgvarg[1].vt = VT_BSTR;
+	dispparams.rgvarg[1].bstrVal = bstrPort;
+	//Init Result (Return Value)
+	VARIANTARG vaResult;
+	VariantInit(&vaResult);
+
+	HRESULT hr;
+	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+		&dispparams, &vaResult, NULL, NULL);
+
+
+	strError = BSTRToWString(bstrError);
+	//Free allocated resources
+	delete[] pArg;
+	::SysFreeString(bstrPort);
+	::SysFreeString(bstrError);
+
+	return vaResult.lVal;
+}
+
+long OpenPort()
+{
+	long hr;
+	//Open Port - get first MiniProg3 port in the ports list
+	std::vector<std::wstring> ports;
+	hr = ppGetPorts(ports, sErrorMsg);
+	if (!SUCCEEDED(hr)) return hr;
+
+	if (ports.size() <= 0)
+	{
+		sErrorMsg = L"Connect any Programmer to PC";
+		return -1;
+	}
+
+	//Port should be opened just once to connect Programmer device (MiniProg1/3,etc).
+	//After that you can use Chip-/Programmer- specific APIs as long as you need.
+	//No need to repoen port when you need to acquire chip 2nd time, just call Acquire() again.
+	//This is true for all other APIs which get available once port is opened.
+	//You have to call OpenPort() again if port was closed by ClosePort() method, or 
+	//when there is a need to connect to other programmer, or
+	//if programmer was physically reconnected to USB-port.
+
+	std::wstring portName = ports[0];
+	hr = ppOpenPort(portName, sErrorMsg);
+	return hr;
+}
+
+long ppClosePort(std::wstring& strError)
+{
+	DISPID dispid = dispID_ClosePort;
+	// Set up parameters
+	DISPPARAMS dispparams;
+	memset(&dispparams, 0, sizeof(DISPPARAMS));
+	dispparams.cArgs = 1;
+	// Allocate memory for parameters
+	VARIANTARG* pArg = new VARIANTARG[dispparams.cArgs];
+	dispparams.rgvarg = pArg;
+	memset(pArg, 0, sizeof(VARIANT) * dispparams.cArgs);
+	//Initialize parameters
+	BSTR bstrError = 0;
+	dispparams.rgvarg[0].vt = VT_BSTR | VT_BYREF;
+	dispparams.rgvarg[0].pbstrVal = &bstrError;
+	//Init Result (Return Value)
+	VARIANTARG vaResult;
+	VariantInit(&vaResult);
+
+	HRESULT hr;
+	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+		&dispparams, &vaResult, NULL, NULL);
+
+	USES_CONVERSION;
+	strError = BSTRToWString(bstrError);
+	//Free allocated resources
+	delete[] pArg;
+	::SysFreeString(bstrError);
+
+	return vaResult.lVal;
+}
+
+long ClosePort()
+{
+	return ppClosePort(sErrorMsg);
+}
+
 long Execute()
 {
-	return S_OK;
+	int hr;
+
+	//Open Port - get last (connected) port in the ports list
+	hr = OpenPort();
+	if (!SUCCEEDED(hr)) return hr;
+	wcout << "OpenPort OK" << endl;
+
+	//Close the Port, so it is available for other apps
+	ClosePort();
+	wcout << "Port Closed" << endl;
+	return hr;
 }
 
 int main()
