@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cpp_Ex", "Cpp_Ex\Cpp_Ex.vcxproj", "{35346097-52FF-43EF-B993-407DBF74FB21}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "comOpen", "comOpen\comOpen.vcxproj", "{EADCCAD5-BAF5-4383-9B36-3636FCA8E334}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{35346097-52FF-43EF-B993-407DBF74FB21}.Debug|x86.ActiveCfg = Debug|Win32
+		{35346097-52FF-43EF-B993-407DBF74FB21}.Debug|x86.Build.0 = Debug|Win32
+		{35346097-52FF-43EF-B993-407DBF74FB21}.Release|x86.ActiveCfg = Release|Win32
+		{35346097-52FF-43EF-B993-407DBF74FB21}.Release|x86.Build.0 = Release|Win32
+		{EADCCAD5-BAF5-4383-9B36-3636FCA8E334}.Debug|x86.ActiveCfg = Debug|Win32
+		{EADCCAD5-BAF5-4383-9B36-3636FCA8E334}.Debug|x86.Build.0 = Debug|Win32
+		{EADCCAD5-BAF5-4383-9B36-3636FCA8E334}.Release|x86.ActiveCfg = Release|Win32
+		{EADCCAD5-BAF5-4383-9B36-3636FCA8E334}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14A306F8-B329-4A1C-975F-29CBFCBA018E}
+	EndGlobalSection
+EndGlobal
