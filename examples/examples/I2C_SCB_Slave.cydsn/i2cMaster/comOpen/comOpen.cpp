@@ -5,6 +5,7 @@
 using namespace std;
 
 static IDispatch* pIDispatch = NULL;
+static std::wstring sErrorMsg;
 
 //DispIDs for each function used in the Example
 //They are initialized once after COM-object is created by GetDispIDsByName() function
@@ -121,6 +122,11 @@ long ppStartSelfTerminator(long ClientProcessID)
 	return vaResult.lVal;
 }
 
+long Execute()
+{
+	return S_OK;
+}
+
 int main()
 {
 	HRESULT hr = 0;
@@ -160,6 +166,20 @@ int main()
 	}
 
 	ppStartSelfTerminator(GetCurrentProcessId());
+
+	//Execute actual task of the example
+	hr = Execute();
+
+	{
+		std::wstring str;
+		if (SUCCEEDED(hr))
+			str = L"Succeeded!";
+		else {
+			str = L"Failed! ";
+			str.append(sErrorMsg);
+		}
+		wcout << str.c_str() << endl;
+	}
 
 cleanup:
 	wcout << "Shutting down COM" << endl;
