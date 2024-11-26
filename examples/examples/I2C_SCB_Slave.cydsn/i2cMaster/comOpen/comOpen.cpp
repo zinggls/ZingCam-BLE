@@ -7,15 +7,15 @@ using namespace std;
 int main()
 {
 	HRESULT hr = 0;
-	cout << "Initializing COM" << endl;
+	wcout << "Initializing COM" << endl;
 	if (FAILED(CoInitialize(NULL)))
 	{
-		cout << "Unable to initialize COM" << endl;
+		wcout << "Unable to initialize COM" << endl;
 		return 0;
 	}
-	cout << "COM Initialized" << endl;
+	wcout << "COM Initialized" << endl;
 
-	cout << "Shutting down COM" << endl;
+	wcout << "Shutting down COM" << endl;
 	CoUninitialize();
 	return 0;
 }
