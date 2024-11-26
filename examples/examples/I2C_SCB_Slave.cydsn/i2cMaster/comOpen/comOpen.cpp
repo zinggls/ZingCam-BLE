@@ -10,6 +10,9 @@ using namespace std;
 static IDispatch* pIDispatch = NULL;
 static std::wstring sErrorMsg;
 
+//Use Version Independent Prog ID to instantiate COM-object
+static const wchar_t progid[] = L"PSoCProgrammerCOM.PSoCProgrammerCOM_Object";
+
 //DispIDs for each function used in the Example
 //They are initialized once after COM-object is created by GetDispIDsByName() function
 static DISPID dispID__StartSelfTerminator = 0;
@@ -314,8 +317,6 @@ int main()
 	}
 	wcout << "COM Initialized" << endl;
 
-	//Use Version Independent Prog ID to instantiate COM-object
-	wchar_t progid[] = L"PSoCProgrammerCOM.PSoCProgrammerCOM_Object";
 
 	CLSID clsid;
 	hr = ::CLSIDFromProgID(progid, &clsid);
