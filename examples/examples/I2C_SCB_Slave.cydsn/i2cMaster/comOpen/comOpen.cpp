@@ -37,29 +37,51 @@ long ClosePort()
 	return CCom::ppClosePort(CCom::sErrorMsg);
 }
 
-long I2C_SCB_Slave(int deviceAddress)
+long writeI2C(int deviceAddress,int rgb)
 {
 	int hr;
 
-	//w 01 01 17	//Send CMD_SET_RED	
+	//w 01 rgb 17
 	std::vector<byte> dataIN;
 	dataIN.resize(3);
 	dataIN[0] = 0x01;
-	dataIN[1] = 0x01;
+	dataIN[1] = rgb;
 	dataIN[2] = 0x17;
 	hr = CCom::ppI2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
-	wcout << L"Send CMD_SET_RED" << endl;
+	wcout << L"Send CMD_SET: " << rgb << endl;
+
+	return hr;
+}
+
+long readI2C(int deviceAddress, long readLen)
+{
+	int hr;
 
 	//Read 3 bytes from device
 	std::vector<byte> dataOUT;
 	dataOUT.resize(0);
-	hr = CCom::ppI2C_ReadData(deviceAddress, 3, dataOUT, CCom::sErrorMsg);
+	hr = CCom::ppI2C_ReadData(deviceAddress, readLen, dataOUT, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 
 	wcout << L"Read " << dataOUT.size() << "bytes from device : ";
 	for (size_t i = 0; i < dataOUT.size(); i++) wcout << std::hex << std::setw(2) << std::setfill(L'0') << dataOUT[i] << " ";
 	wcout << endl;
+
+	return hr;
+}
+
+long I2C_SCB_Slave(int deviceAddress)
+{
+	int hr;
+
+	//w 01 01 17	//Send CMD_SET_RED
+	hr = writeI2C(deviceAddress, 1);
+	if (!SUCCEEDED(hr)) return hr;
+
+	//Read 3 bytes from device
+	hr = readI2C(deviceAddress, 3);
+	if (!SUCCEEDED(hr)) return hr;
 
 	return hr;
 }
