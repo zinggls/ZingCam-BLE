@@ -41,24 +41,23 @@ long I2C_SCB_Slave(int deviceAddress)
 {
 	int hr;
 
-	//w 08 01 01 17 p	//Send CMD_SET_RED	
+	//w 01 01 17	//Send CMD_SET_RED	
 	std::vector<byte> dataIN;
-	dataIN.resize(4);
+	dataIN.resize(3);
 	dataIN[0] = 0x01;
 	dataIN[1] = 0x01;
 	dataIN[2] = 0x17;
-	dataIN[3] = 'p';	//p
 	hr = CCom::ppI2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Send CMD_SET_RED" << endl;
 
-	//Read 4 bytes from device
+	//Read 3 bytes from device
 	std::vector<byte> dataOUT;
 	dataOUT.resize(0);
-	hr = CCom::ppI2C_ReadData(deviceAddress, 4, dataOUT, CCom::sErrorMsg);
+	hr = CCom::ppI2C_ReadData(deviceAddress, 3, dataOUT, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 
-	wcout << L"Read 4 bytes from device: ";
+	wcout << L"Read " << dataOUT.size() << "bytes from device : ";
 	for (size_t i = 0; i < dataOUT.size(); i++) wcout << std::hex << std::setw(2) << std::setfill(L'0') << dataOUT[i] << " ";
 	wcout << endl;
 
