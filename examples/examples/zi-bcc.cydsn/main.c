@@ -5,6 +5,7 @@
 #include <gitcommit.h>
 #include <UartBuf.h>
 #include <ZingUart.h>
+#include <i2cs.h>
 
 #define L(...)  //Logging is not supported
 
@@ -187,12 +188,14 @@ int main(void)
     ZingUart_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
+    i2cs_start();
     CyBle_Start( CyBle_AppCallback );
     
     for(;;)
     {          
         CyBle_ProcessEvents();
         process_uart_data();
+        i2cs_process();
         SendCommandToPeripheral(123);
         
         zxxLog();
