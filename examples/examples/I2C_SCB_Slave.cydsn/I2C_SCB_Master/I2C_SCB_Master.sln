@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cpp_Ex", "Cpp_Ex\Cpp_Ex.vcxproj", "{35346097-52FF-43EF-B993-407DBF74FB21}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I2C_SCB_Master", "comOpen\I2C_SCB_Master.vcxproj", "{EADCCAD5-BAF5-4383-9B36-3636FCA8E334}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I2C_SCB_Master", "I2C_SCB_Master\I2C_SCB_Master.vcxproj", "{EADCCAD5-BAF5-4383-9B36-3636FCA8E334}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
