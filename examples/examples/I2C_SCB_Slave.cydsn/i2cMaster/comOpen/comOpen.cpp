@@ -46,6 +46,11 @@ long I2C_Operations()
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << "Setup Power - 5.0V and internal done" << endl;
 
+	//Power On
+	hr = CCom::ppPowerOn(CCom::sErrorMsg);
+	if (!SUCCEEDED(hr)) return hr;
+	wcout << "Power On" << endl;
+
 	return hr;
 }
 

@@ -299,3 +299,35 @@ long CCom::ppSetPowerVoltage(std::wstring voltage, std::wstring& strError)
 
 	return vaResult.lVal;
 }
+
+long CCom::ppPowerOn(std::wstring& strError)
+{
+	DISPID dispid = dispID_PowerOn;
+	// Set up parameters
+	DISPPARAMS dispparams;
+	memset(&dispparams, 0, sizeof(DISPPARAMS));
+	dispparams.cArgs = 1;
+	// Allocate memory for parameters
+	VARIANTARG* pArg = new VARIANTARG[dispparams.cArgs];
+	dispparams.rgvarg = pArg;
+	memset(pArg, 0, sizeof(VARIANT) * dispparams.cArgs);
+	//Initialize parameters
+	BSTR bstrError = 0;
+	dispparams.rgvarg[0].vt = VT_BSTR | VT_BYREF;
+	dispparams.rgvarg[0].pbstrVal = &bstrError;
+	//Init Result (Return Value)
+	VARIANTARG vaResult;
+	VariantInit(&vaResult);
+
+	HRESULT hr;
+	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+		&dispparams, &vaResult, NULL, NULL);
+
+	USES_CONVERSION;
+	strError = BSTRToWString(bstrError);
+	//Free allocated resources
+	delete[] pArg;
+	::SysFreeString(bstrError);
+
+	return vaResult.lVal;
+}
