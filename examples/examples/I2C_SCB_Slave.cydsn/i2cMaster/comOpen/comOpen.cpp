@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include <iostream>
 #include "com.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -98,7 +99,8 @@ long I2C_Operations()
 		return hr;
 	}
 	wcout << "Devices list:  8bit  7bit" << endl;
-	for (size_t i = 0; i < devices.size(); i++) printf("     address:  %02x    %02x\n", devices[i] << 1, devices[i]);
+	for (size_t i = 0; i < devices.size(); i++)
+		wcout << L"     address:  " << std::hex << std::setw(2) << std::setfill(L'0') << (devices[i] << 1) << "    " << std::hex << std::setw(2) << std::setfill(L'0') << devices[i] << endl;
 
 	return hr;
 }
