@@ -38,4 +38,5 @@ public:
 	static long ppPowerOn(std::wstring& strError);
 	static long ppSetProtocol(enumInterfaces protocol, std::wstring& strError);
 	static long ppI2C_ResetBus(std::wstring& strError);
+	static long ppI2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError);
 };

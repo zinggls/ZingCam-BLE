@@ -60,6 +60,14 @@ long I2C_Operations()
 	hr = CCom::ppI2C_ResetBus(CCom::sErrorMsg);
 	wcout << "Reset bus!" << endl;
 
+	//Sleep script for 100 milliseconds
+	Sleep(100);
+
+	//Set I2C speed
+	hr = CCom::ppI2C_SetSpeed(enumI2Cspeed::CLK_100K, CCom::sErrorMsg);
+	if (!SUCCEEDED(hr)) return hr;
+	wcout << "Set speed: 100K!" << endl;
+
 	return hr;
 }
 
