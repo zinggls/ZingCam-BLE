@@ -90,24 +90,27 @@ long I2C_SCB_Slave(int deviceAddress)
 {
 	int hr;
 
-	hr = Color(deviceAddress,1);	//RED
-	if (!SUCCEEDED(hr)) return hr;
+	while (1) {
+		hr = Color(deviceAddress, 1);	//RED
+		if (!SUCCEEDED(hr)) return hr;
 
-	Sleep(500);
+		Sleep(500);
 
-	hr = Color(deviceAddress, 2);	//GREEN
-	if (!SUCCEEDED(hr)) return hr;
+		hr = Color(deviceAddress, 2);	//GREEN
+		if (!SUCCEEDED(hr)) return hr;
 
-	Sleep(500);
+		Sleep(500);
 
-	hr = Color(deviceAddress, 3);	//BLUE
-	if (!SUCCEEDED(hr)) return hr;
+		hr = Color(deviceAddress, 3);	//BLUE
+		if (!SUCCEEDED(hr)) return hr;
 
-	Sleep(500);
+		Sleep(500);
 
-	hr = Color(deviceAddress, 0);	//OFF
-	if (!SUCCEEDED(hr)) return hr;
+		hr = Color(deviceAddress, 0);	//OFF
+		if (!SUCCEEDED(hr)) return hr;
 
+		Sleep(500);
+	}
 	return hr;
 }
 
