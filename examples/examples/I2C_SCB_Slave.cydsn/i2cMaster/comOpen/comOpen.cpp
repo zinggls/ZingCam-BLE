@@ -82,6 +82,24 @@ long I2C_Operations()
 	wcout << "Get speed: " << val.c_str() << "!" << endl;
 	if (!SUCCEEDED(hr)) return hr;
 
+	//Get device list
+	std::vector<byte> devices;
+	hr = CCom::ppI2C_GetDeviceList(devices, CCom::sErrorMsg);
+	if (!SUCCEEDED(hr))
+	{
+		CCom::sErrorMsg = L"Failed to enumerate I2C devices";
+		return hr;
+	}
+
+	//Show devices
+	if (devices.size() == 0)
+	{
+		CCom::sErrorMsg = L"No devices found";
+		return hr;
+	}
+	wcout << "Devices list:  8bit  7bit" << endl;
+	for (size_t i = 0; i < devices.size(); i++) printf("     address:  %02x    %02x\n", devices[i] << 1, devices[i]);
+
 	return hr;
 }
 
