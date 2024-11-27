@@ -58,7 +58,7 @@ int main()
 	if (FAILED(CoInitialize(NULL)))
 	{
 		wcout << "Unable to initialize COM" << endl;
-		return 0;
+		goto exit;
 	}
 	wcout << "COM Initialized" << endl;
 
@@ -83,8 +83,7 @@ int main()
 	if (FAILED(hr))
 	{
 		wcout << "Failed to get DispIDs of used methods";
-		CoUninitialize();
-		return 0;
+		goto cleanup;
 	}
 
 	CCom::ppStartSelfTerminator(GetCurrentProcessId());
@@ -106,5 +105,6 @@ int main()
 cleanup:
 	wcout << "Shutting down COM" << endl;
 	CoUninitialize();
+exit:
 	return 0;
 }
