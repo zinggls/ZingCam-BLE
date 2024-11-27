@@ -76,7 +76,7 @@ long Color(int deviceAddress,int rgb)
 	int hr;
 
 	//w 01 rgb 17
-	hr = writeI2C(deviceAddress, 1);
+	hr = writeI2C(deviceAddress, rgb);
 	if (!SUCCEEDED(hr)) return hr;
 
 	//Read 3 bytes from device
@@ -91,6 +91,21 @@ long I2C_SCB_Slave(int deviceAddress)
 	int hr;
 
 	hr = Color(deviceAddress,1);	//RED
+	if (!SUCCEEDED(hr)) return hr;
+
+	Sleep(500);
+
+	hr = Color(deviceAddress, 2);	//GREEN
+	if (!SUCCEEDED(hr)) return hr;
+
+	Sleep(500);
+
+	hr = Color(deviceAddress, 3);	//BLUE
+	if (!SUCCEEDED(hr)) return hr;
+
+	Sleep(500);
+
+	hr = Color(deviceAddress, 0);	//OFF
 	if (!SUCCEEDED(hr)) return hr;
 
 	return hr;
