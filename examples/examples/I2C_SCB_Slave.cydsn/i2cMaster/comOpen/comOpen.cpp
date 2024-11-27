@@ -41,7 +41,7 @@ long I2C_SCB_Slave(int deviceAddress)
 {
 	int hr;
 
-	//w 00 04 01 FF 01 ; //Power On LED1
+	//w 08 01 01 17 p	//Send CMD_SET_RED	
 	std::vector<byte> dataIN;
 	dataIN.resize(4);
 	dataIN[0] = 0x01;
