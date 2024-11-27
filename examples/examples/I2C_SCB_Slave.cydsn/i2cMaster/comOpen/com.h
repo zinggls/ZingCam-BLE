@@ -41,4 +41,5 @@ public:
 	static long ppI2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError);
 	static long ppI2C_GetSpeed(long& speed, std::wstring& strError);
 	static long ppI2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError);
+	static long ppI2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT, std::wstring& strError);
 };

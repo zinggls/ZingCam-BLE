@@ -504,3 +504,57 @@ long CCom::ppI2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strErro
 
 	return vaResult.lVal;
 }
+
+long CCom::ppI2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT, std::wstring& strError)
+{
+	DISPID dispid = dispID_I2C_DataTransfer;
+	// Set up parameters
+	DISPPARAMS dispparams;
+	memset(&dispparams, 0, sizeof(DISPPARAMS));
+	dispparams.cArgs = 6;
+	// Allocate memory for parameters
+	VARIANTARG* pArg = new VARIANTARG[dispparams.cArgs];
+	dispparams.rgvarg = pArg;
+	memset(pArg, 0, sizeof(VARIANT) * dispparams.cArgs);
+
+	//Initialize parameters
+	VARIANT dOUT;
+	VariantInit(&dOUT);
+
+	//Convert dataIN into SafeArray
+	VARIANT dIN;
+	ConvertByteVector2SA(dataIN, &dIN);
+
+	BSTR bstrError = 0;
+	dispparams.rgvarg[0].vt = VT_BSTR | VT_BYREF;
+	dispparams.rgvarg[0].pbstrVal = &bstrError;
+	dispparams.rgvarg[1].vt = VT_VARIANT | VT_BYREF;
+	dispparams.rgvarg[1].pvarVal = &dOUT;
+	dispparams.rgvarg[2].vt = VT_ARRAY | VT_UI1;
+	dispparams.rgvarg[2].parray = dIN.parray;
+	dispparams.rgvarg[3].vt = VT_I4;
+	dispparams.rgvarg[3].lVal = readLen;
+	dispparams.rgvarg[4].vt = VT_I4;
+	dispparams.rgvarg[4].lVal = mode;
+	dispparams.rgvarg[5].vt = VT_I4;
+	dispparams.rgvarg[5].lVal = deviceAddr;
+
+	//Init Result (Return Value)
+	VARIANTARG vaResult;
+	VariantInit(&vaResult);
+
+	HRESULT hr;
+	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+		&dispparams, &vaResult, NULL, NULL);
+
+	USES_CONVERSION;
+	strError = BSTRToWString(bstrError);
+	ConvertSA2ByteVector(dOUT, dataOUT);
+	//Free allocated resources
+	delete[] pArg;
+	::SysFreeString(bstrError);
+	VariantClear(&dOUT);
+	VariantClear(&dIN);
+
+	return vaResult.lVal;
+}

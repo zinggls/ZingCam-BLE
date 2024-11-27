@@ -37,3 +37,20 @@ void ConvertSA2ByteVector(VARIANT arrayIN, std::vector<BYTE>& vector)
 		vector[j] = b;
 	}
 }
+
+void ConvertByteVector2SA(std::vector<BYTE> vector, VARIANT* arrayOUT)
+{
+	SAFEARRAY* psa;
+	SAFEARRAYBOUND rgsabound[1];
+	rgsabound[0].lLbound = 0;
+	rgsabound[0].cElements = (ULONG)vector.size();
+	psa = SafeArrayCreate(VT_UI1, 1, rgsabound);
+	for (UINT i = 0; i < vector.size(); i++) {
+		SafeArrayPutElement(psa, (long*)&i, &vector[i]);
+	}
+
+	//return data in VARIANT
+	VariantInit(arrayOUT);
+	V_VT(arrayOUT) = VT_ARRAY | VT_UI1;
+	V_ARRAY(arrayOUT) = psa;
+}
