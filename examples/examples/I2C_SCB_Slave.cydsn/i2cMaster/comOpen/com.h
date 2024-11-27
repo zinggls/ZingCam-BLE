@@ -3,6 +3,7 @@
 #include <iostream>
 #include <comdef.h>
 #include <vector>
+#include "ppcom.h"
 
 class CCom {
 public:
@@ -35,4 +36,5 @@ public:
 	static long ppClosePort(std::wstring& strError);
 	static long ppSetPowerVoltage(std::wstring voltage, std::wstring& strError);
 	static long ppPowerOn(std::wstring& strError);
+	static long ppSetProtocol(enumInterfaces protocol, std::wstring& strError);
 };

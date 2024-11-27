@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="com.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ppcom.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

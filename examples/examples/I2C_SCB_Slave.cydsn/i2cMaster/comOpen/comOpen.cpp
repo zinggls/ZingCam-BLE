@@ -51,6 +51,11 @@ long I2C_Operations()
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << "Power On" << endl;
 
+	//Set protocol, connector and frequency
+	hr = CCom::ppSetProtocol(enumInterfaces::I2C, CCom::sErrorMsg); //I2C-protocol
+	if (!SUCCEEDED(hr)) return hr;
+	wcout << "Set protocol, connector and frequency" << endl;
+
 	return hr;
 }
 
