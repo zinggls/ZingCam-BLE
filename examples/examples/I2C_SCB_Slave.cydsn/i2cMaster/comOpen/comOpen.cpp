@@ -37,6 +37,24 @@ long ClosePort()
 	return CCom::ppClosePort(CCom::sErrorMsg);
 }
 
+long I2C_SCB_Slave(int deviceAddress)
+{
+	int hr;
+
+	//w 00 04 01 FF 01 ; //Power On LED1
+	std::vector<byte> dataIN;
+	dataIN.resize(4);
+	dataIN[0] = 0x01;
+	dataIN[1] = 0x01;
+	dataIN[2] = 0x17;
+	dataIN[3] = 'p';	//p
+	hr = CCom::ppI2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
+	if (!SUCCEEDED(hr)) return hr;
+	wcout << "Send CMD_SET_RED" << endl;
+
+	return hr;
+}
+
 long I2C_Operations()
 {
 	int hr;
@@ -102,6 +120,9 @@ long I2C_Operations()
 	for (size_t i = 0; i < devices.size(); i++)
 		wcout << L"     address:  " << std::hex << std::setw(2) << std::setfill(L'0') << (devices[i] << 1) << "    " << std::hex << std::setw(2) << std::setfill(L'0') << devices[i] << endl;
 
+	hr = I2C_SCB_Slave(devices[0]);
+	if (!SUCCEEDED(hr)) return hr;
+
 	return hr;
 }
 
@@ -116,6 +137,8 @@ long Execute()
 
 	//Execute I2C communication
 	hr = I2C_Operations();
+	if (!SUCCEEDED(hr)) return hr;
+	wcout << "I2C_Operations OK" << endl;
 
 	//Close the Port, so it is available for other apps
 	ClosePort();
