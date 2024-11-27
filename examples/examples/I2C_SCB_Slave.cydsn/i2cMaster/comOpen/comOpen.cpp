@@ -82,7 +82,7 @@ int main()
 	hr = CCom::GetDispIDsByName();
 	if (FAILED(hr))
 	{
-		cout << "Failed to get DispIDs of used methods";
+		wcout << "Failed to get DispIDs of used methods";
 		CoUninitialize();
 		return 0;
 	}
