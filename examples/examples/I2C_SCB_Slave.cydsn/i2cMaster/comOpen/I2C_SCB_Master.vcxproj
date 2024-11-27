@@ -14,7 +14,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{eadccad5-baf5-4383-9b36-3636fca8e334}</ProjectGuid>
-    <RootNamespace>comOpen</RootNamespace>
+    <RootNamespace>I2C_SCB_Master</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>I2C_SCB_Master</ProjectName>
   </PropertyGroup>
