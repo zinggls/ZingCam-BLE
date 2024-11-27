@@ -1,11 +1,12 @@
 
 #include "project.h"
 #include <stdio.h>
-#include <Log.h>
 #include <ZFrame.h>
 #include <gitcommit.h>
 #include <UartBuf.h>
 #include <ZingUart.h>
+
+#define L(...)  //Logging is not supported
 
 // Modes for a statemachine
 typedef enum SystemMode {
@@ -183,7 +184,6 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
-    UART_DBG_Start();
     ZingUart_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
