@@ -86,7 +86,7 @@ long Color(int deviceAddress,int rgb)
 	return hr;
 }
 
-long I2C_SCB_Slave(int deviceAddress)
+long Control_I2C_SCB_Slave(int deviceAddress)
 {
 	int hr;
 
@@ -179,7 +179,7 @@ long I2C_Operations()
 	for (size_t i = 0; i < devices.size(); i++)
 		wcout << L"     address:  " << std::hex << std::setw(2) << std::setfill(L'0') << (devices[i] << 1) << "    " << std::hex << std::setw(2) << std::setfill(L'0') << devices[i] << endl;
 
-	hr = I2C_SCB_Slave(devices[0]);
+	hr = Control_I2C_SCB_Slave(devices[0]);
 	if (!SUCCEEDED(hr)) return hr;
 
 	return hr;
