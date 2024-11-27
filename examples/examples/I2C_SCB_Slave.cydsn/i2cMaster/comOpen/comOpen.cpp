@@ -68,6 +68,20 @@ long I2C_Operations()
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << "Set speed: 100K!" << endl;
 
+	//Get I2C speed
+	long speed = 0;
+	std::string val = "";
+	hr = CCom::ppI2C_GetSpeed(speed, CCom::sErrorMsg);
+	if (speed == 1) {
+		val = "100K";
+	}else if (speed == 4) {
+		val = "50K";
+	}else if (speed == 2) {
+		val = "400K";
+	}
+	wcout << "Get speed: " << val.c_str() << "!" << endl;
+	if (!SUCCEEDED(hr)) return hr;
+
 	return hr;
 }
 

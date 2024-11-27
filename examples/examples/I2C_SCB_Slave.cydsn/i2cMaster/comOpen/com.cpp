@@ -431,3 +431,37 @@ long CCom::ppI2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
 
 	return vaResult.lVal;
 }
+
+long CCom::ppI2C_GetSpeed(long& speed, std::wstring& strError)
+{
+	DISPID dispid = dispID_I2C_GetSpeed;
+	// Set up parameters
+	DISPPARAMS dispparams;
+	memset(&dispparams, 0, sizeof(DISPPARAMS));
+	dispparams.cArgs = 2;
+	// Allocate memory for parameters
+	VARIANTARG* pArg = new VARIANTARG[dispparams.cArgs];
+	dispparams.rgvarg = pArg;
+	memset(pArg, 0, sizeof(VARIANT) * dispparams.cArgs);
+	//Initialize parameters
+	BSTR bstrError = 0;
+	dispparams.rgvarg[0].vt = VT_BSTR | VT_BYREF;
+	dispparams.rgvarg[0].pbstrVal = &bstrError;
+	dispparams.rgvarg[1].vt = VT_I4 | VT_BYREF;
+	dispparams.rgvarg[1].plVal = &speed;
+	//Init Result (Return Value)
+	VARIANTARG vaResult;
+	VariantInit(&vaResult);
+
+	HRESULT hr;
+	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+		&dispparams, &vaResult, NULL, NULL);
+
+	USES_CONVERSION;
+	strError = BSTRToWString(bstrError);
+	//Free allocated resources
+	delete[] pArg;
+	::SysFreeString(bstrError);
+
+	return vaResult.lVal;
+}
