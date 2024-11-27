@@ -28,7 +28,7 @@ long OpenPort()
 	//if programmer was physically reconnected to USB-port.
 
 	std::wstring portName = ports[0];
-	wcout << "Port name:" << portName << endl;
+	wcout << L"Port name:" << portName << endl;
 	return CCom::ppOpenPort(portName, CCom::sErrorMsg);
 }
 
@@ -50,7 +50,7 @@ long I2C_SCB_Slave(int deviceAddress)
 	dataIN[3] = 'p';	//p
 	hr = CCom::ppI2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
-	wcout << "Send CMD_SET_RED" << endl;
+	wcout << L"Send CMD_SET_RED" << endl;
 
 	//Read 4 bytes from device
 	std::vector<byte> dataOUT;
@@ -73,21 +73,21 @@ long I2C_Operations()
 	//Setup Power - "5.0V" and internal
 	hr = CCom::ppSetPowerVoltage(L"5.0", CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
-	wcout << "Setup Power - 5.0V and internal done" << endl;
+	wcout << L"Setup Power - 5.0V and internal done" << endl;
 
 	//Power On
 	hr = CCom::ppPowerOn(CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
-	wcout << "Power On" << endl;
+	wcout << L"Power On" << endl;
 
 	//Set protocol, connector and frequency
 	hr = CCom::ppSetProtocol(enumInterfaces::I2C, CCom::sErrorMsg); //I2C-protocol
 	if (!SUCCEEDED(hr)) return hr;
-	wcout << "Set protocol, connector and frequency" << endl;
+	wcout << L"Set protocol, connector and frequency" << endl;
 
 	//Reset bus
 	hr = CCom::ppI2C_ResetBus(CCom::sErrorMsg);
-	wcout << "Reset bus!" << endl;
+	wcout << L"Reset bus!" << endl;
 
 	//Sleep script for 100 milliseconds
 	Sleep(100);
@@ -95,7 +95,7 @@ long I2C_Operations()
 	//Set I2C speed
 	hr = CCom::ppI2C_SetSpeed(enumI2Cspeed::CLK_100K, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
-	wcout << "Set speed: 100K!" << endl;
+	wcout << L"Set speed: 100K!" << endl;
 
 	//Get I2C speed
 	long speed = 0;
@@ -108,7 +108,7 @@ long I2C_Operations()
 	}else if (speed == 2) {
 		val = "400K";
 	}
-	wcout << "Get speed: " << val.c_str() << "!" << endl;
+	wcout << L"Get speed: " << val.c_str() << "!" << endl;
 	if (!SUCCEEDED(hr)) return hr;
 
 	//Get device list
@@ -126,7 +126,7 @@ long I2C_Operations()
 		CCom::sErrorMsg = L"No devices found";
 		return hr;
 	}
-	wcout << "Devices list:  8bit  7bit" << endl;
+	wcout << L"Devices list:  8bit  7bit" << endl;
 	for (size_t i = 0; i < devices.size(); i++)
 		wcout << L"     address:  " << std::hex << std::setw(2) << std::setfill(L'0') << (devices[i] << 1) << "    " << std::hex << std::setw(2) << std::setfill(L'0') << devices[i] << endl;
 
@@ -143,36 +143,36 @@ long Execute()
 	//Open Port - get last (connected) port in the ports list
 	hr = OpenPort();
 	if (!SUCCEEDED(hr)) return hr;
-	wcout << "OpenPort OK" << endl;
+	wcout << L"OpenPort OK" << endl;
 
 	//Execute I2C communication
 	hr = I2C_Operations();
 	if (!SUCCEEDED(hr)) return hr;
-	wcout << "I2C_Operations OK" << endl;
+	wcout << L"I2C_Operations OK" << endl;
 
 	//Close the Port, so it is available for other apps
 	ClosePort();
-	wcout << "Port Closed" << endl;
+	wcout << L"Port Closed" << endl;
 	return hr;
 }
 
 int main()
 {
 	HRESULT hr = 0;
-	wcout << "Initializing COM" << endl;
+	wcout << L"Initializing COM" << endl;
 	if (FAILED(CoInitialize(NULL)))
 	{
-		wcout << "Unable to initialize COM" << endl;
+		wcout << L"Unable to initialize COM" << endl;
 		goto exit;
 	}
-	wcout << "COM Initialized" << endl;
+	wcout << L"COM Initialized" << endl;
 
 
 	CLSID clsid;
 	hr = ::CLSIDFromProgID(CCom::progid, &clsid);
 	if (FAILED(hr))
 	{
-		wcout << "Failed to get class id for PSoC Programmer COM object !" << endl;
+		wcout << L"Failed to get class id for PSoC Programmer COM object !" << endl;
 		goto cleanup;
 	}
 	wcout << L"Class ID Obtained from Version Independent Prod ID: " << CCom::progid << endl;
@@ -180,14 +180,14 @@ int main()
 	hr = ::CoCreateInstance(clsid, NULL, CLSCTX_SERVER, IID_IDispatch, (void**)&CCom::pIDispatch);
 	if (FAILED(hr))
 	{
-		wcout << "Failed to create instance of PSoC Programmer COM object !" << endl;
+		wcout << L"Failed to create instance of PSoC Programmer COM object !" << endl;
 		goto cleanup;
 	}
 
 	hr = CCom::GetDispIDsByName();
 	if (FAILED(hr))
 	{
-		wcout << "Failed to get DispIDs of used methods";
+		wcout << L"Failed to get DispIDs of used methods";
 		goto cleanup;
 	}
 
@@ -208,7 +208,7 @@ int main()
 	}
 
 cleanup:
-	wcout << "Shutting down COM" << endl;
+	wcout << L"Shutting down COM" << endl;
 	CoUninitialize();
 exit:
 	return 0;
