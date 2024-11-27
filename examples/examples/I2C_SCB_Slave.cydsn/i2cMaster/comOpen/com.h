@@ -37,4 +37,5 @@ public:
 	static long ppSetPowerVoltage(std::wstring voltage, std::wstring& strError);
 	static long ppPowerOn(std::wstring& strError);
 	static long ppSetProtocol(enumInterfaces protocol, std::wstring& strError);
+	static long ppI2C_ResetBus(std::wstring& strError);
 };

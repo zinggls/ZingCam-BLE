@@ -365,3 +365,35 @@ long CCom::ppSetProtocol(enumInterfaces protocol, std::wstring& strError)
 
 	return vaResult.lVal;
 }
+
+long CCom::ppI2C_ResetBus(std::wstring& strError)
+{
+	DISPID dispid = dispID_I2C_ResetBus;
+	// Set up parameters
+	DISPPARAMS dispparams;
+	memset(&dispparams, 0, sizeof(DISPPARAMS));
+	dispparams.cArgs = 1;
+	// Allocate memory for parameters
+	VARIANTARG* pArg = new VARIANTARG[dispparams.cArgs];
+	dispparams.rgvarg = pArg;
+	memset(pArg, 0, sizeof(VARIANT) * dispparams.cArgs);
+	//Initialize parameters
+	BSTR bstrError = 0;
+	dispparams.rgvarg[0].vt = VT_BSTR | VT_BYREF;
+	dispparams.rgvarg[0].pbstrVal = &bstrError;
+	//Init Result (Return Value)
+	VARIANTARG vaResult;
+	VariantInit(&vaResult);
+
+	HRESULT hr;
+	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+		&dispparams, &vaResult, NULL, NULL);
+
+	USES_CONVERSION;
+	strError = BSTRToWString(bstrError);
+	//Free allocated resources
+	delete[] pArg;
+	::SysFreeString(bstrError);
+
+	return vaResult.lVal;
+}

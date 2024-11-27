@@ -56,6 +56,10 @@ long I2C_Operations()
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << "Set protocol, connector and frequency" << endl;
 
+	//Reset bus
+	hr = CCom::ppI2C_ResetBus(CCom::sErrorMsg);
+	wcout << "Reset bus!" << endl;
+
 	return hr;
 }
 
