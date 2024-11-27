@@ -33,4 +33,5 @@ public:
 	static long ppGetPorts(std::vector<std::wstring>& portNames, std::wstring& strError);
 	static long ppOpenPort(std::wstring portName, std::wstring& strError);
 	static long ppClosePort(std::wstring& strError);
+	static long ppSetPowerVoltage(std::wstring voltage, std::wstring& strError);
 };

@@ -36,6 +36,19 @@ long ClosePort()
 	return CCom::ppClosePort(CCom::sErrorMsg);
 }
 
+long I2C_Operations()
+{
+	int hr;
+
+	//Port Initialization
+	//Setup Power - "5.0V" and internal
+	hr = CCom::ppSetPowerVoltage(L"5.0", CCom::sErrorMsg);
+	if (!SUCCEEDED(hr)) return hr;
+	wcout << "Setup Power - 5.0V and internal done" << endl;
+
+	return hr;
+}
+
 long Execute()
 {
 	int hr;
@@ -44,6 +57,9 @@ long Execute()
 	hr = OpenPort();
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << "OpenPort OK" << endl;
+
+	//Execute I2C communication
+	hr = I2C_Operations();
 
 	//Close the Port, so it is available for other apps
 	ClosePort();
