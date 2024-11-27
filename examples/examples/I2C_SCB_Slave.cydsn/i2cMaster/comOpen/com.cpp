@@ -600,3 +600,48 @@ long CCom::ppI2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstrin
 
 	return vaResult.lVal;
 }
+
+long CCom::ppI2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT, std::wstring& strError)
+{
+	DISPID dispid = dispID_I2C_ReadData;
+	// Set up parameters
+	DISPPARAMS dispparams;
+	memset(&dispparams, 0, sizeof(DISPPARAMS));
+	dispparams.cArgs = 4;
+	// Allocate memory for parameters
+	VARIANTARG* pArg = new VARIANTARG[dispparams.cArgs];
+	dispparams.rgvarg = pArg;
+	memset(pArg, 0, sizeof(VARIANT) * dispparams.cArgs);
+
+	//Initialize parameters
+	VARIANT dOUT;
+	VariantInit(&dOUT);
+
+	BSTR bstrError = 0;
+	dispparams.rgvarg[0].vt = VT_BSTR | VT_BYREF;
+	dispparams.rgvarg[0].pbstrVal = &bstrError;
+	dispparams.rgvarg[1].vt = VT_VARIANT | VT_BYREF;
+	dispparams.rgvarg[1].pvarVal = &dOUT;
+	dispparams.rgvarg[2].vt = VT_I4;
+	dispparams.rgvarg[2].lVal = readLen;
+	dispparams.rgvarg[3].vt = VT_I4;
+	dispparams.rgvarg[3].lVal = deviceAddr;
+
+	//Init Result (Return Value)
+	VARIANTARG vaResult;
+	VariantInit(&vaResult);
+
+	HRESULT hr;
+	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+		&dispparams, &vaResult, NULL, NULL);
+
+	USES_CONVERSION;
+	strError = BSTRToWString(bstrError);
+	ConvertSA2ByteVector(dOUT, dataOUT);
+	//Free allocated resources
+	delete[] pArg;
+	::SysFreeString(bstrError);
+	VariantClear(&dOUT);
+
+	return vaResult.lVal;
+}
