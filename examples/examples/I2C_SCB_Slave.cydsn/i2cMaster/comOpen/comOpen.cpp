@@ -52,6 +52,16 @@ long I2C_SCB_Slave(int deviceAddress)
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << "Send CMD_SET_RED" << endl;
 
+	//Read 4 bytes from device
+	std::vector<byte> dataOUT;
+	dataOUT.resize(0);
+	hr = CCom::ppI2C_ReadData(deviceAddress, 4, dataOUT, CCom::sErrorMsg);
+	if (!SUCCEEDED(hr)) return hr;
+
+	wcout << L"Read 4 bytes from device: ";
+	for (size_t i = 0; i < dataOUT.size(); i++) wcout << std::hex << std::setw(2) << std::setfill(L'0') << dataOUT[i] << " ";
+	wcout << endl;
+
 	return hr;
 }
 
