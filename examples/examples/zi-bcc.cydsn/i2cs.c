@@ -83,7 +83,7 @@ void i2cs_process(void)
         (void) I2C_I2CSlaveClearWriteStatus();
         
         /* Update the read buffer */
-        i2cReadBuffer[0] = ivfCom.scopeCamera;
+        setReadBuffer_ScopeCamera(&i2cReadBuffer[0],ivfCom.scopeCamera);
     }
     
     /* Read complete: expose buffer to master */

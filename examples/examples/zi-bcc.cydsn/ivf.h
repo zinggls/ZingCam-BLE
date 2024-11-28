@@ -13,6 +13,8 @@
 #ifndef IVF_H
 #define IVF_H
     
+#include <stdint.h>
+    
 typedef enum{
     change_none = 0,    //0x00 :알림 없음/알림 반영 완료
     change_eo,          //0x01 : 영상융합처리기 -> 조준경 EO 변경 요청 알림
@@ -26,6 +28,8 @@ typedef struct {
 
 IvfCom ivfCom;
     
+void setReadBuffer_ScopeCamera(uint8_t* rdBuf,ScopeCamera sc);
+
 #endif
 
 /* [] END OF FILE */
