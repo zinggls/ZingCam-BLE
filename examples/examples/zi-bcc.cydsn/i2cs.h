@@ -40,19 +40,6 @@
 #define CMD_SET_GREEN       (2u)
 #define CMD_SET_BLUE        (3u)
 
-typedef enum{
-    change_none = 0,    //0x00 :알림 없음/알림 반영 완료
-    change_eo,          //0x01 : 영상융합처리기 -> 조준경 EO 변경 요청 알림
-    change_ir_white,    //0x02 : 영상융합처리기 -> 조준경 IR 백상 변경 요청 알림
-    change_ir_black     //0x03 : 영상융합처리기 -> 조준경 IR 흑상 변경 요청 알림
-}ScopeCamera;
-
-typedef struct {
-    ScopeCamera sc;
-} IvfCom;
-
-IvfCom ivfCom;
-
 void i2cs_start(void);
 void i2cs_process(void);
 
