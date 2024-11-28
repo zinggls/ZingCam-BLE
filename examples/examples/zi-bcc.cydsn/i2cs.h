@@ -10,8 +10,8 @@
  * ========================================
 */
 
-#define I2C_WR_BUFFER_SIZE  (3u)
-#define I2C_RD_BUFFER_SIZE  (3u)
+#define I2C_WR_BUFFER_SIZE  (11u)
+#define I2C_RD_BUFFER_SIZE  (46u)
 
 /* LED constants */
 #define LED_ON              (0u)
