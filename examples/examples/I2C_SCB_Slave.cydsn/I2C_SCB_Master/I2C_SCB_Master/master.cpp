@@ -58,7 +58,7 @@ long readI2C(int deviceAddress, long readLen)
 {
 	int hr;
 
-	//Read 3 bytes from device
+	//Read readLen bytes from device
 	std::vector<byte> dataOUT;
 	dataOUT.resize(0);
 	hr = CCom::ppI2C_ReadData(deviceAddress, readLen, dataOUT, CCom::sErrorMsg);
