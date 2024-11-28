@@ -25,6 +25,7 @@ typedef enum{
 typedef struct {
     ScopeCamera scopeCamera;
     uint8_t scopeOutput;
+    uint8_t wirelessVideoChannelMode;
 } IvfCom;
 
 IvfCom ivfCom;
