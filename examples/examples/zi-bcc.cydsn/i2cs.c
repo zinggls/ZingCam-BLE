@@ -105,8 +105,7 @@ void i2cs_process(ZCD_FRAME *zcd)
         i2cReadBuffer[9] = ivfCom.wirelssVideoReceiverImuOutputType;
         i2cReadBuffer[10] = ivfCom.wirelessVideoReceiverImuCalibrate;
         
-        //TODO
-        //Write zcd data to i2cReadBuffer
+        setZcdBuffer(i2cReadBuffer+11,zcd);
     }
     
     /* Read complete: expose buffer to master */
@@ -116,6 +115,36 @@ void i2cs_process(ZCD_FRAME *zcd)
         I2C_I2CSlaveClearReadBuf();
         (void) I2C_I2CSlaveClearReadStatus();
     }
+}
+
+void setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd)
+{
+    uint8_t *ptr = buf; // Pointer to traverse the buffer
+
+    // Write COMMON_FIELDS
+    memcpy(ptr, &zcd->kind, sizeof(zcd->kind));                     ptr += sizeof(zcd->kind);
+    memcpy(ptr, &zcd->usb, sizeof(zcd->usb));                       ptr += sizeof(zcd->usb);
+    memcpy(ptr, &zcd->bnd, sizeof(zcd->bnd));                       ptr += sizeof(zcd->bnd);
+    memcpy(ptr, &zcd->ppid, sizeof(zcd->ppid));                     ptr += sizeof(zcd->ppid);
+    memcpy(ptr, &zcd->devid, sizeof(zcd->devid));                   ptr += sizeof(zcd->devid);
+    memcpy(ptr, &zcd->fmt, sizeof(zcd->fmt));                       ptr += sizeof(zcd->fmt);
+    memcpy(ptr, &zcd->idx, sizeof(zcd->idx));                       ptr += sizeof(zcd->idx);
+    memcpy(ptr, &zcd->trt, sizeof(zcd->trt));                       ptr += sizeof(zcd->trt);
+    memcpy(ptr, &zcd->ack, sizeof(zcd->ack));                       ptr += sizeof(zcd->ack);
+    memcpy(ptr, &zcd->ppc, sizeof(zcd->ppc));                       ptr += sizeof(zcd->ppc);
+    memcpy(ptr, &zcd->run, sizeof(zcd->run));                       ptr += sizeof(zcd->run);
+    memcpy(ptr, &zcd->txid, sizeof(zcd->txid));                     ptr += sizeof(zcd->txid);
+    memcpy(ptr, &zcd->rxid, sizeof(zcd->rxid));                     ptr += sizeof(zcd->rxid);
+    memcpy(ptr, &zcd->cnt, sizeof(zcd->cnt));                       ptr += sizeof(zcd->cnt);
+    memcpy(ptr, &zcd->pos, sizeof(zcd->pos));                       ptr += sizeof(zcd->pos);
+
+    // Write ZCD_ADDITIONAL_FIELDS
+    memcpy(ptr, &zcd->fps, sizeof(zcd->fps));                       ptr += sizeof(zcd->fps);
+    memcpy(ptr, &zcd->itf, sizeof(zcd->itf));                       ptr += sizeof(zcd->itf);
+    memcpy(ptr, &zcd->destIdErrCnt, sizeof(zcd->destIdErrCnt));     ptr += sizeof(zcd->destIdErrCnt);
+    memcpy(ptr, &zcd->destIdDiff, sizeof(zcd->destIdDiff));         ptr += sizeof(zcd->destIdDiff);
+    memcpy(ptr, &zcd->phyRxFrameCnt, sizeof(zcd->phyRxFrameCnt));   ptr += sizeof(zcd->phyRxFrameCnt);
+    memcpy(ptr, &zcd->frameDiff, sizeof(zcd->frameDiff));           ptr += sizeof(zcd->frameDiff);
 }
 
 /* [] END OF FILE */
