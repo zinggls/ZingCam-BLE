@@ -24,11 +24,13 @@ typedef enum{
 
 typedef struct {
     ScopeCamera scopeCamera;
+    uint8_t scopeOutput;
 } IvfCom;
 
 IvfCom ivfCom;
     
 void setReadBuffer_ScopeCamera(uint8_t* rdBuf,ScopeCamera sc);
+void setReadBuffer_ScopeOutput(uint8_t* rdBuf,uint8_t so);
 
 #endif
 

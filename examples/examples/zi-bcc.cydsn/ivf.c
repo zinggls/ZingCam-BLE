@@ -35,4 +35,13 @@ void setReadBuffer_ScopeCamera(uint8_t* rdBuf,ScopeCamera sc)
     *rdBuf = sc + 3;
 }
 
+void setReadBuffer_ScopeOutput(uint8_t* rdBuf,uint8_t so)
+{
+    if(so==0) {
+        *rdBuf = 0;
+        return;
+    }
+    *rdBuf = so + 2;
+}
+
 /* [] END OF FILE */
