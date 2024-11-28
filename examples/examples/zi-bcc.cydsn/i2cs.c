@@ -75,7 +75,7 @@ void i2cs_process(void)
         /* Check the packet length */
         if (PACKET_SIZE == I2C_I2CSlaveGetWriteBufSize())
         {
-            ivfCom.sc = changeScope(i2cWriteBuffer[0]);
+            ivfCom.scopeCamera = changeScope(i2cWriteBuffer[0]);
         }
         
         /* Clear the slave write buffer and status */
@@ -83,7 +83,7 @@ void i2cs_process(void)
         (void) I2C_I2CSlaveClearWriteStatus();
         
         /* Update the read buffer */
-        i2cReadBuffer[0] = ivfCom.sc;
+        i2cReadBuffer[0] = ivfCom.scopeCamera;
     }
     
     /* Read complete: expose buffer to master */

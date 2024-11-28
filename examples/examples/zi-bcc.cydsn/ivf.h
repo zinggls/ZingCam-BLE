@@ -21,7 +21,7 @@ typedef enum{
 }ScopeCamera;
 
 typedef struct {
-    ScopeCamera sc;
+    ScopeCamera scopeCamera;
 } IvfCom;
 
 IvfCom ivfCom;
