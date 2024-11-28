@@ -40,10 +40,10 @@ static void ZingCB(const char *buf)
     // Parsing the values into the structure
     if (!parse(ZCD,&zcdFrame,buf)) {
 #ifdef ZXX_DEBUG
-        UART_DBG_UartPutString("Parsing Error\r\n");
-        UART_DBG_UartPutString("Received: ");
-        UART_DBG_UartPutString(zing_status);
-        UART_DBG_UartPutString("\r\n");
+        L("Parsing Error\r\n");
+        L("Received: ");
+        L(zing_status);
+        L("\r\n");
 #endif
     }
 }
