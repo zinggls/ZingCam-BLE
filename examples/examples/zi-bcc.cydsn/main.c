@@ -28,6 +28,7 @@ static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
 static ZCD_FRAME zcdFrame;
+static ZxxKind *pZxxKind = 0;
 extern ZingRxCallback zingRxCb;
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
@@ -109,14 +110,14 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
             notificationParam = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T*)eventParam;
             
-            if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
+            if(*pZxxKind==Unknown) *pZxxKind = inspect((char*)notificationParam->handleValPair.value.val);
             
             if(notificationParam->handleValPair.value.len == getFrameSize()) {
                 notifiedCustom++;
                 
                 // Process the received data                                
-                if(zxxKind==ZED) memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-                if(zxxKind==ZCH) memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                if(*pZxxKind==ZED) memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                if(*pZxxKind==ZCH) memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
             }
             break;
             
@@ -170,12 +171,12 @@ static void zxxLog()
 {
     ZCD_FRAME *zc = &zcdFrame;
     
-    if(zxxKind==ZED) {
+    if(*pZxxKind==ZED) {
         ZED_FRAME *z = &zedFrame;
         L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZED USB:%d CNT:%d, ZCD USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt,zc->usb,zc->cnt);
     }
     
-    if(zxxKind==ZCH) {
+    if(*pZxxKind==ZCH) {
         ZCH_FRAME *z = &zchFrame;
         L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZCH USB:%d CNT, ZCD USB:%d CNT:%d:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt,zc->usb,zc->cnt);
     }
@@ -185,6 +186,7 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
+    pZxxKind = getZxxKind();
     ZingUart_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
