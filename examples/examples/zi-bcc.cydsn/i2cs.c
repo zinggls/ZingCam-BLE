@@ -67,7 +67,7 @@ void i2cs_start(void)
     I2C_Start();
 }
 
-void i2cs_process(void)
+void i2cs_process(ZCD_FRAME *zcd)
 {
     /* Write complete: parse the command packet */
     if (0u != (I2C_I2CSlaveStatus() & I2C_I2C_SSTAT_WR_CMPLT))
@@ -104,6 +104,9 @@ void i2cs_process(void)
         i2cReadBuffer[8] = ivfCom.wirelessVideoTransmitterImuCalibrate;
         i2cReadBuffer[9] = ivfCom.wirelssVideoReceiverImuOutputType;
         i2cReadBuffer[10] = ivfCom.wirelessVideoReceiverImuCalibrate;
+        
+        //TODO
+        //Write zcd data to i2cReadBuffer
     }
     
     /* Read complete: expose buffer to master */

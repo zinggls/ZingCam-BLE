@@ -197,7 +197,7 @@ int main(void)
     {          
         CyBle_ProcessEvents();
         process_uart_data();
-        i2cs_process();
+        i2cs_process(&zcdFrame);
         SendCommandToPeripheral(123);
         
         zxxLog();
