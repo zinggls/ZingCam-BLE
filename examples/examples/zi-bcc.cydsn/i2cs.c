@@ -13,49 +13,50 @@
 #include "i2cs.h"
 #include "project.h"
 
-static uint8 i2cReadBuffer [I2C_RD_BUFFER_SIZE] = {PACKET_SOP, STS_CMD_FAIL, PACKET_EOP};
+static uint8 i2cReadBuffer [I2C_RD_BUFFER_SIZE] = {0};
 static uint8 i2cWriteBuffer[I2C_WR_BUFFER_SIZE] = {0};
-static uint8 status = STS_CMD_FAIL;
 
-uint8 ExecuteCommand(uint32 cmd)
+uint8 changeScope(ScopeCamera cam)
 {
-    uint8 status;
-
-    status = STS_CMD_DONE;
+    uint8 result;
 
     /* Execute the received command */
-    switch (cmd)
+    switch (cam)
     {
-        case CMD_SET_RED:
+        case change_none:
+            LED_RED_Write  (LED_OFF);
+            LED_GREEN_Write(LED_OFF);
+            LED_BLUE_Write (LED_OFF);
+            result = change_none;
+            break;
+
+        case change_eo:
             LED_RED_Write  (LED_ON);
             LED_GREEN_Write(LED_OFF);
             LED_BLUE_Write (LED_OFF);
+            result = change_eo;
             break;
 
-        case CMD_SET_GREEN:
+        case change_ir_white:
             LED_RED_Write  (LED_OFF);
             LED_GREEN_Write(LED_ON);
             LED_BLUE_Write (LED_OFF);
+            result = change_ir_white;
             break;
 
-        case CMD_SET_BLUE:
+        case change_ir_black:
             LED_RED_Write  (LED_OFF);
             LED_GREEN_Write(LED_OFF);
             LED_BLUE_Write (LED_ON);
-            break;
-
-        case CMD_SET_OFF:
-            LED_RED_Write  (LED_OFF);
-            LED_GREEN_Write(LED_OFF);
-            LED_BLUE_Write (LED_OFF);
+            result = change_ir_black;
             break;
 
         default:
-            status = STS_CMD_FAIL;
-        break;
+            result = change_none;
+            break;
     }
 
-    return(status);
+    return result;
 }
 
 void i2cs_start(void)
@@ -73,12 +74,7 @@ void i2cs_process(void)
         /* Check the packet length */
         if (PACKET_SIZE == I2C_I2CSlaveGetWriteBufSize())
         {
-            /* Check the start and end of packet markers */
-            if ((i2cWriteBuffer[PACKET_SOP_POS] == PACKET_SOP) &&
-                (i2cWriteBuffer[PACKET_EOP_POS] == PACKET_EOP))
-            {
-                status = ExecuteCommand(i2cWriteBuffer[PACKET_CMD_POS]);
-            }
+            ivfCom.sc = changeScope(i2cWriteBuffer[0]);
         }
         
         /* Clear the slave write buffer and status */
@@ -86,8 +82,7 @@ void i2cs_process(void)
         (void) I2C_I2CSlaveClearWriteStatus();
         
         /* Update the read buffer */
-        i2cReadBuffer[PACKET_STS_POS] = status;
-        status = STS_CMD_FAIL;
+        i2cReadBuffer[0] = ivfCom.sc;
     }
     
     /* Read complete: expose buffer to master */
