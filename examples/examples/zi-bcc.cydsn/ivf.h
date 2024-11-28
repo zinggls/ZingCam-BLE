@@ -27,6 +27,13 @@ typedef struct {
     uint8_t scopeOutput;
     uint8_t wirelessVideoChannelMode;
     uint8_t wirelessVideoChannelInformation;
+    uint8_t scopeOperationMode;    
+    uint8_t wirelessVideoTransmitterOperationModeStatus;
+    uint8_t wirelessVideoReceiverOperationModeStatus;
+    uint8_t wirelessVideoTransmitterImuOutputType;
+    uint8_t wirelessVideoTransmitterImuCalibrate;
+    uint8_t wirelssVideoReceiverImuOutputType;
+    uint8_t wirelessVideoReceiverImuCalibrate;
 } IvfCom;
 
 IvfCom ivfCom;

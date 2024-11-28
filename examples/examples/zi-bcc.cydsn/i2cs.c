@@ -79,6 +79,13 @@ void i2cs_process(void)
             ivfCom.scopeOutput = i2cWriteBuffer[1];
             ivfCom.wirelessVideoChannelMode = i2cWriteBuffer[2];
             ivfCom.wirelessVideoChannelInformation = i2cWriteBuffer[3];
+            ivfCom.scopeOperationMode = i2cWriteBuffer[4];
+            ivfCom.wirelessVideoTransmitterOperationModeStatus = i2cWriteBuffer[5];
+            ivfCom.wirelessVideoReceiverOperationModeStatus = i2cWriteBuffer[6];
+            ivfCom.wirelessVideoTransmitterImuOutputType = i2cWriteBuffer[7];
+            ivfCom.wirelessVideoTransmitterImuCalibrate = i2cWriteBuffer[8];
+            ivfCom.wirelssVideoReceiverImuOutputType = i2cWriteBuffer[9];
+            ivfCom.wirelessVideoReceiverImuCalibrate = i2cWriteBuffer[10];
         }
         
         /* Clear the slave write buffer and status */
@@ -90,6 +97,13 @@ void i2cs_process(void)
         setReadBuffer_ScopeOutput(&i2cReadBuffer[1],ivfCom.scopeOutput);
         i2cReadBuffer[2] = ivfCom.wirelessVideoChannelMode;
         i2cReadBuffer[3] = ivfCom.wirelessVideoChannelInformation;
+        i2cReadBuffer[4] = ivfCom.scopeOperationMode;
+        i2cReadBuffer[5] = ivfCom.wirelessVideoTransmitterOperationModeStatus;
+        i2cReadBuffer[6] = ivfCom.wirelessVideoReceiverOperationModeStatus;
+        i2cReadBuffer[7] = ivfCom.wirelessVideoTransmitterImuOutputType;
+        i2cReadBuffer[8] = ivfCom.wirelessVideoTransmitterImuCalibrate;
+        i2cReadBuffer[9] = ivfCom.wirelssVideoReceiverImuOutputType;
+        i2cReadBuffer[10] = ivfCom.wirelessVideoReceiverImuCalibrate;
     }
     
     /* Read complete: expose buffer to master */
