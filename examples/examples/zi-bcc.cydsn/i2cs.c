@@ -78,6 +78,7 @@ void i2cs_process(void)
             ivfCom.scopeCamera = changeScope(i2cWriteBuffer[0]);
             ivfCom.scopeOutput = i2cWriteBuffer[1];
             ivfCom.wirelessVideoChannelMode = i2cWriteBuffer[2];
+            ivfCom.wirelessVideoChannelInformation = i2cWriteBuffer[3];
         }
         
         /* Clear the slave write buffer and status */
@@ -88,6 +89,7 @@ void i2cs_process(void)
         setReadBuffer_ScopeCamera(&i2cReadBuffer[0],ivfCom.scopeCamera);
         setReadBuffer_ScopeOutput(&i2cReadBuffer[1],ivfCom.scopeOutput);
         i2cReadBuffer[2] = ivfCom.wirelessVideoChannelMode;
+        i2cReadBuffer[3] = ivfCom.wirelessVideoChannelInformation;
     }
     
     /* Read complete: expose buffer to master */

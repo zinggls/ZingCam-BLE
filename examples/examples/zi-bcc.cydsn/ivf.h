@@ -26,6 +26,7 @@ typedef struct {
     ScopeCamera scopeCamera;
     uint8_t scopeOutput;
     uint8_t wirelessVideoChannelMode;
+    uint8_t wirelessVideoChannelInformation;
 } IvfCom;
 
 IvfCom ivfCom;
