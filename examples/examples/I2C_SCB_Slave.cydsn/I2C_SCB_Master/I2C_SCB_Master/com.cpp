@@ -3,28 +3,29 @@
 #include <atlbase.h>
 #include "util.h"
 
-const wchar_t CCom::progid[] = L"PSoCProgrammerCOM.PSoCProgrammerCOM_Object";
 std::wstring CCom::sErrorMsg = L"";
-IDispatch* CCom::pIDispatch = 0;
-DISPID CCom::dispID__StartSelfTerminator = 0;
-DISPID CCom::dispID_OpenPort = 0;
-DISPID CCom::dispID_ClosePort = 0;
-DISPID CCom::dispID_GetPorts = 0;
-DISPID CCom::dispID_SetPowerVoltage = 0;
-DISPID CCom::dispID_PowerOn = 0;
-DISPID CCom::dispID_SetProtocol = 0;
-DISPID CCom::dispID_I2C_ResetBus = 0;
-DISPID CCom::dispID_I2C_GetDeviceList = 0;
-DISPID CCom::dispID_I2C_SetSpeed = 0;
-DISPID CCom::dispID_I2C_GetSpeed = 0;
-DISPID CCom::dispID_I2C_DataTransfer = 0;
-DISPID CCom::dispID_I2C_SendData = 0;
-DISPID CCom::dispID_I2C_ReadData = 0;
-DISPID CCom::dispID_I2C_ReadDataFromReg = 0;
 
-CCom::CCom()
+CCom::CCom(const std::wstring& progID)
 {
+	HRESULT hr = ::CLSIDFromProgID(progID.c_str(), &m_clsid);
+	if (FAILED(hr)) {
+		throw std::runtime_error("Failed to obtain CLSID from ProgID");
+	}
 
+	hr = ::CoCreateInstance(m_clsid, NULL, CLSCTX_SERVER, IID_IDispatch, (void**)&m_pIDispatch);
+	if (FAILED(hr)) {
+		throw std::runtime_error("Failed to create COM instance");
+	}
+
+	hr = GetDispIDsByName();
+	if (FAILED(hr)) {
+		throw std::runtime_error("GetDispIDsByName error");
+	}
+
+	hr = ppStartSelfTerminator(GetCurrentProcessId());
+	if (FAILED(hr)) {
+		throw std::runtime_error("StartSelfTerminator error");
+	}
 }
 
 CCom::~CCom()
@@ -32,84 +33,84 @@ CCom::~CCom()
 
 }
 
-int CCom::GetDispIDsByName()
+HRESULT CCom::GetDispIDsByName()
 {
-	int hr = S_OK;
+	HRESULT hr = S_OK;
 	LPOLESTR functionName;
 
 	//_StartSelfTerminator
 	functionName = const_cast <LPOLESTR>(L"_StartSelfTerminator");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID__StartSelfTerminator);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID__StartSelfTerminator);
 	if (FAILED(hr)) return hr;
 
 	//OpenPort
 	functionName = const_cast <LPOLESTR>(L"OpenPort");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_OpenPort);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_OpenPort);
 	if (FAILED(hr)) return hr;
 
 	//ClosePort
 	functionName = const_cast <LPOLESTR>(L"ClosePort");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_ClosePort);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_ClosePort);
 	if (FAILED(hr)) return hr;
 
 	//GetPorts
 	functionName = const_cast <LPOLESTR>(L"GetPorts");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_GetPorts);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_GetPorts);
 	if (FAILED(hr)) return hr;
 
 	//SetPowerVoltage
 	functionName = const_cast <LPOLESTR>(L"SetPowerVoltage");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_SetPowerVoltage);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_SetPowerVoltage);
 	if (FAILED(hr)) return hr;
 
 	//PowerOn
 	functionName = const_cast <LPOLESTR>(L"PowerOn");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_PowerOn);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_PowerOn);
 	if (FAILED(hr)) return hr;
 
 	//SetProtocol
 	functionName = const_cast <LPOLESTR>(L"SetProtocol");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_SetProtocol);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_SetProtocol);
 	if (FAILED(hr)) return hr;
 
 	//Reset Bus
 	functionName = const_cast <LPOLESTR>(L"I2C_ResetBus");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_ResetBus);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_I2C_ResetBus);
 	if (FAILED(hr)) return hr;
 
 	//I2C_GetDeviceList
 	functionName = const_cast <LPOLESTR>(L"I2C_GetDeviceList");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_GetDeviceList);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_I2C_GetDeviceList);
 	if (FAILED(hr)) return hr;
 
 	//I2C_SetSpeed
 	functionName = const_cast <LPOLESTR>(L"I2C_SetSpeed");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_SetSpeed);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_I2C_SetSpeed);
 	if (FAILED(hr)) return hr;
 
 	//I2C_GetSpeed
 	functionName = const_cast <LPOLESTR>(L"I2C_GetSpeed");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_GetSpeed);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_I2C_GetSpeed);
 	if (FAILED(hr)) return hr;
 
 	//I2C_DataTransfer
 	functionName = const_cast <LPOLESTR>(L"I2C_DataTransfer");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_DataTransfer);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_I2C_DataTransfer);
 	if (FAILED(hr)) return hr;
 
 	//I2C_SendData
 	functionName = const_cast <LPOLESTR>(L"I2C_SendData");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_SendData);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_I2C_SendData);
 	if (FAILED(hr)) return hr;
 
 	//I2C_ReadData
 	functionName = const_cast <LPOLESTR>(L"I2C_ReadData");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_ReadData);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_I2C_ReadData);
 	if (FAILED(hr)) return hr;
 
 	//I2C_ReadDataFromReg
 	functionName = const_cast <LPOLESTR>(L"I2C_ReadDataFromReg");
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &dispID_I2C_ReadDataFromReg);
+	hr = m_pIDispatch->GetIDsOfNames(IID_NULL, &functionName, 1, LOCALE_SYSTEM_DEFAULT, &m_dispID_I2C_ReadDataFromReg);
 	if (FAILED(hr)) return hr;
 
 	return hr;
@@ -117,7 +118,7 @@ int CCom::GetDispIDsByName()
 
 long CCom::ppStartSelfTerminator(long ClientProcessID)
 {
-	DISPID dispid = dispID__StartSelfTerminator;
+	DISPID dispid = m_dispID__StartSelfTerminator;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -135,7 +136,7 @@ long CCom::ppStartSelfTerminator(long ClientProcessID)
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	//Free allocated resources
@@ -147,7 +148,7 @@ long CCom::ppStartSelfTerminator(long ClientProcessID)
 
 long CCom::ppGetPorts(std::vector<std::wstring>& portNames, std::wstring& strError)
 {
-	DISPID dispid = dispID_GetPorts;
+	DISPID dispid = m_dispID_GetPorts;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -169,7 +170,7 @@ long CCom::ppGetPorts(std::vector<std::wstring>& portNames, std::wstring& strErr
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 	USES_CONVERSION;
 	strError = BSTRToWString(bstrError);
@@ -197,7 +198,7 @@ long CCom::ppGetPorts(std::vector<std::wstring>& portNames, std::wstring& strErr
 
 long CCom::ppOpenPort(std::wstring portName, std::wstring& strError)
 {
-	DISPID dispid = dispID_OpenPort;
+	DISPID dispid = m_dispID_OpenPort;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -219,7 +220,7 @@ long CCom::ppOpenPort(std::wstring portName, std::wstring& strError)
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 
@@ -234,7 +235,7 @@ long CCom::ppOpenPort(std::wstring portName, std::wstring& strError)
 
 long CCom::ppClosePort(std::wstring& strError)
 {
-	DISPID dispid = dispID_ClosePort;
+	DISPID dispid = m_dispID_ClosePort;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -252,7 +253,7 @@ long CCom::ppClosePort(std::wstring& strError)
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -266,7 +267,7 @@ long CCom::ppClosePort(std::wstring& strError)
 
 long CCom::ppSetPowerVoltage(std::wstring voltage, std::wstring& strError)
 {
-	DISPID dispid = dispID_SetPowerVoltage;
+	DISPID dispid = m_dispID_SetPowerVoltage;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -288,7 +289,7 @@ long CCom::ppSetPowerVoltage(std::wstring voltage, std::wstring& strError)
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	strError = BSTRToWString(bstrError);
@@ -302,7 +303,7 @@ long CCom::ppSetPowerVoltage(std::wstring voltage, std::wstring& strError)
 
 long CCom::ppPowerOn(std::wstring& strError)
 {
-	DISPID dispid = dispID_PowerOn;
+	DISPID dispid = m_dispID_PowerOn;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -320,7 +321,7 @@ long CCom::ppPowerOn(std::wstring& strError)
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -334,7 +335,7 @@ long CCom::ppPowerOn(std::wstring& strError)
 
 long CCom::ppSetProtocol(enumInterfaces protocol, std::wstring& strError)
 {
-	DISPID dispid = dispID_SetProtocol;
+	DISPID dispid = m_dispID_SetProtocol;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -354,7 +355,7 @@ long CCom::ppSetProtocol(enumInterfaces protocol, std::wstring& strError)
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -368,7 +369,7 @@ long CCom::ppSetProtocol(enumInterfaces protocol, std::wstring& strError)
 
 long CCom::ppI2C_ResetBus(std::wstring& strError)
 {
-	DISPID dispid = dispID_I2C_ResetBus;
+	DISPID dispid = m_dispID_I2C_ResetBus;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -386,7 +387,7 @@ long CCom::ppI2C_ResetBus(std::wstring& strError)
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -400,7 +401,7 @@ long CCom::ppI2C_ResetBus(std::wstring& strError)
 
 long CCom::ppI2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
 {
-	DISPID dispid = dispID_I2C_SetSpeed;
+	DISPID dispid = m_dispID_I2C_SetSpeed;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -420,7 +421,7 @@ long CCom::ppI2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -434,7 +435,7 @@ long CCom::ppI2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
 
 long CCom::ppI2C_GetSpeed(long& speed, std::wstring& strError)
 {
-	DISPID dispid = dispID_I2C_GetSpeed;
+	DISPID dispid = m_dispID_I2C_GetSpeed;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -454,7 +455,7 @@ long CCom::ppI2C_GetSpeed(long& speed, std::wstring& strError)
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -468,7 +469,7 @@ long CCom::ppI2C_GetSpeed(long& speed, std::wstring& strError)
 
 long CCom::ppI2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError)
 {
-	DISPID dispid = dispID_I2C_GetDeviceList;
+	DISPID dispid = m_dispID_I2C_GetDeviceList;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -491,7 +492,7 @@ long CCom::ppI2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strErro
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -507,7 +508,7 @@ long CCom::ppI2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strErro
 
 long CCom::ppI2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT, std::wstring& strError)
 {
-	DISPID dispid = dispID_I2C_DataTransfer;
+	DISPID dispid = m_dispID_I2C_DataTransfer;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -544,7 +545,7 @@ long CCom::ppI2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vec
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -561,7 +562,7 @@ long CCom::ppI2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vec
 
 long CCom::ppI2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstring& strError)
 {
-	DISPID dispid = dispID_I2C_SendData;
+	DISPID dispid = m_dispID_I2C_SendData;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -588,7 +589,7 @@ long CCom::ppI2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstrin
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -603,7 +604,7 @@ long CCom::ppI2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstrin
 
 long CCom::ppI2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT, std::wstring& strError)
 {
-	DISPID dispid = dispID_I2C_ReadData;
+	DISPID dispid = m_dispID_I2C_ReadData;
 	// Set up parameters
 	DISPPARAMS dispparams;
 	memset(&dispparams, 0, sizeof(DISPPARAMS));
@@ -632,7 +633,7 @@ long CCom::ppI2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& data
 	VariantInit(&vaResult);
 
 	HRESULT hr;
-	hr = pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
+	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
@@ -644,4 +645,48 @@ long CCom::ppI2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& data
 	VariantClear(&dOUT);
 
 	return vaResult.lVal;
+}
+
+long CCom::OpenPort()
+{
+	long hr;
+	//Open Port - get first MiniProg3 port in the ports list
+	std::vector<std::wstring> ports;
+	hr = ppGetPorts(ports, CCom::sErrorMsg);
+	if (!SUCCEEDED(hr)) return hr;
+
+	if (ports.size() <= 0) throw std::runtime_error("Connect any Programmer to PC");
+
+	//Port should be opened just once to connect Programmer device (MiniProg1/3,etc).
+	//After that you can use Chip-/Programmer- specific APIs as long as you need.
+	//No need to repoen port when you need to acquire chip 2nd time, just call Acquire() again.
+	//This is true for all other APIs which get available once port is opened.
+	//You have to call OpenPort() again if port was closed by ClosePort() method, or 
+	//when there is a need to connect to other programmer, or
+	//if programmer was physically reconnected to USB-port.
+
+	std::wstring portName = ports[0];
+	return CCom::ppOpenPort(portName, CCom::sErrorMsg);
+}
+
+long CCom::ClosePort()
+{
+	return ppClosePort(CCom::sErrorMsg);
+}
+
+long CCom::writeI2C(int deviceAddress, int rgb)
+{
+	std::vector<byte> dataIN;
+	dataIN.resize(3);
+	dataIN[0] = 0x01;
+	dataIN[1] = rgb;
+	dataIN[2] = 0x17;
+	return CCom::ppI2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
+}
+
+long CCom::readI2C(int deviceAddress, long readLen, std::vector<BYTE>& dataOUT)
+{
+	//Read readLen bytes from device
+	dataOUT.resize(0);
+	return CCom::ppI2C_ReadData(deviceAddress, readLen, dataOUT, CCom::sErrorMsg);
 }

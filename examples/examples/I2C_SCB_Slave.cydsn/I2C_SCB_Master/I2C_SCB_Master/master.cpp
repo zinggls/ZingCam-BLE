@@ -5,63 +5,18 @@
 
 using namespace std;
 
-long OpenPort()
-{
-	long hr;
-	//Open Port - get first MiniProg3 port in the ports list
-	std::vector<std::wstring> ports;
-	hr = CCom::ppGetPorts(ports, CCom::sErrorMsg);
-	if (!SUCCEEDED(hr)) return hr;
-
-	if (ports.size() <= 0)
-	{
-		CCom::sErrorMsg = L"Connect any Programmer to PC";
-		return -1;
-	}
-
-	//Port should be opened just once to connect Programmer device (MiniProg1/3,etc).
-	//After that you can use Chip-/Programmer- specific APIs as long as you need.
-	//No need to repoen port when you need to acquire chip 2nd time, just call Acquire() again.
-	//This is true for all other APIs which get available once port is opened.
-	//You have to call OpenPort() again if port was closed by ClosePort() method, or 
-	//when there is a need to connect to other programmer, or
-	//if programmer was physically reconnected to USB-port.
-
-	std::wstring portName = ports[0];
-	wcout << L"Port name:" << portName << endl;
-	return CCom::ppOpenPort(portName, CCom::sErrorMsg);
-}
-
-long ClosePort()
-{
-	return CCom::ppClosePort(CCom::sErrorMsg);
-}
-
-long writeI2C(int deviceAddress,int rgb)
+long Color(CCom& com,int deviceAddress,int rgb)
 {
 	int hr;
 
 	//w 01 rgb 17
-	std::vector<byte> dataIN;
-	dataIN.resize(3);
-	dataIN[0] = 0x01;
-	dataIN[1] = rgb;
-	dataIN[2] = 0x17;
-	hr = CCom::ppI2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
+	hr = com.writeI2C(deviceAddress, rgb);
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Send CMD_SET: " << rgb << endl;
 
-	return hr;
-}
-
-long readI2C(int deviceAddress, long readLen)
-{
-	int hr;
-
-	//Read readLen bytes from device
+	//Read 3 bytes from device
 	std::vector<byte> dataOUT;
-	dataOUT.resize(0);
-	hr = CCom::ppI2C_ReadData(deviceAddress, readLen, dataOUT, CCom::sErrorMsg);
+	hr = com.readI2C(deviceAddress, 3, dataOUT);
 	if (!SUCCEEDED(hr)) return hr;
 
 	wcout << L"Read " << dataOUT.size() << "bytes from device : ";
@@ -71,42 +26,27 @@ long readI2C(int deviceAddress, long readLen)
 	return hr;
 }
 
-long Color(int deviceAddress,int rgb)
-{
-	int hr;
-
-	//w 01 rgb 17
-	hr = writeI2C(deviceAddress, rgb);
-	if (!SUCCEEDED(hr)) return hr;
-
-	//Read 3 bytes from device
-	hr = readI2C(deviceAddress, 3);
-	if (!SUCCEEDED(hr)) return hr;
-
-	return hr;
-}
-
-long Control_I2C_SCB_Slave(int deviceAddress)
+long Control_I2C_SCB_Slave(CCom& com,int deviceAddress)
 {
 	int hr;
 
 	while (1) {
-		hr = Color(deviceAddress, 1);	//RED
+		hr = Color(com,deviceAddress, 1);	//RED
 		if (!SUCCEEDED(hr)) return hr;
 
 		Sleep(500);
 
-		hr = Color(deviceAddress, 2);	//GREEN
+		hr = Color(com,deviceAddress, 2);	//GREEN
 		if (!SUCCEEDED(hr)) return hr;
 
 		Sleep(500);
 
-		hr = Color(deviceAddress, 3);	//BLUE
+		hr = Color(com,deviceAddress, 3);	//BLUE
 		if (!SUCCEEDED(hr)) return hr;
 
 		Sleep(500);
 
-		hr = Color(deviceAddress, 0);	//OFF
+		hr = Color(com,deviceAddress, 0);	//OFF
 		if (!SUCCEEDED(hr)) return hr;
 
 		Sleep(500);
@@ -114,42 +54,42 @@ long Control_I2C_SCB_Slave(int deviceAddress)
 	return hr;
 }
 
-long I2C_Operations()
+long Execute(CCom& com)
 {
 	int hr;
 
 	//Port Initialization
 	//Setup Power - "5.0V" and internal
-	hr = CCom::ppSetPowerVoltage(L"5.0", CCom::sErrorMsg);
+	hr = com.ppSetPowerVoltage(L"5.0", CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Setup Power - 5.0V and internal done" << endl;
 
 	//Power On
-	hr = CCom::ppPowerOn(CCom::sErrorMsg);
+	hr = com.ppPowerOn(CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Power On" << endl;
 
 	//Set protocol, connector and frequency
-	hr = CCom::ppSetProtocol(enumInterfaces::I2C, CCom::sErrorMsg); //I2C-protocol
+	hr = com.ppSetProtocol(enumInterfaces::I2C, CCom::sErrorMsg); //I2C-protocol
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Set protocol, connector and frequency" << endl;
 
 	//Reset bus
-	hr = CCom::ppI2C_ResetBus(CCom::sErrorMsg);
+	hr = com.ppI2C_ResetBus(CCom::sErrorMsg);
 	wcout << L"Reset bus!" << endl;
 
 	//Sleep script for 100 milliseconds
 	Sleep(100);
 
 	//Set I2C speed
-	hr = CCom::ppI2C_SetSpeed(enumI2Cspeed::CLK_100K, CCom::sErrorMsg);
+	hr = com.ppI2C_SetSpeed(enumI2Cspeed::CLK_100K, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Set speed: 100K!" << endl;
 
 	//Get I2C speed
 	long speed = 0;
 	std::string val = "";
-	hr = CCom::ppI2C_GetSpeed(speed, CCom::sErrorMsg);
+	hr = com.ppI2C_GetSpeed(speed, CCom::sErrorMsg);
 	if (speed == 1) {
 		val = "100K";
 	}else if (speed == 4) {
@@ -162,7 +102,7 @@ long I2C_Operations()
 
 	//Get device list
 	std::vector<byte> devices;
-	hr = CCom::ppI2C_GetDeviceList(devices, CCom::sErrorMsg);
+	hr = com.ppI2C_GetDeviceList(devices, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr))
 	{
 		CCom::sErrorMsg = L"Failed to enumerate I2C devices";
@@ -179,29 +119,9 @@ long I2C_Operations()
 	for (size_t i = 0; i < devices.size(); i++)
 		wcout << L"     address:  " << std::hex << std::setw(2) << std::setfill(L'0') << (devices[i] << 1) << "    " << std::hex << std::setw(2) << std::setfill(L'0') << devices[i] << endl;
 
-	hr = Control_I2C_SCB_Slave(devices[0]);
+	hr = Control_I2C_SCB_Slave(com,devices[0]);
 	if (!SUCCEEDED(hr)) return hr;
 
-	return hr;
-}
-
-long Execute()
-{
-	int hr;
-
-	//Open Port - get last (connected) port in the ports list
-	hr = OpenPort();
-	if (!SUCCEEDED(hr)) return hr;
-	wcout << L"OpenPort OK" << endl;
-
-	//Execute I2C communication
-	hr = I2C_Operations();
-	if (!SUCCEEDED(hr)) return hr;
-	wcout << L"I2C_Operations OK" << endl;
-
-	//Close the Port, so it is available for other apps
-	ClosePort();
-	wcout << L"Port Closed" << endl;
 	return hr;
 }
 
@@ -216,44 +136,32 @@ int main()
 	}
 	wcout << L"COM Initialized" << endl;
 
+	try {
+		CCom com(L"PSoCProgrammerCOM.PSoCProgrammerCOM_Object");
+		wcout << L"Class ID Obtained from Version Independent Prod ID" << endl;
 
-	CLSID clsid;
-	hr = ::CLSIDFromProgID(CCom::progid, &clsid);
-	if (FAILED(hr))
-	{
-		wcout << L"Failed to get class id for PSoC Programmer COM object !" << endl;
-		goto cleanup;
-	}
-	wcout << L"Class ID Obtained from Version Independent Prod ID: " << CCom::progid << endl;
+		hr = com.OpenPort();
+		if (!SUCCEEDED(hr)) goto cleanup;
+		wcout << L"OpenPort OK" << endl;
 
-	hr = ::CoCreateInstance(clsid, NULL, CLSCTX_SERVER, IID_IDispatch, (void**)&CCom::pIDispatch);
-	if (FAILED(hr))
-	{
-		wcout << L"Failed to create instance of PSoC Programmer COM object !" << endl;
-		goto cleanup;
-	}
+		Execute(com);	//Execute actual task of the example
 
-	hr = CCom::GetDispIDsByName();
-	if (FAILED(hr))
-	{
-		wcout << L"Failed to get DispIDs of used methods";
-		goto cleanup;
-	}
+		com.ClosePort();
+		wcout << L"Port Closed" << endl;
 
-	CCom::ppStartSelfTerminator(GetCurrentProcessId());
-
-	//Execute actual task of the example
-	hr = Execute();
-
-	{
-		std::wstring str;
-		if (SUCCEEDED(hr))
-			str = L"Succeeded!";
-		else {
-			str = L"Failed! ";
-			str.append(CCom::sErrorMsg);
+		{
+			std::wstring str;
+			if (SUCCEEDED(hr))
+				str = L"Succeeded!";
+			else {
+				str = L"Failed! ";
+				str.append(CCom::sErrorMsg);
+			}
+			wcout << str.c_str() << endl;
 		}
-		wcout << str.c_str() << endl;
+	}
+	catch (const std::exception& ex) {
+		wcout << L"An exception occurred: " << ex.what() << endl;
 	}
 
 cleanup:
