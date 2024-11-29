@@ -208,6 +208,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	HRESULT hr = m_pCom->SetPowerVoltage(_T("5.0"));
 	if (!SUCCEEDED(hr)) {
 		L(_T("Setup Power error,HRESULT: 0x%08X"), hr);
+		return;
 	}
 	L(_T("Setup Power - 5.0V and internal done"));
 
@@ -215,6 +216,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	hr = m_pCom->PowerOn();
 	if (!SUCCEEDED(hr)) {
 		L(_T("Power On error,HRESULT: 0x%08X"), hr);
+		return;
 	}
 	L(_T("Power On"));
 
@@ -222,6 +224,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	hr = m_pCom->SetProtocol(enumInterfaces::I2C); //I2C-protocol
 	if (!SUCCEEDED(hr)) {
 		L(_T("SetProtocol error,HRESULT: 0x%08X"), hr);
+		return;
 	}
 	L(_T("Set protocol, connector and frequency"));
 
@@ -236,6 +239,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	hr = m_pCom->I2C_SetSpeed(enumI2Cspeed::CLK_100K);
 	if (!SUCCEEDED(hr)) {
 		L(_T("Set speed: 100K error,HRESULT: 0x%08X"), hr);
+		return;
 	}
 	L(_T("Set speed: 100K"));
 
@@ -255,6 +259,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 
 	if (!SUCCEEDED(hr)) {
 		L(_T("Get speed error,HRESULT: 0x%08X"), hr);
+		return;
 	}
 	L(_T("Get speed: %s"), val);
 
@@ -264,6 +269,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	if (!SUCCEEDED(hr))
 	{
 		L(_T("Failed to enumerate I2C devices,HRESULT: 0x%08X"), hr);
+		return;
 	}
 	L(_T("Enumerate I2C devices"));
 
@@ -271,6 +277,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	if (devices.size() == 0) L(_T("No devices found"));
 	{
 		L(_T("No devices found"));
+		return;
 	}
 	L(_T("Devices list:  8bit  7bit"));
 	for (size_t i = 0; i < devices.size(); i++) L(_T("     address:  %02x    %02x"), devices[i] << 1, devices[i]);
