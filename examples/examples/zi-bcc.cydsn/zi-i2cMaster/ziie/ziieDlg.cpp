@@ -281,4 +281,26 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	}
 	L(_T("Devices list:  8bit  7bit"));
 	for (size_t i = 0; i < devices.size(); i++) L(_T("     address:  %02x    %02x"), devices[i] << 1, devices[i]);
+
+	Control_I2C_SCB_Slave(devices[0]);
+}
+
+long CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
+{
+	std::vector<byte> dataOUT;
+	HRESULT hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
+	if (!SUCCEEDED(hr)) {
+		L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
+		return hr;
+	}
+	L(_T("Read %dbytes from device"), dataOUT.size());
+
+	CString str;
+	for (size_t i = 0; i < dataOUT.size(); i++) {
+		CString tmp;
+		tmp.Format(_T("%02x "), dataOUT[i]);
+		str += tmp;
+	}
+	L(str);
+	return S_OK;
 }

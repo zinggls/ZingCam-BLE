@@ -4,6 +4,8 @@
 
 #pragma once
 
+#define READ_BUFFER_SIZE	174
+
 class CCom;
 
 // CZiieDlg 대화 상자
@@ -37,6 +39,7 @@ public:
 	CListBox m_log;
 
 	void L(const TCHAR* str, ...);
+	long Control_I2C_SCB_Slave(int deviceAddress);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
 };
