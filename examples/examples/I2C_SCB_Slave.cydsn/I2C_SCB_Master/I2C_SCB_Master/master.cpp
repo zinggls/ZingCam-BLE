@@ -130,6 +130,8 @@ long Execute(CCom& com)
 	return hr;
 }
 
+static std::wstring progID = L"PSoCProgrammerCOM.PSoCProgrammerCOM_Object";
+
 int main()
 {
 	HRESULT hr = 0;
@@ -142,8 +144,8 @@ int main()
 	wcout << L"COM Initialized" << endl;
 
 	try {
-		CCom com(L"PSoCProgrammerCOM.PSoCProgrammerCOM_Object");
-		wcout << L"Class ID Obtained from Version Independent Prod ID" << endl;
+		CCom com(progID);
+		wcout << L"Class ID Obtained from Version Independent Prod ID : " << progID << endl;
 
 		hr = com.OpenPort();
 		if (!SUCCEEDED(hr)) goto cleanup;
