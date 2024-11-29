@@ -287,8 +287,18 @@ void CZiieDlg::OnBnClickedExecuteButton()
 
 long CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 {
+	HRESULT hr;
+	std::vector<byte> dataIN;
+	dataIN.resize(11);
+	hr = m_pCom->writeI2C(deviceAddress, dataIN);
+	if (!SUCCEEDED(hr)) {
+		L(_T("Failed writeI2C,HRESULT: 0x%08X"), hr);
+		return hr;
+	}
+	L(_T("Write %dbytes to device"), dataIN.size());
+
 	std::vector<byte> dataOUT;
-	HRESULT hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
+	hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
 	if (!SUCCEEDED(hr)) {
 		L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
 		return hr;
