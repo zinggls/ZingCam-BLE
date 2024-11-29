@@ -27,6 +27,9 @@
     <ClCompile Include="..\..\..\common\com.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="I2C_Control.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -39,6 +42,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\common\ppcom.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="I2C_Control.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

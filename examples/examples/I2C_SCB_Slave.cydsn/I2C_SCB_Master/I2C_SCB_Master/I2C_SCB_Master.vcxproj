@@ -81,6 +81,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\common\com.cpp" />
     <ClCompile Include="..\..\..\common\util.cpp" />
+    <ClCompile Include="I2C_Control.cpp" />
     <ClCompile Include="master.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -91,6 +92,7 @@
     <ClInclude Include="..\..\..\common\com.h" />
     <ClInclude Include="..\..\..\common\ppcom.h" />
     <ClInclude Include="..\..\..\common\util.h" />
+    <ClInclude Include="I2C_Control.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
