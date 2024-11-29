@@ -217,4 +217,11 @@ void CZiieDlg::OnBnClickedExecuteButton()
 		L(_T("Power On error,HRESULT: 0x%08X"), hr);
 	}
 	L(_T("Power On"));
+
+	//Set protocol, connector and frequency
+	hr = m_pCom->SetProtocol(enumInterfaces::I2C); //I2C-protocol
+	if (!SUCCEEDED(hr)) {
+		L(_T("SetProtocol error,HRESULT: 0x%08X"), hr);
+	}
+	L(_T("Set protocol, connector and frequency"));
 }
