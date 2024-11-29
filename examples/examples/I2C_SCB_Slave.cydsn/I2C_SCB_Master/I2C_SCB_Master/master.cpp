@@ -151,21 +151,17 @@ int main()
 		if (!SUCCEEDED(hr)) goto cleanup;
 		wcout << L"OpenPort OK" << endl;
 
-		Execute(com);	//Execute actual task of the example
+		std::wstring str;
+		if (SUCCEEDED(Execute(com)))
+			str = L"Succeeded!";
+		else {
+			str = L"Failed! ";
+			str.append(CCom::sErrorMsg);
+		}
+		wcout << str.c_str() << endl;
 
 		com.ClosePort();
 		wcout << L"Port Closed" << endl;
-
-		{
-			std::wstring str;
-			if (SUCCEEDED(hr))
-				str = L"Succeeded!";
-			else {
-				str = L"Failed! ";
-				str.append(CCom::sErrorMsg);
-			}
-			wcout << str.c_str() << endl;
-		}
 	}
 	catch (const std::exception& ex) {
 		wcout << L"An exception occurred: " << ex.what() << endl;
