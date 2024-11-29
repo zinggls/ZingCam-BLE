@@ -266,4 +266,12 @@ void CZiieDlg::OnBnClickedExecuteButton()
 		L(_T("Failed to enumerate I2C devices,HRESULT: 0x%08X"), hr);
 	}
 	L(_T("Enumerate I2C devices"));
+
+	//Show devices
+	if (devices.size() == 0) L(_T("No devices found"));
+	{
+		L(_T("No devices found"));
+	}
+	L(_T("Devices list:  8bit  7bit"));
+	for (size_t i = 0; i < devices.size(); i++) L(_T("     address:  %02x    %02x"), devices[i] << 1, devices[i]);
 }
