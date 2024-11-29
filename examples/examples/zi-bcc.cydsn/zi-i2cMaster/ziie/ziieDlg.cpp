@@ -68,6 +68,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
+	ON_BN_CLICKED(IDC_EXECUTE_BUTTON, &CZiieDlg::OnBnClickedExecuteButton)
 END_MESSAGE_MAP()
 
 
@@ -196,4 +197,10 @@ void CZiieDlg::OnDestroy()
 	m_pCom->ClosePort();
 	CoUninitialize();
 	delete m_pCom;
+}
+
+
+void CZiieDlg::OnBnClickedExecuteButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }

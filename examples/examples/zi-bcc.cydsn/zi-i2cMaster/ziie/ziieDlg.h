@@ -38,4 +38,5 @@ public:
 
 	void L(const TCHAR* str, ...);
 	afx_msg void OnDestroy();
+	afx_msg void OnBnClickedExecuteButton();
 };
