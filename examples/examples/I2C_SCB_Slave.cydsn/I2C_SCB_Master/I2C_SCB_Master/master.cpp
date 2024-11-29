@@ -7,7 +7,7 @@ using namespace std;
 
 long Color(CCom& com,int deviceAddress,int rgb)
 {
-	int hr;
+	long hr;
 
 	//w 01 rgb 17
 	std::vector<byte> dataIN;
@@ -33,7 +33,7 @@ long Color(CCom& com,int deviceAddress,int rgb)
 
 long Control_I2C_SCB_Slave(CCom& com,int deviceAddress)
 {
-	int hr;
+	long hr;
 
 	while (1) {
 		hr = Color(com,deviceAddress, 1);	//RED
@@ -61,7 +61,7 @@ long Control_I2C_SCB_Slave(CCom& com,int deviceAddress)
 
 long Execute(CCom& com)
 {
-	int hr;
+	long hr;
 
 	//Port Initialization
 	//Setup Power - "5.0V" and internal
