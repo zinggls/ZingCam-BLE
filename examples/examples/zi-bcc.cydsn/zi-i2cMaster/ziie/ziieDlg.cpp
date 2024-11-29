@@ -257,4 +257,13 @@ void CZiieDlg::OnBnClickedExecuteButton()
 		L(_T("Get speed error,HRESULT: 0x%08X"), hr);
 	}
 	L(_T("Get speed: %s"), val);
+
+	//Get device list
+	std::vector<byte> devices;
+	hr = m_pCom->I2C_GetDeviceList(devices);
+	if (!SUCCEEDED(hr))
+	{
+		L(_T("Failed to enumerate I2C devices,HRESULT: 0x%08X"), hr);
+	}
+	L(_T("Enumerate I2C devices"));
 }
