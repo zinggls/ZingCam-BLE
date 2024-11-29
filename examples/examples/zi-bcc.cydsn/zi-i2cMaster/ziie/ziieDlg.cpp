@@ -224,4 +224,11 @@ void CZiieDlg::OnBnClickedExecuteButton()
 		L(_T("SetProtocol error,HRESULT: 0x%08X"), hr);
 	}
 	L(_T("Set protocol, connector and frequency"));
+
+	//Reset bus
+	hr = m_pCom->I2C_ResetBus();
+	L(_T("Reset bus!"));
+
+	//Sleep script for 100 milliseconds
+	Sleep(100);
 }
