@@ -113,6 +113,13 @@ BOOL CZiieDlg::OnInitDialog()
 	m_pCom = new CCom(_T("PSoCProgrammerCOM.PSoCProgrammerCOM_Object"));
 	ASSERT(m_pCom);
 
+	HRESULT hr = m_pCom->OpenPort();
+	if (!SUCCEEDED(hr)) {
+		L(_T("COM OpenPort failed=%d"),hr);
+	}
+	else {
+		L(_T("COM OpenPort OK"));
+	}
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -186,6 +193,7 @@ void CZiieDlg::OnDestroy()
 	CDialogEx::OnDestroy();
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	m_pCom->ClosePort();
 	CoUninitialize();
 	delete m_pCom;
 }
