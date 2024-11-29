@@ -210,4 +210,11 @@ void CZiieDlg::OnBnClickedExecuteButton()
 		L(_T("Setup Power error,HRESULT: 0x%08X"), hr);
 	}
 	L(_T("Setup Power - 5.0V and internal done"));
+
+	//Power On
+	hr = m_pCom->PowerOn();
+	if (!SUCCEEDED(hr)) {
+		L(_T("Power On error,HRESULT: 0x%08X"), hr);
+	}
+	L(_T("Power On"));
 }
