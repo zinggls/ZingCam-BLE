@@ -30,7 +30,7 @@ public:
 
 	long OpenPort();
 	long ClosePort();
-	long writeI2C(int deviceAddress, int rgb);
+	long writeI2C(int deviceAddress, std::vector<BYTE>& dataIN);
 	long readI2C(int deviceAddress, long readLen, std::vector<BYTE>& dataOUT);
 
 private:

@@ -674,13 +674,8 @@ long CCom::ClosePort()
 	return ppClosePort(CCom::sErrorMsg);
 }
 
-long CCom::writeI2C(int deviceAddress, int rgb)
+long CCom::writeI2C(int deviceAddress, std::vector<BYTE>& dataIN)
 {
-	std::vector<byte> dataIN;
-	dataIN.resize(3);
-	dataIN[0] = 0x01;
-	dataIN[1] = rgb;
-	dataIN[2] = 0x17;
 	return CCom::ppI2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
 }
 

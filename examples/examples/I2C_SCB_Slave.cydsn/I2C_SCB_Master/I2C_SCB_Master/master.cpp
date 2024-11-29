@@ -10,7 +10,12 @@ long Color(CCom& com,int deviceAddress,int rgb)
 	int hr;
 
 	//w 01 rgb 17
-	hr = com.writeI2C(deviceAddress, rgb);
+	std::vector<byte> dataIN;
+	dataIN.resize(3);
+	dataIN[0] = 0x01;
+	dataIN[1] = rgb;
+	dataIN[2] = 0x17;
+	hr = com.writeI2C(deviceAddress, dataIN);
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Send CMD_SET: " << rgb << endl;
 
