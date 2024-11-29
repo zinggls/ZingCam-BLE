@@ -115,7 +115,7 @@ BOOL CZiieDlg::OnInitDialog()
 
 	HRESULT hr = m_pCom->OpenPort();
 	if (!SUCCEEDED(hr)) {
-		L(_T("COM OpenPort failed=%d"),hr);
+		L(_T("COM OpenPort failed, HRESULT: 0x%08X"), hr);
 	}
 	else {
 		L(_T("COM OpenPort OK"));
