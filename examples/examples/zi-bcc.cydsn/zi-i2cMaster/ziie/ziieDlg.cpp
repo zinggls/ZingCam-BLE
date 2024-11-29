@@ -231,4 +231,11 @@ void CZiieDlg::OnBnClickedExecuteButton()
 
 	//Sleep script for 100 milliseconds
 	Sleep(100);
+
+	//Set I2C speed
+	hr = m_pCom->I2C_SetSpeed(enumI2Cspeed::CLK_100K);
+	if (!SUCCEEDED(hr)) {
+		L(_T("Set speed: 100K error,HRESULT: 0x%08X"), hr);
+	}
+	L(_T("Set speed: 100K!"));
 }
