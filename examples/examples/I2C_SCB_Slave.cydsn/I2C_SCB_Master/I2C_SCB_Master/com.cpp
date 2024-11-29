@@ -22,7 +22,7 @@ CCom::CCom(const std::wstring& progID)
 		throw std::runtime_error("GetDispIDsByName error");
 	}
 
-	hr = ppStartSelfTerminator(GetCurrentProcessId());
+	hr = StartSelfTerminator(GetCurrentProcessId());
 	if (FAILED(hr)) {
 		throw std::runtime_error("StartSelfTerminator error");
 	}
@@ -116,7 +116,7 @@ HRESULT CCom::GetDispIDsByName()
 	return hr;
 }
 
-long CCom::ppStartSelfTerminator(long ClientProcessID)
+long CCom::StartSelfTerminator(long ClientProcessID)
 {
 	DISPID dispid = m_dispID__StartSelfTerminator;
 	// Set up parameters
@@ -146,7 +146,7 @@ long CCom::ppStartSelfTerminator(long ClientProcessID)
 	return vaResult.lVal;
 }
 
-long CCom::ppGetPorts(std::vector<std::wstring>& portNames, std::wstring& strError)
+long CCom::GetPorts(std::vector<std::wstring>& portNames, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_GetPorts;
 	// Set up parameters
@@ -196,7 +196,7 @@ long CCom::ppGetPorts(std::vector<std::wstring>& portNames, std::wstring& strErr
 	return vaResult.lVal;
 }
 
-long CCom::ppOpenPort(std::wstring portName, std::wstring& strError)
+long CCom::OpenPort(std::wstring portName, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_OpenPort;
 	// Set up parameters
@@ -233,7 +233,7 @@ long CCom::ppOpenPort(std::wstring portName, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::ppClosePort(std::wstring& strError)
+long CCom::ClosePort(std::wstring& strError)
 {
 	DISPID dispid = m_dispID_ClosePort;
 	// Set up parameters
@@ -265,7 +265,7 @@ long CCom::ppClosePort(std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::ppSetPowerVoltage(std::wstring voltage, std::wstring& strError)
+long CCom::SetPowerVoltage(std::wstring voltage, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_SetPowerVoltage;
 	// Set up parameters
@@ -301,7 +301,7 @@ long CCom::ppSetPowerVoltage(std::wstring voltage, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::ppPowerOn(std::wstring& strError)
+long CCom::PowerOn(std::wstring& strError)
 {
 	DISPID dispid = m_dispID_PowerOn;
 	// Set up parameters
@@ -333,7 +333,7 @@ long CCom::ppPowerOn(std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::ppSetProtocol(enumInterfaces protocol, std::wstring& strError)
+long CCom::SetProtocol(enumInterfaces protocol, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_SetProtocol;
 	// Set up parameters
@@ -367,7 +367,7 @@ long CCom::ppSetProtocol(enumInterfaces protocol, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::ppI2C_ResetBus(std::wstring& strError)
+long CCom::I2C_ResetBus(std::wstring& strError)
 {
 	DISPID dispid = m_dispID_I2C_ResetBus;
 	// Set up parameters
@@ -399,7 +399,7 @@ long CCom::ppI2C_ResetBus(std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::ppI2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
+long CCom::I2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_I2C_SetSpeed;
 	// Set up parameters
@@ -433,7 +433,7 @@ long CCom::ppI2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::ppI2C_GetSpeed(long& speed, std::wstring& strError)
+long CCom::I2C_GetSpeed(long& speed, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_I2C_GetSpeed;
 	// Set up parameters
@@ -467,7 +467,7 @@ long CCom::ppI2C_GetSpeed(long& speed, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::ppI2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError)
+long CCom::I2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_I2C_GetDeviceList;
 	// Set up parameters
@@ -506,7 +506,7 @@ long CCom::ppI2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strErro
 	return vaResult.lVal;
 }
 
-long CCom::ppI2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT, std::wstring& strError)
+long CCom::I2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_I2C_DataTransfer;
 	// Set up parameters
@@ -560,7 +560,7 @@ long CCom::ppI2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vec
 	return vaResult.lVal;
 }
 
-long CCom::ppI2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstring& strError)
+long CCom::I2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_I2C_SendData;
 	// Set up parameters
@@ -602,7 +602,7 @@ long CCom::ppI2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstrin
 	return vaResult.lVal;
 }
 
-long CCom::ppI2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT, std::wstring& strError)
+long CCom::I2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT, std::wstring& strError)
 {
 	DISPID dispid = m_dispID_I2C_ReadData;
 	// Set up parameters
@@ -652,7 +652,7 @@ long CCom::OpenPort()
 	long hr;
 	//Open Port - get first MiniProg3 port in the ports list
 	std::vector<std::wstring> ports;
-	hr = ppGetPorts(ports, CCom::sErrorMsg);
+	hr = GetPorts(ports, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 
 	if (ports.size() <= 0) throw std::runtime_error("Connect any Programmer to PC");
@@ -666,22 +666,22 @@ long CCom::OpenPort()
 	//if programmer was physically reconnected to USB-port.
 
 	std::wstring portName = ports[0];
-	return CCom::ppOpenPort(portName, CCom::sErrorMsg);
+	return CCom::OpenPort(portName, CCom::sErrorMsg);
 }
 
 long CCom::ClosePort()
 {
-	return ppClosePort(CCom::sErrorMsg);
+	return ClosePort(CCom::sErrorMsg);
 }
 
 long CCom::writeI2C(int deviceAddress, std::vector<BYTE>& dataIN)
 {
-	return CCom::ppI2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
+	return CCom::I2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
 }
 
 long CCom::readI2C(int deviceAddress, long readLen, std::vector<BYTE>& dataOUT)
 {
 	//Read readLen bytes from device
 	dataOUT.resize(0);
-	return CCom::ppI2C_ReadData(deviceAddress, readLen, dataOUT, CCom::sErrorMsg);
+	return CCom::I2C_ReadData(deviceAddress, readLen, dataOUT, CCom::sErrorMsg);
 }

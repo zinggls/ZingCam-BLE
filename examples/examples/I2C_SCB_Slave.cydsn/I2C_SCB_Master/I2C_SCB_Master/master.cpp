@@ -65,36 +65,36 @@ long Execute(CCom& com)
 
 	//Port Initialization
 	//Setup Power - "5.0V" and internal
-	hr = com.ppSetPowerVoltage(L"5.0", CCom::sErrorMsg);
+	hr = com.SetPowerVoltage(L"5.0", CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Setup Power - 5.0V and internal done" << endl;
 
 	//Power On
-	hr = com.ppPowerOn(CCom::sErrorMsg);
+	hr = com.PowerOn(CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Power On" << endl;
 
 	//Set protocol, connector and frequency
-	hr = com.ppSetProtocol(enumInterfaces::I2C, CCom::sErrorMsg); //I2C-protocol
+	hr = com.SetProtocol(enumInterfaces::I2C, CCom::sErrorMsg); //I2C-protocol
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Set protocol, connector and frequency" << endl;
 
 	//Reset bus
-	hr = com.ppI2C_ResetBus(CCom::sErrorMsg);
+	hr = com.I2C_ResetBus(CCom::sErrorMsg);
 	wcout << L"Reset bus!" << endl;
 
 	//Sleep script for 100 milliseconds
 	Sleep(100);
 
 	//Set I2C speed
-	hr = com.ppI2C_SetSpeed(enumI2Cspeed::CLK_100K, CCom::sErrorMsg);
+	hr = com.I2C_SetSpeed(enumI2Cspeed::CLK_100K, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr)) return hr;
 	wcout << L"Set speed: 100K!" << endl;
 
 	//Get I2C speed
 	long speed = 0;
 	std::string val = "";
-	hr = com.ppI2C_GetSpeed(speed, CCom::sErrorMsg);
+	hr = com.I2C_GetSpeed(speed, CCom::sErrorMsg);
 	if (speed == 1) {
 		val = "100K";
 	}else if (speed == 4) {
@@ -107,7 +107,7 @@ long Execute(CCom& com)
 
 	//Get device list
 	std::vector<byte> devices;
-	hr = com.ppI2C_GetDeviceList(devices, CCom::sErrorMsg);
+	hr = com.I2C_GetDeviceList(devices, CCom::sErrorMsg);
 	if (!SUCCEEDED(hr))
 	{
 		CCom::sErrorMsg = L"Failed to enumerate I2C devices";

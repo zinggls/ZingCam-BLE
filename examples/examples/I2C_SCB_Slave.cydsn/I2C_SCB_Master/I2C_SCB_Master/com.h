@@ -13,20 +13,20 @@ public:
 
 	static std::wstring sErrorMsg;
 
-	long ppStartSelfTerminator(long ClientProcessID);
-	long ppGetPorts(std::vector<std::wstring>& portNames, std::wstring& strError);
-	long ppOpenPort(std::wstring portName, std::wstring& strError);
-	long ppClosePort(std::wstring& strError);
-	long ppSetPowerVoltage(std::wstring voltage, std::wstring& strError);
-	long ppPowerOn(std::wstring& strError);
-	long ppSetProtocol(enumInterfaces protocol, std::wstring& strError);
-	long ppI2C_ResetBus(std::wstring& strError);
-	long ppI2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError);
-	long ppI2C_GetSpeed(long& speed, std::wstring& strError);
-	long ppI2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError);
-	long ppI2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT, std::wstring& strError);
-	long ppI2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstring& strError);
-	long ppI2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT, std::wstring& strError);
+	long StartSelfTerminator(long ClientProcessID);
+	long GetPorts(std::vector<std::wstring>& portNames, std::wstring& strError);
+	long OpenPort(std::wstring portName, std::wstring& strError);
+	long ClosePort(std::wstring& strError);
+	long SetPowerVoltage(std::wstring voltage, std::wstring& strError);
+	long PowerOn(std::wstring& strError);
+	long SetProtocol(enumInterfaces protocol, std::wstring& strError);
+	long I2C_ResetBus(std::wstring& strError);
+	long I2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError);
+	long I2C_GetSpeed(long& speed, std::wstring& strError);
+	long I2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError);
+	long I2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT, std::wstring& strError);
+	long I2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstring& strError);
+	long I2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT, std::wstring& strError);
 
 	long OpenPort();
 	long ClosePort();
