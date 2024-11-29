@@ -146,7 +146,7 @@ long CCom::StartSelfTerminator(long ClientProcessID)
 	return vaResult.lVal;
 }
 
-long CCom::GetPorts(std::vector<std::wstring>& portNames, std::wstring& strError)
+long CCom::GetPorts(std::vector<std::wstring>& portNames)
 {
 	DISPID dispid = m_dispID_GetPorts;
 	// Set up parameters
@@ -173,7 +173,7 @@ long CCom::GetPorts(std::vector<std::wstring>& portNames, std::wstring& strError
 	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Translate Result into std::vector<std::string>
 	long lLBound, lUBound;
 	SAFEARRAY* psa = varPorts.parray;
@@ -196,7 +196,7 @@ long CCom::GetPorts(std::vector<std::wstring>& portNames, std::wstring& strError
 	return vaResult.lVal;
 }
 
-long CCom::OpenPort(std::wstring portName, std::wstring& strError)
+long CCom::OpenPort(std::wstring portName)
 {
 	DISPID dispid = m_dispID_OpenPort;
 	// Set up parameters
@@ -224,7 +224,7 @@ long CCom::OpenPort(std::wstring portName, std::wstring& strError)
 		&dispparams, &vaResult, NULL, NULL);
 
 
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Free allocated resources
 	delete[] pArg;
 	::SysFreeString(bstrPort);
@@ -233,7 +233,7 @@ long CCom::OpenPort(std::wstring portName, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::ClosePort(std::wstring& strError)
+long CCom::ClosePort()
 {
 	DISPID dispid = m_dispID_ClosePort;
 	// Set up parameters
@@ -257,7 +257,7 @@ long CCom::ClosePort(std::wstring& strError)
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Free allocated resources
 	delete[] pArg;
 	::SysFreeString(bstrError);
@@ -265,7 +265,7 @@ long CCom::ClosePort(std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::SetPowerVoltage(std::wstring voltage, std::wstring& strError)
+long CCom::SetPowerVoltage(std::wstring voltage)
 {
 	DISPID dispid = m_dispID_SetPowerVoltage;
 	// Set up parameters
@@ -292,7 +292,7 @@ long CCom::SetPowerVoltage(std::wstring voltage, std::wstring& strError)
 	hr = m_pIDispatch->Invoke(dispid, IID_NULL, GetUserDefaultLCID(), DISPATCH_METHOD,
 		&dispparams, &vaResult, NULL, NULL);
 
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Free allocated resources
 	delete[] pArg;
 	::SysFreeString(bstrVoltage);
@@ -301,7 +301,7 @@ long CCom::SetPowerVoltage(std::wstring voltage, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::PowerOn(std::wstring& strError)
+long CCom::PowerOn()
 {
 	DISPID dispid = m_dispID_PowerOn;
 	// Set up parameters
@@ -325,7 +325,7 @@ long CCom::PowerOn(std::wstring& strError)
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Free allocated resources
 	delete[] pArg;
 	::SysFreeString(bstrError);
@@ -333,7 +333,7 @@ long CCom::PowerOn(std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::SetProtocol(enumInterfaces protocol, std::wstring& strError)
+long CCom::SetProtocol(enumInterfaces protocol)
 {
 	DISPID dispid = m_dispID_SetProtocol;
 	// Set up parameters
@@ -359,7 +359,7 @@ long CCom::SetProtocol(enumInterfaces protocol, std::wstring& strError)
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Free allocated resources
 	delete[] pArg;
 	::SysFreeString(bstrError);
@@ -367,7 +367,7 @@ long CCom::SetProtocol(enumInterfaces protocol, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::I2C_ResetBus(std::wstring& strError)
+long CCom::I2C_ResetBus()
 {
 	DISPID dispid = m_dispID_I2C_ResetBus;
 	// Set up parameters
@@ -391,7 +391,7 @@ long CCom::I2C_ResetBus(std::wstring& strError)
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Free allocated resources
 	delete[] pArg;
 	::SysFreeString(bstrError);
@@ -399,7 +399,7 @@ long CCom::I2C_ResetBus(std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::I2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
+long CCom::I2C_SetSpeed(enumI2Cspeed speed)
 {
 	DISPID dispid = m_dispID_I2C_SetSpeed;
 	// Set up parameters
@@ -425,7 +425,7 @@ long CCom::I2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Free allocated resources
 	delete[] pArg;
 	::SysFreeString(bstrError);
@@ -433,7 +433,7 @@ long CCom::I2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::I2C_GetSpeed(long& speed, std::wstring& strError)
+long CCom::I2C_GetSpeed(long& speed)
 {
 	DISPID dispid = m_dispID_I2C_GetSpeed;
 	// Set up parameters
@@ -459,7 +459,7 @@ long CCom::I2C_GetSpeed(long& speed, std::wstring& strError)
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Free allocated resources
 	delete[] pArg;
 	::SysFreeString(bstrError);
@@ -467,7 +467,7 @@ long CCom::I2C_GetSpeed(long& speed, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::I2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError)
+long CCom::I2C_GetDeviceList(std::vector<BYTE>& devices)
 {
 	DISPID dispid = m_dispID_I2C_GetDeviceList;
 	// Set up parameters
@@ -496,7 +496,7 @@ long CCom::I2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError)
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	ConvertSA2ByteVector(varDevices, devices);
 	//Free allocated resources
 	delete[] pArg;
@@ -506,7 +506,7 @@ long CCom::I2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError)
 	return vaResult.lVal;
 }
 
-long CCom::I2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT, std::wstring& strError)
+long CCom::I2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT)
 {
 	DISPID dispid = m_dispID_I2C_DataTransfer;
 	// Set up parameters
@@ -549,7 +549,7 @@ long CCom::I2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vecto
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	ConvertSA2ByteVector(dOUT, dataOUT);
 	//Free allocated resources
 	delete[] pArg;
@@ -560,7 +560,7 @@ long CCom::I2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vecto
 	return vaResult.lVal;
 }
 
-long CCom::I2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstring& strError)
+long CCom::I2C_SendData(long deviceAddr, std::vector<BYTE> dataIN)
 {
 	DISPID dispid = m_dispID_I2C_SendData;
 	// Set up parameters
@@ -593,7 +593,7 @@ long CCom::I2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstring&
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	//Free allocated resources
 	delete[] pArg;
 	::SysFreeString(bstrError);
@@ -602,7 +602,7 @@ long CCom::I2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstring&
 	return vaResult.lVal;
 }
 
-long CCom::I2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT, std::wstring& strError)
+long CCom::I2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT)
 {
 	DISPID dispid = m_dispID_I2C_ReadData;
 	// Set up parameters
@@ -637,7 +637,7 @@ long CCom::I2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOU
 		&dispparams, &vaResult, NULL, NULL);
 
 	USES_CONVERSION;
-	strError = BSTRToWString(bstrError);
+	CCom::sErrorMsg = BSTRToWString(bstrError);
 	ConvertSA2ByteVector(dOUT, dataOUT);
 	//Free allocated resources
 	delete[] pArg;
@@ -652,7 +652,7 @@ long CCom::OpenPort()
 	long hr;
 	//Open Port - get first MiniProg3 port in the ports list
 	std::vector<std::wstring> ports;
-	hr = GetPorts(ports, CCom::sErrorMsg);
+	hr = GetPorts(ports);
 	if (!SUCCEEDED(hr)) return hr;
 
 	if (ports.size() <= 0) throw std::runtime_error("Connect any Programmer to PC");
@@ -666,22 +666,17 @@ long CCom::OpenPort()
 	//if programmer was physically reconnected to USB-port.
 
 	std::wstring portName = ports[0];
-	return CCom::OpenPort(portName, CCom::sErrorMsg);
-}
-
-long CCom::ClosePort()
-{
-	return ClosePort(CCom::sErrorMsg);
+	return CCom::OpenPort(portName);
 }
 
 long CCom::writeI2C(int deviceAddress, std::vector<BYTE>& dataIN)
 {
-	return CCom::I2C_SendData(deviceAddress, dataIN, CCom::sErrorMsg);
+	return CCom::I2C_SendData(deviceAddress, dataIN);
 }
 
 long CCom::readI2C(int deviceAddress, long readLen, std::vector<BYTE>& dataOUT)
 {
 	//Read readLen bytes from device
 	dataOUT.resize(0);
-	return CCom::I2C_ReadData(deviceAddress, readLen, dataOUT, CCom::sErrorMsg);
+	return CCom::I2C_ReadData(deviceAddress, readLen, dataOUT);
 }

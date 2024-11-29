@@ -14,22 +14,21 @@ public:
 	static std::wstring sErrorMsg;
 
 	long StartSelfTerminator(long ClientProcessID);
-	long GetPorts(std::vector<std::wstring>& portNames, std::wstring& strError);
-	long OpenPort(std::wstring portName, std::wstring& strError);
-	long ClosePort(std::wstring& strError);
-	long SetPowerVoltage(std::wstring voltage, std::wstring& strError);
-	long PowerOn(std::wstring& strError);
-	long SetProtocol(enumInterfaces protocol, std::wstring& strError);
-	long I2C_ResetBus(std::wstring& strError);
-	long I2C_SetSpeed(enumI2Cspeed speed, std::wstring& strError);
-	long I2C_GetSpeed(long& speed, std::wstring& strError);
-	long I2C_GetDeviceList(std::vector<BYTE>& devices, std::wstring& strError);
-	long I2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT, std::wstring& strError);
-	long I2C_SendData(long deviceAddr, std::vector<BYTE> dataIN, std::wstring& strError);
-	long I2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT, std::wstring& strError);
+	long GetPorts(std::vector<std::wstring>& portNames);
+	long OpenPort(std::wstring portName);
+	long ClosePort();
+	long SetPowerVoltage(std::wstring voltage);
+	long PowerOn();
+	long SetProtocol(enumInterfaces protocol);
+	long I2C_ResetBus();
+	long I2C_SetSpeed(enumI2Cspeed speed);
+	long I2C_GetSpeed(long& speed);
+	long I2C_GetDeviceList(std::vector<BYTE>& devices);
+	long I2C_DataTransfer(long deviceAddr, long mode, long readLen, std::vector<BYTE> dataIN, std::vector<BYTE>& dataOUT);
+	long I2C_SendData(long deviceAddr, std::vector<BYTE> dataIN);
+	long I2C_ReadData(long deviceAddr, long readLen, std::vector<BYTE>& dataOUT);
 
 	long OpenPort();
-	long ClosePort();
 	long writeI2C(int deviceAddress, std::vector<BYTE>& dataIN);
 	long readI2C(int deviceAddress, long readLen, std::vector<BYTE>& dataOUT);
 
