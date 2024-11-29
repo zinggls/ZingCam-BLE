@@ -101,7 +101,12 @@ BOOL CZiieDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	L(_T("OnInitDialog"));
+	L(_T("Initializing COM"));
+	if (FAILED(CoInitialize(NULL)))
+	{
+		L(_T("Unable to initialize COM"));
+	}
+	L(_T("COM Initialized"));
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
