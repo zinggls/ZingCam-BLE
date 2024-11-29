@@ -4,6 +4,7 @@
 
 #pragma once
 
+class CCom;
 
 // CZiieDlg 대화 상자
 class CZiieDlg : public CDialogEx
@@ -32,6 +33,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	CCom *m_pCom;
 	CListBox m_log;
 
 	void L(const TCHAR* str, ...);

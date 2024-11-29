@@ -7,6 +7,7 @@
 #include "ziie.h"
 #include "ziieDlg.h"
 #include "afxdialogex.h"
+#include "com.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -51,7 +52,7 @@ END_MESSAGE_MAP()
 
 
 CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_ZIIE_DIALOG, pParent)
+	: CDialogEx(IDD_ZIIE_DIALOG, pParent), m_pCom(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -108,6 +109,9 @@ BOOL CZiieDlg::OnInitDialog()
 		L(_T("Unable to initialize COM"));
 	}
 	L(_T("COM Initialized"));
+
+	m_pCom = new CCom(_T("PSoCProgrammerCOM.PSoCProgrammerCOM_Object"));
+	ASSERT(m_pCom);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -183,4 +187,5 @@ void CZiieDlg::OnDestroy()
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 	CoUninitialize();
+	delete m_pCom;
 }
