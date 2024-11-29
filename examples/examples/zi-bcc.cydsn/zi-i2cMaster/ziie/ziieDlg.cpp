@@ -237,5 +237,24 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	if (!SUCCEEDED(hr)) {
 		L(_T("Set speed: 100K error,HRESULT: 0x%08X"), hr);
 	}
-	L(_T("Set speed: 100K!"));
+	L(_T("Set speed: 100K"));
+
+	//Get I2C speed
+	long speed = 0;
+	CString val = _T("");
+	hr = m_pCom->I2C_GetSpeed(speed);
+	if (speed == 1) {
+		val = _T("100K");
+	}
+	else if (speed == 4) {
+		val = _T("50K");
+	}
+	else if (speed == 2) {
+		val = _T("400K");
+	}
+
+	if (!SUCCEEDED(hr)) {
+		L(_T("Get speed error,HRESULT: 0x%08X"), hr);
+	}
+	L(_T("Get speed: %s"), val);
 }
