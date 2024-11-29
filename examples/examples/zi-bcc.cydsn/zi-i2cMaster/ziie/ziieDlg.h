@@ -33,4 +33,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CListBox m_log;
+
+	void L(const TCHAR* str, ...);
 };

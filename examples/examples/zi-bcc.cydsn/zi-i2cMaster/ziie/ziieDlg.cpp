@@ -101,7 +101,7 @@ BOOL CZiieDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	m_log.AddString(_T("OnInitDialog"));
+	L(_T("OnInitDialog"));
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -155,3 +155,18 @@ HCURSOR CZiieDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CZiieDlg::L(const TCHAR* str, ...)
+{
+	va_list args;
+	va_start(args, str);
+
+	int len = _vsctprintf(str, args) + 1;	//_vscprintf doesn't count terminating '\0'
+	TCHAR* buffer = new TCHAR[len];
+	_vstprintf(buffer, len, str, args);
+	va_end(args);
+
+	m_log.AddString(buffer);
+	delete[](buffer);
+
+	m_log.SetTopIndex(m_log.GetCount() - 1);
+}
