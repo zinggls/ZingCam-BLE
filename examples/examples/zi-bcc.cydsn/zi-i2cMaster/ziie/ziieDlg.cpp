@@ -203,4 +203,9 @@ void CZiieDlg::OnDestroy()
 void CZiieDlg::OnBnClickedExecuteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	HRESULT hr = m_pCom->SetPowerVoltage(_T("5.0"));
+	if (!SUCCEEDED(hr)) {
+		L(_T("Setup Power error,HRESULT: 0x%08X"), hr);
+	}
+	L(_T("Setup Power - 5.0V and internal done"));
 }
