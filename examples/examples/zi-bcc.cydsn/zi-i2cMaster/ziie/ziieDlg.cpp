@@ -274,7 +274,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	L(_T("Enumerate I2C devices"));
 
 	//Show devices
-	if (devices.size() == 0) L(_T("No devices found"));
+	if (devices.size() == 0)
 	{
 		L(_T("No devices found"));
 		return;
