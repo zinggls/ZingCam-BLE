@@ -41,6 +41,7 @@ public:
 	void L(const TCHAR* str, ...);
 	long Control_I2C_SCB_Slave(int deviceAddress);
 	BOOL SetPowerVoltage();
+	BOOL PowerOn();
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
 };
