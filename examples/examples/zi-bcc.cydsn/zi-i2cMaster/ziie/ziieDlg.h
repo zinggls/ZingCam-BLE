@@ -48,7 +48,7 @@ public:
 	BOOL I2C_SetSpeed();
 	BOOL I2C_GetSpeed();
 	BOOL I2C_GetDeviceList(std::vector<byte>& devices);
-	long Control_I2C_SCB_Slave(int deviceAddress);
+	HRESULT Control_I2C_SCB_Slave(int deviceAddress);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
 };

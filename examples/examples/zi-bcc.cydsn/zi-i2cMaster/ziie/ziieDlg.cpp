@@ -326,7 +326,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	Control_I2C_SCB_Slave(devices[0]);
 }
 
-long CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
+HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
 	std::vector<byte> dataIN;
