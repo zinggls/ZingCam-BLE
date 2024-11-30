@@ -42,7 +42,7 @@ void SendCommandToPeripheral(uint8_t command) {
 
 static void onImuFrame(const ImuFrame *imu)
 {
-    memcpy(getI2CReadBuffer()+34,imu->data,IMU_FRAME_SIZE);
+    memcpy(getI2CReadBuffer()+34,imu->data,IMU_FRAME_SIZE); //무선영상 수신기IMU 34
 }
 
 int main(void)
