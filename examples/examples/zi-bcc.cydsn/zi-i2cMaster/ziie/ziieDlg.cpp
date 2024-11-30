@@ -396,4 +396,5 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 		L(_T("Read thread AfxBeginThread failed"));
 		return;
 	}
+	GetDlgItem(IDC_I2C_READ_BUTTON)->EnableWindow(FALSE);
 }
