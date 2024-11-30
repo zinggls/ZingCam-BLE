@@ -55,7 +55,8 @@ void ConvertByteVector2SA(std::vector<BYTE> vector, VARIANT* arrayOUT)
 	V_ARRAY(arrayOUT) = psa;
 }
 
-int ToInt(const std::vector<byte>& data, size_t startIndex) {
+int ToInt(const std::vector<byte>& data, size_t startIndex)
+{
 	// Ensure the startIndex is valid and we have at least 4 bytes to read
 	if ((startIndex + 3) >= data.size()) throw std::out_of_range("Not enough data in vector to read 4 bytes.");
 
