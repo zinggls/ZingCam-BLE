@@ -58,4 +58,5 @@ public:
 	static UINT I2C_Read(LPVOID pParam);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedI2cReadButton();
+	CListCtrl m_zcdListCtrl;
 };
