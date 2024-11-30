@@ -7,8 +7,7 @@
 #include <ZingUart.h>
 #include <i2cs.h>
 #include "imu.h"
-
-#define L(...)  //Logging is not supported
+#include "NoLog.h"
 
 // Modes for a statemachine
 typedef enum SystemMode {
