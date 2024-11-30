@@ -234,6 +234,18 @@ BOOL CZiieDlg::SetProtocol()
 	return TRUE;
 }
 
+BOOL CZiieDlg::I2C_ResetBus()
+{
+	//Reset bus
+	HRESULT hr = m_pCom->I2C_ResetBus();
+	if (!SUCCEEDED(hr)) {
+		L(_T("Reset bus error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Reset bus!"));
+	return TRUE;
+}
+
 void CZiieDlg::OnBnClickedExecuteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -241,14 +253,9 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	if (SetPowerVoltage() != TRUE) return;
 	if (PowerOn() != TRUE) return;
 	if (SetProtocol() != TRUE) return;
+	if (I2C_ResetBus() != TRUE) return;
 
 	HRESULT hr;
-
-
-
-	//Reset bus
-	hr = m_pCom->I2C_ResetBus();
-	L(_T("Reset bus!"));
 
 	//Sleep script for 100 milliseconds
 	Sleep(100);
