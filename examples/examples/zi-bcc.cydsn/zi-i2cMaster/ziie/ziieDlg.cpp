@@ -68,7 +68,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
-	ON_BN_CLICKED(IDC_EXECUTE_BUTTON, &CZiieDlg::OnBnClickedExecuteButton)
+	ON_BN_CLICKED(IDC_I2C_READ_BUTTON, &CZiieDlg::OnBnClickedI2cReadButton)
 END_MESSAGE_MAP()
 
 
@@ -323,16 +323,6 @@ BOOL CZiieDlg::I2C_GetDeviceList()
 	return TRUE;
 }
 
-void CZiieDlg::OnBnClickedExecuteButton()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	m_pReadThread = AfxBeginThread(I2C_Read, this);
-	if (m_pReadThread == NULL) {
-		L(_T("Read thread AfxBeginThread failed"));
-		return;
-	}
-}
-
 HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -396,4 +386,14 @@ UINT CZiieDlg::I2C_Read(LPVOID pParam)
 
 	pDlg->Read_I2C_SCB_Slave(pDlg->m_devices[0], 100);	//무한 루프함수
 	return 0;
+}
+
+void CZiieDlg::OnBnClickedI2cReadButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_pReadThread = AfxBeginThread(I2C_Read, this);
+	if (m_pReadThread == NULL) {
+		L(_T("Read thread AfxBeginThread failed"));
+		return;
+	}
 }

@@ -57,5 +57,5 @@ public:
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static UINT I2C_Read(LPVOID pParam);
 	afx_msg void OnDestroy();
-	afx_msg void OnBnClickedExecuteButton();
+	afx_msg void OnBnClickedI2cReadButton();
 };

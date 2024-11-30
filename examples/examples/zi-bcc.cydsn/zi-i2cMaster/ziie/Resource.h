@@ -8,8 +8,7 @@
 #define IDD_ZIIE_DIALOG                 102
 #define IDR_MAINFRAME                   128
 #define IDC_LOG_LIST                    1000
-#define IDC_EXECUTE_BUTTON              1001
-#define IDC_RUN_BUTTON                  1001
+#define IDC_I2C_READ_BUTTON             1001
 
 // Next default values for new objects
 // 
