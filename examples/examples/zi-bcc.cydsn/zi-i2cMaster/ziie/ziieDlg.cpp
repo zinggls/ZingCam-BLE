@@ -52,7 +52,7 @@ END_MESSAGE_MAP()
 
 
 CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_ZIIE_DIALOG, pParent), m_pCom(NULL)
+	: CDialogEx(IDD_ZIIE_DIALOG, pParent), m_pCom(NULL), m_pReadThread(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -156,14 +156,16 @@ HCURSOR CZiieDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CZiieDlg::COM_Init()
+BOOL CZiieDlg::COM_Init()
 {
 	L(_T("Initializing COM"));
 	if (FAILED(CoInitialize(NULL)))
 	{
 		L(_T("Unable to initialize COM"));
+		return FALSE;
 	}
 	L(_T("COM Initialized"));
+	return TRUE;
 }
 
 void CZiieDlg::COM_UnInit()
@@ -173,7 +175,7 @@ void CZiieDlg::COM_UnInit()
 }
 
 
-void CZiieDlg::COM_OpenPort()
+BOOL CZiieDlg::COM_OpenPort()
 {
 	m_pCom = new CCom(_T("PSoCProgrammerCOM.PSoCProgrammerCOM_Object"));
 	ASSERT(m_pCom);
@@ -181,9 +183,11 @@ void CZiieDlg::COM_OpenPort()
 	HRESULT hr = m_pCom->OpenPort();
 	if (!SUCCEEDED(hr)) {
 		L(_T("COM OpenPort failed, HRESULT: 0x%08X"), hr);
+		return FALSE;
 	}
 	else {
 		L(_T("COM OpenPort OK"));
+		return TRUE;
 	}
 }
 
@@ -322,23 +326,11 @@ BOOL CZiieDlg::I2C_GetDeviceList()
 void CZiieDlg::OnBnClickedExecuteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	COM_Init();
-	COM_OpenPort();
-
-	if (SetPowerVoltage() != TRUE) return;
-	if (PowerOn() != TRUE) return;
-	if (SetProtocol() != TRUE) return;
-	if (I2C_ResetBus() != TRUE) return;
-
-	//Sleep script for 100 milliseconds
-	Sleep(100);
-
-	if (I2C_SetSpeed() != TRUE) return;
-	if (I2C_GetSpeed() != TRUE) return;
-
-	if (I2C_GetDeviceList() != TRUE) return;
-	
-	Read_I2C_SCB_Slave(m_devices[0], 100);
+	m_pReadThread = AfxBeginThread(I2C_Read, this);
+	if (m_pReadThread == NULL) {
+		L(_T("Read thread AfxBeginThread failed"));
+		return;
+	}
 }
 
 HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
@@ -380,4 +372,28 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		Sleep(dwMilliseconds);
 	}
 	return S_OK;
+}
+
+UINT CZiieDlg::I2C_Read(LPVOID pParam)
+{
+	CZiieDlg* pDlg = (CZiieDlg*)pParam;
+
+	if (pDlg->COM_Init() != TRUE) return 1;
+	if (pDlg->COM_OpenPort() != TRUE) return 1;
+
+	if (pDlg->SetPowerVoltage() != TRUE) return 1;
+	if (pDlg->PowerOn() != TRUE) return 1;
+	if (pDlg->SetProtocol() != TRUE) return 1;
+	if (pDlg->I2C_ResetBus() != TRUE) return 1;
+
+	//Sleep script for 100 milliseconds
+	Sleep(100);
+
+	if (pDlg->I2C_SetSpeed() != TRUE) return 1;
+	if (pDlg->I2C_GetSpeed() != TRUE) return 1;
+
+	if (pDlg->I2C_GetDeviceList() != TRUE) return 1;
+
+	pDlg->Read_I2C_SCB_Slave(pDlg->m_devices[0], 100);	//무한 루프함수
+	return 0;
 }

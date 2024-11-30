@@ -40,10 +40,11 @@ public:
 	CCom *m_pCom;
 	CListBox m_log;
 	std::vector<byte> m_devices;
+	CWinThread* m_pReadThread;
 
-	void COM_Init();
+	BOOL COM_Init();
 	void COM_UnInit();
-	void COM_OpenPort();
+	BOOL COM_OpenPort();
 	void L(const TCHAR* str, ...);
 	BOOL SetPowerVoltage();
 	BOOL PowerOn();
@@ -54,6 +55,7 @@ public:
 	BOOL I2C_GetDeviceList();
 	HRESULT Control_I2C_SCB_Slave(int deviceAddress);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
+	static UINT I2C_Read(LPVOID pParam);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
 };
