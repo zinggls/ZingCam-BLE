@@ -282,10 +282,10 @@ BOOL CZiieDlg::I2C_GetSpeed()
 	return TRUE;
 }
 
-BOOL CZiieDlg::I2C_GetDeviceList(std::vector<byte>& devices)
+BOOL CZiieDlg::I2C_GetDeviceList()
 {
 	//Get device list
-	HRESULT hr = m_pCom->I2C_GetDeviceList(devices);
+	HRESULT hr = m_pCom->I2C_GetDeviceList(m_devices);
 	if (!SUCCEEDED(hr))
 	{
 		L(_T("Failed to enumerate I2C devices,HRESULT: 0x%08X"), hr);
@@ -294,14 +294,14 @@ BOOL CZiieDlg::I2C_GetDeviceList(std::vector<byte>& devices)
 	L(_T("Enumerate I2C devices"));
 
 	//Show devices
-	if (devices.size() == 0)
+	if (m_devices.size() == 0)
 	{
 		L(_T("No devices found"));
 		return FALSE;
 	}
 
 	L(_T("Devices list:  8bit  7bit"));
-	for (size_t i = 0; i < devices.size(); i++) L(_T("     address:  %02x    %02x"), devices[i] << 1, devices[i]);
+	for (size_t i = 0; i < m_devices.size(); i++) L(_T("     address:  %02x    %02x"), m_devices[i] << 1, m_devices[i]);
 	return TRUE;
 }
 
@@ -320,10 +320,9 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	if (I2C_SetSpeed() != TRUE) return;
 	if (I2C_GetSpeed() != TRUE) return;
 
-	std::vector<byte> devices;
-	if (I2C_GetDeviceList(devices) != TRUE) return;
+	if (I2C_GetDeviceList() != TRUE) return;
 	
-	Control_I2C_SCB_Slave(devices[0]);
+	Control_I2C_SCB_Slave(m_devices[0]);
 }
 
 HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)

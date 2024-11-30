@@ -39,6 +39,7 @@ protected:
 public:
 	CCom *m_pCom;
 	CListBox m_log;
+	std::vector<byte> m_devices;
 
 	void L(const TCHAR* str, ...);
 	BOOL SetPowerVoltage();
@@ -47,7 +48,7 @@ public:
 	BOOL I2C_ResetBus();
 	BOOL I2C_SetSpeed();
 	BOOL I2C_GetSpeed();
-	BOOL I2C_GetDeviceList(std::vector<byte>& devices);
+	BOOL I2C_GetDeviceList();
 	HRESULT Control_I2C_SCB_Slave(int deviceAddress);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
