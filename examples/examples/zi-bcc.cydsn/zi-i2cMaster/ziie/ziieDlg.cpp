@@ -104,23 +104,6 @@ BOOL CZiieDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	L(_T("Initializing COM"));
-	if (FAILED(CoInitialize(NULL)))
-	{
-		L(_T("Unable to initialize COM"));
-	}
-	L(_T("COM Initialized"));
-
-	m_pCom = new CCom(_T("PSoCProgrammerCOM.PSoCProgrammerCOM_Object"));
-	ASSERT(m_pCom);
-
-	HRESULT hr = m_pCom->OpenPort();
-	if (!SUCCEEDED(hr)) {
-		L(_T("COM OpenPort failed, HRESULT: 0x%08X"), hr);
-	}
-	else {
-		L(_T("COM OpenPort OK"));
-	}
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -171,6 +154,30 @@ void CZiieDlg::OnPaint()
 HCURSOR CZiieDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CZiieDlg::COM_Init()
+{
+	L(_T("Initializing COM"));
+	if (FAILED(CoInitialize(NULL)))
+	{
+		L(_T("Unable to initialize COM"));
+	}
+	L(_T("COM Initialized"));
+}
+
+void CZiieDlg::COM_OpenPort()
+{
+	m_pCom = new CCom(_T("PSoCProgrammerCOM.PSoCProgrammerCOM_Object"));
+	ASSERT(m_pCom);
+
+	HRESULT hr = m_pCom->OpenPort();
+	if (!SUCCEEDED(hr)) {
+		L(_T("COM OpenPort failed, HRESULT: 0x%08X"), hr);
+	}
+	else {
+		L(_T("COM OpenPort OK"));
+	}
 }
 
 void CZiieDlg::L(const TCHAR* str, ...)
@@ -308,6 +315,8 @@ BOOL CZiieDlg::I2C_GetDeviceList()
 void CZiieDlg::OnBnClickedExecuteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	COM_Init();
+	COM_OpenPort();
 
 	if (SetPowerVoltage() != TRUE) return;
 	if (PowerOn() != TRUE) return;

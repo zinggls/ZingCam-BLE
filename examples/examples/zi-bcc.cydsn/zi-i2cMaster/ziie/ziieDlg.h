@@ -41,6 +41,8 @@ public:
 	CListBox m_log;
 	std::vector<byte> m_devices;
 
+	void COM_Init();
+	void COM_OpenPort();
 	void L(const TCHAR* str, ...);
 	BOOL SetPowerVoltage();
 	BOOL PowerOn();
