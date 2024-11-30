@@ -199,18 +199,25 @@ void CZiieDlg::OnDestroy()
 	delete m_pCom;
 }
 
+BOOL CZiieDlg::SetPowerVoltage()
+{
+	//Setup Power - "5.0V" and internal
+	HRESULT hr = m_pCom->SetPowerVoltage(_T("5.0"));
+	if (!SUCCEEDED(hr)) {
+		L(_T("Setup Power error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Setup Power - 5.0V and internal done"));
+	return TRUE;
+}
 
 void CZiieDlg::OnBnClickedExecuteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 
-	//Setup Power - "5.0V" and internal
-	HRESULT hr = m_pCom->SetPowerVoltage(_T("5.0"));
-	if (!SUCCEEDED(hr)) {
-		L(_T("Setup Power error,HRESULT: 0x%08X"), hr);
-		return;
-	}
-	L(_T("Setup Power - 5.0V and internal done"));
+	if (SetPowerVoltage() != TRUE) return;
+
+	HRESULT hr;
 
 	//Power On
 	hr = m_pCom->PowerOn();
@@ -305,12 +312,16 @@ long CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 	}
 	L(_T("Read %dbytes from device"), dataOUT.size());
 
-	CString str;
-	for (size_t i = 0; i < dataOUT.size(); i++) {
-		CString tmp;
-		tmp.Format(_T("%02x "), dataOUT[i]);
-		str += tmp;
+	while (1) {
+		CString str;
+		for (size_t i = 0; i < dataOUT.size(); i++) {
+			CString tmp;
+			tmp.Format(_T("%02x "), dataOUT[i]);
+			str += tmp;
+		}
+		L(str);
+		Sleep(100);
 	}
-	L(str);
+
 	return S_OK;
 }
