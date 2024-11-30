@@ -255,10 +255,12 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	if (SetProtocol() != TRUE) return;
 	if (I2C_ResetBus() != TRUE) return;
 
-	HRESULT hr;
-
 	//Sleep script for 100 milliseconds
 	Sleep(100);
+
+	HRESULT hr;
+
+
 
 	//Set I2C speed
 	hr = m_pCom->I2C_SetSpeed(enumI2Cspeed::CLK_100K);
