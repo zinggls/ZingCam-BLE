@@ -147,4 +147,9 @@ void setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd)
     memcpy(ptr, &zcd->frameDiff, sizeof(zcd->frameDiff));           ptr += sizeof(zcd->frameDiff);
 }
 
+uint8_t* getI2CReadBuffer()
+{
+    return i2cReadBuffer;
+}
+
 /* [] END OF FILE */

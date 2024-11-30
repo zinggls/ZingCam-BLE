@@ -42,6 +42,7 @@ void SendCommandToPeripheral(uint8_t command) {
 
 static void onImuFrame(const ImuFrame *imu)
 {
+    memcpy(getI2CReadBuffer()+34,imu->data,IMU_FRAME_SIZE);
 }
 
 int main(void)
