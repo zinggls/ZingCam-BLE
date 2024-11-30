@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <vector>
+
 #define READ_BUFFER_SIZE	174
 
 class CCom;
@@ -46,6 +48,7 @@ public:
 	BOOL I2C_ResetBus();
 	BOOL I2C_SetSpeed();
 	BOOL I2C_GetSpeed();
+	BOOL I2C_GetDeviceList(std::vector<byte>& devices);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
 };

@@ -282,6 +282,29 @@ BOOL CZiieDlg::I2C_GetSpeed()
 	return TRUE;
 }
 
+BOOL CZiieDlg::I2C_GetDeviceList(std::vector<byte>& devices)
+{
+	//Get device list
+	HRESULT hr = m_pCom->I2C_GetDeviceList(devices);
+	if (!SUCCEEDED(hr))
+	{
+		L(_T("Failed to enumerate I2C devices,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Enumerate I2C devices"));
+
+	//Show devices
+	if (devices.size() == 0)
+	{
+		L(_T("No devices found"));
+		return FALSE;
+	}
+
+	L(_T("Devices list:  8bit  7bit"));
+	for (size_t i = 0; i < devices.size(); i++) L(_T("     address:  %02x    %02x"), devices[i] << 1, devices[i]);
+	return TRUE;
+}
+
 void CZiieDlg::OnBnClickedExecuteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -296,30 +319,10 @@ void CZiieDlg::OnBnClickedExecuteButton()
 
 	if (I2C_SetSpeed() != TRUE) return;
 	if (I2C_GetSpeed() != TRUE) return;
-	
-	HRESULT hr;
 
-
-
-	//Get device list
 	std::vector<byte> devices;
-	hr = m_pCom->I2C_GetDeviceList(devices);
-	if (!SUCCEEDED(hr))
-	{
-		L(_T("Failed to enumerate I2C devices,HRESULT: 0x%08X"), hr);
-		return;
-	}
-	L(_T("Enumerate I2C devices"));
-
-	//Show devices
-	if (devices.size() == 0)
-	{
-		L(_T("No devices found"));
-		return;
-	}
-	L(_T("Devices list:  8bit  7bit"));
-	for (size_t i = 0; i < devices.size(); i++) L(_T("     address:  %02x    %02x"), devices[i] << 1, devices[i]);
-
+	if (I2C_GetDeviceList(devices) != TRUE) return;
+	
 	Control_I2C_SCB_Slave(devices[0]);
 }
 
