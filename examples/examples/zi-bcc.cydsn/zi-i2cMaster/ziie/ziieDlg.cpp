@@ -338,15 +338,15 @@ HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 	L(_T("Write %dbytes to device"), dataIN.size());
 
 	std::vector<byte> dataOUT;
-	hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
-	if (!SUCCEEDED(hr)) {
-		L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
-		return hr;
-	}
-	L(_T("Read %dbytes from device"), dataOUT.size());
-
 	while (1) {
+		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
+		if (!SUCCEEDED(hr)) {
+			L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
+			return hr;
+		}
+
 		CString str;
+		str.Format(_T("[%u] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
 			CString tmp;
 			tmp.Format(_T("%02x "), dataOUT[i]);
