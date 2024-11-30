@@ -50,6 +50,7 @@ public:
 	BOOL I2C_GetSpeed();
 	BOOL I2C_GetDeviceList();
 	HRESULT Control_I2C_SCB_Slave(int deviceAddress);
+	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
 };

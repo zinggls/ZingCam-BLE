@@ -322,7 +322,7 @@ void CZiieDlg::OnBnClickedExecuteButton()
 
 	if (I2C_GetDeviceList() != TRUE) return;
 	
-	Control_I2C_SCB_Slave(m_devices[0]);
+	Read_I2C_SCB_Slave(m_devices[0], 100);
 }
 
 HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
@@ -337,6 +337,14 @@ HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 	}
 	L(_T("Write %dbytes to device"), dataIN.size());
 
+	Read_I2C_SCB_Slave(deviceAddress, 100);
+
+	return S_OK;
+}
+
+HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
+{
+	HRESULT hr;
 	std::vector<byte> dataOUT;
 	while (1) {
 		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
@@ -353,8 +361,7 @@ HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 			str += tmp;
 		}
 		L(str);
-		Sleep(100);
+		Sleep(dwMilliseconds);
 	}
-
 	return S_OK;
 }
