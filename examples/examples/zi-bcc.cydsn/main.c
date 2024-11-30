@@ -167,21 +167,6 @@ void SendCommandToPeripheral(uint8_t command) {
     if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeCharVal++;
 }
 
-static void zxxLog()
-{
-    ZCD_FRAME *zc = &zcdFrame;
-    
-    if(*pZxxKind==ZED) {
-        ZED_FRAME *z = &zedFrame;
-        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZED USB:%d CNT:%d, ZCD USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt,zc->usb,zc->cnt);
-    }
-    
-    if(*pZxxKind==ZCH) {
-        ZCH_FRAME *z = &zchFrame;
-        L("[cc %s] st:%d O>WRC:%u I>NC:%u(%04X)/WRSP:%u, ZCH USB:%d CNT, ZCD USB:%d CNT:%d:%d\r\n", GIT_INFO,cyBle_state,writeCharVal ,notifiedCustom,z->pos,writeRsp,z->usb,z->cnt,zc->usb,zc->cnt);
-    }
-}
-
 static void onImuFrame(const ImuFrame *imu)
 {
 }
@@ -206,7 +191,6 @@ int main(void)
         SendCommandToPeripheral(123);
         imu_process_uart_data(onImuFrame);
         
-        zxxLog();
         CyDelay(10);
     }
 }
