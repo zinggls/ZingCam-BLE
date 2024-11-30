@@ -12,8 +12,10 @@
   <Data key="DataVersionKey" value="2" />
   <Group key="DWRInstGuidMapping">
     <Group key="Pin">
+      <Data key="6f1c6cc3-8ac8-42b8-9be0-54c1b90c12b2" value="UART_IMU_TX" />
       <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="UART_RX" />
       <Data key="345b91c1-8e67-4f7b-8cdc-1fe70a03f1e3" value="UART_ZING_RX" />
+      <Data key="4703c4a4-16ad-48a0-a02e-3a15d4b0387a" value="UART_IMU_RX" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="UART_IMU_RX" />
       <Data key="66214980-b37c-468f-ae81-f45b7048469d" value="UART_ZING_TX" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="UART_TX" />
@@ -3556,6 +3558,11 @@
     </Group>
   </Group>
   <Group key="Pin2">
+    <Group key="6f1c6cc3-8ac8-42b8-9be0-54c1b90c12b2">
+      <Group key="0">
+        <Data key="Port Format" value="0,1" />
+      </Group>
+    </Group>
     <Group key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba">
       <Group key="0">
         <Data key="Port Format" value="1,4" />
@@ -3564,6 +3571,11 @@
     <Group key="345b91c1-8e67-4f7b-8cdc-1fe70a03f1e3">
       <Group key="0">
         <Data key="Port Format" value="3,0" />
+      </Group>
+    </Group>
+    <Group key="4703c4a4-16ad-48a0-a02e-3a15d4b0387a">
+      <Group key="0">
+        <Data key="Port Format" value="0,0" />
       </Group>
     </Group>
     <Group key="1425177d-0d0e-4468-8bcc-e638e5509a9b">
