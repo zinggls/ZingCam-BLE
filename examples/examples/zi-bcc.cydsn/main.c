@@ -28,7 +28,6 @@ static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
 static ZCD_FRAME zcdFrame;
-extern ZingRxCallback zingRxCb;
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
 const static uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
