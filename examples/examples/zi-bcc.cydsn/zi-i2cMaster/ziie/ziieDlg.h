@@ -42,6 +42,7 @@ public:
 	std::vector<byte> m_devices;
 
 	void COM_Init();
+	void COM_UnInit();
 	void COM_OpenPort();
 	void L(const TCHAR* str, ...);
 	BOOL SetPowerVoltage();

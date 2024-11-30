@@ -166,6 +166,13 @@ void CZiieDlg::COM_Init()
 	L(_T("COM Initialized"));
 }
 
+void CZiieDlg::COM_UnInit()
+{
+	CoUninitialize();
+	L(_T("COM Uninitialized"));
+}
+
+
 void CZiieDlg::COM_OpenPort()
 {
 	m_pCom = new CCom(_T("PSoCProgrammerCOM.PSoCProgrammerCOM_Object"));
