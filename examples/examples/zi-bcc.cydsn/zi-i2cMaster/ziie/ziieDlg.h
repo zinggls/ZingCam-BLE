@@ -41,7 +41,6 @@ public:
 	CListBox m_log;
 
 	void L(const TCHAR* str, ...);
-	long Control_I2C_SCB_Slave(int deviceAddress);
 	BOOL SetPowerVoltage();
 	BOOL PowerOn();
 	BOOL SetProtocol();
@@ -49,6 +48,7 @@ public:
 	BOOL I2C_SetSpeed();
 	BOOL I2C_GetSpeed();
 	BOOL I2C_GetDeviceList(std::vector<byte>& devices);
+	long Control_I2C_SCB_Slave(int deviceAddress);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
 };
