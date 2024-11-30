@@ -45,6 +45,7 @@ public:
 	BOOL SetProtocol();
 	BOOL I2C_ResetBus();
 	BOOL I2C_SetSpeed();
+	BOOL I2C_GetSpeed();
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
 };

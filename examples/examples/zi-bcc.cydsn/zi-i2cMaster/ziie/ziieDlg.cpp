@@ -258,6 +258,30 @@ BOOL CZiieDlg::I2C_SetSpeed()
 	return TRUE;
 }
 
+BOOL CZiieDlg::I2C_GetSpeed()
+{
+	//Get I2C speed
+	long speed = 0;
+	CString val = _T("");
+	HRESULT hr = m_pCom->I2C_GetSpeed(speed);
+	if (!SUCCEEDED(hr)) {
+		L(_T("Get speed error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+
+	if (speed == 1) {
+		val = _T("100K");
+	}
+	else if (speed == 4) {
+		val = _T("50K");
+	}
+	else if (speed == 2) {
+		val = _T("400K");
+	}
+	L(_T("Get speed: %s"), val);
+	return TRUE;
+}
+
 void CZiieDlg::OnBnClickedExecuteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -271,28 +295,11 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	Sleep(100);
 
 	if (I2C_SetSpeed() != TRUE) return;
-
+	if (I2C_GetSpeed() != TRUE) return;
+	
 	HRESULT hr;
 
-	//Get I2C speed
-	long speed = 0;
-	CString val = _T("");
-	hr = m_pCom->I2C_GetSpeed(speed);
-	if (speed == 1) {
-		val = _T("100K");
-	}
-	else if (speed == 4) {
-		val = _T("50K");
-	}
-	else if (speed == 2) {
-		val = _T("400K");
-	}
 
-	if (!SUCCEEDED(hr)) {
-		L(_T("Get speed error,HRESULT: 0x%08X"), hr);
-		return;
-	}
-	L(_T("Get speed: %s"), val);
 
 	//Get device list
 	std::vector<byte> devices;
