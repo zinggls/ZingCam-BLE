@@ -42,6 +42,7 @@ public:
 	long Control_I2C_SCB_Slave(int deviceAddress);
 	BOOL SetPowerVoltage();
 	BOOL PowerOn();
+	BOOL SetProtocol();
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExecuteButton();
 };

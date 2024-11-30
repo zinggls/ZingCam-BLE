@@ -222,22 +222,29 @@ BOOL CZiieDlg::PowerOn()
 	return TRUE;
 }
 
+BOOL CZiieDlg::SetProtocol()
+{
+	//Set protocol, connector and frequency
+	HRESULT hr = m_pCom->SetProtocol(enumInterfaces::I2C); //I2C-protocol
+	if (!SUCCEEDED(hr)) {
+		L(_T("SetProtocol error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Set protocol, connector and frequency"));
+	return TRUE;
+}
+
 void CZiieDlg::OnBnClickedExecuteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 
 	if (SetPowerVoltage() != TRUE) return;
 	if (PowerOn() != TRUE) return;
+	if (SetProtocol() != TRUE) return;
 
 	HRESULT hr;
 
-	//Set protocol, connector and frequency
-	hr = m_pCom->SetProtocol(enumInterfaces::I2C); //I2C-protocol
-	if (!SUCCEEDED(hr)) {
-		L(_T("SetProtocol error,HRESULT: 0x%08X"), hr);
-		return;
-	}
-	L(_T("Set protocol, connector and frequency"));
+
 
 	//Reset bus
 	hr = m_pCom->I2C_ResetBus();
