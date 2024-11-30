@@ -246,6 +246,18 @@ BOOL CZiieDlg::I2C_ResetBus()
 	return TRUE;
 }
 
+BOOL CZiieDlg::I2C_SetSpeed()
+{
+	//Set I2C speed
+	HRESULT hr = m_pCom->I2C_SetSpeed(enumI2Cspeed::CLK_100K);
+	if (!SUCCEEDED(hr)) {
+		L(_T("Set speed: 100K error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Set speed: 100K"));
+	return TRUE;
+}
+
 void CZiieDlg::OnBnClickedExecuteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -258,17 +270,9 @@ void CZiieDlg::OnBnClickedExecuteButton()
 	//Sleep script for 100 milliseconds
 	Sleep(100);
 
+	if (I2C_SetSpeed() != TRUE) return;
+
 	HRESULT hr;
-
-
-
-	//Set I2C speed
-	hr = m_pCom->I2C_SetSpeed(enumI2Cspeed::CLK_100K);
-	if (!SUCCEEDED(hr)) {
-		L(_T("Set speed: 100K error,HRESULT: 0x%08X"), hr);
-		return;
-	}
-	L(_T("Set speed: 100K"));
 
 	//Get I2C speed
 	long speed = 0;
