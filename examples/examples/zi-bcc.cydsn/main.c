@@ -6,6 +6,7 @@
 #include <UartBuf.h>
 #include <ZingUart.h>
 #include <i2cs.h>
+#include "imu.h"
 
 #define L(...)  //Logging is not supported
 
@@ -182,6 +183,10 @@ static void zxxLog()
     }
 }
 
+static void onImuFrame(const ImuFrame *imu)
+{
+}
+
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
@@ -192,13 +197,15 @@ int main(void)
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     i2cs_start();
     CyBle_Start( CyBle_AppCallback );
+    UART_IMU_StartAndInitialize();
     
     for(;;)
     {          
         CyBle_ProcessEvents();
-        process_uart_data();
+        zing_process_uart_data();
         i2cs_process(&zcdFrame);
         SendCommandToPeripheral(123);
+        imu_process_uart_data(onImuFrame);
         
         zxxLog();
         CyDelay(10);

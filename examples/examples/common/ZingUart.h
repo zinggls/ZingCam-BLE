@@ -33,7 +33,7 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
 }
 
 // Function to process data when a complete message is available
-void process_uart_data()
+void zing_process_uart_data()
 {
     if (uBuf.message_complete) {
         // Extract complete message from buffer        

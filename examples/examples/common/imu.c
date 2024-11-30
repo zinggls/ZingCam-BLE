@@ -1,6 +1,9 @@
 #include "project.h"
 #include "imu.h"
 
+static UartBuf uBuf;    //Circular buffer for UART data
+static ImuFrame imu;
+
 CY_ISR(UART_IMU_RX_INTERRUPT)
 {
     UartBuf_write_char(&uBuf,UART_IMU_UartGetByte());  // Write character to circular buffer
@@ -29,7 +32,7 @@ void UART_IMU_StartAndInitialize()
 }
 
 // Function to process data when a complete message is available
-void process_uart_data(ImuFrameCallback cb)
+void imu_process_uart_data(ImuFrameCallback cb)
 {
     while (!UartBuf_is_empty(&uBuf)) {
         char ch = UartBuf_read_char(&uBuf);
