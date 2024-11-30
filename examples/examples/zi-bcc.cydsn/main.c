@@ -28,7 +28,6 @@ static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
 static ZCD_FRAME zcdFrame;
-static ZxxKind *pZxxKind = 0;
 extern ZingRxCallback zingRxCb;
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
@@ -110,14 +109,14 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
             notificationParam = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T*)eventParam;
             
-            if(*pZxxKind==Unknown) *pZxxKind = inspect((char*)notificationParam->handleValPair.value.val);
+            if(*getZxxKind()==Unknown) *getZxxKind() = inspect((char*)notificationParam->handleValPair.value.val);
             
             if(notificationParam->handleValPair.value.len == getFrameSize()) {
                 notifiedCustom++;
                 
                 // Process the received data                                
-                if(*pZxxKind==ZED) memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-                if(*pZxxKind==ZCH) memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                if(*getZxxKind()==ZED) memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                if(*getZxxKind()==ZCH) memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
             }
             break;
             
@@ -175,7 +174,6 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
-    pZxxKind = getZxxKind();
     ZingUart_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
