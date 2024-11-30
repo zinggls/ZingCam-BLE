@@ -8,6 +8,7 @@
 #include "ziieDlg.h"
 #include "afxdialogex.h"
 #include "com.h"
+#include "util.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -361,6 +362,7 @@ HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
+	CString str;
 	std::vector<byte> dataOUT;
 	while (1) {
 		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
@@ -369,7 +371,11 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 			return hr;
 		}
 
-		CString str;
+		int nItem = m_zcdListCtrl.InsertItem(0, _T("-"));
+
+		str.Format(_T("%d"), ToInt(dataOUT, 103));
+		m_zcdListCtrl.SetItemText(nItem, 0, str);
+
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
 			CString tmp;

@@ -54,3 +54,16 @@ void ConvertByteVector2SA(std::vector<BYTE> vector, VARIANT* arrayOUT)
 	V_VT(arrayOUT) = VT_ARRAY | VT_UI1;
 	V_ARRAY(arrayOUT) = psa;
 }
+
+int ToInt(const std::vector<byte>& data, size_t startIndex) {
+	// Ensure the startIndex is valid and we have at least 4 bytes to read
+	if ((startIndex + 3) >= data.size()) throw std::out_of_range("Not enough data in vector to read 4 bytes.");
+
+	// Convert little-endian bytes to integer
+	return static_cast<int>(
+		static_cast<uint32_t>(data[startIndex]) |
+		(static_cast<uint32_t>(data[startIndex + 1]) << 8) |
+		(static_cast<uint32_t>(data[startIndex + 2]) << 16) |
+		(static_cast<uint32_t>(data[startIndex + 3]) << 24)
+		);
+}
