@@ -10,3 +10,4 @@ void ConvertByteVector2SA(std::vector<BYTE> vector, VARIANT* arrayOUT);
 int ToInt(const std::vector<byte>& data, size_t startIndex);
 CString ToHex(const std::vector<byte>& data, size_t startIndex);
 CString ToIntStr(const std::vector<byte>& data, size_t startIndex);
+CString ToCharStr(const std::vector<byte>& data, size_t startIndex);

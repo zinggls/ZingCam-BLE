@@ -82,3 +82,10 @@ CString ToIntStr(const std::vector<byte>& data, size_t startIndex)
 	str.Format(_T("%d"), ToInt(data, startIndex));
 	return str;
 }
+
+CString ToCharStr(const std::vector<byte>& data, size_t startIndex)
+{
+	CString str;
+	str.Format(_T("%c"), data[startIndex]);
+	return str;
+}
