@@ -79,3 +79,81 @@ ZxxKind* getZxxKind()
 {
     return &zxxKind;
 }
+
+void setZcdBuffer(uint8_t *buf,ZCD_FRAME *z)
+{
+    uint8_t *ptr = buf; // Pointer to traverse the buffer
+
+    // Write COMMON_FIELDS
+    memcpy(ptr, &z->kind, sizeof(z->kind));                     ptr += sizeof(z->kind);
+    memcpy(ptr, &z->usb, sizeof(z->usb));                       ptr += sizeof(z->usb);
+    memcpy(ptr, &z->bnd, sizeof(z->bnd));                       ptr += sizeof(z->bnd);
+    memcpy(ptr, &z->ppid, sizeof(z->ppid));                     ptr += sizeof(z->ppid);
+    memcpy(ptr, &z->devid, sizeof(z->devid));                   ptr += sizeof(z->devid);
+    memcpy(ptr, &z->fmt, sizeof(z->fmt));                       ptr += sizeof(z->fmt);
+    memcpy(ptr, &z->idx, sizeof(z->idx));                       ptr += sizeof(z->idx);
+    memcpy(ptr, &z->trt, sizeof(z->trt));                       ptr += sizeof(z->trt);
+    memcpy(ptr, &z->ack, sizeof(z->ack));                       ptr += sizeof(z->ack);
+    memcpy(ptr, &z->ppc, sizeof(z->ppc));                       ptr += sizeof(z->ppc);
+    memcpy(ptr, &z->run, sizeof(z->run));                       ptr += sizeof(z->run);
+    memcpy(ptr, &z->txid, sizeof(z->txid));                     ptr += sizeof(z->txid);
+    memcpy(ptr, &z->rxid, sizeof(z->rxid));                     ptr += sizeof(z->rxid);
+    memcpy(ptr, &z->cnt, sizeof(z->cnt));                       ptr += sizeof(z->cnt);
+    memcpy(ptr, &z->pos, sizeof(z->pos));                       ptr += sizeof(z->pos);
+
+    // Write ZCD_ADDITIONAL_FIELDS
+    memcpy(ptr, &z->fps, sizeof(z->fps));                       ptr += sizeof(z->fps);
+    memcpy(ptr, &z->itf, sizeof(z->itf));                       ptr += sizeof(z->itf);
+    memcpy(ptr, &z->destIdErrCnt, sizeof(z->destIdErrCnt));     ptr += sizeof(z->destIdErrCnt);
+    memcpy(ptr, &z->destIdDiff, sizeof(z->destIdDiff));         ptr += sizeof(z->destIdDiff);
+    memcpy(ptr, &z->phyRxFrameCnt, sizeof(z->phyRxFrameCnt));   ptr += sizeof(z->phyRxFrameCnt);
+    memcpy(ptr, &z->frameDiff, sizeof(z->frameDiff));           ptr += sizeof(z->frameDiff);
+}
+
+void setZedBuffer(uint8_t *buf,ZED_FRAME *z)
+{
+    uint8_t *ptr = buf; // Pointer to traverse the buffer
+
+    // Write COMMON_FIELDS (45Bytes)
+    memcpy(ptr, &z->kind, sizeof(z->kind));                     ptr += sizeof(z->kind);
+    memcpy(ptr, &z->usb, sizeof(z->usb));                       ptr += sizeof(z->usb);
+    memcpy(ptr, &z->bnd, sizeof(z->bnd));                       ptr += sizeof(z->bnd);
+    memcpy(ptr, &z->ppid, sizeof(z->ppid));                     ptr += sizeof(z->ppid);
+    memcpy(ptr, &z->devid, sizeof(z->devid));                   ptr += sizeof(z->devid);
+    memcpy(ptr, &z->fmt, sizeof(z->fmt));                       ptr += sizeof(z->fmt);
+    memcpy(ptr, &z->idx, sizeof(z->idx));                       ptr += sizeof(z->idx);
+    memcpy(ptr, &z->trt, sizeof(z->trt));                       ptr += sizeof(z->trt);
+    memcpy(ptr, &z->ack, sizeof(z->ack));                       ptr += sizeof(z->ack);
+    memcpy(ptr, &z->ppc, sizeof(z->ppc));                       ptr += sizeof(z->ppc);
+    memcpy(ptr, &z->run, sizeof(z->run));                       ptr += sizeof(z->run);
+    memcpy(ptr, &z->txid, sizeof(z->txid));                     ptr += sizeof(z->txid);
+    memcpy(ptr, &z->rxid, sizeof(z->rxid));                     ptr += sizeof(z->rxid);
+    memcpy(ptr, &z->cnt, sizeof(z->cnt));                       ptr += sizeof(z->cnt);
+    memcpy(ptr, &z->pos, sizeof(z->pos));                       ptr += sizeof(z->pos);
+}
+
+void setZchBuffer(uint8_t *buf,ZCH_FRAME *z)
+{
+    uint8_t *ptr = buf; // Pointer to traverse the buffer
+
+    // Write COMMON_FIELDS (45Bytes)
+    memcpy(ptr, &z->kind, sizeof(z->kind));                     ptr += sizeof(z->kind);
+    memcpy(ptr, &z->usb, sizeof(z->usb));                       ptr += sizeof(z->usb);
+    memcpy(ptr, &z->bnd, sizeof(z->bnd));                       ptr += sizeof(z->bnd);
+    memcpy(ptr, &z->ppid, sizeof(z->ppid));                     ptr += sizeof(z->ppid);
+    memcpy(ptr, &z->devid, sizeof(z->devid));                   ptr += sizeof(z->devid);
+    memcpy(ptr, &z->fmt, sizeof(z->fmt));                       ptr += sizeof(z->fmt);
+    memcpy(ptr, &z->idx, sizeof(z->idx));                       ptr += sizeof(z->idx);
+    memcpy(ptr, &z->trt, sizeof(z->trt));                       ptr += sizeof(z->trt);
+    memcpy(ptr, &z->ack, sizeof(z->ack));                       ptr += sizeof(z->ack);
+    memcpy(ptr, &z->ppc, sizeof(z->ppc));                       ptr += sizeof(z->ppc);
+    memcpy(ptr, &z->run, sizeof(z->run));                       ptr += sizeof(z->run);
+    memcpy(ptr, &z->txid, sizeof(z->txid));                     ptr += sizeof(z->txid);
+    memcpy(ptr, &z->rxid, sizeof(z->rxid));                     ptr += sizeof(z->rxid);
+    memcpy(ptr, &z->cnt, sizeof(z->cnt));                       ptr += sizeof(z->cnt);
+    memcpy(ptr, &z->pos, sizeof(z->pos));                       ptr += sizeof(z->pos);
+    
+    // Write ZCD_ADDITIONAL_FIELDS
+    memcpy(ptr, &z->vnd, sizeof(z->vnd));                       ptr += sizeof(z->vnd);
+    memcpy(ptr, &z->prd, sizeof(z->prd));                       ptr += sizeof(z->prd);
+}
