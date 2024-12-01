@@ -11,3 +11,4 @@ int ToInt(const std::vector<byte>& data, size_t startIndex);
 CString ToHex(const std::vector<byte>& data, size_t startIndex);
 CString ToIntStr(const std::vector<byte>& data, size_t startIndex);
 CString ToCharStr(const std::vector<byte>& data, size_t startIndex);
+CString ToHexStr(const std::vector<byte>& data, size_t startIndex, size_t count);

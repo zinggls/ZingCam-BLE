@@ -89,3 +89,15 @@ CString ToCharStr(const std::vector<byte>& data, size_t startIndex)
 	str.Format(_T("%c"), data[startIndex]);
 	return str;
 }
+
+CString ToHexStr(const std::vector<byte>& data, size_t startIndex, size_t count)
+{
+	CString str;
+	str.Format(_T("0x"));
+	for (size_t i = 0; i < count; i++) {
+		CString tmp;
+		tmp.Format(_T("%02X"), data[startIndex + i]);
+		str += tmp;
+	}
+	return str;
+}

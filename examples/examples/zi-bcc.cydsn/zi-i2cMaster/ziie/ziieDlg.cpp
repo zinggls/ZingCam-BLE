@@ -380,6 +380,14 @@ int CZiieDlg::InsertItem(CListCtrl& listCtrl, const CString& newItem)
 	return index;
 }
 
+void CZiieDlg::UpdateDImuListCtrl(std::vector<byte>& dataOUT)
+{
+	int nItem = InsertItem(m_dImuListCtrl, _T("DIMU"));
+
+	size_t dimuIndex = 34;
+	m_dImuListCtrl.SetItemText(nItem, 0, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
+}
+
 void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 {
 	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
@@ -437,6 +445,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 			return hr;
 		}
 
+		UpdateDImuListCtrl(dataOUT);
 		UpdateZcdListCtrl(dataOUT);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
