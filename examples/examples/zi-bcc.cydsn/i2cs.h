@@ -48,6 +48,8 @@
 void i2cs_start(void);
 void i2cs_process(ZCD_FRAME *zcd);
 void setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd);
+void setZedBuffer(uint8_t *buf,ZED_FRAME *z);
+void setZchBuffer(uint8_t *buf,ZCH_FRAME *z);
 uint8_t* getI2CReadBuffer();
 
 #endif //I2CS_H
