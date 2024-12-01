@@ -75,3 +75,10 @@ CString ToHex(const std::vector<byte>& data, size_t startIndex)
 	str.Format(_T("0x%X"), ToInt(data, startIndex));
 	return str;
 }
+
+CString ToIntStr(const std::vector<byte>& data, size_t startIndex)
+{
+	CString str;
+	str.Format(_T("%d"), ToInt(data, startIndex));
+	return str;
+}
