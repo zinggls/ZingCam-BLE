@@ -378,6 +378,14 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		m_zcdListCtrl.SetItemText(nItem, 0, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
 		m_zcdListCtrl.SetItemText(nItem, 1, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
 
+		//firmware setZcdBuffer내에서 bnd값을 보내는데 이는 chatgpt가 생성한 코드를 쓰다보니 생긴 오류로 보임. zcd에는 bnd가 정의되지 않았다 따라서 bnd는 무시
+		zcdIndex += 1;
+
+		m_zcdListCtrl.SetItemText(nItem, 2, ToHex(dataOUT, zcdIndex)); zcdIndex += 4;
+		m_zcdListCtrl.SetItemText(nItem, 3, ToHex(dataOUT, zcdIndex)); zcdIndex += 4;
+		m_zcdListCtrl.SetItemText(nItem, 4, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
+		m_zcdListCtrl.SetItemText(nItem, 5, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
+
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
 			CString tmp;
