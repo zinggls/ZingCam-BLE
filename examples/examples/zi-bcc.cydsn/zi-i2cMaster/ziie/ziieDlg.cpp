@@ -106,24 +106,24 @@ BOOL CZiieDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	m_zcdListCtrl.InsertColumn(0, _T("Kind"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(1, _T("USB"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(2, _T("PPID"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(3, _T("DeviceID"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(4, _T("FMT"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(5, _T("IDX"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(6, _T("FPS"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(7, _T("TRT"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(8, _T("ACK"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(9, _T("PPC"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(10, _T("RUN"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(11, _T("ITF"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(12, _T("TXID"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(13, _T("RXID"), LVCFMT_LEFT, 65);
+	m_zcdListCtrl.InsertColumn(0, _T("Kind"), LVCFMT_LEFT, 35);
+	m_zcdListCtrl.InsertColumn(1, _T("USB"), LVCFMT_LEFT, 35);
+	m_zcdListCtrl.InsertColumn(2, _T("PPID"), LVCFMT_LEFT, 85);
+	m_zcdListCtrl.InsertColumn(3, _T("DeviceID"), LVCFMT_LEFT, 85);
+	m_zcdListCtrl.InsertColumn(4, _T("FMT"), LVCFMT_LEFT, 35);
+	m_zcdListCtrl.InsertColumn(5, _T("IDX"), LVCFMT_LEFT, 35);
+	m_zcdListCtrl.InsertColumn(6, _T("FPS"), LVCFMT_LEFT, 85);
+	m_zcdListCtrl.InsertColumn(7, _T("TRT"), LVCFMT_LEFT, 35);
+	m_zcdListCtrl.InsertColumn(8, _T("ACK"), LVCFMT_LEFT, 35);
+	m_zcdListCtrl.InsertColumn(9, _T("PPC"), LVCFMT_LEFT, 35);
+	m_zcdListCtrl.InsertColumn(10, _T("RUN"), LVCFMT_LEFT, 35);
+	m_zcdListCtrl.InsertColumn(11, _T("ITF"), LVCFMT_LEFT, 35);
+	m_zcdListCtrl.InsertColumn(12, _T("TXID"), LVCFMT_LEFT, 85);
+	m_zcdListCtrl.InsertColumn(13, _T("RXID"), LVCFMT_LEFT, 85);
 	m_zcdListCtrl.InsertColumn(14, _T("DestID_ERR_CNT"), LVCFMT_LEFT, 120);
-	m_zcdListCtrl.InsertColumn(15, _T("PHY_RX_FRAME_CNT"), LVCFMT_LEFT, 120);
+	m_zcdListCtrl.InsertColumn(15, _T("PHY_RX_FRAME_CNT"), LVCFMT_LEFT, 130);
 	m_zcdListCtrl.InsertColumn(16, _T("MFIR"), LVCFMT_LEFT, 65);
-	m_zcdListCtrl.InsertColumn(17, _T("CNT"), LVCFMT_LEFT, 65);
+	m_zcdListCtrl.InsertColumn(17, _T("CNT"), LVCFMT_LEFT, 85);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
