@@ -386,6 +386,11 @@ void CZiieDlg::UpdateDImuListCtrl(std::vector<byte>& dataOUT)
 
 	size_t dimuIndex = 34;
 	m_dImuListCtrl.SetItemText(nItem, 0, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
+	m_dImuListCtrl.SetItemText(nItem, 1, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
+	m_dImuListCtrl.SetItemText(nItem, 2, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
+	m_dImuListCtrl.SetItemText(nItem, 3, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
+	m_dImuListCtrl.SetItemText(nItem, 4, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
+	m_dImuListCtrl.SetItemText(nItem, 5, ToHexStr(dataOUT, dimuIndex, 2));
 }
 
 void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
