@@ -11,8 +11,9 @@
 #define IDC_I2C_READ_BUTTON             1001
 #define IDC_LIST1                       1002
 #define IDC_ZCD_LIST                    1002
-#define IDC_ZCC_IMU_LIST                1003
 #define IDC_DMU_LIST                    1003
+#define IDC_DMU_LIST2                   1004
+#define IDC_HMU_LIST                    1004
 
 // Next default values for new objects
 // 
