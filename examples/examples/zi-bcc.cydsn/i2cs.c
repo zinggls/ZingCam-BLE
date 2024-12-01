@@ -117,34 +117,34 @@ void i2cs_process(ZCD_FRAME *zcd)
     }
 }
 
-void setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd)
+void setZcdBuffer(uint8_t *buf,ZCD_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer
 
     // Write COMMON_FIELDS
-    memcpy(ptr, &zcd->kind, sizeof(zcd->kind));                     ptr += sizeof(zcd->kind);
-    memcpy(ptr, &zcd->usb, sizeof(zcd->usb));                       ptr += sizeof(zcd->usb);
-    memcpy(ptr, &zcd->bnd, sizeof(zcd->bnd));                       ptr += sizeof(zcd->bnd);
-    memcpy(ptr, &zcd->ppid, sizeof(zcd->ppid));                     ptr += sizeof(zcd->ppid);
-    memcpy(ptr, &zcd->devid, sizeof(zcd->devid));                   ptr += sizeof(zcd->devid);
-    memcpy(ptr, &zcd->fmt, sizeof(zcd->fmt));                       ptr += sizeof(zcd->fmt);
-    memcpy(ptr, &zcd->idx, sizeof(zcd->idx));                       ptr += sizeof(zcd->idx);
-    memcpy(ptr, &zcd->trt, sizeof(zcd->trt));                       ptr += sizeof(zcd->trt);
-    memcpy(ptr, &zcd->ack, sizeof(zcd->ack));                       ptr += sizeof(zcd->ack);
-    memcpy(ptr, &zcd->ppc, sizeof(zcd->ppc));                       ptr += sizeof(zcd->ppc);
-    memcpy(ptr, &zcd->run, sizeof(zcd->run));                       ptr += sizeof(zcd->run);
-    memcpy(ptr, &zcd->txid, sizeof(zcd->txid));                     ptr += sizeof(zcd->txid);
-    memcpy(ptr, &zcd->rxid, sizeof(zcd->rxid));                     ptr += sizeof(zcd->rxid);
-    memcpy(ptr, &zcd->cnt, sizeof(zcd->cnt));                       ptr += sizeof(zcd->cnt);
-    memcpy(ptr, &zcd->pos, sizeof(zcd->pos));                       ptr += sizeof(zcd->pos);
+    memcpy(ptr, &z->kind, sizeof(z->kind));                     ptr += sizeof(z->kind);
+    memcpy(ptr, &z->usb, sizeof(z->usb));                       ptr += sizeof(z->usb);
+    memcpy(ptr, &z->bnd, sizeof(z->bnd));                       ptr += sizeof(z->bnd);
+    memcpy(ptr, &z->ppid, sizeof(z->ppid));                     ptr += sizeof(z->ppid);
+    memcpy(ptr, &z->devid, sizeof(z->devid));                   ptr += sizeof(z->devid);
+    memcpy(ptr, &z->fmt, sizeof(z->fmt));                       ptr += sizeof(z->fmt);
+    memcpy(ptr, &z->idx, sizeof(z->idx));                       ptr += sizeof(z->idx);
+    memcpy(ptr, &z->trt, sizeof(z->trt));                       ptr += sizeof(z->trt);
+    memcpy(ptr, &z->ack, sizeof(z->ack));                       ptr += sizeof(z->ack);
+    memcpy(ptr, &z->ppc, sizeof(z->ppc));                       ptr += sizeof(z->ppc);
+    memcpy(ptr, &z->run, sizeof(z->run));                       ptr += sizeof(z->run);
+    memcpy(ptr, &z->txid, sizeof(z->txid));                     ptr += sizeof(z->txid);
+    memcpy(ptr, &z->rxid, sizeof(z->rxid));                     ptr += sizeof(z->rxid);
+    memcpy(ptr, &z->cnt, sizeof(z->cnt));                       ptr += sizeof(z->cnt);
+    memcpy(ptr, &z->pos, sizeof(z->pos));                       ptr += sizeof(z->pos);
 
     // Write ZCD_ADDITIONAL_FIELDS
-    memcpy(ptr, &zcd->fps, sizeof(zcd->fps));                       ptr += sizeof(zcd->fps);
-    memcpy(ptr, &zcd->itf, sizeof(zcd->itf));                       ptr += sizeof(zcd->itf);
-    memcpy(ptr, &zcd->destIdErrCnt, sizeof(zcd->destIdErrCnt));     ptr += sizeof(zcd->destIdErrCnt);
-    memcpy(ptr, &zcd->destIdDiff, sizeof(zcd->destIdDiff));         ptr += sizeof(zcd->destIdDiff);
-    memcpy(ptr, &zcd->phyRxFrameCnt, sizeof(zcd->phyRxFrameCnt));   ptr += sizeof(zcd->phyRxFrameCnt);
-    memcpy(ptr, &zcd->frameDiff, sizeof(zcd->frameDiff));           ptr += sizeof(zcd->frameDiff);
+    memcpy(ptr, &z->fps, sizeof(z->fps));                       ptr += sizeof(z->fps);
+    memcpy(ptr, &z->itf, sizeof(z->itf));                       ptr += sizeof(z->itf);
+    memcpy(ptr, &z->destIdErrCnt, sizeof(z->destIdErrCnt));     ptr += sizeof(z->destIdErrCnt);
+    memcpy(ptr, &z->destIdDiff, sizeof(z->destIdDiff));         ptr += sizeof(z->destIdDiff);
+    memcpy(ptr, &z->phyRxFrameCnt, sizeof(z->phyRxFrameCnt));   ptr += sizeof(z->phyRxFrameCnt);
+    memcpy(ptr, &z->frameDiff, sizeof(z->frameDiff));           ptr += sizeof(z->frameDiff);
 }
 
 void setZedBuffer(uint8_t *buf,ZED_FRAME *z)
