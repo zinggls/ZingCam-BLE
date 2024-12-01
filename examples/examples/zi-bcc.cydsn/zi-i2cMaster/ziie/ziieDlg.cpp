@@ -360,9 +360,21 @@ HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 	return S_OK;
 }
 
+int CZiieDlg::InsertItem(CListCtrl& listCtrl, const CString& newItem)
+{
+	int itemCount = listCtrl.GetItemCount();
+	if (itemCount >= MAX_LIST_ITEMS) listCtrl.DeleteItem(0);	// Remove the first item (FIFO behavior)
+
+	int index = listCtrl.InsertItem(itemCount, newItem); // Add new item at the end
+
+	// Ensure the new item is visible
+	listCtrl.EnsureVisible(index, FALSE);
+	return index;
+}
+
 void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 {
-	int nItem = m_zcdListCtrl.InsertItem(m_zcdListCtrl.GetItemCount(), _T("-"));
+	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
 
 	size_t zcdIndex = 99;
 	m_zcdListCtrl.SetItemText(nItem, 0, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;	//Kind
@@ -403,9 +415,6 @@ void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 	m_zcdListCtrl.SetItemText(nItem, 15, strPhyRx);										//PHY_RX_FRAME_CNT
 	m_zcdListCtrl.SetItemText(nItem, 16, _T("-"));										//MFIR
 	m_zcdListCtrl.SetItemText(nItem, 17, strCnt);										//CNT
-
-	// Ensure the latest item is visible
-	m_zcdListCtrl.EnsureVisible(nItem, FALSE);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)

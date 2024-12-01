@@ -7,6 +7,7 @@
 #include <vector>
 
 #define READ_BUFFER_SIZE	174
+#define MAX_LIST_ITEMS		(1024*8)
 
 class CCom;
 
@@ -54,6 +55,7 @@ public:
 	BOOL I2C_GetSpeed();
 	BOOL I2C_GetDeviceList();
 	HRESULT Control_I2C_SCB_Slave(int deviceAddress);
+	int InsertItem(CListCtrl& listCtrl, const CString& newItem);
 	void UpdateZcdListCtrl(std::vector<byte>& dataOUT);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static UINT I2C_Read(LPVOID pParam);
