@@ -375,16 +375,44 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		int nItem = m_zcdListCtrl.InsertItem(0, _T("-"));
 
 		size_t zcdIndex = 99;
-		m_zcdListCtrl.SetItemText(nItem, 0, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
-		m_zcdListCtrl.SetItemText(nItem, 1, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
+		m_zcdListCtrl.SetItemText(nItem, 0, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;	//Kind
+		m_zcdListCtrl.SetItemText(nItem, 1, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;	//USB
 
 		//firmware setZcdBuffer내에서 bnd값을 보내는데 이는 chatgpt가 생성한 코드를 쓰다보니 생긴 오류로 보임. zcd에는 bnd가 정의되지 않았다 따라서 bnd는 무시
-		zcdIndex += 1;
+		CString strBnd = ToCharStr(dataOUT, zcdIndex); zcdIndex += 1;
 
-		m_zcdListCtrl.SetItemText(nItem, 2, ToHex(dataOUT, zcdIndex)); zcdIndex += 4;
-		m_zcdListCtrl.SetItemText(nItem, 3, ToHex(dataOUT, zcdIndex)); zcdIndex += 4;
-		m_zcdListCtrl.SetItemText(nItem, 4, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
-		m_zcdListCtrl.SetItemText(nItem, 5, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
+		m_zcdListCtrl.SetItemText(nItem, 2, ToHex(dataOUT, zcdIndex)); zcdIndex += 4;		//PPID
+		m_zcdListCtrl.SetItemText(nItem, 3, ToHex(dataOUT, zcdIndex)); zcdIndex += 4;		//DeviceID
+		m_zcdListCtrl.SetItemText(nItem, 4, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;	//FMT
+		m_zcdListCtrl.SetItemText(nItem, 5, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;	//IDX
+
+		CString strTrt = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
+		CString strAck = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
+		CString strPpc = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
+		CString strRun = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
+		CString strTxid = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
+		CString strRxid = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
+		CString strCnt = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
+		CString strPos = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
+		CString strFps = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
+		CString strItf = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
+		CString strDestErr = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
+		CString strDestDif = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
+		CString strPhyRx = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
+		CString strFrameDif = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
+
+		m_zcdListCtrl.SetItemText(nItem, 6, strFps);										//FPS
+		m_zcdListCtrl.SetItemText(nItem, 7, strTrt);										//TRT
+		m_zcdListCtrl.SetItemText(nItem, 8, strAck);										//ACK
+		m_zcdListCtrl.SetItemText(nItem, 9, strPpc);										//PPC
+		m_zcdListCtrl.SetItemText(nItem, 10, strRun);										//RUN
+		m_zcdListCtrl.SetItemText(nItem, 11, strItf);										//ITF
+		m_zcdListCtrl.SetItemText(nItem, 12, strTxid);										//TXID
+		m_zcdListCtrl.SetItemText(nItem, 13, strRxid);										//RXID
+		m_zcdListCtrl.SetItemText(nItem, 14, strDestErr);									//DestID_ERR_CNT
+		m_zcdListCtrl.SetItemText(nItem, 15, strPhyRx);										//PHY_RX_FRAME_CNT
+		m_zcdListCtrl.SetItemText(nItem, 16, _T("-"));										//MFIR
+		m_zcdListCtrl.SetItemText(nItem, 17, strCnt);										//CNT
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
