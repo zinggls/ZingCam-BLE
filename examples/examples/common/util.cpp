@@ -68,3 +68,10 @@ int ToInt(const std::vector<byte>& data, size_t startIndex)
 		(static_cast<uint32_t>(data[startIndex + 3]) << 24)
 		);
 }
+
+CString ToHex(const std::vector<byte>& data, size_t startIndex)
+{
+	CString str;
+	str.Format(_T("0x%X"), ToInt(data, startIndex));
+	return str;
+}
