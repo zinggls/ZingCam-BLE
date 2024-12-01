@@ -54,6 +54,7 @@ public:
 	BOOL I2C_GetSpeed();
 	BOOL I2C_GetDeviceList();
 	HRESULT Control_I2C_SCB_Slave(int deviceAddress);
+	void UpdateZcdListCtrl(std::vector<byte>& dataOUT);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static UINT I2C_Read(LPVOID pParam);
 	afx_msg void OnDestroy();
