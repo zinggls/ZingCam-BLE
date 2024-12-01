@@ -374,8 +374,9 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 
 		int nItem = m_zcdListCtrl.InsertItem(0, _T("-"));
 
-		m_zcdListCtrl.SetItemText(nItem, 0, ToIntStr(dataOUT, 99));
-		m_zcdListCtrl.SetItemText(nItem, 1, ToIntStr(dataOUT, 103));
+		size_t zcdIndex = 99;
+		m_zcdListCtrl.SetItemText(nItem, 0, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
+		m_zcdListCtrl.SetItemText(nItem, 1, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
