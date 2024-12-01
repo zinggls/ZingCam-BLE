@@ -62,4 +62,5 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedI2cReadButton();
 	CListCtrl m_zcdListCtrl;
+	CListCtrl m_dImuListCtrl;
 };

@@ -63,6 +63,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LOG_LIST, m_log);
 	DDX_Control(pDX, IDC_ZCD_LIST, m_zcdListCtrl);
+	DDX_Control(pDX, IDC_ZCC_IMU_LIST, m_dImuListCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -106,6 +107,13 @@ BOOL CZiieDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	m_dImuListCtrl.InsertColumn(0, _T("IMU Data1"), LVCFMT_RIGHT, 85);
+	m_dImuListCtrl.InsertColumn(1, _T("IMU Data2"), LVCFMT_RIGHT, 85);
+	m_dImuListCtrl.InsertColumn(2, _T("IMU Data3"), LVCFMT_RIGHT, 85);
+	m_dImuListCtrl.InsertColumn(3, _T("IMU Data4"), LVCFMT_RIGHT, 85);
+	m_dImuListCtrl.InsertColumn(4, _T("IMU Data5"), LVCFMT_RIGHT, 85);
+	m_dImuListCtrl.InsertColumn(5, _T("Checksum"), LVCFMT_RIGHT, 85);
+
 	m_zcdListCtrl.InsertColumn(0, _T("Kind"), LVCFMT_RIGHT, 35);
 	m_zcdListCtrl.InsertColumn(1, _T("USB"), LVCFMT_RIGHT, 35);
 	m_zcdListCtrl.InsertColumn(2, _T("PPID"), LVCFMT_RIGHT, 85);
