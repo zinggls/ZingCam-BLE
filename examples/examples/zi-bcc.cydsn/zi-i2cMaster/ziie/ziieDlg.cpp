@@ -109,20 +109,8 @@ BOOL CZiieDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	m_hImuListCtrl.InsertColumn(0, _T("IMU Data1"), LVCFMT_RIGHT, 70);
-	m_hImuListCtrl.InsertColumn(1, _T("IMU Data2"), LVCFMT_RIGHT, 70);
-	m_hImuListCtrl.InsertColumn(2, _T("IMU Data3"), LVCFMT_RIGHT, 70);
-	m_hImuListCtrl.InsertColumn(3, _T("IMU Data4"), LVCFMT_RIGHT, 70);
-	m_hImuListCtrl.InsertColumn(4, _T("IMU Data5"), LVCFMT_RIGHT, 70);
-	m_hImuListCtrl.InsertColumn(5, _T("Checksum"), LVCFMT_RIGHT, 70);
-
-	m_dImuListCtrl.InsertColumn(0, _T("IMU Data1"), LVCFMT_RIGHT, 70);
-	m_dImuListCtrl.InsertColumn(1, _T("IMU Data2"), LVCFMT_RIGHT, 70);
-	m_dImuListCtrl.InsertColumn(2, _T("IMU Data3"), LVCFMT_RIGHT, 70);
-	m_dImuListCtrl.InsertColumn(3, _T("IMU Data4"), LVCFMT_RIGHT, 70);
-	m_dImuListCtrl.InsertColumn(4, _T("IMU Data5"), LVCFMT_RIGHT, 70);
-	m_dImuListCtrl.InsertColumn(5, _T("Checksum"), LVCFMT_RIGHT, 70);
-
+	CreateColumnsIMU(m_hImuListCtrl);
+	CreateColumnsIMU(m_dImuListCtrl);
 	CreateColumnsZxx(m_zxxListCtrl);
 	CreateColumnsZxx(m_zcdListCtrl);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -175,6 +163,16 @@ void CZiieDlg::OnPaint()
 HCURSOR CZiieDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CZiieDlg::CreateColumnsIMU(CListCtrl& listCtrl)
+{
+	listCtrl.InsertColumn(0, _T("IMU Data1"), LVCFMT_RIGHT, 70);
+	listCtrl.InsertColumn(1, _T("IMU Data2"), LVCFMT_RIGHT, 70);
+	listCtrl.InsertColumn(2, _T("IMU Data3"), LVCFMT_RIGHT, 70);
+	listCtrl.InsertColumn(3, _T("IMU Data4"), LVCFMT_RIGHT, 70);
+	listCtrl.InsertColumn(4, _T("IMU Data5"), LVCFMT_RIGHT, 70);
+	listCtrl.InsertColumn(5, _T("Checksum"), LVCFMT_RIGHT, 70);
 }
 
 void CZiieDlg::CreateColumnsZxx(CListCtrl& listCtrl)

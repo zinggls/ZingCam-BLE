@@ -43,6 +43,7 @@ public:
 	std::vector<byte> m_devices;
 	CWinThread* m_pReadThread;
 
+	void CreateColumnsIMU(CListCtrl& listCtrl);
 	void CreateColumnsZxx(CListCtrl& listCtrl);
 	BOOL COM_Init();
 	void COM_UnInit();
