@@ -33,10 +33,10 @@
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\common\com.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\common\util.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\common\com.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
