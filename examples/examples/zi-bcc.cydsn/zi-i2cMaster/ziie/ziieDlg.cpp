@@ -424,6 +424,59 @@ void CZiieDlg::UpdateDImuListCtrl(std::vector<byte>& dataOUT)
 	m_dImuListCtrl.SetItemText(nItem, 5, ToHexStr(dataOUT, dimuIndex, 2));
 }
 
+void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT)
+{
+	int nItem = InsertItem(m_zxxListCtrl, _T("ZXX"));
+
+	size_t zxxIndex = 46;
+	CString strKind = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
+	CString strUSB = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
+	CString strBND = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
+	CString strPPID = ToHex(dataOUT, zxxIndex);	zxxIndex += 4;
+	CString strDeviceID = ToHex(dataOUT, zxxIndex);	zxxIndex += 4;
+	CString strFMT = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
+	CString strIDX = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
+	CString strTrt = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
+	CString strAck = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
+	CString strPpc = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
+	CString strRun = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
+	CString strTxid = ToHex(dataOUT, zxxIndex); zxxIndex += 4;
+	CString strRxid = ToHex(dataOUT, zxxIndex); zxxIndex += 4;
+	CString strCnt = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
+	CString strPos = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
+
+	//ZCD_ADDITIONAL_FIELDS
+	CString strVND = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
+	CString strPRD = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
+
+	m_zxxListCtrl.SetItemText(nItem, 0, strKind);
+	m_zxxListCtrl.SetItemText(nItem, 1, strUSB);
+	m_zxxListCtrl.SetItemText(nItem, 4, strBND);
+	m_zxxListCtrl.SetItemText(nItem, 5, strPPID);
+	m_zxxListCtrl.SetItemText(nItem, 6, strDeviceID);
+	m_zxxListCtrl.SetItemText(nItem, 7, strTrt);
+	m_zxxListCtrl.SetItemText(nItem, 8, strAck);
+	m_zxxListCtrl.SetItemText(nItem, 9, strPpc);
+	m_zxxListCtrl.SetItemText(nItem, 10, strTxid);
+	m_zxxListCtrl.SetItemText(nItem, 11, strRxid);
+	m_zxxListCtrl.SetItemText(nItem, 12, strRun);
+	m_zxxListCtrl.SetItemText(nItem, 13, strCnt);
+
+	if (strKind == _T("1")) {	//ZED
+		GetDlgItem(IDC_ZXX_STATIC)->SetWindowText(_T("ZED"));
+		m_zxxListCtrl.SetItemText(nItem, 2, _T("-"));
+		m_zxxListCtrl.SetItemText(nItem, 3, _T("-"));
+	}
+	else if (strKind == _T("2")) {	//ZCH
+		GetDlgItem(IDC_ZXX_STATIC)->SetWindowText(_T("ZCH"));
+		m_zxxListCtrl.SetItemText(nItem, 2, strVND);
+		m_zxxListCtrl.SetItemText(nItem, 3, strPRD);
+	}
+	else {
+		ASSERT(FALSE);	//must not reach here
+	}
+}
+
 void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 {
 	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
@@ -482,6 +535,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		}
 
 		UpdateDImuListCtrl(dataOUT);
+		UpdateZxxListCtrl(dataOUT);
 		UpdateZcdListCtrl(dataOUT);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());

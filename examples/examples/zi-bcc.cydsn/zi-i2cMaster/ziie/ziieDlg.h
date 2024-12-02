@@ -60,6 +60,7 @@ public:
 	HRESULT Control_I2C_SCB_Slave(int deviceAddress);
 	int InsertItem(CListCtrl& listCtrl, const CString& newItem);
 	void UpdateDImuListCtrl(std::vector<byte>& dataOUT);
+	void UpdateZxxListCtrl(std::vector<byte>& dataOUT);
 	void UpdateZcdListCtrl(std::vector<byte>& dataOUT);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static UINT I2C_Read(LPVOID pParam);
