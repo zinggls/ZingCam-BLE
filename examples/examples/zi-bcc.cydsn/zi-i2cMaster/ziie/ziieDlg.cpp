@@ -123,24 +123,8 @@ BOOL CZiieDlg::OnInitDialog()
 	m_dImuListCtrl.InsertColumn(4, _T("IMU Data5"), LVCFMT_RIGHT, 70);
 	m_dImuListCtrl.InsertColumn(5, _T("Checksum"), LVCFMT_RIGHT, 70);
 
-	m_zcdListCtrl.InsertColumn(0, _T("Kind"), LVCFMT_RIGHT, 35);
-	m_zcdListCtrl.InsertColumn(1, _T("USB"), LVCFMT_RIGHT, 35);
-	m_zcdListCtrl.InsertColumn(2, _T("PPID"), LVCFMT_RIGHT, 85);
-	m_zcdListCtrl.InsertColumn(3, _T("DeviceID"), LVCFMT_RIGHT, 85);
-	m_zcdListCtrl.InsertColumn(4, _T("FMT"), LVCFMT_RIGHT, 35);
-	m_zcdListCtrl.InsertColumn(5, _T("IDX"), LVCFMT_RIGHT, 35);
-	m_zcdListCtrl.InsertColumn(6, _T("FPS"), LVCFMT_RIGHT, 85);
-	m_zcdListCtrl.InsertColumn(7, _T("TRT"), LVCFMT_RIGHT, 35);
-	m_zcdListCtrl.InsertColumn(8, _T("ACK"), LVCFMT_RIGHT, 35);
-	m_zcdListCtrl.InsertColumn(9, _T("PPC"), LVCFMT_RIGHT, 35);
-	m_zcdListCtrl.InsertColumn(10, _T("RUN"), LVCFMT_RIGHT, 35);
-	m_zcdListCtrl.InsertColumn(11, _T("ITF"), LVCFMT_RIGHT, 35);
-	m_zcdListCtrl.InsertColumn(12, _T("TXID"), LVCFMT_RIGHT, 85);
-	m_zcdListCtrl.InsertColumn(13, _T("RXID"), LVCFMT_RIGHT, 85);
-	m_zcdListCtrl.InsertColumn(14, _T("DestID_ERR_CNT"), LVCFMT_RIGHT, 120);
-	m_zcdListCtrl.InsertColumn(15, _T("PHY_RX_FRAME_CNT"), LVCFMT_RIGHT, 130);
-	m_zcdListCtrl.InsertColumn(16, _T("MFIR"), LVCFMT_RIGHT, 65);
-	m_zcdListCtrl.InsertColumn(17, _T("CNT"), LVCFMT_RIGHT, 85);
+	CreateColumns(m_zxxListCtrl);
+	CreateColumns(m_zcdListCtrl);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -191,6 +175,28 @@ void CZiieDlg::OnPaint()
 HCURSOR CZiieDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CZiieDlg::CreateColumns(CListCtrl& listCtrl)
+{
+	listCtrl.InsertColumn(0, _T("Kind"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(1, _T("USB"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(2, _T("PPID"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(3, _T("DeviceID"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(4, _T("FMT"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(5, _T("IDX"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(6, _T("FPS"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(7, _T("TRT"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(8, _T("ACK"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(9, _T("PPC"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(10, _T("RUN"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(11, _T("ITF"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(12, _T("TXID"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(13, _T("RXID"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(14, _T("DestID_ERR_CNT"), LVCFMT_RIGHT, 120);
+	listCtrl.InsertColumn(15, _T("PHY_RX_FRAME_CNT"), LVCFMT_RIGHT, 130);
+	listCtrl.InsertColumn(16, _T("MFIR"), LVCFMT_RIGHT, 65);
+	listCtrl.InsertColumn(17, _T("CNT"), LVCFMT_RIGHT, 85);
 }
 
 BOOL CZiieDlg::COM_Init()
