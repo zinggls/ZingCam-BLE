@@ -123,8 +123,8 @@ BOOL CZiieDlg::OnInitDialog()
 	m_dImuListCtrl.InsertColumn(4, _T("IMU Data5"), LVCFMT_RIGHT, 70);
 	m_dImuListCtrl.InsertColumn(5, _T("Checksum"), LVCFMT_RIGHT, 70);
 
-	CreateColumns(m_zxxListCtrl);
-	CreateColumns(m_zcdListCtrl);
+	CreateColumnsZxx(m_zxxListCtrl);
+	CreateColumnsZxx(m_zcdListCtrl);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -177,7 +177,7 @@ HCURSOR CZiieDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CZiieDlg::CreateColumns(CListCtrl& listCtrl)
+void CZiieDlg::CreateColumnsZxx(CListCtrl& listCtrl)
 {
 	listCtrl.InsertColumn(0, _T("Kind"), LVCFMT_RIGHT, 35);
 	listCtrl.InsertColumn(1, _T("USB"), LVCFMT_RIGHT, 35);
