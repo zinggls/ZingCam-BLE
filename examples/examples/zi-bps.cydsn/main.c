@@ -68,7 +68,7 @@ void BleCallBack(uint32 event, void* eventParam)
         case CYBLE_EVT_GATTS_WRITE_REQ:
             wrReqParam = (CYBLE_GATTS_WRITE_REQ_PARAM_T *) eventParam;
             
-            if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE) {
+            if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE) {
                 if (wrReqParam->handleValPair.value.len == sizeof(ZED_FRAME)) {
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
@@ -151,7 +151,7 @@ int main()
     UART_IMU_StartAndInitialize();
 
     CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
-    myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
+    myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE;
     
     for(;;)
     {        

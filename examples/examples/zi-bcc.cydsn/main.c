@@ -29,7 +29,7 @@ static void ZingCB(const char *buf)
 void SendCommandToPeripheral(uint8_t command) {
     // Use the characteristic index to obtain the attribute handle    
     CYBLE_GATT_DB_ATTR_HANDLE_T attrHandle = cyBle_customCServ[CYBLE_CUSTOMC_CUSTOM_SERVICE_SERVICE_INDEX]
-                                                .customServChar[CYBLE_CUSTOMC_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_INDEX]
+                                                .customServChar[CYBLE_CUSTOMC_CUSTOM_SERVICE_ZXX_CHAR_INDEX]
                                                 .customServCharHandle;
 
     CYBLE_GATTC_WRITE_REQ_T writeReq;
