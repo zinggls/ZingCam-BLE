@@ -16,7 +16,7 @@
 #include <ZFrame.h>
 
 #define I2C_WR_BUFFER_SIZE  (11u)
-#define I2C_RD_BUFFER_SIZE  (174u)   //ICD(46) + ZCH/ZED(56) + ZCD(72) = 174Bytes, Start Index ICD(0),ZCH/ZED(46),ZCD(46+56=102)
+#define I2C_RD_BUFFER_SIZE  (186u)   //ICD(46) + ZCH/ZED(56) + ZCD(72) + HIMU(12) = 186Bytes, Start Index ICD(0),ZCH/ZED(46),ZCD(46+53=99)
 
 /* LED constants */
 #define LED_ON              (0u)
