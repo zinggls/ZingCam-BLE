@@ -43,6 +43,7 @@ public:
 	std::vector<byte> m_devices;
 	CWinThread* m_pReadThread;
 
+	void FillPortsCombo();
 	void CreateColumnsIMU(CListCtrl& listCtrl);
 	void CreateColumnsZXX(CListCtrl& listCtrl);
 	void CreateColumnsZCD(CListCtrl& listCtrl);
@@ -71,4 +72,5 @@ public:
 	CListCtrl m_zxxListCtrl;
 	CListCtrl m_dImuListCtrl;
 	CListCtrl m_hImuListCtrl;
+	CComboBox m_portsCombo;
 };

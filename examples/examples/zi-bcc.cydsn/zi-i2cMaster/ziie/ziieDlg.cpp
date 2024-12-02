@@ -67,6 +67,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ZXX_LIST, m_zxxListCtrl);
 	DDX_Control(pDX, IDC_DMU_LIST, m_dImuListCtrl);
 	DDX_Control(pDX, IDC_HMU_LIST, m_hImuListCtrl);
+	DDX_Control(pDX, IDC_PORTS_COMBO, m_portsCombo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -110,6 +111,7 @@ BOOL CZiieDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	FillPortsCombo();
 	CreateColumnsIMU(m_hImuListCtrl);
 	CreateColumnsIMU(m_dImuListCtrl);
 	CreateColumnsZXX(m_zxxListCtrl);
@@ -164,6 +166,22 @@ void CZiieDlg::OnPaint()
 HCURSOR CZiieDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CZiieDlg::FillPortsCombo()
+{
+	COM_Init();
+
+	CCom com(_T("PSoCProgrammerCOM.PSoCProgrammerCOM_Object"));
+	std::vector<std::wstring> ports;
+	long hr = com.GetPorts(ports);
+	if (!SUCCEEDED(hr)) {
+		COM_UnInit();
+		return;
+	}
+	for (size_t i = 0; i < ports.size(); i++) m_portsCombo.AddString(ports[i].c_str());
+
+	COM_UnInit();
 }
 
 void CZiieDlg::CreateColumnsIMU(CListCtrl& listCtrl)
