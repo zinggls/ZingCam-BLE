@@ -108,7 +108,12 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
             notificationParam = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T*)eventParam;
-            processingZxx();
+            if(notificationParam->handleValPair.attrHandle == cyBle_customCServ[CYBLE_CUSTOMC_CUSTOM_SERVICE_SERVICE_INDEX]
+                                                                .customServChar[CYBLE_CUSTOMC_CUSTOM_SERVICE_ZXX_CHAR_INDEX]
+                                                                .customServCharHandle)
+            {
+                processingZxx();
+            }
             break;
             
         case CYBLE_EVT_GATTC_WRITE_RSP: // Sucesfull write - nothing to do
