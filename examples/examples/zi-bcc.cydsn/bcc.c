@@ -1,5 +1,6 @@
 #include "bcc.h"
 #include "NoLog.h"
+#include "i2cs.h"
 
 static SystemMode_t systemMode = SM_INITIALIZE; // Starting mode of statemachine 
 static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
@@ -87,8 +88,20 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 notifiedCustom++;
                 
                 // Process the received data                                
-                if(*getZxxKind()==ZED) memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-                if(*getZxxKind()==ZCH) memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                if(*getZxxKind()==ZED) {
+                    memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                    setZedBuffer(getI2CReadBuffer()+46,&zedFrame);
+                    LED_RED_Write  (0);
+                    LED_GREEN_Write(1);
+                    LED_BLUE_Write (0);
+                }
+                if(*getZxxKind()==ZCH) {
+                    memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                    setZchBuffer(getI2CReadBuffer()+46,&zchFrame);
+                    LED_RED_Write  (0);
+                    LED_GREEN_Write(0);
+                    LED_BLUE_Write (1);
+                }
             }
             break;
             
