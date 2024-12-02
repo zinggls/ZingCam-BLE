@@ -14,6 +14,7 @@
 #define new DEBUG_NEW
 #endif
 
+BOOL CZiieDlg::bRead = FALSE;
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
@@ -547,6 +548,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		}
 		L(str);
 		Sleep(dwMilliseconds);
+		if (bRead == FALSE) break;
 	}
 	return S_OK;
 }
@@ -571,17 +573,25 @@ UINT CZiieDlg::I2C_Read(LPVOID pParam)
 
 	if (pDlg->I2C_GetDeviceList() != TRUE) return 1;
 
-	pDlg->Read_I2C_SCB_Slave(pDlg->m_devices[0], 100);	//무한 루프함수
+	pDlg->Read_I2C_SCB_Slave(pDlg->m_devices[0], 100);
+	pDlg->COM_UnInit();
 	return 0;
 }
 
 void CZiieDlg::OnBnClickedI2cReadButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	m_pReadThread = AfxBeginThread(I2C_Read, this);
-	if (m_pReadThread == NULL) {
-		L(_T("Read thread AfxBeginThread failed"));
-		return;
+	if (bRead == FALSE) {
+		bRead = TRUE;
+		m_pReadThread = AfxBeginThread(I2C_Read, this);
+		if (m_pReadThread == NULL) {
+			L(_T("Read thread AfxBeginThread failed"));
+			return;
+		}
+		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
 	}
-	GetDlgItem(IDC_I2C_READ_BUTTON)->EnableWindow(FALSE);
+	else {
+		bRead = FALSE;
+		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
+	}
 }

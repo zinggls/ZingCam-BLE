@@ -63,6 +63,7 @@ public:
 	void UpdateZxxListCtrl(std::vector<byte>& dataOUT);
 	void UpdateZcdListCtrl(std::vector<byte>& dataOUT);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
+	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedI2cReadButton();
