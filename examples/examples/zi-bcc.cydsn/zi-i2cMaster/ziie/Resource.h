@@ -14,6 +14,9 @@
 #define IDC_DMU_LIST                    1003
 #define IDC_DMU_LIST2                   1004
 #define IDC_HMU_LIST                    1004
+#define IDC_ZCD_LIST2                   1005
+#define IDC_ZXX_LIST                    1005
+#define IDC_ZXX_STATIC                  1006
 
 // Next default values for new objects
 // 
@@ -21,7 +24,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1007
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -63,6 +63,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LOG_LIST, m_log);
 	DDX_Control(pDX, IDC_ZCD_LIST, m_zcdListCtrl);
+	DDX_Control(pDX, IDC_ZXX_LIST, m_zxxListCtrl);
 	DDX_Control(pDX, IDC_DMU_LIST, m_dImuListCtrl);
 	DDX_Control(pDX, IDC_HMU_LIST, m_hImuListCtrl);
 }
