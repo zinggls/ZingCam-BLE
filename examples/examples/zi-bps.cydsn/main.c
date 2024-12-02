@@ -6,6 +6,7 @@
 #include <gitcommit.h>
 #include <ZingUart.h>
 #include "ZFrame.h"
+#include "imu.h"
 
 static uint16 notifyCustom = 0;
 static uint16 writereqCustom = 0;
@@ -125,6 +126,11 @@ static void zxxLog()
     }
 }
 
+static void onImuFrame(const ImuFrame *imu)
+{
+
+}
+
 /***************************************************************
  * Main
  **************************************************************/
@@ -141,6 +147,8 @@ int main()
     
     /* Start BLE stack and register the callback function */
     CyBle_Start(BleCallBack);
+    
+    UART_IMU_StartAndInitialize();
 
     CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
     myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_CUSTOM_CHARACTERISTIC_CHAR_HANDLE;
@@ -168,5 +176,6 @@ int main()
    
         CyBle_ProcessEvents();
         zing_process_uart_data();
+        imu_process_uart_data(onImuFrame);
     }
 }
