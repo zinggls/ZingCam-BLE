@@ -284,7 +284,6 @@ BOOL CZiieDlg::COM_OpenPort()
 	HRESULT hr = m_pCom->OpenPort(strPort.GetString());
 	if (!SUCCEEDED(hr)) {
 		L(_T("COM OpenPort failed, HRESULT: 0x%08X"), hr);
-		ResetI2CReadButton();
 		return FALSE;
 	}
 	else {
@@ -601,22 +600,25 @@ UINT CZiieDlg::I2C_Read(LPVOID pParam)
 
 	CComAuto ca(pDlg);
 
-	if (pDlg->COM_OpenPort() != TRUE) return 1;
+	if (pDlg->COM_OpenPort() != TRUE) goto cleanup;
 
-	if (pDlg->SetPowerVoltage() != TRUE) return 1;
-	if (pDlg->PowerOn() != TRUE) return 1;
-	if (pDlg->SetProtocol() != TRUE) return 1;
-	if (pDlg->I2C_ResetBus() != TRUE) return 1;
+	if (pDlg->SetPowerVoltage() != TRUE) goto cleanup;
+	if (pDlg->PowerOn() != TRUE) goto cleanup;
+	if (pDlg->SetProtocol() != TRUE) goto cleanup;
+	if (pDlg->I2C_ResetBus() != TRUE) goto cleanup;
 
 	//Sleep script for 100 milliseconds
 	Sleep(100);
 
-	if (pDlg->I2C_SetSpeed() != TRUE) return 1;
-	if (pDlg->I2C_GetSpeed() != TRUE) return 1;
+	if (pDlg->I2C_SetSpeed() != TRUE) goto cleanup;
+	if (pDlg->I2C_GetSpeed() != TRUE) goto cleanup;
 
-	if (pDlg->I2C_GetDeviceList() != TRUE) return 1;
+	if (pDlg->I2C_GetDeviceList() != TRUE) goto cleanup;
 
 	pDlg->Read_I2C_SCB_Slave(pDlg->m_devices[0], 100);
+
+cleanup:
+	pDlg->ResetI2CReadButton();
 	return 0;
 }
 
@@ -628,6 +630,7 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 		m_pReadThread = AfxBeginThread(I2C_Read, this);
 		if (m_pReadThread == NULL) {
 			L(_T("Read thread AfxBeginThread failed"));
+			ResetI2CReadButton();
 			return;
 		}
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
