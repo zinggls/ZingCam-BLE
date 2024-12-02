@@ -271,6 +271,7 @@ void CZiieDlg::ResetI2CReadButton()
 {
 	bRead = FALSE;
 	GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
+	GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(TRUE);
 }
 
 BOOL CZiieDlg::COM_OpenPort()
@@ -634,6 +635,7 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 			return;
 		}
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
+		GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(FALSE);
 	}
 	else {
 		ResetI2CReadButton();
