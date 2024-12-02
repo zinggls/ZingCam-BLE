@@ -211,7 +211,7 @@ void CZiieDlg::CreateColumnsZCD(CListCtrl& listCtrl)
 	listCtrl.InsertColumn(13, _T("RXID"), LVCFMT_RIGHT, 85);
 	listCtrl.InsertColumn(14, _T("DestID_ERR_CNT"), LVCFMT_RIGHT, 120);
 	listCtrl.InsertColumn(15, _T("PHY_RX_FRAME_CNT"), LVCFMT_RIGHT, 130);
-	listCtrl.InsertColumn(16, _T("MFIR"), LVCFMT_RIGHT, 65);
+	listCtrl.InsertColumn(16, _T("POS"), LVCFMT_RIGHT, 65);
 	listCtrl.InsertColumn(17, _T("CNT"), LVCFMT_RIGHT, 85);
 }
 
@@ -520,7 +520,7 @@ void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 	m_zcdListCtrl.SetItemText(nItem, 13, strRxid);
 	m_zcdListCtrl.SetItemText(nItem, 14, strDestErr);
 	m_zcdListCtrl.SetItemText(nItem, 15, strPhyRx);
-	m_zcdListCtrl.SetItemText(nItem, 16, _T("-"));
+	m_zcdListCtrl.SetItemText(nItem, 16, strPos);
 	m_zcdListCtrl.SetItemText(nItem, 17, strCnt);
 }
 

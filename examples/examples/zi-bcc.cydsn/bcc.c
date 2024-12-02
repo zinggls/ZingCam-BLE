@@ -91,6 +91,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 if(*getZxxKind()==ZED) {
                     memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
                     setZedBuffer(getI2CReadBuffer()+46,&zedFrame);
+                    getZcdFrame()->pos = zedFrame.pos;
                     LED_RED_Write  (0);
                     LED_GREEN_Write(1);
                     LED_BLUE_Write (0);
@@ -98,6 +99,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 if(*getZxxKind()==ZCH) {
                     memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
                     setZchBuffer(getI2CReadBuffer()+46,&zchFrame);
+                    getZcdFrame()->pos = zchFrame.pos;
                     LED_RED_Write  (0);
                     LED_GREEN_Write(0);
                     LED_BLUE_Write (1);
