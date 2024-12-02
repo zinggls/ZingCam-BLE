@@ -172,7 +172,7 @@ void CZiieDlg::FillPortsCombo()
 {
 	COM_Init();
 
-	CCom com(_T("PSoCProgrammerCOM.PSoCProgrammerCOM_Object"));
+	CCom com;
 	std::vector<std::wstring> ports;
 	long hr = com.GetPorts(ports);
 	if (!SUCCEEDED(hr)) {
@@ -255,7 +255,7 @@ void CZiieDlg::COM_UnInit()
 
 BOOL CZiieDlg::COM_OpenPort()
 {
-	m_pCom = new CCom(_T("PSoCProgrammerCOM.PSoCProgrammerCOM_Object"));
+	m_pCom = new CCom();
 	ASSERT(m_pCom);
 
 	HRESULT hr = m_pCom->OpenPort();

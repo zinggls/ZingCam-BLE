@@ -4,10 +4,11 @@
 #include "util.h"
 
 std::wstring CCom::sErrorMsg = L"";
+const static std::wstring ProgID = L"PSoCProgrammerCOM.PSoCProgrammerCOM_Object";
 
-CCom::CCom(const std::wstring& progID)
+CCom::CCom()
 {
-	HRESULT hr = ::CLSIDFromProgID(progID.c_str(), &m_clsid);
+	HRESULT hr = ::CLSIDFromProgID(ProgID.c_str(), &m_clsid);
 	if (FAILED(hr)) {
 		throw std::runtime_error("Failed to obtain CLSID from ProgID");
 	}

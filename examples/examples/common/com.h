@@ -6,9 +6,8 @@
 #include "ppcom.h"
 
 class CCom {
-	CCom();
 public:
-	CCom(const std::wstring& progID);
+	CCom();
 	~CCom();
 
 	static std::wstring sErrorMsg;
