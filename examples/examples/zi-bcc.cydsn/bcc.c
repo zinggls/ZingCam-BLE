@@ -21,6 +21,33 @@ ZED_FRAME* getZedFrame() { return &zedFrame; }
 ZCH_FRAME* getZchFrame() { return &zchFrame; }
 ZCD_FRAME* getZcdFrame() { return &zcdFrame; }
 
+static void processingZxx()
+{
+            if(*getZxxKind()==Unknown) *getZxxKind() = inspect((char*)notificationParam->handleValPair.value.val);
+            
+            if(notificationParam->handleValPair.value.len == getFrameSize()) {
+                notifiedCustom++;
+                
+                // Process the received data                                
+                if(*getZxxKind()==ZED) {
+                    memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                    setZedBuffer(getI2CReadBuffer()+46,&zedFrame);
+                    getZcdFrame()->pos = zedFrame.pos;
+                    LED_RED_Write  (0);
+                    LED_GREEN_Write(1);
+                    LED_BLUE_Write (0);
+                }
+                if(*getZxxKind()==ZCH) {
+                    memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+                    setZchBuffer(getI2CReadBuffer()+46,&zchFrame);
+                    getZcdFrame()->pos = zchFrame.pos;
+                    LED_RED_Write  (0);
+                    LED_GREEN_Write(0);
+                    LED_BLUE_Write (1);
+                }
+            }
+}
+
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 {
@@ -81,30 +108,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
             notificationParam = (CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T*)eventParam;
-            
-            if(*getZxxKind()==Unknown) *getZxxKind() = inspect((char*)notificationParam->handleValPair.value.val);
-            
-            if(notificationParam->handleValPair.value.len == getFrameSize()) {
-                notifiedCustom++;
-                
-                // Process the received data                                
-                if(*getZxxKind()==ZED) {
-                    memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-                    setZedBuffer(getI2CReadBuffer()+46,&zedFrame);
-                    getZcdFrame()->pos = zedFrame.pos;
-                    LED_RED_Write  (0);
-                    LED_GREEN_Write(1);
-                    LED_BLUE_Write (0);
-                }
-                if(*getZxxKind()==ZCH) {
-                    memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-                    setZchBuffer(getI2CReadBuffer()+46,&zchFrame);
-                    getZcdFrame()->pos = zchFrame.pos;
-                    LED_RED_Write  (0);
-                    LED_GREEN_Write(0);
-                    LED_BLUE_Write (1);
-                }
-            }
+            processingZxx();
             break;
             
         case CYBLE_EVT_GATTC_WRITE_RSP: // Sucesfull write - nothing to do
