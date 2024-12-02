@@ -411,17 +411,18 @@ int CZiieDlg::InsertItem(CListCtrl& listCtrl, const CString& newItem)
 	return index;
 }
 
-void CZiieDlg::UpdateDImuListCtrl(std::vector<byte>& dataOUT)
+size_t CZiieDlg::UpdateImuListCtrl(CListCtrl& listCtrl, std::vector<byte>& dataOUT, size_t index)
 {
-	int nItem = InsertItem(m_dImuListCtrl, _T("DIMU"));
+	int nItem = InsertItem(listCtrl, _T("DIMU"));
 
-	size_t dimuIndex = 34;
-	m_dImuListCtrl.SetItemText(nItem, 0, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
-	m_dImuListCtrl.SetItemText(nItem, 1, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
-	m_dImuListCtrl.SetItemText(nItem, 2, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
-	m_dImuListCtrl.SetItemText(nItem, 3, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
-	m_dImuListCtrl.SetItemText(nItem, 4, ToHexStr(dataOUT, dimuIndex, 2)); dimuIndex += 2;
-	m_dImuListCtrl.SetItemText(nItem, 5, ToHexStr(dataOUT, dimuIndex, 2));
+	listCtrl.SetItemText(nItem, 0, ToHexStr(dataOUT, index, 2)); index += 2;
+	listCtrl.SetItemText(nItem, 1, ToHexStr(dataOUT, index, 2)); index += 2;
+	listCtrl.SetItemText(nItem, 2, ToHexStr(dataOUT, index, 2)); index += 2;
+	listCtrl.SetItemText(nItem, 3, ToHexStr(dataOUT, index, 2)); index += 2;
+	listCtrl.SetItemText(nItem, 4, ToHexStr(dataOUT, index, 2)); index += 2;
+	listCtrl.SetItemText(nItem, 5, ToHexStr(dataOUT, index, 2)); index += 2;
+
+	return index;
 }
 
 void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT)
@@ -536,7 +537,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 			return hr;
 		}
 
-		UpdateDImuListCtrl(dataOUT);
+		UpdateImuListCtrl(m_hImuListCtrl, dataOUT, 22);
+		UpdateImuListCtrl(m_dImuListCtrl, dataOUT, 34);
 		UpdateZxxListCtrl(dataOUT);
 		UpdateZcdListCtrl(dataOUT);
 
