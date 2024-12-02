@@ -181,6 +181,13 @@ void CZiieDlg::FillPortsCombo()
 	}
 	for (size_t i = 0; i < ports.size(); i++) m_portsCombo.AddString(ports[i].c_str());
 
+	if (ports.size() > 0) {
+		m_portsCombo.SetCurSel(0);
+	}
+	else {
+		GetDlgItem(IDC_I2C_READ_BUTTON)->EnableWindow(FALSE);
+	}
+
 	COM_UnInit();
 }
 
