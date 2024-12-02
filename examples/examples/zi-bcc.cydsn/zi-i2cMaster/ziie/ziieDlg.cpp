@@ -496,7 +496,7 @@ void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 	CString strTxid = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
 	CString strRxid = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
 	CString strCnt = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
-	CString strPos = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
+	CString strPos = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
 	CString strFps = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
 	CString strItf = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
 	CString strDestErr = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
