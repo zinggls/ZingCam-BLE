@@ -482,17 +482,13 @@ void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
 
 	size_t zcdIndex = 99;
-	m_zcdListCtrl.SetItemText(nItem, 0, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;	//Kind
-	m_zcdListCtrl.SetItemText(nItem, 1, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;	//USB
-
-	//firmware setZcdBuffer내에서 bnd값을 보내는데 이는 chatgpt가 생성한 코드를 쓰다보니 생긴 오류로 보임. zcd에는 bnd가 정의되지 않았다 따라서 bnd는 무시
-	CString strBnd = ToCharStr(dataOUT, zcdIndex); zcdIndex += 1;
-
-	m_zcdListCtrl.SetItemText(nItem, 2, ToHex(dataOUT, zcdIndex)); zcdIndex += 4;		//PPID
-	m_zcdListCtrl.SetItemText(nItem, 3, ToHex(dataOUT, zcdIndex)); zcdIndex += 4;		//DeviceID
-	m_zcdListCtrl.SetItemText(nItem, 4, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;	//FMT
-	m_zcdListCtrl.SetItemText(nItem, 5, ToIntStr(dataOUT, zcdIndex)); zcdIndex += 4;	//IDX
-
+	CString strKind = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
+	CString strUSB = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
+	CString strBnd = ToCharStr(dataOUT, zcdIndex); zcdIndex += 1;	//firmware setZcdBuffer내에서 bnd값을 보내는데 이는 chatgpt가 생성한 코드를 쓰다보니 생긴 오류
+	CString strPPID = ToHex(dataOUT, zcdIndex);	zcdIndex += 4;
+	CString strDeviceID = ToHex(dataOUT, zcdIndex);	zcdIndex += 4;
+	CString strFMT = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
+	CString strIDX = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
 	CString strTrt = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
 	CString strAck = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
 	CString strPpc = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
@@ -508,18 +504,24 @@ void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 	CString strPhyRx = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
 	CString strFrameDif = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
 
-	m_zcdListCtrl.SetItemText(nItem, 6, strFps);										//FPS
-	m_zcdListCtrl.SetItemText(nItem, 7, strTrt);										//TRT
-	m_zcdListCtrl.SetItemText(nItem, 8, strAck);										//ACK
-	m_zcdListCtrl.SetItemText(nItem, 9, strPpc);										//PPC
-	m_zcdListCtrl.SetItemText(nItem, 10, strRun);										//RUN
-	m_zcdListCtrl.SetItemText(nItem, 11, strItf);										//ITF
-	m_zcdListCtrl.SetItemText(nItem, 12, strTxid);										//TXID
-	m_zcdListCtrl.SetItemText(nItem, 13, strRxid);										//RXID
-	m_zcdListCtrl.SetItemText(nItem, 14, strDestErr);									//DestID_ERR_CNT
-	m_zcdListCtrl.SetItemText(nItem, 15, strPhyRx);										//PHY_RX_FRAME_CNT
-	m_zcdListCtrl.SetItemText(nItem, 16, _T("-"));										//MFIR
-	m_zcdListCtrl.SetItemText(nItem, 17, strCnt);										//CNT
+	m_zcdListCtrl.SetItemText(nItem, 0, strKind);
+	m_zcdListCtrl.SetItemText(nItem, 1, strUSB);
+	m_zcdListCtrl.SetItemText(nItem, 2, strPPID);
+	m_zcdListCtrl.SetItemText(nItem, 3, strDeviceID);
+	m_zcdListCtrl.SetItemText(nItem, 4, strFMT);
+	m_zcdListCtrl.SetItemText(nItem, 5, strIDX);
+	m_zcdListCtrl.SetItemText(nItem, 6, strFps);
+	m_zcdListCtrl.SetItemText(nItem, 7, strTrt);
+	m_zcdListCtrl.SetItemText(nItem, 8, strAck);
+	m_zcdListCtrl.SetItemText(nItem, 9, strPpc);
+	m_zcdListCtrl.SetItemText(nItem, 10, strRun);
+	m_zcdListCtrl.SetItemText(nItem, 11, strItf);
+	m_zcdListCtrl.SetItemText(nItem, 12, strTxid);
+	m_zcdListCtrl.SetItemText(nItem, 13, strRxid);
+	m_zcdListCtrl.SetItemText(nItem, 14, strDestErr);
+	m_zcdListCtrl.SetItemText(nItem, 15, strPhyRx);
+	m_zcdListCtrl.SetItemText(nItem, 16, _T("-"));
+	m_zcdListCtrl.SetItemText(nItem, 17, strCnt);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
