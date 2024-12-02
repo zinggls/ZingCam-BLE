@@ -473,9 +473,6 @@ void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT)
 		m_zxxListCtrl.SetItemText(nItem, 2, strVND);
 		m_zxxListCtrl.SetItemText(nItem, 3, strPRD);
 	}
-	else {
-		ASSERT(FALSE);	//must not reach here
-	}
 }
 
 void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
