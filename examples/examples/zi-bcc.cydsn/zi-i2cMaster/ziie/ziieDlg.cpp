@@ -265,7 +265,10 @@ BOOL CZiieDlg::COM_OpenPort()
 	m_pCom = new CCom();
 	ASSERT(m_pCom);
 
-	HRESULT hr = m_pCom->OpenPort();
+	CString strPort;
+	m_portsCombo.GetLBText(m_portsCombo.GetCurSel(), strPort);
+
+	HRESULT hr = m_pCom->OpenPort(strPort.GetString());
 	if (!SUCCEEDED(hr)) {
 		L(_T("COM OpenPort failed, HRESULT: 0x%08X"), hr);
 		return FALSE;
