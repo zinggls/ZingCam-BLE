@@ -111,8 +111,7 @@ BOOL CZiieDlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	CreateColumnsIMU(m_hImuListCtrl);
 	CreateColumnsIMU(m_dImuListCtrl);
-	CreateColumnsZxx(m_zxxListCtrl);
-	CreateColumnsZxx(m_zcdListCtrl);
+	CreateColumnsZCD(m_zcdListCtrl);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -175,7 +174,7 @@ void CZiieDlg::CreateColumnsIMU(CListCtrl& listCtrl)
 	listCtrl.InsertColumn(5, _T("Checksum"), LVCFMT_RIGHT, 70);
 }
 
-void CZiieDlg::CreateColumnsZxx(CListCtrl& listCtrl)
+void CZiieDlg::CreateColumnsZCD(CListCtrl& listCtrl)
 {
 	listCtrl.InsertColumn(0, _T("Kind"), LVCFMT_RIGHT, 35);
 	listCtrl.InsertColumn(1, _T("USB"), LVCFMT_RIGHT, 35);
