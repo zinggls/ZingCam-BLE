@@ -49,6 +49,7 @@ public:
 	void CreateColumnsZCD(CListCtrl& listCtrl);
 	BOOL COM_Init();
 	void COM_UnInit();
+	void ResetI2CReadButton();
 	BOOL COM_OpenPort();
 	void L(const TCHAR* str, ...);
 	BOOL SetPowerVoltage();

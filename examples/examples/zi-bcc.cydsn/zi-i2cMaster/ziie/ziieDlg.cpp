@@ -267,6 +267,11 @@ void CZiieDlg::COM_UnInit()
 	L(_T("COM Uninitialized"));
 }
 
+void CZiieDlg::ResetI2CReadButton()
+{
+	bRead = FALSE;
+	GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
+}
 
 BOOL CZiieDlg::COM_OpenPort()
 {
@@ -279,6 +284,7 @@ BOOL CZiieDlg::COM_OpenPort()
 	HRESULT hr = m_pCom->OpenPort(strPort.GetString());
 	if (!SUCCEEDED(hr)) {
 		L(_T("COM OpenPort failed, HRESULT: 0x%08X"), hr);
+		ResetI2CReadButton();
 		return FALSE;
 	}
 	else {
@@ -627,7 +633,6 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
 	}
 	else {
-		bRead = FALSE;
-		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
+		ResetI2CReadButton();
 	}
 }
