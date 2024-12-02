@@ -111,6 +111,7 @@ BOOL CZiieDlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	CreateColumnsIMU(m_hImuListCtrl);
 	CreateColumnsIMU(m_dImuListCtrl);
+	CreateColumnsZXX(m_zxxListCtrl);
 	CreateColumnsZCD(m_zcdListCtrl);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -172,6 +173,24 @@ void CZiieDlg::CreateColumnsIMU(CListCtrl& listCtrl)
 	listCtrl.InsertColumn(3, _T("IMU Data4"), LVCFMT_RIGHT, 70);
 	listCtrl.InsertColumn(4, _T("IMU Data5"), LVCFMT_RIGHT, 70);
 	listCtrl.InsertColumn(5, _T("Checksum"), LVCFMT_RIGHT, 70);
+}
+
+void CZiieDlg::CreateColumnsZXX(CListCtrl& listCtrl)
+{
+	listCtrl.InsertColumn(0, _T("Kind"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(1, _T("USB"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(2, _T("VND"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(3, _T("PRD"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(4, _T("BND"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(5, _T("PPID"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(6, _T("DeviceID"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(7, _T("TRT"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(8, _T("ACK"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(9, _T("PPC"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(10, _T("TXID"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(11, _T("RXID"), LVCFMT_RIGHT, 85);
+	listCtrl.InsertColumn(12, _T("RUN"), LVCFMT_RIGHT, 35);
+	listCtrl.InsertColumn(13, _T("CNT"), LVCFMT_RIGHT, 85);
 }
 
 void CZiieDlg::CreateColumnsZCD(CListCtrl& listCtrl)

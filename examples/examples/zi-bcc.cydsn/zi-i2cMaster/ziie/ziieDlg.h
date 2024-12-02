@@ -44,6 +44,7 @@ public:
 	CWinThread* m_pReadThread;
 
 	void CreateColumnsIMU(CListCtrl& listCtrl);
+	void CreateColumnsZXX(CListCtrl& listCtrl);
 	void CreateColumnsZCD(CListCtrl& listCtrl);
 	BOOL COM_Init();
 	void COM_UnInit();
