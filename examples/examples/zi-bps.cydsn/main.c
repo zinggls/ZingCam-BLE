@@ -126,9 +126,32 @@ static void zxxLog()
     }
 }
 
+static short toShort(const char *data)
+{
+    return (short)((data[1] << 8) | data[0]);
+}
+
 static void onImuFrame(const ImuFrame *imu)
 {
-
+    if(*getZxxKind()==ZED) {
+        ZED_FRAME *z = &zedFrame;
+        z->imu1 = toShort(imu->data);
+        z->imu2 = toShort(imu->data+2);
+        z->imu3 = toShort(imu->data+4);
+        z->imu4 = toShort(imu->data+6);
+        z->imu5 = toShort(imu->data+8);
+        z->imuChecksum = toShort(imu->data+10);
+    }
+    
+    if(*getZxxKind()==ZCH) {
+        ZCH_FRAME *z = &zchFrame;
+        z->imu1 = toShort(imu->data);
+        z->imu2 = toShort(imu->data+2);
+        z->imu3 = toShort(imu->data+4);
+        z->imu4 = toShort(imu->data+6);
+        z->imu5 = toShort(imu->data+8);
+        z->imuChecksum = toShort(imu->data+10);
+    }
 }
 
 /***************************************************************

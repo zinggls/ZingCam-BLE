@@ -34,6 +34,14 @@ typedef enum {
     unsigned int cnt;   \
     unsigned int pos;   \
 
+#define IMU_FIELDS      \
+    short imu1;         \
+    short imu2;         \
+    short imu3;         \
+    short imu4;         \
+    short imu5;         \
+    short imuChecksum;  \
+
 // Define additional fields for ZCD_FRAME
 #define ZCD_ADDITIONAL_FIELDS     \
     unsigned int fps;             \
@@ -46,6 +54,7 @@ typedef enum {
 // Define ZCH_FRAME with additional specific fields
 typedef struct {
     COMMON_FIELDS
+    IMU_FIELDS
     unsigned int vnd;    // VENDOR, e.g., "0xEB1A"
     unsigned int prd;    // PRODUCT, e.g., "0xB101"
 } ZCH_FRAME;
@@ -53,6 +62,7 @@ typedef struct {
 // Define ZED_FRAME which includes only the common fields
 typedef struct {
     COMMON_FIELDS
+    IMU_FIELDS
     // No additional fields for ZED_FRAME
 } ZED_FRAME;
 
@@ -71,5 +81,7 @@ ZxxKind* getZxxKind();
 void setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd);
 void setZedBuffer(uint8_t *buf,ZED_FRAME *z);
 void setZchBuffer(uint8_t *buf,ZCH_FRAME *z);
+void setZedImuBuffer(uint8_t *buf,ZED_FRAME *z);
+void setZchImuBuffer(uint8_t *buf,ZCH_FRAME *z);
 
 #endif /* Z_FRAME_H */

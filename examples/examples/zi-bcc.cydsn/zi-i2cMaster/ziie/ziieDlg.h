@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#define READ_BUFFER_SIZE	174
+#define READ_BUFFER_SIZE	(174+12)
 #define MAX_LIST_ITEMS		(1024*8)
 
 class CCom;
