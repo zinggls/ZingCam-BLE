@@ -16,6 +16,14 @@
 
 BOOL CZiieDlg::bRead = FALSE;
 
+class CComAuto {
+public:
+	CComAuto(CZiieDlg* p) :m_p(p) { p->COM_Init(); }
+	~CComAuto() { m_p->COM_UnInit(); }
+private:
+	CZiieDlg* m_p;
+};
+
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -585,7 +593,8 @@ UINT CZiieDlg::I2C_Read(LPVOID pParam)
 {
 	CZiieDlg* pDlg = (CZiieDlg*)pParam;
 
-	if (pDlg->COM_Init() != TRUE) return 1;
+	CComAuto ca(pDlg);
+
 	if (pDlg->COM_OpenPort() != TRUE) return 1;
 
 	if (pDlg->SetPowerVoltage() != TRUE) return 1;
@@ -602,7 +611,6 @@ UINT CZiieDlg::I2C_Read(LPVOID pParam)
 	if (pDlg->I2C_GetDeviceList() != TRUE) return 1;
 
 	pDlg->Read_I2C_SCB_Slave(pDlg->m_devices[0], 100);
-	pDlg->COM_UnInit();
 	return 0;
 }
 
