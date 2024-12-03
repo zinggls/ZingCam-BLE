@@ -81,6 +81,7 @@ public:
 	void UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5);
 	void UpdateTxState(byte dat1, byte dat2, byte dat3);
 	void UpdateRxState(byte dat1, byte dat2);
+	void UpdateBleState(byte dat);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
@@ -113,4 +114,5 @@ public:
 	CString m_strTxStateImu;
 	CString m_strRxStateModem;
 	CString m_strRxStateImu;
+	CString m_strBleState;
 };

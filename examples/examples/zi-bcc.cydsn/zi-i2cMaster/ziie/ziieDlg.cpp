@@ -84,6 +84,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strTxStateImu(_T(""))
 	, m_strRxStateModem(_T(""))
 	, m_strRxStateImu(_T(""))
+	, m_strBleState(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -118,6 +119,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_TX_STATE_IMU_STATIC, m_strTxStateImu);
 	DDX_Text(pDX, IDC_RX_STATE_MODEM_STATIC, m_strRxStateModem);
 	DDX_Text(pDX, IDC_RX_STATE_IMU_STATIC, m_strRxStateImu);
+	DDX_Text(pDX, IDC_BLE_STATE_STATIC, m_strBleState);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -880,6 +882,34 @@ void CZiieDlg::UpdateRxState(byte dat1, byte dat2)
 	m_strRxStateImu = ModuleSanity(_T("IMU상태: "), dat2, 0xE6);
 }
 
+void CZiieDlg::UpdateBleState(byte dat)
+{
+	/*
+	0x00 : 대기
+	0x01 : 패어링 중
+	0x02 : 패어링 완료
+	*/
+
+	m_strBleState = _T("BLE상태:");
+	CString str;
+	switch (dat)
+	{
+	case 0:
+		str.Format(_T("대기(%x)"), dat);
+		break;
+	case 1:
+		str.Format(_T("페어링중(%x)"), dat);
+		break;
+	case 2:
+		str.Format(_T("페어링 완료(%x)"), dat);
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), dat);
+		break;
+	}
+	m_strBleState += str;
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
@@ -907,6 +937,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		UpdateScopeState(dataOUT[11], dataOUT[12], dataOUT[13], dataOUT[15], dataOUT[16]);
 		UpdateTxState(dataOUT[14], dataOUT[17], dataOUT[19]);
 		UpdateRxState(dataOUT[18], dataOUT[20]);
+		UpdateBleState(dataOUT[21]);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
