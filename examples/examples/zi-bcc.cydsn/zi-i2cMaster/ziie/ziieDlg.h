@@ -75,6 +75,7 @@ public:
 	void UpdateScopeStateOut(byte dat);
 	static void BatteryInfo(CString& str, byte dat);
 	void UpdateScopeStateBattery(byte dat);
+	CString ModuleSanity(CString strName, byte dat, byte errCode);
 	void UpdateScopeStateIR(byte dat);
 	void UpdateScopeStateEO(byte dat);
 	void UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5);

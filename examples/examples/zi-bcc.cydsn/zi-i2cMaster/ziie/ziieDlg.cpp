@@ -817,6 +817,23 @@ void CZiieDlg::UpdateScopeStateBattery(byte dat)
 	BatteryInfo(m_strScopeStateBattery, dat);
 }
 
+CString CZiieDlg::ModuleSanity(CString strName, byte dat, byte errCode)
+{
+	CString strResult(strName);
+
+	CString str;
+	if (dat == 0) {
+		str.Format(_T("정상(%x)"), dat);
+	}
+	else if (dat == errCode) {
+		str.Format(_T("모듈이상(%x)"), dat);
+	}
+	else {
+		str.Format(_T("미정의(%x)"), dat);
+	}
+	return strResult + str;
+}
+
 void CZiieDlg::UpdateScopeStateIR(byte dat)
 {
 	/*
@@ -824,21 +841,7 @@ void CZiieDlg::UpdateScopeStateIR(byte dat)
 	0xE1 : 화기조준경 IR 모듈 이상
 	0xff : unkown
 	*/
-	m_strScopeStateIR = _T("IR상태: ");
-
-	CString str;
-	switch (dat) {
-	case 0:
-		str.Format(_T("정상(%x)"), dat);
-		break;
-	case 0xE1:
-		str.Format(_T("모듈이상(%x)"), dat);
-		break;
-	default:
-		str.Format(_T("미정의(%x)"), dat);
-		break;
-	}
-	m_strScopeStateIR += str;
+	m_strScopeStateIR = ModuleSanity(_T("IR상태: "), dat, 0xE1);
 }
 
 void CZiieDlg::UpdateScopeStateEO(byte dat)
@@ -848,21 +851,7 @@ void CZiieDlg::UpdateScopeStateEO(byte dat)
 	0xE2 : 화기조준경 EO 모듈 이상
 	0xff : unkown
 	*/
-	m_strScopeStateEO = _T("EO상태: ");
-
-	CString str;
-	switch (dat) {
-	case 0:
-		str.Format(_T("정상(%x)"), dat);
-		break;
-	case 0xE2:
-		str.Format(_T("모듈이상(%x)"), dat);
-		break;
-	default:
-		str.Format(_T("미정의(%x)"), dat);
-		break;
-	}
-	m_strScopeStateEO += str;
+	m_strScopeStateEO = ModuleSanity(_T("EO상태: "), dat, 0xE2);
 }
 
 void CZiieDlg::UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5)
