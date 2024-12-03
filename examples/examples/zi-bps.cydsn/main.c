@@ -13,7 +13,6 @@ static uint16 writereqCustom = 0;
 
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
-extern ZingRxCallback zingRxCb;
 
 // Function to process data when a complete message is available
 static void ZingCB(const char *buf)
