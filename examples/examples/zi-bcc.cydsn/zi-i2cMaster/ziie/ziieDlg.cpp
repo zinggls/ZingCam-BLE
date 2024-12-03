@@ -65,6 +65,8 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_ZIIE_DIALOG, pParent), m_pCom(NULL), m_pReadThread(NULL)
 	, m_strScopeKind(_T(""))
 	, m_strScopeOut(_T(""))
+	, m_strWirelessChannelMode(_T(""))
+	, m_strWirelessChannelInfo(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -80,6 +82,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PORTS_COMBO, m_portsCombo);
 	DDX_Text(pDX, IDC_SCOPE_KIND_STATIC, m_strScopeKind);
 	DDX_Text(pDX, IDC_SCOPE_OUT_STATIC, m_strScopeOut);
+	DDX_Text(pDX, IDC_WIRELESS_CHANNEL_MODE_STATIC, m_strWirelessChannelMode);
+	DDX_Text(pDX, IDC_WIRELESS_CHANNEL_INFO_STATIC, m_strWirelessChannelInfo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -625,6 +629,36 @@ void CZiieDlg::UpdateScope(byte dat1, byte dat2)
 	UpdateScopeOut(dat2);
 }
 
+void CZiieDlg::UpdateWirelessChannel(byte dat1, byte dat2)
+{
+	switch (dat1) {
+	case 1:
+		m_strWirelessChannelMode = _T("모드: 자동(Default)");
+		break;
+	case 2:
+		m_strWirelessChannelMode = _T("모드: 자동(Default)");
+		break;
+	default:
+		m_strWirelessChannelMode.Format(_T("모드: 미정의(%x)"), dat1);
+		break;
+	}
+
+	switch (dat1) {
+	case 0:
+		m_strWirelessChannelInfo = _T("정보: 선택 안함(Default)");
+		break;
+	case 1:
+		m_strWirelessChannelInfo = _T("정보: 수동 1채널");
+		break;
+	case 2:
+		m_strWirelessChannelInfo = _T("정보: 수동 2채널");
+		break;
+	default:
+		m_strWirelessChannelInfo.Format(_T("정보: 미정의(%x)"), dat1);
+		break;
+	}
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
@@ -643,6 +677,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		UpdateZcdListCtrl(dataOUT);
 
 		UpdateScope(dataOUT[0], dataOUT[1]);
+		UpdateWirelessChannel(dataOUT[2], dataOUT[3]);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {

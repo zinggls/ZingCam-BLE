@@ -20,8 +20,10 @@
 #define IDC_PORTS_COMBO                 1007
 #define IDC_SCOPE_KIND_STATIC           1008
 #define IDC_SCOPE_STATIC                1009
-#define IDC_SCOPE_KIND_STATIC2          1010
 #define IDC_SCOPE_OUT_STATIC            1010
+#define IDC_WIRELESS_CHANNEL_MODE_STATIC 1011
+#define IDC_SCOPE_OUT_STATIC2           1012
+#define IDC_WIRELESS_CHANNEL_INFO_STATIC 1012
 
 // Next default values for new objects
 // 
