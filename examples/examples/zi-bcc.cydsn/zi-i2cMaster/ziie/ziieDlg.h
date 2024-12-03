@@ -122,4 +122,5 @@ public:
 	CComboBox m_opmodeScopeCombo;
 	CComboBox m_opmodeTxCombo;
 	CComboBox m_opmodeRxCombo;
+	CComboBox m_txImuTypeCombo;
 };

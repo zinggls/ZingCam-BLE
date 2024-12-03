@@ -127,6 +127,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_OPMODE_SCOPE_COMBO, m_opmodeScopeCombo);
 	DDX_Control(pDX, IDC_OPMODE_TX_COMBO, m_opmodeTxCombo);
 	DDX_Control(pDX, IDC_OPMODE_RX_COMBO, m_opmodeRxCombo);
+	DDX_Control(pDX, IDC_TX_IMU_TYPE_COMBO, m_txImuTypeCombo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -207,6 +208,9 @@ BOOL CZiieDlg::OnInitDialog()
 	m_opmodeRxCombo.AddString(_T("운용모드"));
 	m_opmodeRxCombo.AddString(_T("대기모드"));
 	m_opmodeRxCombo.AddString(_T("절전모드"));
+
+	m_txImuTypeCombo.AddString(_T("Euler Angle(Default)"));
+	m_txImuTypeCombo.AddString(_T("Quaternion"));
 
 	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
