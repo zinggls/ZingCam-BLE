@@ -70,6 +70,8 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strOpmodeScope(_T(""))
 	, m_strOpmodeTx(_T(""))
 	, m_strOpmodeRx(_T(""))
+	, m_strTxImuType(_T(""))
+	, m_strTxImuCalib(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -90,6 +92,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_OPMODE_SCOPE_STATIC, m_strOpmodeScope);
 	DDX_Text(pDX, IDC_OPMODE_TX_STATIC, m_strOpmodeTx);
 	DDX_Text(pDX, IDC_OPMODE_RX_STATIC, m_strOpmodeRx);
+	DDX_Text(pDX, IDC_TX_IMU_TYPE_STATIC, m_strTxImuType);
+	DDX_Text(pDX, IDC_TX_IMU_CALIB_STATIC, m_strTxImuCalib);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -695,6 +699,42 @@ void CZiieDlg::UpdateOpmode(byte dat1, byte dat2, byte dat3)
 	m_strOpmodeRx = _T("수신기:") + Opmode(dat3);
 }
 
+void CZiieDlg::UpdateTxIMU(byte dat1, byte dat2)
+{
+	switch (dat1) {
+	case 0:
+		m_strTxImuType.Format(_T("타입:*Euler(%x)"), dat1);
+		break;
+	case 1:
+		m_strTxImuType.Format(_T("타입:Quaternion(%x)"), dat1);
+		break;
+	default:
+		m_strTxImuType.Format(_T("타입:미정의(%x)"), dat1);
+		break;
+	}
+
+	switch (dat2)
+	{
+	case 0:
+		m_strTxImuCalib.Format(_T("보정:*(%x)"), dat2);
+		break;
+	case 1:
+		m_strTxImuCalib.Format(_T("보정:자이로(%x)"), dat2);
+		break;
+	case 2:
+		m_strTxImuCalib.Format(_T("보정:가속도(%x)"), dat2);
+		break;
+	case 3:
+		m_strTxImuCalib.Format(_T("보정:지자계S(%x)"), dat2);
+		break;
+	case 4:
+		m_strTxImuCalib.Format(_T("보정:지자계E(%x)"), dat2);
+		break;
+	default:
+		break;
+	}
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
@@ -715,6 +755,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		UpdateScope(dataOUT[0], dataOUT[1]);
 		UpdateWirelessChannel(dataOUT[2], dataOUT[3]);
 		UpdateOpmode(dataOUT[4], dataOUT[5], dataOUT[6]);
+		UpdateTxIMU(dataOUT[7], dataOUT[8]);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {

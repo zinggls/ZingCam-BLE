@@ -70,6 +70,7 @@ public:
 	void UpdateWirelessChannel(byte dat1, byte dat2);
 	CString Opmode(byte dat);
 	void UpdateOpmode(byte dat1, byte dat2, byte dat3);
+	void UpdateTxIMU(byte dat1, byte dat2);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
@@ -88,4 +89,6 @@ public:
 	CString m_strOpmodeScope;
 	CString m_strOpmodeTx;
 	CString m_strOpmodeRx;
+	CString m_strTxImuType;
+	CString m_strTxImuCalib;
 };

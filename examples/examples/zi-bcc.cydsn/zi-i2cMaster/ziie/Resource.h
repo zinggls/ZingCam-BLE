@@ -25,8 +25,10 @@
 #define IDC_WIRELESS_CHANNEL_INFO_STATIC 1012
 #define IDC_OPMODE_SCOPE_STATIC         1013
 #define IDC_OPMODE_TX_STATIC            1015
-#define IDC_OPMODE_TX_STATIC2           1016
 #define IDC_OPMODE_RX_STATIC            1016
+#define IDC_TX_IMU_TYPE_STATIC          1019
+#define IDC_OPMODE_TX_STATIC2           1020
+#define IDC_TX_IMU_CALIB_STATIC         1020
 
 // Next default values for new objects
 // 
