@@ -71,6 +71,7 @@ public:
 	CString Opmode(byte dat);
 	void UpdateOpmode(byte dat1, byte dat2, byte dat3);
 	static void UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byte dat2);
+	void UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
@@ -93,4 +94,9 @@ public:
 	CString m_strTxImuCalib;
 	CString m_strRxImuType;
 	CString m_strRxImuCalib;
+	CString m_strScopeStateKind;
+	CString m_strScopeStateOut;
+	CString m_strScopeStateBattery;
+	CString m_strScopeStateIR;
+	CString m_strScopeStateEO;
 };

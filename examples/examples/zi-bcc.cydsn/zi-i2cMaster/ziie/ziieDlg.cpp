@@ -74,6 +74,11 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strTxImuCalib(_T(""))
 	, m_strRxImuType(_T(""))
 	, m_strRxImuCalib(_T(""))
+	, m_strScopeStateKind(_T(""))
+	, m_strScopeStateOut(_T(""))
+	, m_strScopeStateBattery(_T(""))
+	, m_strScopeStateIR(_T(""))
+	, m_strScopeStateEO(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -98,6 +103,11 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_TX_IMU_CALIB_STATIC, m_strTxImuCalib);
 	DDX_Text(pDX, IDC_RX_IMU_TYPE_STATIC, m_strRxImuType);
 	DDX_Text(pDX, IDC_RX_IMU_CALIB_STATIC, m_strRxImuCalib);
+	DDX_Text(pDX, IDC_SCOPE_STATE_KIND_STATIC, m_strScopeStateKind);
+	DDX_Text(pDX, IDC_SCOPE_STATE_OUT_STATIC, m_strScopeStateOut);
+	DDX_Text(pDX, IDC_SCOPE_STATE_BATTERY_STATIC, m_strScopeStateBattery);
+	DDX_Text(pDX, IDC_SCOPE_STATE_IR_STATIC, m_strScopeStateIR);
+	DDX_Text(pDX, IDC_SCOPE_STATE_EO_STATIC, m_strScopeStateEO);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -739,6 +749,11 @@ void CZiieDlg::UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byt
 	}
 }
 
+void CZiieDlg::UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5)
+{
+
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
@@ -762,6 +777,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 
 		UpdateXIMU(m_strTxImuType, m_strTxImuCalib, dataOUT[7], dataOUT[8]);
 		UpdateXIMU(m_strRxImuType, m_strRxImuCalib, dataOUT[9], dataOUT[10]);
+
+		UpdateScopeState(dataOUT[11], dataOUT[12], dataOUT[13], dataOUT[15], dataOUT[16]);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {

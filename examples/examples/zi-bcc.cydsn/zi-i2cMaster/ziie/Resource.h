@@ -30,6 +30,12 @@
 #define IDC_TX_IMU_CALIB_STATIC         1020
 #define IDC_RX_IMU_TYPE_STATIC          1021
 #define IDC_RX_IMU_CALIB_STATIC         1022
+#define IDC_SCOPE_STATE_KIND_STATIC     1024
+#define IDC_SCOPE_STATE_OUT_STATIC      1025
+#define IDC_SCOPE_STATE_BATTERY_STATIC  1026
+#define IDC_SCOPE_STATE_IR_STATIC       1027
+#define IDC_SCOPE_STATE_IR_STATIC2      1028
+#define IDC_SCOPE_STATE_EO_STATIC       1028
 
 // Next default values for new objects
 // 
