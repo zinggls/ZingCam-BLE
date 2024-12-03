@@ -64,6 +64,8 @@ public:
 	size_t UpdateImuListCtrl(CListCtrl& listCtrl, std::vector<byte>& dataOUT, size_t index);
 	void UpdateZxxListCtrl(std::vector<byte>& dataOUT);
 	void UpdateZcdListCtrl(std::vector<byte>& dataOUT);
+	void UpdateScopeKind(byte dat);
+	void UpdateScope(byte dat1, byte dat2);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);

@@ -569,6 +569,36 @@ void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 	m_zcdListCtrl.SetItemText(nItem, 17, strCnt);
 }
 
+void CZiieDlg::UpdateScopeKind(byte dat)
+{
+	m_strScopeKind = _T("종류: ");
+
+	CString str;
+	switch (dat) {
+	case 0:
+		str = _T("0");
+		break;
+	case 4:
+		str = _T("EO");
+		break;
+	case 5:
+		str = _T("IR백상");
+		break;
+	case 6:
+		str = _T("IR흑상");
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), dat);
+		break;
+	}
+	m_strScopeKind += str;
+}
+
+void CZiieDlg::UpdateScope(byte dat1, byte dat2)
+{
+	UpdateScopeKind(dat1);
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
@@ -585,6 +615,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		UpdateImuListCtrl(m_dImuListCtrl, dataOUT, 34);
 		UpdateZxxListCtrl(dataOUT);
 		UpdateZcdListCtrl(dataOUT);
+
+		UpdateScope(dataOUT[0], dataOUT[1]);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
