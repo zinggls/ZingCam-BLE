@@ -83,6 +83,7 @@ public:
 	void UpdateTxState(byte dat1, byte dat2, byte dat3);
 	void UpdateRxState(byte dat1, byte dat2);
 	void UpdateBleState(byte dat);
+	void UpdateWriteBuffer();
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
@@ -128,4 +129,5 @@ public:
 	CComboBox m_rxImuTypeCombo;
 	CComboBox m_rxImuCalibCombo;
 	CListCtrl m_writeBufferListCtrl;
+	CMap<CString, LPCTSTR, byte, byte> m_writeMap;
 };

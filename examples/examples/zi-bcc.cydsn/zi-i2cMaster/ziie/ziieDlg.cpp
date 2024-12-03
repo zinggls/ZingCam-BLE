@@ -728,6 +728,8 @@ void CZiieDlg::UpdateScopeKind(byte dat)
 		break;
 	}
 	m_strScopeKind += str;
+
+	m_writeMap.SetAt(_T("ScopeKind"), dat);
 }
 
 void CZiieDlg::UpdateScopeOut(byte dat)
@@ -750,6 +752,8 @@ void CZiieDlg::UpdateScopeOut(byte dat)
 		break;
 	}
 	m_strScopeOut += str;
+
+	m_writeMap.SetAt(_T("ScopeOut"), dat);
 }
 
 void CZiieDlg::UpdateScope(byte dat1, byte dat2)
@@ -771,6 +775,7 @@ void CZiieDlg::UpdateWirelessChannel(byte dat1, byte dat2)
 		m_strWirelessChannelMode.Format(_T("모드: 미정의(%x)"), dat1);
 		break;
 	}
+	m_writeMap.SetAt(_T("WirelessChannelMode"), dat1);
 
 	switch (dat2) {
 	case 0:
@@ -786,6 +791,7 @@ void CZiieDlg::UpdateWirelessChannel(byte dat1, byte dat2)
 		m_strWirelessChannelInfo.Format(_T("정보: 미정의(%x)"), dat2);
 		break;
 	}
+	m_writeMap.SetAt(_T("WirelessChannelInfo"), dat2);
 }
 
 CString CZiieDlg::Opmode(byte dat)
@@ -814,8 +820,13 @@ CString CZiieDlg::Opmode(byte dat)
 void CZiieDlg::UpdateOpmode(byte dat1, byte dat2, byte dat3)
 {
 	m_strOpmodeScope = _T("화기:") + Opmode(dat1);
+	m_writeMap.SetAt(_T("OpmodeScope"), dat1);
+
 	m_strOpmodeTx = _T("송신기:") + Opmode(dat2);
+	m_writeMap.SetAt(_T("OpmodeTx"), dat2);
+
 	m_strOpmodeRx = _T("수신기:") + Opmode(dat3);
+	m_writeMap.SetAt(_T("OpmodeRx"), dat3);
 }
 
 void CZiieDlg::UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byte dat2)
@@ -1003,6 +1014,22 @@ void CZiieDlg::UpdateBleState(byte dat)
 	m_strBleState += str;
 }
 
+void CZiieDlg::UpdateWriteBuffer()
+{
+	CString key;
+	byte value;
+	int index = 0;
+	POSITION pos = m_writeMap.GetStartPosition();
+	while (pos != nullptr) {
+		m_writeMap.GetNextAssoc(pos, key, value);
+
+		CString str;
+		str.Format(_T("%02x"), value);
+		m_writeBufferListCtrl.SetItemText(0, index, str);
+		index++;
+	}
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
@@ -1025,7 +1052,14 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		UpdateOpmode(dataOUT[4], dataOUT[5], dataOUT[6]);
 
 		UpdateXIMU(m_strTxImuType, m_strTxImuCalib, dataOUT[7], dataOUT[8]);
+		m_writeMap.SetAt(_T("TxImuType"), dataOUT[7]);
+		m_writeMap.SetAt(_T("TxImuCalib"), dataOUT[8]);
+
 		UpdateXIMU(m_strRxImuType, m_strRxImuCalib, dataOUT[9], dataOUT[10]);
+		m_writeMap.SetAt(_T("RxImuType"), dataOUT[9]);
+		m_writeMap.SetAt(_T("RxImuCalib"), dataOUT[10]);
+
+		UpdateWriteBuffer();
 
 		UpdateScopeState(dataOUT[11], dataOUT[12], dataOUT[13], dataOUT[15], dataOUT[16]);
 		UpdateTxState(dataOUT[14], dataOUT[17], dataOUT[19]);
