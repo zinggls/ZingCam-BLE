@@ -74,4 +74,6 @@ public:
 	CListCtrl m_dImuListCtrl;
 	CListCtrl m_hImuListCtrl;
 	CComboBox m_portsCombo;
+	CString m_strScopeKind;
+	CString m_strScopeOut;
 };

@@ -63,6 +63,8 @@ END_MESSAGE_MAP()
 
 CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_ZIIE_DIALOG, pParent), m_pCom(NULL), m_pReadThread(NULL)
+	, m_strScopeKind(_T(""))
+	, m_strScopeOut(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -76,6 +78,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_DMU_LIST, m_dImuListCtrl);
 	DDX_Control(pDX, IDC_HMU_LIST, m_hImuListCtrl);
 	DDX_Control(pDX, IDC_PORTS_COMBO, m_portsCombo);
+	DDX_Text(pDX, IDC_SCOPE_KIND_STATIC, m_strScopeKind);
+	DDX_Text(pDX, IDC_SCOPE_OUT_STATIC, m_strScopeOut);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
