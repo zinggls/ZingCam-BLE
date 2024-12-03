@@ -123,6 +123,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SCOPE_KIND_COMBO, m_scopeKindCombo);
 	DDX_Control(pDX, IDC_SCOPE_OUT_COMBO, m_scopeOutCombo);
 	DDX_Control(pDX, IDC_WIRELESS_CHANNEL_MODE_COMBO, m_wirelessChannelModeCombo);
+	DDX_Control(pDX, IDC_WIRELESS_CHANNEL_INFO_COMBO, m_wirelessChannelInfoCombo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -184,6 +185,10 @@ BOOL CZiieDlg::OnInitDialog()
 
 	m_wirelessChannelModeCombo.AddString(_T("자동(Default)"));
 	m_wirelessChannelModeCombo.AddString(_T("수동"));
+
+	m_wirelessChannelInfoCombo.AddString(_T("선택안함(Default)"));
+	m_wirelessChannelInfoCombo.AddString(_T("수동1채널"));
+	m_wirelessChannelInfoCombo.AddString(_T("수동2채널"));
 
 	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
