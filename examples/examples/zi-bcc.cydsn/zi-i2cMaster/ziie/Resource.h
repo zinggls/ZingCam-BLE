@@ -27,8 +27,9 @@
 #define IDC_OPMODE_TX_STATIC            1015
 #define IDC_OPMODE_RX_STATIC            1016
 #define IDC_TX_IMU_TYPE_STATIC          1019
-#define IDC_OPMODE_TX_STATIC2           1020
 #define IDC_TX_IMU_CALIB_STATIC         1020
+#define IDC_RX_IMU_TYPE_STATIC          1021
+#define IDC_RX_IMU_CALIB_STATIC         1022
 
 // Next default values for new objects
 // 

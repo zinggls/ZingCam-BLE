@@ -72,6 +72,8 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strOpmodeRx(_T(""))
 	, m_strTxImuType(_T(""))
 	, m_strTxImuCalib(_T(""))
+	, m_strRxImuType(_T(""))
+	, m_strRxImuCalib(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -94,6 +96,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_OPMODE_RX_STATIC, m_strOpmodeRx);
 	DDX_Text(pDX, IDC_TX_IMU_TYPE_STATIC, m_strTxImuType);
 	DDX_Text(pDX, IDC_TX_IMU_CALIB_STATIC, m_strTxImuCalib);
+	DDX_Text(pDX, IDC_RX_IMU_TYPE_STATIC, m_strRxImuType);
+	DDX_Text(pDX, IDC_RX_IMU_CALIB_STATIC, m_strRxImuCalib);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -735,11 +739,6 @@ void CZiieDlg::UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byt
 	}
 }
 
-void CZiieDlg::UpdateTxIMU(byte dat1, byte dat2)
-{
-	UpdateXIMU(m_strTxImuType, m_strTxImuCalib, dat1, dat2);
-}
-
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
@@ -760,7 +759,9 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 		UpdateScope(dataOUT[0], dataOUT[1]);
 		UpdateWirelessChannel(dataOUT[2], dataOUT[3]);
 		UpdateOpmode(dataOUT[4], dataOUT[5], dataOUT[6]);
-		UpdateTxIMU(dataOUT[7], dataOUT[8]);
+
+		UpdateXIMU(m_strTxImuType, m_strTxImuCalib, dataOUT[7], dataOUT[8]);
+		UpdateXIMU(m_strRxImuType, m_strRxImuCalib, dataOUT[9], dataOUT[10]);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
