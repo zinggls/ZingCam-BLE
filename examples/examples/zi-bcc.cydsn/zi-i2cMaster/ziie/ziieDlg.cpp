@@ -129,6 +129,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_OPMODE_RX_COMBO, m_opmodeRxCombo);
 	DDX_Control(pDX, IDC_TX_IMU_TYPE_COMBO, m_txImuTypeCombo);
 	DDX_Control(pDX, IDC_TX_IMU_CALIB_COMBO, m_TxImuCalibCombo);
+	DDX_Control(pDX, IDC_RX_IMU_TYPE_COMBO, m_rxImuTypeCombo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -218,6 +219,9 @@ BOOL CZiieDlg::OnInitDialog()
 	m_TxImuCalibCombo.AddString(_T("가속도 보정"));
 	m_TxImuCalibCombo.AddString(_T("지자계 보정"));
 	m_TxImuCalibCombo.AddString(_T("지자계 보정 종료"));
+
+	m_rxImuTypeCombo.AddString(_T("Euler Angle(Default)"));
+	m_rxImuTypeCombo.AddString(_T("Quaternion"));
 
 	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
