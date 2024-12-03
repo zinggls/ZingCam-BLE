@@ -39,7 +39,8 @@
 #define IDC_TX_STATE_MODEM_STATIC       1030
 #define IDC_TX_STATE_IMU_STATIC         1031
 #define IDC_RX_STATE_BATTERY_STATIC     1032
-#define IDC_RX_STATE_MODEM_STATIC       1033
+#define IDC_RX_STATE_MODEM_STATIC       1032
+#define IDC_RX_STATE_IMU_STATIC         1033
 
 // Next default values for new objects
 // 
