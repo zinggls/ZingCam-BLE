@@ -796,10 +796,21 @@ void CZiieDlg::UpdateScopeStateOut(byte dat)
 	m_strScopeStateOut += str;
 }
 
+void CZiieDlg::UpdateScopeStateBattery(byte dat)
+{
+	if (dat < 0 || dat>100) {
+		m_strScopeStateBattery.Format(_T("배터리: 범위밖(%d)"), dat);
+		return;
+	}
+
+	m_strScopeStateBattery.Format(_T("배터리: %d%%"), dat);
+}
+
 void CZiieDlg::UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5)
 {
 	UpdateScopeStateKind(dat1);
 	UpdateScopeStateOut(dat2);
+	UpdateScopeStateBattery(dat3);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)

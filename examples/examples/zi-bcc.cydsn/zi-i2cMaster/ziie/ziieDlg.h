@@ -73,6 +73,7 @@ public:
 	static void UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byte dat2);
 	void UpdateScopeStateKind(byte dat);
 	void UpdateScopeStateOut(byte dat);
+	void UpdateScopeStateBattery(byte dat);
 	void UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static BOOL bRead;
