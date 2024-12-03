@@ -876,7 +876,7 @@ void CZiieDlg::UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte
 
 void CZiieDlg::UpdateTxState(byte dat1, byte dat2, byte dat3)
 {
-
+	BatteryInfo(m_strTxStateBattery, dat1);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
