@@ -68,6 +68,8 @@ public:
 	void UpdateScopeOut(byte dat);
 	void UpdateScope(byte dat1, byte dat2);
 	void UpdateWirelessChannel(byte dat1, byte dat2);
+	CString Opmode(byte dat);
+	void UpdateOpmode(byte dat1, byte dat2, byte dat3);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
@@ -83,4 +85,7 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CString m_strWirelessChannelMode;
 	CString m_strWirelessChannelInfo;
+	CString m_strOpmodeScope;
+	CString m_strOpmodeTx;
+	CString m_strOpmodeRx;
 };

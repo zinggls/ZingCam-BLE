@@ -67,6 +67,9 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strScopeOut(_T(""))
 	, m_strWirelessChannelMode(_T(""))
 	, m_strWirelessChannelInfo(_T(""))
+	, m_strOpmodeScope(_T(""))
+	, m_strOpmodeTx(_T(""))
+	, m_strOpmodeRx(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -84,6 +87,9 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_SCOPE_OUT_STATIC, m_strScopeOut);
 	DDX_Text(pDX, IDC_WIRELESS_CHANNEL_MODE_STATIC, m_strWirelessChannelMode);
 	DDX_Text(pDX, IDC_WIRELESS_CHANNEL_INFO_STATIC, m_strWirelessChannelInfo);
+	DDX_Text(pDX, IDC_OPMODE_SCOPE_STATIC, m_strOpmodeScope);
+	DDX_Text(pDX, IDC_OPMODE_TX_STATIC, m_strOpmodeTx);
+	DDX_Text(pDX, IDC_OPMODE_RX_STATIC, m_strOpmodeRx);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -659,6 +665,36 @@ void CZiieDlg::UpdateWirelessChannel(byte dat1, byte dat2)
 	}
 }
 
+CString CZiieDlg::Opmode(byte dat)
+{
+	CString str;
+	switch (dat) {
+	case 0:
+		str.Format(_T("(%x)"), dat);
+		break;
+	case 1:
+		str.Format(_T("운용(%x)"), dat);
+		break;
+	case 2:
+		str.Format(_T("대기(%x)"), dat);
+		break;
+	case 4:
+		str.Format(_T("절전(%x)"), dat);
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), dat);
+		break;
+	}
+	return str;
+}
+
+void CZiieDlg::UpdateOpmode(byte dat1, byte dat2, byte dat3)
+{
+	m_strOpmodeScope = _T("화기:") + Opmode(dat1);
+	m_strOpmodeTx = _T("송신기:") + Opmode(dat2);
+	m_strOpmodeRx = _T("수신기:") + Opmode(dat3);
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
@@ -678,6 +714,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 
 		UpdateScope(dataOUT[0], dataOUT[1]);
 		UpdateWirelessChannel(dataOUT[2], dataOUT[3]);
+		UpdateOpmode(dataOUT[4], dataOUT[5], dataOUT[6]);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {

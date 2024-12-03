@@ -22,8 +22,11 @@
 #define IDC_SCOPE_STATIC                1009
 #define IDC_SCOPE_OUT_STATIC            1010
 #define IDC_WIRELESS_CHANNEL_MODE_STATIC 1011
-#define IDC_SCOPE_OUT_STATIC2           1012
 #define IDC_WIRELESS_CHANNEL_INFO_STATIC 1012
+#define IDC_OPMODE_SCOPE_STATIC         1013
+#define IDC_OPMODE_TX_STATIC            1015
+#define IDC_OPMODE_TX_STATIC2           1016
+#define IDC_OPMODE_RX_STATIC            1016
 
 // Next default values for new objects
 // 
