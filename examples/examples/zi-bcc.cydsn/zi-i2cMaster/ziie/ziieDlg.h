@@ -117,4 +117,5 @@ public:
 	CString m_strBleState;
 	CComboBox m_scopeKindCombo;
 	CComboBox m_scopeOutCombo;
+	CComboBox m_wirelessChannelModeCombo;
 };

@@ -122,6 +122,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_BLE_STATE_STATIC, m_strBleState);
 	DDX_Control(pDX, IDC_SCOPE_KIND_COMBO, m_scopeKindCombo);
 	DDX_Control(pDX, IDC_SCOPE_OUT_COMBO, m_scopeOutCombo);
+	DDX_Control(pDX, IDC_WIRELESS_CHANNEL_MODE_COMBO, m_wirelessChannelModeCombo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -180,6 +181,9 @@ BOOL CZiieDlg::OnInitDialog()
 	m_scopeOutCombo.AddString(_T("알림없음/알림반영"));
 	m_scopeOutCombo.AddString(_T("조준경 영상출력"));
 	m_scopeOutCombo.AddString(_T("조준경 영상미출력"));
+
+	m_wirelessChannelModeCombo.AddString(_T("자동(Default)"));
+	m_wirelessChannelModeCombo.AddString(_T("수동"));
 
 	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
