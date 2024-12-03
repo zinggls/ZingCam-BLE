@@ -55,6 +55,7 @@
 #define IDC_RX_IMU_CALIB_COMBO          1041
 #define IDC_LIST2                       1042
 #define IDC_WRITE_BUFFER_LIST           1042
+#define IDC_I2C_WRITE_BUTTON            1043
 
 // Next default values for new objects
 // 

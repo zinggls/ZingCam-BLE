@@ -130,4 +130,5 @@ public:
 	CComboBox m_rxImuCalibCombo;
 	CListCtrl m_writeBufferListCtrl;
 	CMap<CString, LPCTSTR, byte, byte> m_writeMap;
+	afx_msg void OnBnClickedI2cWriteButton();
 };
