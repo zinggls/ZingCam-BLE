@@ -44,6 +44,7 @@ public:
 	CWinThread* m_pReadThread;
 
 	void FillPortsCombo();
+	void CreateWriteBuffer();
 	void CreateColumnsIMU(CListCtrl& listCtrl);
 	void CreateColumnsZXX(CListCtrl& listCtrl);
 	void CreateColumnsZCD(CListCtrl& listCtrl);
