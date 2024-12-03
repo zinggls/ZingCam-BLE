@@ -867,6 +867,7 @@ void CZiieDlg::UpdateTxState(byte dat1, byte dat2, byte dat3)
 {
 	BatteryInfo(m_strTxStateBattery, dat1);
 	m_strTxStateModem = ModuleSanity(_T("모뎀상태: "), dat2, 0xE3);
+	m_strTxStateImu = ModuleSanity(_T("IMU상태: "), dat3, 0xE5);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
