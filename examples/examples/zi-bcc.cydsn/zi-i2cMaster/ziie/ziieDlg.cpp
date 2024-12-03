@@ -1025,7 +1025,7 @@ void CZiieDlg::UpdateWriteBuffer()
 		m_writeMap.GetNextAssoc(pos, key, value);
 
 		CString str;
-		str.Format(_T("%02x"), value);
+		str.Format(_T("%02X"), value);
 		m_writeBufferListCtrl.SetItemText(0, index, str);
 		index++;
 	}
