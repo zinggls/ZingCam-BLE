@@ -73,6 +73,7 @@ public:
 	static void UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byte dat2);
 	void UpdateScopeStateKind(byte dat);
 	void UpdateScopeStateOut(byte dat);
+	static void BatteryInfo(CString& str, byte dat);
 	void UpdateScopeStateBattery(byte dat);
 	void UpdateScopeStateIR(byte dat);
 	void UpdateScopeStateEO(byte dat);

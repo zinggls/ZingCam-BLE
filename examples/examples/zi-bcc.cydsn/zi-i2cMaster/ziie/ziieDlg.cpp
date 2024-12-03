@@ -802,14 +802,19 @@ void CZiieDlg::UpdateScopeStateOut(byte dat)
 	m_strScopeStateOut += str;
 }
 
-void CZiieDlg::UpdateScopeStateBattery(byte dat)
+void CZiieDlg::BatteryInfo(CString& str, byte dat)
 {
 	if (dat < 0 || dat>100) {
-		m_strScopeStateBattery.Format(_T("배터리: 범위밖(%d)"), dat);
+		str.Format(_T("배터리: 범위밖(%d)"), dat);
 		return;
 	}
 
-	m_strScopeStateBattery.Format(_T("배터리: %d%%"), dat);
+	str.Format(_T("배터리: %d%%"), dat);
+}
+
+void CZiieDlg::UpdateScopeStateBattery(byte dat)
+{
+	BatteryInfo(m_strScopeStateBattery, dat);
 }
 
 void CZiieDlg::UpdateScopeStateIR(byte dat)
