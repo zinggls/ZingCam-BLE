@@ -120,4 +120,5 @@ public:
 	CComboBox m_wirelessChannelModeCombo;
 	CComboBox m_wirelessChannelInfoCombo;
 	CComboBox m_opmodeScopeCombo;
+	CComboBox m_opmodeTxCombo;
 };
