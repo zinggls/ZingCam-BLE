@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <cytypes.h>
+#include <stdbool.h>
     
 #define ZED_NUM  11
 #define ZCH_NUM  15
@@ -83,5 +84,6 @@ void setZedBuffer(uint8_t *buf,ZED_FRAME *z);
 void setZchBuffer(uint8_t *buf,ZCH_FRAME *z);
 void setZedImuBuffer(uint8_t *buf,ZED_FRAME *z);
 void setZchImuBuffer(uint8_t *buf,ZCH_FRAME *z);
+bool isNoZingCb(uint32 loopCount,uint32 *zingCount);
 
 #endif /* Z_FRAME_H */

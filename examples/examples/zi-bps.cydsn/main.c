@@ -156,17 +156,6 @@ static void onImuFrame(const ImuFrame *imu)
     }
 }
 
-bool isNoZingCb(uint32 loopCount,uint32 *zingCount)
-{
-    bool noZingCb = false;
-    
-    if( (loopCount%100==0) ){
-        if(*zingCount==0) noZingCb = true;
-        *zingCount = 0;
-    }
-    return noZingCb;
-}
-
 /***************************************************************
  * Main
  **************************************************************/
