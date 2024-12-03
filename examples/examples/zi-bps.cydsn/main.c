@@ -13,6 +13,7 @@ static uint16 writereqCustom = 0;
 
 static ZED_FRAME zedFrame;
 static ZCH_FRAME zchFrame;
+static uint32 ZingCbCount = 0;
 
 // Function to process data when a complete message is available
 static void ZingCB(const char *buf)
@@ -30,6 +31,8 @@ static void ZingCB(const char *buf)
         UART_DBG_UartPutString(zing_status);
         UART_DBG_UartPutString("\r\n");
 #endif
+    }else{
+        ZingCbCount++;
     }
 }
 
@@ -153,6 +156,17 @@ static void onImuFrame(const ImuFrame *imu)
     }
 }
 
+bool isNoZingCb(uint32 loopCount,uint32 *zingCount)
+{
+    bool noZingCb = false;
+    
+    if( (loopCount%100==0) ){
+        if(*zingCount==0) noZingCb = true;
+        *zingCount = 0;
+    }
+    return noZingCb;
+}
+
 /***************************************************************
  * Main
  **************************************************************/
@@ -175,6 +189,7 @@ int main()
     CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
     myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE;
     
+    uint32 count = 0;
     for(;;)
     {        
         /* if Capsense scan is done, read the value and start another scan */
@@ -188,6 +203,8 @@ int main()
         
         uint8_t *frame = (uint8_t *)getFrame(&zedFrame,&zchFrame);
         if(frame) {
+            if(isNoZingCb(count,&ZingCbCount)) memset(frame,0,getFrameSize());  //reset on no zing data
+            
             myDataHandle.value.val = frame;
             myDataHandle.value.len = getFrameSize();
             CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
@@ -199,5 +216,7 @@ int main()
         CyBle_ProcessEvents();
         zing_process_uart_data();
         imu_process_uart_data(onImuFrame);
+        
+        count++;
     }
 }
