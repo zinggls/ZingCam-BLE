@@ -131,6 +131,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TX_IMU_CALIB_COMBO, m_txImuCalibCombo);
 	DDX_Control(pDX, IDC_RX_IMU_TYPE_COMBO, m_rxImuTypeCombo);
 	DDX_Control(pDX, IDC_RX_IMU_CALIB_COMBO, m_rxImuCalibCombo);
+	DDX_Control(pDX, IDC_WRITE_BUFFER_LIST, m_writeBufferListCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -229,6 +230,32 @@ BOOL CZiieDlg::OnInitDialog()
 	m_rxImuCalibCombo.AddString(_T("가속도 보정"));
 	m_rxImuCalibCombo.AddString(_T("지자계 보정"));
 	m_rxImuCalibCombo.AddString(_T("지자계 보정 종료"));
+
+	int nHexWidth = 26;
+	m_writeBufferListCtrl.InsertColumn(0, _T("0"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(1, _T("1"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(2, _T("2"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(3, _T("3"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(4, _T("4"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(5, _T("5"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(6, _T("6"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(7, _T("7"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(8, _T("8"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(9, _T("9"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(10, _T("10"), LVCFMT_RIGHT, nHexWidth);
+
+	m_writeBufferListCtrl.InsertItem(0, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 0, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 1, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 2, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 3, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 4, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 5, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 6, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 7, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 8, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 9, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0,10, _T("FF"));
 
 	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.

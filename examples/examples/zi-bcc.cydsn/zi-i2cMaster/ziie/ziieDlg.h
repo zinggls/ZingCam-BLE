@@ -126,4 +126,5 @@ public:
 	CComboBox m_txImuCalibCombo;
 	CComboBox m_rxImuTypeCombo;
 	CComboBox m_rxImuCalibCombo;
+	CListCtrl m_writeBufferListCtrl;
 };
