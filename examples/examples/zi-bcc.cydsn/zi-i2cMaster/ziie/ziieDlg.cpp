@@ -583,16 +583,16 @@ void CZiieDlg::UpdateScopeKind(byte dat)
 	CString str;
 	switch (dat) {
 	case 0:
-		str = _T("0");
+		str = _T("(0)");
 		break;
 	case 4:
-		str = _T("EO");
+		str.Format(_T("EO(%x)"), dat);
 		break;
 	case 5:
-		str = _T("IR백상");
+		str.Format(_T("IR백상(%x)"),dat);
 		break;
 	case 6:
-		str = _T("IR흑상");
+		str.Format(_T("IR흑상(%x)"), dat);
 		break;
 	default:
 		str.Format(_T("미정의(%x)"), dat);
@@ -608,13 +608,13 @@ void CZiieDlg::UpdateScopeOut(byte dat)
 	CString str;
 	switch (dat) {
 	case 0:
-		str = _T("0");
+		str = _T("(0)");
 		break;
 	case 3:
-		str = _T("출력");
+		str.Format(_T("출력(%x)"), dat);
 		break;
 	case 4:
-		str = _T("미출력");
+		str.Format(_T("미출력(%x)"), dat);
 		break;
 	default:
 		str.Format(_T("미정의(%x)"), dat);
@@ -633,28 +633,28 @@ void CZiieDlg::UpdateWirelessChannel(byte dat1, byte dat2)
 {
 	switch (dat1) {
 	case 1:
-		m_strWirelessChannelMode = _T("모드: 자동(Default)");
+		m_strWirelessChannelMode.Format(_T("모드: 자동(Default)(%x)"), dat1);
 		break;
 	case 2:
-		m_strWirelessChannelMode = _T("모드: 자동(Default)");
+		m_strWirelessChannelMode .Format(_T("모드: 수동(%x)"),dat1);
 		break;
 	default:
 		m_strWirelessChannelMode.Format(_T("모드: 미정의(%x)"), dat1);
 		break;
 	}
 
-	switch (dat1) {
+	switch (dat2) {
 	case 0:
-		m_strWirelessChannelInfo = _T("정보: 선택 안함(Default)");
+		m_strWirelessChannelInfo.Format(_T("정보: 선택 안함(Default)(%x)"), dat2);
 		break;
 	case 1:
-		m_strWirelessChannelInfo = _T("정보: 수동 1채널");
+		m_strWirelessChannelInfo.Format(_T("정보: 수동 1채널(%x)"), dat2);
 		break;
 	case 2:
-		m_strWirelessChannelInfo = _T("정보: 수동 2채널");
+		m_strWirelessChannelInfo.Format(_T("정보: 수동 2채널(%x)"), dat2);
 		break;
 	default:
-		m_strWirelessChannelInfo.Format(_T("정보: 미정의(%x)"), dat1);
+		m_strWirelessChannelInfo.Format(_T("정보: 미정의(%x)"), dat2);
 		break;
 	}
 }
