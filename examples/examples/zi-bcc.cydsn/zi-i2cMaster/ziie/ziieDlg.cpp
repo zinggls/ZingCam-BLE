@@ -806,11 +806,36 @@ void CZiieDlg::UpdateScopeStateBattery(byte dat)
 	m_strScopeStateBattery.Format(_T("배터리: %d%%"), dat);
 }
 
+void CZiieDlg::UpdateScopeStateIR(byte dat)
+{
+	/*
+	0x00 : 정상
+	0xE1 : 화기조준경 IR 모듈 이상
+	0xff : unkown
+	*/
+	m_strScopeStateIR = _T("IR상태: ");
+
+	CString str;
+	switch (dat) {
+	case 0:
+		str.Format(_T("정상(%x)"), dat);
+		break;
+	case 0xE1:
+		str.Format(_T("모듈이상(%x)"), dat);
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), dat);
+		break;
+	}
+	m_strScopeStateIR += str;
+}
+
 void CZiieDlg::UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5)
 {
 	UpdateScopeStateKind(dat1);
 	UpdateScopeStateOut(dat2);
 	UpdateScopeStateBattery(dat3);
+	UpdateScopeStateIR(dat4);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
