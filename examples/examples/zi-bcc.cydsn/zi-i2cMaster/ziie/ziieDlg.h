@@ -65,6 +65,7 @@ public:
 	void UpdateZxxListCtrl(std::vector<byte>& dataOUT);
 	void UpdateZcdListCtrl(std::vector<byte>& dataOUT);
 	void UpdateScopeKind(byte dat);
+	void UpdateScopeOut(byte dat);
 	void UpdateScope(byte dat1, byte dat2);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
 	static BOOL bRead;

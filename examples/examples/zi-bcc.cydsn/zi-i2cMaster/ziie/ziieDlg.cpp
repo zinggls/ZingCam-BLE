@@ -597,9 +597,32 @@ void CZiieDlg::UpdateScopeKind(byte dat)
 	m_strScopeKind += str;
 }
 
+void CZiieDlg::UpdateScopeOut(byte dat)
+{
+	m_strScopeOut = _T("출력: ");
+
+	CString str;
+	switch (dat) {
+	case 0:
+		str = _T("0");
+		break;
+	case 3:
+		str = _T("출력");
+		break;
+	case 4:
+		str = _T("미출력");
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), dat);
+		break;
+	}
+	m_strScopeOut += str;
+}
+
 void CZiieDlg::UpdateScope(byte dat1, byte dat2)
 {
 	UpdateScopeKind(dat1);
+	UpdateScopeOut(dat2);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
