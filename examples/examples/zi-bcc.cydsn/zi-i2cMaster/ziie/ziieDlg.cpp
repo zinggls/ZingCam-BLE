@@ -749,9 +749,37 @@ void CZiieDlg::UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byt
 	}
 }
 
+void CZiieDlg::UpdateScopeStateKind(byte dat)
+{
+	m_strScopeStateKind = _T("종류: ");
+
+	CString str;
+	switch (dat) {
+	case 1:
+		str.Format(_T("EO(%x)"), dat);
+		break;
+	case 2:
+		str.Format(_T("IR백상(%x)"), dat);
+		break;
+	case 3:
+		str.Format(_T("IR흑상(%x)"), dat);
+		break;
+	case 4:
+		str.Format(_T("경II EO(%x)"), dat);
+		break;
+	case 8:
+		str.Format(_T("경II IR(%x)"), dat);
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), dat);
+		break;
+	}
+	m_strScopeStateKind += str;
+}
+
 void CZiieDlg::UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5)
 {
-
+	UpdateScopeStateKind(dat1);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
