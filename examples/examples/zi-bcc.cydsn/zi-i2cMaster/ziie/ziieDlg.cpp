@@ -82,6 +82,8 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strTxStateBattery(_T(""))
 	, m_strTxStateModem(_T(""))
 	, m_strTxStateImu(_T(""))
+	, m_strRxStateModem(_T(""))
+	, m_strRxStateImu(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -114,6 +116,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_TX_STATE_BATTERY_STATIC, m_strTxStateBattery);
 	DDX_Text(pDX, IDC_TX_STATE_MODEM_STATIC, m_strTxStateModem);
 	DDX_Text(pDX, IDC_TX_STATE_IMU_STATIC, m_strTxStateImu);
+	DDX_Text(pDX, IDC_RX_STATE_MODEM_STATIC, m_strRxStateModem);
+	DDX_Text(pDX, IDC_RX_STATE_IMU_STATIC, m_strRxStateImu);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -870,6 +874,12 @@ void CZiieDlg::UpdateTxState(byte dat1, byte dat2, byte dat3)
 	m_strTxStateImu = ModuleSanity(_T("IMU상태: "), dat3, 0xE5);
 }
 
+void CZiieDlg::UpdateRxState(byte dat1, byte dat2)
+{
+	m_strRxStateModem = ModuleSanity(_T("모뎀상태: "), dat1, 0xE4);
+	m_strRxStateImu = ModuleSanity(_T("IMU상태: "), dat2, 0xE6);
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 {
 	HRESULT hr;
@@ -896,6 +906,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 
 		UpdateScopeState(dataOUT[11], dataOUT[12], dataOUT[13], dataOUT[15], dataOUT[16]);
 		UpdateTxState(dataOUT[14], dataOUT[17], dataOUT[19]);
+		UpdateRxState(dataOUT[18], dataOUT[20]);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
