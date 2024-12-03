@@ -27,10 +27,13 @@
 #define IDC_BLE_STATE_STATIC            1014
 #define IDC_OPMODE_TX_STATIC            1015
 #define IDC_OPMODE_RX_STATIC            1016
+#define IDC_COMBO1                      1017
+#define IDC_COMBO2                      1018
 #define IDC_TX_IMU_TYPE_STATIC          1019
 #define IDC_TX_IMU_CALIB_STATIC         1020
 #define IDC_RX_IMU_TYPE_STATIC          1021
 #define IDC_RX_IMU_CALIB_STATIC         1022
+#define IDC_COMBO3                      1023
 #define IDC_SCOPE_STATE_KIND_STATIC     1024
 #define IDC_SCOPE_STATE_OUT_STATIC      1025
 #define IDC_SCOPE_STATE_BATTERY_STATIC  1026
@@ -41,6 +44,14 @@
 #define IDC_TX_STATE_IMU_STATIC         1031
 #define IDC_RX_STATE_MODEM_STATIC       1032
 #define IDC_RX_STATE_IMU_STATIC         1033
+#define IDC_COMBO4                      1034
+#define IDC_COMBO5                      1035
+#define IDC_COMBO6                      1036
+#define IDC_COMBO7                      1037
+#define IDC_COMBO8                      1038
+#define IDC_COMBO9                      1039
+#define IDC_COMBO10                     1040
+#define IDC_COMBO11                     1041
 
 // Next default values for new objects
 // 
@@ -48,7 +59,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1015
+#define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
