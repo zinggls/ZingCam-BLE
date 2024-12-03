@@ -326,17 +326,17 @@ void CZiieDlg::CreateWriteBuffer()
 	m_writeBufferListCtrl.InsertColumn(10, _T("10"), LVCFMT_RIGHT, nHexWidth);
 
 	m_writeBufferListCtrl.InsertItem(0, _T(""));
-	m_writeBufferListCtrl.SetItemText(0, 0, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 1, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 2, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 3, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 4, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 5, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 6, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 7, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 8, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 9, _T("FF"));
-	m_writeBufferListCtrl.SetItemText(0, 10, _T("FF"));
+	m_writeBufferListCtrl.SetItemText(0, 0, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 1, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 2, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 3, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 4, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 5, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 6, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 7, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 8, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 9, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 10, _T(""));
 }
 
 void CZiieDlg::CreateColumnsIMU(CListCtrl& listCtrl)
