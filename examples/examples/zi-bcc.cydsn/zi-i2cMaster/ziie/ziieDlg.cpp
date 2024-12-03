@@ -128,7 +128,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_OPMODE_TX_COMBO, m_opmodeTxCombo);
 	DDX_Control(pDX, IDC_OPMODE_RX_COMBO, m_opmodeRxCombo);
 	DDX_Control(pDX, IDC_TX_IMU_TYPE_COMBO, m_txImuTypeCombo);
-	DDX_Control(pDX, IDC_TX_IMU_CALIB_COMBO, m_TxImuCalibCombo);
+	DDX_Control(pDX, IDC_TX_IMU_CALIB_COMBO, m_txImuCalibCombo);
 	DDX_Control(pDX, IDC_RX_IMU_TYPE_COMBO, m_rxImuTypeCombo);
 	DDX_Control(pDX, IDC_RX_IMU_CALIB_COMBO, m_rxImuCalibCombo);
 }
@@ -215,11 +215,11 @@ BOOL CZiieDlg::OnInitDialog()
 	m_txImuTypeCombo.AddString(_T("Euler Angle(Default)"));
 	m_txImuTypeCombo.AddString(_T("Quaternion"));
 
-	m_TxImuCalibCombo.AddString(_T("(default)"));
-	m_TxImuCalibCombo.AddString(_T("자이로 보정"));
-	m_TxImuCalibCombo.AddString(_T("가속도 보정"));
-	m_TxImuCalibCombo.AddString(_T("지자계 보정"));
-	m_TxImuCalibCombo.AddString(_T("지자계 보정 종료"));
+	m_txImuCalibCombo.AddString(_T("(default)"));
+	m_txImuCalibCombo.AddString(_T("자이로 보정"));
+	m_txImuCalibCombo.AddString(_T("가속도 보정"));
+	m_txImuCalibCombo.AddString(_T("지자계 보정"));
+	m_txImuCalibCombo.AddString(_T("지자계 보정 종료"));
 
 	m_rxImuTypeCombo.AddString(_T("Euler Angle(Default)"));
 	m_rxImuTypeCombo.AddString(_T("Quaternion"));
