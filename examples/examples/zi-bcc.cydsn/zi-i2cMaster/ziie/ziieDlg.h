@@ -123,4 +123,5 @@ public:
 	CComboBox m_opmodeTxCombo;
 	CComboBox m_opmodeRxCombo;
 	CComboBox m_txImuTypeCombo;
+	CComboBox m_TxImuCalibCombo;
 };
