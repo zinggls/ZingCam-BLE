@@ -116,4 +116,5 @@ public:
 	CString m_strRxStateImu;
 	CString m_strBleState;
 	CComboBox m_scopeKindCombo;
+	CComboBox m_scopeOutCombo;
 };

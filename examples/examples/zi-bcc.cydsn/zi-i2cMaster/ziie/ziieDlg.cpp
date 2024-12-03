@@ -121,6 +121,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_RX_STATE_IMU_STATIC, m_strRxStateImu);
 	DDX_Text(pDX, IDC_BLE_STATE_STATIC, m_strBleState);
 	DDX_Control(pDX, IDC_SCOPE_KIND_COMBO, m_scopeKindCombo);
+	DDX_Control(pDX, IDC_SCOPE_OUT_COMBO, m_scopeOutCombo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -175,6 +176,10 @@ BOOL CZiieDlg::OnInitDialog()
 	m_scopeKindCombo.AddString(_T("조준경EO"));
 	m_scopeKindCombo.AddString(_T("조준경IR 백상"));
 	m_scopeKindCombo.AddString(_T("조준경IR 흑상"));
+
+	m_scopeOutCombo.AddString(_T("알림없음/알림반영"));
+	m_scopeOutCombo.AddString(_T("조준경 영상출력"));
+	m_scopeOutCombo.AddString(_T("조준경 영상미출력"));
 
 	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
