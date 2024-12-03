@@ -699,40 +699,45 @@ void CZiieDlg::UpdateOpmode(byte dat1, byte dat2, byte dat3)
 	m_strOpmodeRx = _T("수신기:") + Opmode(dat3);
 }
 
-void CZiieDlg::UpdateTxIMU(byte dat1, byte dat2)
+void CZiieDlg::UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byte dat2)
 {
 	switch (dat1) {
 	case 0:
-		m_strTxImuType.Format(_T("타입:*Euler(%x)"), dat1);
+		strImuType.Format(_T("타입:*Euler(%x)"), dat1);
 		break;
 	case 1:
-		m_strTxImuType.Format(_T("타입:Quaternion(%x)"), dat1);
+		strImuType.Format(_T("타입:Quaternion(%x)"), dat1);
 		break;
 	default:
-		m_strTxImuType.Format(_T("타입:미정의(%x)"), dat1);
+		strImuType.Format(_T("타입:미정의(%x)"), dat1);
 		break;
 	}
 
 	switch (dat2)
 	{
 	case 0:
-		m_strTxImuCalib.Format(_T("보정:*(%x)"), dat2);
+		strCalib.Format(_T("보정:*(%x)"), dat2);
 		break;
 	case 1:
-		m_strTxImuCalib.Format(_T("보정:자이로(%x)"), dat2);
+		strCalib.Format(_T("보정:자이로(%x)"), dat2);
 		break;
 	case 2:
-		m_strTxImuCalib.Format(_T("보정:가속도(%x)"), dat2);
+		strCalib.Format(_T("보정:가속도(%x)"), dat2);
 		break;
 	case 3:
-		m_strTxImuCalib.Format(_T("보정:지자계S(%x)"), dat2);
+		strCalib.Format(_T("보정:지자계S(%x)"), dat2);
 		break;
 	case 4:
-		m_strTxImuCalib.Format(_T("보정:지자계E(%x)"), dat2);
+		strCalib.Format(_T("보정:지자계E(%x)"), dat2);
 		break;
 	default:
 		break;
 	}
+}
+
+void CZiieDlg::UpdateTxIMU(byte dat1, byte dat2)
+{
+	UpdateXIMU(m_strTxImuType, m_strTxImuCalib, dat1, dat2);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
