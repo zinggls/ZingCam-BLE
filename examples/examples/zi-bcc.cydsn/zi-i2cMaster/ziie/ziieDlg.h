@@ -78,4 +78,5 @@ public:
 	CComboBox m_portsCombo;
 	CString m_strScopeKind;
 	CString m_strScopeOut;
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

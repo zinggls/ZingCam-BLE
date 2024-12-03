@@ -88,6 +88,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_I2C_READ_BUTTON, &CZiieDlg::OnBnClickedI2cReadButton)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -128,6 +129,8 @@ BOOL CZiieDlg::OnInitDialog()
 	CreateColumnsIMU(m_dImuListCtrl);
 	CreateColumnsZXX(m_zxxListCtrl);
 	CreateColumnsZCD(m_zcdListCtrl);
+
+	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -676,4 +679,13 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 	else {
 		ResetI2CReadButton();
 	}
+}
+
+
+void CZiieDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	UpdateData(FALSE);
+
+	CDialogEx::OnTimer(nIDEvent);
 }
