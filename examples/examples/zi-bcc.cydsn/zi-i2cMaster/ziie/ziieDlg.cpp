@@ -630,9 +630,17 @@ void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT)
 	CString strCnt = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
 	CString strPos = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
 
+	//IMU 12bytes
+	zxxIndex += 12;
+
 	//ZCD_ADDITIONAL_FIELDS
-	CString strVND = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
-	CString strPRD = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
+	size_t idx = zxxIndex;
+	CString strVND;
+	strVND.Format(_T("0x%02X%02X"), dataOUT[idx + 1], dataOUT[idx]);	zxxIndex += 4;
+
+	idx = zxxIndex;
+	CString strPRD;
+	strPRD.Format(_T("0x%02X%02X"), dataOUT[idx + 1], dataOUT[idx]);	zxxIndex += 4;
 
 	m_zxxListCtrl.SetItemText(nItem, 0, strKind);
 	m_zxxListCtrl.SetItemText(nItem, 1, strUSB);
