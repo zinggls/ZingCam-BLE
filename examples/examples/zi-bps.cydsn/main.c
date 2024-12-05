@@ -83,6 +83,8 @@ static void onImuFrame(const ImuFrame *imu)
 int main()
 {
     CyGlobalIntEnable; 
+    
+    LED_GREEN_Write(1);
 
     UART_DBG_Start();
     ZingUart_Init(ZingCB);

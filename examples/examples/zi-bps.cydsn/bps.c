@@ -21,6 +21,7 @@ void BleCallBack(uint32 event, void* eventParam)
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
             L("Advertising fast\r\n");
+            LED_GREEN_Write(1);
             break;
             
         case CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP:
@@ -34,6 +35,7 @@ void BleCallBack(uint32 event, void* eventParam)
             
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:
             L("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
+            LED_GREEN_Write(0);
             break;
 
         /* handle a write request */
