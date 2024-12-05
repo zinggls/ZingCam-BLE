@@ -510,12 +510,12 @@ BOOL CZiieDlg::I2C_ResetBus()
 BOOL CZiieDlg::I2C_SetSpeed()
 {
 	//Set I2C speed
-	HRESULT hr = m_pCom->I2C_SetSpeed(enumI2Cspeed::CLK_100K);
+	HRESULT hr = m_pCom->I2C_SetSpeed((enumI2Cspeed)0x05);	//ppcom.h에는 CLK_1000K 0x05 정의가 안되어 있어서 강제로 타입변환
 	if (!SUCCEEDED(hr)) {
-		L(_T("Set speed: 100K error,HRESULT: 0x%08X"), hr);
+		L(_T("Set speed: 1000K error,HRESULT: 0x%08X"), hr);
 		return FALSE;
 	}
-	L(_T("Set speed: 100K"));
+	L(_T("Set speed: 1000K"));
 	return TRUE;
 }
 
