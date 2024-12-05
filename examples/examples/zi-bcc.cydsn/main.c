@@ -49,6 +49,8 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
+    LED_GREEN_Write(LED_OFF);
+    
     ZingUart_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);

@@ -56,6 +56,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             systemMode = SM_SCANNING;
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST); // Start scanning for peripherals
             L("Scanning...\r\n");
+            LED_GREEN_Write(LED_OFF);
             break;
 
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:                     // Advertising packet
@@ -88,6 +89,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             CyBle_GattcStartDiscovery(cyBle_connHandle);  // Discover the services on the GATT Server
             systemMode = SM_SERVICEDISCOVERY;
             L("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
+            LED_GREEN_Write(LED_ON);
             break;
             
         case CYBLE_EVT_GATT_CONNECT_IND: // nothing to do
