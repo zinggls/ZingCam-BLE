@@ -61,7 +61,6 @@ int main(void)
         CyBle_ProcessEvents();
         zing_process_uart_data();
         i2cs_process(getZcdFrame());
-        SendCommandToPeripheral(123);
         imu_process_uart_data(onImuFrame);
     }
 }
