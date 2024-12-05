@@ -34,18 +34,12 @@ static void processingZxx()
             setZedBuffer(getI2CReadBuffer()+46,&zedFrame);
             setZedImuBuffer(getI2CReadBuffer()+22,&zedFrame);   //ICD 무선영상 송신기 IMU
             getZcdFrame()->pos = zedFrame.pos;
-            LED_RED_Write  (0);
-            LED_GREEN_Write(1);
-            LED_BLUE_Write (0);
         }
         if(*getZxxKind()==ZCH) {
             memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
             setZchBuffer(getI2CReadBuffer()+46,&zchFrame);
             setZchImuBuffer(getI2CReadBuffer()+22,&zchFrame);   //ICD 무선영상 송신기 IMU
             getZcdFrame()->pos = zchFrame.pos;
-            LED_RED_Write  (0);
-            LED_GREEN_Write(0);
-            LED_BLUE_Write (1);
         }
     }
 }
