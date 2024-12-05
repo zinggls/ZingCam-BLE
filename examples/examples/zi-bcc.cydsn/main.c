@@ -63,7 +63,5 @@ int main(void)
         i2cs_process(getZcdFrame());
         SendCommandToPeripheral(123);
         imu_process_uart_data(onImuFrame);
-        
-        CyDelay(10);
     }
 }
