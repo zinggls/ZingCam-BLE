@@ -111,6 +111,8 @@ void i2cs_process(ZCD_FRAME *zcd)
     /* Read complete: expose buffer to master */
     if (0u != (I2C_I2CSlaveStatus() & I2C_I2C_SSTAT_RD_CMPLT))
     {
+        memset(i2cReadBuffer,0,sizeof(i2cReadBuffer));
+        
         /* Clear the slave read buffer and status */
         I2C_I2CSlaveClearReadBuf();
         (void) I2C_I2CSlaveClearReadStatus();
