@@ -578,7 +578,7 @@ HRESULT CZiieDlg::Control_I2C_SCB_Slave(int deviceAddress)
 	}
 	L(_T("Write %dbytes to device"), dataIN.size());
 
-	Read_I2C_SCB_Slave(deviceAddress, 100);
+	Read_I2C_SCB_Slave(deviceAddress);
 
 	return S_OK;
 }
@@ -1039,7 +1039,7 @@ void CZiieDlg::UpdateWriteBuffer()
 	}
 }
 
-HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
+HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
 	CString str;
@@ -1082,7 +1082,6 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds)
 			str += tmp;
 		}
 		L(str);
-		Sleep(dwMilliseconds);
 		if (bRead == FALSE) break;
 	}
 	return S_OK;
@@ -1109,7 +1108,7 @@ UINT CZiieDlg::I2C_Read(LPVOID pParam)
 
 	if (pDlg->I2C_GetDeviceList() != TRUE) goto cleanup;
 
-	pDlg->Read_I2C_SCB_Slave(pDlg->m_devices[0], 100);
+	pDlg->Read_I2C_SCB_Slave(pDlg->m_devices[0]);
 
 cleanup:
 	pDlg->ResetI2CReadButton();

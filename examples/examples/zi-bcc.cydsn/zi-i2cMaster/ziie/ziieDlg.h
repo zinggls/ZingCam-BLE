@@ -84,7 +84,7 @@ public:
 	void UpdateRxState(byte dat1, byte dat2);
 	void UpdateBleState(byte dat);
 	void UpdateWriteBuffer();
-	HRESULT Read_I2C_SCB_Slave(int deviceAddress, DWORD dwMilliseconds);
+	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
 	afx_msg void OnDestroy();
