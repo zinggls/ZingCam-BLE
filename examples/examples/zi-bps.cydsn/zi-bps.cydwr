@@ -21,15 +21,17 @@
     <Group key="Pin">
       <Data key="6f1c6cc3-8ac8-42b8-9be0-54c1b90c12b2" value="UART_IMU_TX" />
       <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="UART_RX" />
+      <Data key="9e336c02-827a-4f7e-9893-9cc0a1b0ccf8" value="LED_BLUE" />
       <Data key="43ec2fa1-bf22-4b71-9477-b6ca7b97f0b0/23b8206d-1c77-4e61-be4a-b4037d5de5fc" value="UART_DBG_tx" />
       <Data key="43ec2fa1-bf22-4b71-9477-b6ca7b97f0b0/78e33e5d-45ea-4b75-88d5-73274e8a7ce4" value="UART_DBG_rx" />
+      <Data key="74cbd069-96d1-46de-b032-5f29e3b18053" value="LED_GREEN" />
       <Data key="94b2f552-a799-4a09-b1f3-f852891fc82b" value="blue" />
       <Data key="4703c4a4-16ad-48a0-a02e-3a15d4b0387a" value="UART_IMU_RX" />
       <Data key="5121a5cf-c894-4305-a784-a99b80cae403" value="UART_ZING_RX" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="UART_ZING_RX" />
       <Data key="73779242-6b28-49d2-b702-12fc937e6e01" value="UART_ZING_TX" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="UART_TX" />
-      <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="UART_ZING_TX" />
+      <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="LED_RED" />
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/73b612cd-240c-4d8e-8340-ea28aabf4b11" value="capsense_Sns" />
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/899719c0-e797-4403-a44f-07a66de2cbeb" value="capsense_Cmod" />
     </Group>
@@ -3698,6 +3700,11 @@
         <Data key="Port Format" value="1,4" />
       </Group>
     </Group>
+    <Group key="9e336c02-827a-4f7e-9893-9cc0a1b0ccf8">
+      <Group key="0">
+        <Data key="Port Format" value="3,7" />
+      </Group>
+    </Group>
     <Group key="43ec2fa1-bf22-4b71-9477-b6ca7b97f0b0/23b8206d-1c77-4e61-be4a-b4037d5de5fc">
       <Group key="0">
         <Data key="Port Format" value="1,5" />
@@ -3706,6 +3713,11 @@
     <Group key="43ec2fa1-bf22-4b71-9477-b6ca7b97f0b0/78e33e5d-45ea-4b75-88d5-73274e8a7ce4">
       <Group key="0">
         <Data key="Port Format" value="1,4" />
+      </Group>
+    </Group>
+    <Group key="74cbd069-96d1-46de-b032-5f29e3b18053">
+      <Group key="0">
+        <Data key="Port Format" value="3,6" />
       </Group>
     </Group>
     <Group key="94b2f552-a799-4a09-b1f3-f852891fc82b">
@@ -3740,7 +3752,7 @@
     </Group>
     <Group key="ed092b9b-d398-4703-be89-cebf998501f6">
       <Group key="0">
-        <Data key="Port Format" value="3,1" />
+        <Data key="Port Format" value="2,6" />
       </Group>
     </Group>
     <Group key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/73b612cd-240c-4d8e-8340-ea28aabf4b11">
