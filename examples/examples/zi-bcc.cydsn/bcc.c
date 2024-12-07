@@ -56,7 +56,9 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             systemMode = SM_SCANNING;
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST); // Start scanning for peripherals
             L("Scanning...\r\n");
+            LED_RED_Write(LED_OFF);
             LED_GREEN_Write(LED_OFF);
+            LED_BLUE_Write(LED_OFF);
             break;
 
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:                     // Advertising packet
@@ -76,6 +78,9 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             systemMode = SM_CONNECTING;
             CyBle_GapcStopScan();                                  // stop scanning for peripherals
             L(" Stop scan\r\n");
+            LED_RED_Write(LED_OFF);
+            LED_GREEN_Write(LED_ON);
+            LED_BLUE_Write(LED_ON);
             break;
 
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
@@ -89,7 +94,9 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             CyBle_GattcStartDiscovery(cyBle_connHandle);  // Discover the services on the GATT Server
             systemMode = SM_SERVICEDISCOVERY;
             L("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
+            LED_RED_Write(LED_OFF);
             LED_GREEN_Write(LED_ON);
+            LED_BLUE_Write(LED_OFF);
             break;
             
         case CYBLE_EVT_GATT_CONNECT_IND: // nothing to do
@@ -102,6 +109,9 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 CYBLE_API_RESULT_T apiRes = CyBle_GattcExchangeMtuReq(cyBle_connHandle, CYBLE_GATT_MTU);            
                 L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE, CyBle_GattcExchangeMtuReq=0x%x\r\n",apiRes);
             }
+            LED_RED_Write(LED_OFF);
+            LED_GREEN_Write(LED_OFF);
+            LED_BLUE_Write(LED_ON);
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
@@ -142,6 +152,9 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 
         default:
             L("BLE: Unhandled event(0x%lx)\r\n",eventCode);
+            LED_RED_Write(LED_ON);
+            LED_GREEN_Write(LED_OFF);
+            LED_BLUE_Write(LED_OFF);
             break;
     }
 }
