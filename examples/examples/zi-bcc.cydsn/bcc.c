@@ -41,19 +41,19 @@ void setPairingState(SystemMode_t m, uint8 *buf)
 
 static void processingZxx()
 {
-    if(*getZxxKind()==Unknown) *getZxxKind() = inspect((char*)notificationParam->handleValPair.value.val);
+    if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
     
     if(notificationParam->handleValPair.value.len == getFrameSize()) {
         notifiedCustom++;
         
         // Process the received data                                
-        if(*getZxxKind()==ZED) {
+        if(zxxKind==ZED) {
             memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
             setZedBuffer(getI2CReadBuffer()+46,&zedFrame);
             setZedImuBuffer(getI2CReadBuffer()+22,&zedFrame);   //ICD 무선영상 송신기 IMU
             getZcdFrame()->pos = zedFrame.pos;
         }
-        if(*getZxxKind()==ZCH) {
+        if(zxxKind==ZCH) {
             memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
             setZchBuffer(getI2CReadBuffer()+46,&zchFrame);
             setZchImuBuffer(getI2CReadBuffer()+22,&zchFrame);   //ICD 무선영상 송신기 IMU
