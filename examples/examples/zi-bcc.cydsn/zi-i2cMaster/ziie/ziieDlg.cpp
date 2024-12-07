@@ -182,6 +182,7 @@ BOOL CZiieDlg::OnInitDialog()
 	m_bmpGreenCtrl.LoadBitmap(IDB_GREEN_BITMAP);
 	m_bmpYelloCtrl.LoadBitmap(IDB_YELLOW_BITMAP);
 	m_bmpRedCtrl.LoadBitmap(IDB_RED_BITMAP);
+	m_bleStateCtrl.ShowWindow(SW_HIDE);
 
 	FillPortsCombo();
 	CreateWriteBuffer();
@@ -419,6 +420,7 @@ void CZiieDlg::ResetI2CReadButton()
 	bRead = FALSE;
 	GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
 	GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(TRUE);
+	m_bleStateCtrl.ShowWindow(SW_HIDE);
 }
 
 BOOL CZiieDlg::COM_OpenPort()
@@ -1138,6 +1140,7 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 		}
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
 		GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(FALSE);
+		m_bleStateCtrl.ShowWindow(SW_SHOW);
 	}
 	else {
 		ResetI2CReadButton();
