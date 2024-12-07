@@ -132,6 +132,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RX_IMU_TYPE_COMBO, m_rxImuTypeCombo);
 	DDX_Control(pDX, IDC_RX_IMU_CALIB_COMBO, m_rxImuCalibCombo);
 	DDX_Control(pDX, IDC_WRITE_BUFFER_LIST, m_writeBufferListCtrl);
+	DDX_Control(pDX, IDC_BLE_STATUS_LED_STATIC, m_bleStateCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -177,6 +178,11 @@ BOOL CZiieDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	m_bmpGreyCtrl.LoadBitmap(IDB_GREY_BITMAP);
+	m_bmpGreenCtrl.LoadBitmap(IDB_GREEN_BITMAP);
+	m_bmpYelloCtrl.LoadBitmap(IDB_YELLOW_BITMAP);
+	m_bmpRedCtrl.LoadBitmap(IDB_RED_BITMAP);
+
 	FillPortsCombo();
 	CreateWriteBuffer();
 	CreateColumnsIMU(m_hImuListCtrl);
@@ -1009,15 +1015,19 @@ void CZiieDlg::UpdateBleState(byte dat)
 	{
 	case 0:
 		str.Format(_T("대기(%x)"), dat);
+		m_bleStateCtrl.SetBitmap(m_bmpGreyCtrl);
 		break;
 	case 1:
 		str.Format(_T("페어링중(%x)"), dat);
+		m_bleStateCtrl.SetBitmap(m_bmpYelloCtrl);
 		break;
 	case 2:
 		str.Format(_T("페어링 완료(%x)"), dat);
+		m_bleStateCtrl.SetBitmap(m_bmpGreenCtrl);
 		break;
 	default:
 		str.Format(_T("미정의(%x)"), dat);
+		m_bleStateCtrl.SetBitmap(m_bmpRedCtrl);
 		break;
 	}
 	m_strBleState += str;

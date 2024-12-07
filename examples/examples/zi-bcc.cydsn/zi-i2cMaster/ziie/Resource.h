@@ -9,6 +9,11 @@
 #define IDR_MAINFRAME                   128
 #define IDB_GLS_BITMAP                  130
 #define IDB_PNG1                        131
+#define IDB_GREEN_BITMAP                132
+#define IDB_GREY_BITMAP                 133
+#define IDB_YELLOW_BITMAP               134
+#define IDB_BITMAP1                     135
+#define IDB_RED_BITMAP                  135
 #define IDC_LOG_LIST                    1000
 #define IDC_I2C_READ_BUTTON             1001
 #define IDC_LIST1                       1002
@@ -59,14 +64,15 @@
 #define IDC_WRITE_BUFFER_LIST           1042
 #define IDC_I2C_WRITE_BUTTON            1043
 #define IDC_LOGO_STATIC                 1044
+#define IDC_BLE_STATUS_LED_STATIC       1045
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        132
+#define _APS_NEXT_RESOURCE_VALUE        136
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_CONTROL_VALUE         1046
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

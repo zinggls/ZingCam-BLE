@@ -217,6 +217,10 @@
   <ItemGroup>
     <Image Include="..\..\..\..\..\..\Users\rossi\Downloads\p2p.png" />
     <Image Include="res\GLS.bmp" />
+    <Image Include="res\Green.bmp" />
+    <Image Include="res\Grey.bmp" />
+    <Image Include="res\Red.bmp" />
+    <Image Include="res\yellow.bmp" />
     <Image Include="res\ziie.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

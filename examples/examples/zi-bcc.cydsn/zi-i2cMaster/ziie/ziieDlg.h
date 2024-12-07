@@ -131,4 +131,9 @@ public:
 	CListCtrl m_writeBufferListCtrl;
 	CMap<CString, LPCTSTR, byte, byte> m_writeMap;
 	afx_msg void OnBnClickedI2cWriteButton();
+	CBitmap m_bmpGreyCtrl;
+	CBitmap m_bmpGreenCtrl;
+	CBitmap m_bmpYelloCtrl;
+	CBitmap m_bmpRedCtrl;
+	CStatic m_bleStateCtrl;
 };
