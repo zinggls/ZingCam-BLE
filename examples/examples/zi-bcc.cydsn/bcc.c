@@ -113,8 +113,8 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             systemMode = SM_SERVICEDISCOVERY;
             L("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
             LED_RED_Write(LED_OFF);
-            LED_GREEN_Write(LED_ON);
-            LED_BLUE_Write(LED_OFF);
+            LED_GREEN_Write(LED_OFF);
+            LED_BLUE_Write(LED_ON);
             break;
             
         case CYBLE_EVT_GATT_CONNECT_IND: // nothing to do
@@ -128,8 +128,8 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 L("CYBLE_EVT_GATTC_DISCOVERY_COMPLETE, CyBle_GattcExchangeMtuReq=0x%x\r\n",apiRes);
             }
             LED_RED_Write(LED_OFF);
-            LED_GREEN_Write(LED_OFF);
-            LED_BLUE_Write(LED_ON);
+            LED_GREEN_Write(LED_ON);
+            LED_BLUE_Write(LED_OFF);
             break;
           
         case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:                                 // Capsense Notification Recevied
