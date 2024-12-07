@@ -3,6 +3,7 @@
 
 static UartBuf uBuf;    //Circular buffer for UART data
 static ImuFrame imu;
+static uint16 cbCountPrev,cbCount;
 
 CY_ISR(UART_IMU_RX_INTERRUPT)
 {
@@ -29,6 +30,8 @@ void UART_IMU_StartAndInitialize()
     CyDelay(100);
     UART_IMU_UartPutString("<sots1>");
     CyDelay(100);
+    
+    cbCountPrev = cbCount = 0;
 }
 
 // Function to process data when a complete message is available
@@ -66,13 +69,27 @@ void imu_process_uart_data(ImuFrameCallback cb)
         }
         
         if(imu.isFull) {
-            cb(&imu);
+            cb(&imu); cbCount++;
             ImuFrame_init(&imu);
         }
     }
 }
 
-void setImuState(uint8 val, uint8 *buf)
+void setImuState(uint8 val, uint8 errCode, uint8 *buf)
 {
-    *buf = val;
+    if(val==0) {
+        *buf = val;
+    }else{
+        *buf = errCode;
+    }
+}
+
+uint8 getImuState()
+{
+    if(cbCount==cbCountPrev) {
+        return 1;   //ImuFrameCallback 호출 횟수 변화 없음
+    }else{
+        cbCountPrev = cbCount;
+        return 0;   //ImuFrameCallback 호출 횟수 변화 있음
+    }
 }

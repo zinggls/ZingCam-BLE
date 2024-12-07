@@ -45,8 +45,14 @@ static void onImuFrame(const ImuFrame *imu)
     memcpy(getI2CReadBuffer()+34,imu->data,IMU_FRAME_SIZE); //무선영상 수신기IMU 34
 }
 
+static uint16 updateStateInfoCount = 0;
+
 static void updateStateInfo()
 {
+    updateStateInfoCount++;
+    if(updateStateInfoCount%100!=0) return; //update every 100 times to prevent too frequent updates
+    
+    setImuState(getImuState(),0xE6,getI2CReadBuffer()+20);      //수신기 IMU 상태 0x00: 정상, 0xE6: 무선영상 수신기 IMU 이상
     setPairingState(getSystemMode(), getI2CReadBuffer()+21);    //BLE state
 }
 
