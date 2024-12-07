@@ -1,4 +1,3 @@
-#include <project.h>
 #include "ZingUart.h"
     
 static UartBuf uBuf;    //Circular buffer for UART data
