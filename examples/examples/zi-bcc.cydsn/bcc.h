@@ -17,5 +17,7 @@ ZED_FRAME* getZedFrame();
 ZCH_FRAME* getZchFrame();
 ZCD_FRAME* getZcdFrame();
 void CyBle_AppCallback( uint32 eventCode, void *eventParam );
+SystemMode_t getSystemMode();
+void setPairingState(SystemMode_t m, uint8 *buf);
     
 #endif //BCC_H

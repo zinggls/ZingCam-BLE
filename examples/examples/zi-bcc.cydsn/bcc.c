@@ -21,6 +21,24 @@ ZED_FRAME* getZedFrame() { return &zedFrame; }
 ZCH_FRAME* getZchFrame() { return &zchFrame; }
 ZCD_FRAME* getZcdFrame() { return &zcdFrame; }
 
+SystemMode_t getSystemMode() { return systemMode; }
+
+void setPairingState(SystemMode_t m, uint8 *buf)
+{
+    /*
+    BLE 상태 (1 Byte)
+    0x00 : 대기
+    0x01 : 패어링 중
+    0x02 : 패어링 완료
+    */
+    
+    uint8 value = 0;    //SM_INITIALIZE
+    if(m==SM_SCANNING || m==SM_CONNECTING || m==SM_SERVICEDISCOVERY) value = 1;
+    if(m==SM_CONNECTED) value = 2;
+    
+    *buf = value;
+}    
+
 static void processingZxx()
 {
     if(*getZxxKind()==Unknown) *getZxxKind() = inspect((char*)notificationParam->handleValPair.value.val);

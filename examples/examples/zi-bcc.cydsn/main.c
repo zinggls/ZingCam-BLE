@@ -45,6 +45,11 @@ static void onImuFrame(const ImuFrame *imu)
     memcpy(getI2CReadBuffer()+34,imu->data,IMU_FRAME_SIZE); //무선영상 수신기IMU 34
 }
 
+static void updateStateInfo()
+{
+    setPairingState(getSystemMode(), getI2CReadBuffer()+21);    //BLE state
+}
+
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
@@ -64,5 +69,6 @@ int main(void)
         zing_process_uart_data();
         i2cs_process(getZcdFrame());
         imu_process_uart_data(onImuFrame);
+        updateStateInfo();
     }
 }
