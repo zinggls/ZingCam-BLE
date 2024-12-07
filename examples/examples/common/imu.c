@@ -71,3 +71,8 @@ void imu_process_uart_data(ImuFrameCallback cb)
         }
     }
 }
+
+void setImuState(uint8 val, uint8 *buf)
+{
+    *buf = val;
+}
