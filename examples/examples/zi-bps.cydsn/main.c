@@ -18,13 +18,13 @@ static uint32 ZingCbCount = 0;
 // Function to process data when a complete message is available
 static void ZingCB(const char *buf)
 {
-    if(*getZxxKind()==Unknown) *getZxxKind() = detectZxx(buf);
-    if(*getZxxKind()!=ZED && *getZxxKind()!=ZCH) return;
+    if(zxxKind==Unknown) zxxKind = detectZxx(buf);
+    if(zxxKind!=ZED && zxxKind!=ZCH) return;
 
     // Parsing the values into the structure
     void *frame = getFrame(&zedFrame,&zchFrame);
     CYASSERT(frame);
-    if (!parse(*getZxxKind(),frame,buf)) {
+    if (!parse(zxxKind,frame,buf)) {
 #ifdef ZXX_DEBUG
         UART_DBG_UartPutString("Parsing Error\r\n");
         UART_DBG_UartPutString("Received: ");
@@ -38,12 +38,12 @@ static void ZingCB(const char *buf)
 
 static void zxxLog()
 {
-    if(*getZxxKind()==ZED) {
+    if(zxxKind==ZED) {
         ZED_FRAME *z = &zedFrame;
         L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,getWritereqCustom(),z->usb,z->cnt);
     }
     
-    if(*getZxxKind()==ZCH) {
+    if(zxxKind==ZCH) {
         ZCH_FRAME *z = &zchFrame;
         L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZCH USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,getWritereqCustom(),z->usb,z->cnt);
     }
@@ -56,7 +56,7 @@ static short toShort(const char *data)
 
 static void onImuFrame(const ImuFrame *imu)
 {
-    if(*getZxxKind()==ZED) {
+    if(zxxKind==ZED) {
         ZED_FRAME *z = &zedFrame;
         z->imu1 = toShort(imu->data);
         z->imu2 = toShort(imu->data+2);
@@ -66,7 +66,7 @@ static void onImuFrame(const ImuFrame *imu)
         z->imuChecksum = toShort(imu->data+10);
     }
     
-    if(*getZxxKind()==ZCH) {
+    if(zxxKind==ZCH) {
         ZCH_FRAME *z = &zchFrame;
         z->imu1 = toShort(imu->data);
         z->imu2 = toShort(imu->data+2);
@@ -107,8 +107,8 @@ int main()
         /* if Capsense scan is done, read the value and start another scan */
         if(!capsense_IsBusy())
         {
-            if(*getZxxKind()==ZED) zedFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
-            if(*getZxxKind()==ZCH) zchFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
+            if(zxxKind==ZED) zedFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
+            if(zxxKind==ZCH) zchFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
             capsense_UpdateEnabledBaselines();
             capsense_ScanEnabledWidgets();
         }

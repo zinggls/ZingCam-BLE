@@ -1,7 +1,5 @@
 #include <ZFrame.h>
 
-static ZxxKind zxxKind = Unknown;
-
 ZxxKind detectZxx(const char *buf)
 {
     if(memcmp(buf,"ZED ",4)==0) return ZED;
@@ -73,11 +71,6 @@ uint16 getFrameSize()
     if(zxxKind==ZCH) return sizeof(ZCH_FRAME);
     if(zxxKind==ZCD) return sizeof(ZCD_FRAME);
     return 0;   //never reach here
-}
-
-ZxxKind* getZxxKind()
-{
-    return &zxxKind;
 }
 
 void setZcdBuffer(uint8_t *buf,ZCD_FRAME *z)

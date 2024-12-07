@@ -17,6 +17,8 @@ typedef enum {
     ZCD
 } ZxxKind;
 
+ZxxKind zxxKind;
+
 // Define common fields as a macro to be used in all structures
 #define COMMON_FIELDS   \
     int kind;           \
@@ -78,7 +80,6 @@ ZxxKind inspect(const char *buf);
 int parse(ZxxKind k, void *data, const char *buf);
 void *getFrame(ZED_FRAME *zed, ZCH_FRAME *zch);
 uint16 getFrameSize();
-ZxxKind* getZxxKind();
 void setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd);
 void setZedBuffer(uint8_t *buf,ZED_FRAME *z);
 void setZchBuffer(uint8_t *buf,ZCH_FRAME *z);
