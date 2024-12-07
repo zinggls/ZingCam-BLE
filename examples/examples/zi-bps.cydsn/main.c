@@ -115,7 +115,7 @@ int main()
         
         uint8_t *frame = (uint8_t *)getFrame(&zedFrame,&zchFrame);
         if(frame) {
-            if(isNoZingCb(count,100,&ZingCbCount)) memset(frame,0,getFrameSize());  //reset on no zing data
+            if(isNoZingCb(count,200,&ZingCbCount)) memset(frame,0,getFrameSize());  //reset on no zing data
             
             myDataHandle.value.val = frame;
             myDataHandle.value.len = getFrameSize();
