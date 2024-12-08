@@ -111,7 +111,8 @@ void i2cs_process(ZCD_FRAME *zcd)
     /* Read complete: expose buffer to master */
     if (0u != (I2C_I2CSlaveStatus() & I2C_I2C_SSTAT_RD_CMPLT))
     {
-        memset(i2cReadBuffer,0,sizeof(i2cReadBuffer));
+        //i2cReadBuffer를 모두 초기화하면 i2c로 읽어가는 모든 값들이 0으로 초기화된다
+        //값이 전달되지 않는 것을 표시하는 것은 타이머를 사용하여 구현하도록 변경할 계획이므로 메모리 초기화 코드는 삭제
         
         /* Clear the slave read buffer and status */
         I2C_I2CSlaveClearReadBuf();
