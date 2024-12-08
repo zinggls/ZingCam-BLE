@@ -1,5 +1,9 @@
 #include <ZFrame.h>
 
+static const char ZED_SSCANF_FORMAT[] = "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
+static const char ZCH_SSCANF_FORMAT[] = "ZCH USB:%d VND:0x%X PRD:0x%X BND:%c PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
+static const char ZCD_SSCANF_FORMAT[] = "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d(%d) PHY_RX_FRAME_CNT:%d(%d) MFIR:%d/%d CNT:%d";
+
 ZxxKind detectZxx(const char *buf)
 {
     if(memcmp(buf,"ZED ",4)==0) return ZED;
@@ -25,7 +29,7 @@ int parse(ZxxKind k, void *data, const char *buf)
         case ZED:
             {
                 ZED_FRAME *z = (ZED_FRAME*)data;
-                if(ZED_NUM == sscanf(buf, "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d",
+                if(ZED_NUM == sscanf(buf, ZED_SSCANF_FORMAT,
                                     &z->usb,&z->bnd,&z->ppid,&z->devid,&z->trt,&z->ack,&z->ppc,&z->txid,&z->rxid,&z->run,&z->cnt)) {
                                         z->kind = ZED;
                                         rtn = 1;
@@ -35,7 +39,7 @@ int parse(ZxxKind k, void *data, const char *buf)
         case ZCH:
             {
                 ZCH_FRAME *z = (ZCH_FRAME*)data;
-                if(ZCH_NUM == sscanf(buf, "ZCH USB:%d VND:0x%X PRD:0x%X BND:%c PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d",
+                if(ZCH_NUM == sscanf(buf, ZCH_SSCANF_FORMAT,
                                     &z->usb,&z->vnd,&z->prd,&z->bnd,&z->ppid,&z->devid,&z->fmt,&z->idx,&z->trt,&z->ack,&z->ppc,&z->txid,&z->rxid,&z->run,&z->cnt)) {
                                         z->kind = ZCH;
                                         rtn=1;
@@ -45,7 +49,7 @@ int parse(ZxxKind k, void *data, const char *buf)
         case ZCD:
             {
                 ZCD_FRAME *z = (ZCD_FRAME*)data;
-                if(ZCD_NUM == sscanf(buf, "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d(%d) PHY_RX_FRAME_CNT:%d(%d) MFIR:%d/%d CNT:%d",
+                if(ZCD_NUM == sscanf(buf, ZCD_SSCANF_FORMAT,
                                     &z->usb,&z->ppid,&z->devid,&z->fmt,&z->idx,&z->fps,&z->trt,&z->ack,&z->ppc,&z->run,&z->itf,&z->txid,&z->rxid,&z->destIdErrCnt,&z->destIdDiff,&z->phyRxFrameCnt,&z->frameDiff,&z->destIdDiff,&z->frameDiff,&z->cnt)) {
                                         z->kind = ZCD;
                                         rtn=1;
