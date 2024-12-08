@@ -1090,7 +1090,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
 			CString tmp;
-			tmp.Format(_T("%02x "), dataOUT[i]);
+			tmp.Format(_T("%02X "), dataOUT[i]);
 			str += tmp;
 		}
 		L(str);
