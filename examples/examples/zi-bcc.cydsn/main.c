@@ -4,7 +4,7 @@
 #include <ZFrame.h>
 #include <gitcommit.h>
 #include <UartBuf.h>
-#include <ZingUart.h>
+#include <Zing.h>
 #include <i2cs.h>
 #include "imu.h"
 #include "NoLog.h"
@@ -62,7 +62,7 @@ int main(void)
     
     LED_GREEN_Write(LED_OFF);
     
-    ZingUart_Init(ZingCB);
+    Zing_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     i2cs_start();

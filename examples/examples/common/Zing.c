@@ -1,9 +1,9 @@
-#include "ZingUart.h"
+#include "Zing.h"
     
 static UartBuf uBuf;    //Circular buffer for UART data
 static ZingRxCallback zingRxCb = NULL;
 
-void ZingUart_Init(ZingRxCallback cb)
+void Zing_Init(ZingRxCallback cb)
 {
     UartBuf_init(&uBuf);
     zingRxCb = cb;

@@ -4,7 +4,7 @@
 #include <UartBuf.h>
 #include <ZFrame.h>
 #include <gitcommit.h>
-#include <ZingUart.h>
+#include <Zing.h>
 #include "ZFrame.h"
 #include "imu.h"
 #include "bps.h"
@@ -87,7 +87,7 @@ int main()
     LED_GREEN_Write(1);
 
     UART_DBG_Start();
-    ZingUart_Init(ZingCB);
+    Zing_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     capsense_Start();
