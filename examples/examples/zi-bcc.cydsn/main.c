@@ -56,11 +56,24 @@ static void updateStateInfo()
     setPairingState(getSystemMode(), getI2CReadBuffer()+21);    //BLE state
 }
 
+static uint16 timerCount = 0;
+
+CY_ISR(TimerCallback)
+{
+    timerCount++;
+    
+    if(timerCount==1000) {  //1 second
+        LED_RED_Write(!LED_RED_Read());
+        timerCount = 0;
+    }
+}
+
 int main(void)
 {
-    CyGlobalIntEnable; /* Enable global interrupts. */
+    Timer_Start();
+    timer_isr_StartEx(TimerCallback);
     
-    LED_GREEN_Write(LED_OFF);
+    CyGlobalIntEnable; /* Enable global interrupts. */
     
     Zing_Init(ZingCB);
     UART_ZING_Start();
