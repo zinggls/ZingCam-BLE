@@ -47,6 +47,7 @@ static void onImuFrame(const ImuFrame *imu)
 
 static void updateStateInfo()
 {   
+    setZingState(getZingState(),0xE4,getI2CReadBuffer()+18);    //수신기 모뎀 상태 0x00 : 정상, 0xE4 : 무선영상 수신기 모뎀 이상
     setImuState(getImuState(),0xE6,getI2CReadBuffer()+20);      //수신기 IMU 상태 0x00: 정상, 0xE6: 무선영상 수신기 IMU 이상    
     setPairingState(getSystemMode(), getI2CReadBuffer()+21);    //BLE state
 }

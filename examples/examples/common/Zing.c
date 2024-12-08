@@ -2,11 +2,13 @@
     
 static UartBuf uBuf;    //Circular buffer for UART data
 static ZingRxCallback zingRxCb = NULL;
+static uint16 zingRxCbCountPrev,zingRxCbCount;
 
 void Zing_Init(ZingRxCallback cb)
 {
     UartBuf_init(&uBuf);
     zingRxCb = cb;
+    zingRxCbCountPrev = zingRxCbCount = 0;
 }
     
 CY_ISR(UART_ZING_RX_INTERRUPT)
@@ -42,5 +44,25 @@ void zing_process_uart_data()
         
         CYASSERT(zingRxCb);
         zingRxCb(zing_status);
+        zingRxCbCount++;
+    }
+}
+
+uint8 getZingState()
+{
+    if(zingRxCbCount==zingRxCbCountPrev) {
+        return 1;
+    }else{
+        zingRxCbCountPrev = zingRxCbCount;
+        return 0;
+    }
+}
+
+void setZingState(uint8 val, uint8 errCode, uint8 *buf)
+{
+    if(val==0) {
+        *buf = val;
+    }else{
+        *buf = errCode;
     }
 }
