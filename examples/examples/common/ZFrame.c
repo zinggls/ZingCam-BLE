@@ -43,7 +43,8 @@ int parse(ZxxKind k, void *data, const char *buf)
 {
     int rtn = 0;
     
-    switch(k) {
+    ZxxKind kk = detectZxx(buf);
+    switch(kk) {
         case ZED:
             {
                 ZED_FRAME *z = (ZED_FRAME*)data;
