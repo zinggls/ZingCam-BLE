@@ -39,12 +39,12 @@ static int zcdSscanf(const char *buf,ZCD_FRAME *z)
                     &z->usb,&z->ppid,&z->devid,&z->fmt,&z->idx,&z->fps,&z->trt,&z->ack,&z->ppc,&z->run,&z->itf,&z->txid,&z->rxid,&z->destIdErrCnt,&z->destIdDiff,&z->phyRxFrameCnt,&z->frameDiff,&z->destIdDiff,&z->frameDiff,&z->cnt);
 }
 
-int parse(ZxxKind k, void *data, const char *buf)
+int parse(void *data, const char *buf)
 {
     int rtn = 0;
     
-    ZxxKind kk = detectZxx(buf);
-    switch(kk) {
+    ZxxKind k = detectZxx(buf);
+    switch(k) {
         case ZED:
             {
                 ZED_FRAME *z = (ZED_FRAME*)data;

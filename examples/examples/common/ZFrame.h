@@ -77,7 +77,7 @@ typedef struct {
 
 ZxxKind detectZxx(const char *buf);
 ZxxKind inspect(const char *buf);
-int parse(ZxxKind k, void *data, const char *buf);
+int parse(void *data, const char *buf);
 void *getFrame(ZED_FRAME *zed, ZCH_FRAME *zch);
 uint16 getFrameSize();
 void setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd);

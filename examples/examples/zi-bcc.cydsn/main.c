@@ -16,7 +16,7 @@ static uint16 writeCharVal = 0;
 static void ZingCB(const char *buf)
 {
     // Parsing the values into the structure
-    if (!parse(ZCD,getZcdFrame(),buf)) {
+    if (!parse(getZcdFrame(),buf)) {
 #ifdef ZXX_DEBUG
         L("Parsing Error\r\n");
         L("Received: ");

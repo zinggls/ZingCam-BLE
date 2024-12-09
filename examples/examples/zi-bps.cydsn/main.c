@@ -24,7 +24,7 @@ static void ZingCB(const char *buf)
     // Parsing the values into the structure
     void *frame = getFrame(&zedFrame,&zchFrame);
     CYASSERT(frame);
-    if (!parse(zxxKind,frame,buf)) {
+    if (!parse(frame,buf)) {
 #ifdef ZXX_DEBUG
         UART_DBG_UartPutString("Parsing Error\r\n");
         UART_DBG_UartPutString("Received: ");
