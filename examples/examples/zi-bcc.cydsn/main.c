@@ -11,8 +11,6 @@
 #include "bcc.h"
 #include "icd.h"
 
-static uint16 writeCharVal = 0;
-
 // Function to process data when a complete message is available
 static void ZingCB(const char *buf)
 {
