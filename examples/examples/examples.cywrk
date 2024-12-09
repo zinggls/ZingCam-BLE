@@ -3,7 +3,7 @@
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
 <CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="examples" persistent="examples.cywrk" platform="NOT_USED">
-<current_project name=".\Timer.cydsn\Timer.cyprj" />
+<current_project name=".\Timer_PWM.cydsn\Timer_PWM.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
@@ -21,6 +21,7 @@
 <v>.\zing-zed_softTxUart.cydsn\zing-zed_softTxUart.cyprj</v>
 <v>.\imuNew1.cydsn\imuNew1.cyprj</v>
 <v>.\Timer.cydsn\Timer.cyprj</v>
+<v>.\Timer_PWM.cydsn\Timer_PWM.cyprj</v>
 </projects>
 <workspace_id v="6ae5dda2-2a83-4a3f-8989-8eb17501abec" />
 <WriteAppVersionLastSavedWith v="4.4.0.80" />
