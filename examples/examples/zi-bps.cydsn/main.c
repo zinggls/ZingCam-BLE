@@ -25,10 +25,10 @@ static void ZingCB(const char *buf)
     CYASSERT(frame);
     if (!parse(frame,buf)) {
 #ifdef ZXX_DEBUG
-        UART_DBG_UartPutString("Parsing Error\r\n");
-        UART_DBG_UartPutString("Received: ");
-        UART_DBG_UartPutString(zing_status);
-        UART_DBG_UartPutString("\r\n");
+        L("Parsing Error\r\n");
+        L("Received: ");
+        L(zing_status);
+        L("\r\n");
 #endif
     }else{
         ZingCbCount++;
