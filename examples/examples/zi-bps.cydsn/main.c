@@ -93,10 +93,9 @@ int main()
             capsense_ScanEnabledWidgets();
         }
         
-        uint8_t *frame = (uint8_t *)&zxxFrame;
-        if(isNoZingCb(count,200,&ZingCbCount)) memset(frame,0,getFrameSize());  //reset on no zing data
+        if(isNoZingCb(count,200,&ZingCbCount)) memset(&zxxFrame,0,getFrameSize());  //reset on no zing data
         
-        myDataHandle.value.val = frame;
+        myDataHandle.value.val = (uint8_t *)&zxxFrame;
         myDataHandle.value.len = getFrameSize();
         CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
