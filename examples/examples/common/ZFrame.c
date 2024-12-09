@@ -156,30 +156,7 @@ void setZchBuffer(uint8_t *buf,ZXX_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer
 
-    // Write COMMON_FIELDS (45Bytes)
-    memcpy(ptr, &z->kind, sizeof(z->kind));                     ptr += sizeof(z->kind);
-    memcpy(ptr, &z->usb, sizeof(z->usb));                       ptr += sizeof(z->usb);
-    memcpy(ptr, &z->bnd, sizeof(z->bnd));                       ptr += sizeof(z->bnd);
-    memcpy(ptr, &z->ppid, sizeof(z->ppid));                     ptr += sizeof(z->ppid);
-    memcpy(ptr, &z->devid, sizeof(z->devid));                   ptr += sizeof(z->devid);
-    memcpy(ptr, &z->fmt, sizeof(z->fmt));                       ptr += sizeof(z->fmt);
-    memcpy(ptr, &z->idx, sizeof(z->idx));                       ptr += sizeof(z->idx);
-    memcpy(ptr, &z->trt, sizeof(z->trt));                       ptr += sizeof(z->trt);
-    memcpy(ptr, &z->ack, sizeof(z->ack));                       ptr += sizeof(z->ack);
-    memcpy(ptr, &z->ppc, sizeof(z->ppc));                       ptr += sizeof(z->ppc);
-    memcpy(ptr, &z->run, sizeof(z->run));                       ptr += sizeof(z->run);
-    memcpy(ptr, &z->txid, sizeof(z->txid));                     ptr += sizeof(z->txid);
-    memcpy(ptr, &z->rxid, sizeof(z->rxid));                     ptr += sizeof(z->rxid);
-    memcpy(ptr, &z->cnt, sizeof(z->cnt));                       ptr += sizeof(z->cnt);
-    memcpy(ptr, &z->pos, sizeof(z->pos));                       ptr += sizeof(z->pos);
-    
-    //IMU FIELDS
-	memcpy(ptr, &z->imu1, sizeof(z->imu1));                     ptr += sizeof(z->imu1);
-	memcpy(ptr, &z->imu2, sizeof(z->imu2));                     ptr += sizeof(z->imu2);
-	memcpy(ptr, &z->imu3, sizeof(z->imu3));                     ptr += sizeof(z->imu3);
-	memcpy(ptr, &z->imu4, sizeof(z->imu4));                     ptr += sizeof(z->imu4);
-	memcpy(ptr, &z->imu5, sizeof(z->imu5));                     ptr += sizeof(z->imu5);
-	memcpy(ptr, &z->imuChecksum, sizeof(z->imuChecksum));       ptr += sizeof(z->imuChecksum);
+    setZedBuffer(buf,z);
     
     // Write ZCD_ADDITIONAL_FIELDS
     memcpy(ptr, &z->vnd, sizeof(z->vnd));                       ptr += sizeof(z->vnd);
