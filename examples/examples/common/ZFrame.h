@@ -54,20 +54,13 @@ ZxxKind zxxKind;
     unsigned int phyRxFrameCnt;   \
     int frameDiff;                \
 
-// Define ZCH_FRAME with additional specific fields
+// Define ZXX_FRAME with additional specific fields
 typedef struct {
     COMMON_FIELDS
     IMU_FIELDS
     unsigned int vnd;    // VENDOR, e.g., "0xEB1A"
     unsigned int prd;    // PRODUCT, e.g., "0xB101"
-} ZCH_FRAME;
-
-// Define ZED_FRAME which includes only the common fields
-typedef struct {
-    COMMON_FIELDS
-    IMU_FIELDS
-    // No additional fields for ZED_FRAME
-} ZED_FRAME;
+} ZXX_FRAME;
 
 // Define ZCD_FRAME, which includes the common fields and additional ZCD-specific fields
 typedef struct {
@@ -78,13 +71,11 @@ typedef struct {
 ZxxKind detectZxx(const char *buf);
 ZxxKind inspect(const char *buf);
 int parse(void *data, const char *buf);
-void *getFrame(ZED_FRAME *zed, ZCH_FRAME *zch);
 uint16 getFrameSize();
 void setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd);
-void setZedBuffer(uint8_t *buf,ZED_FRAME *z);
-void setZchBuffer(uint8_t *buf,ZCH_FRAME *z);
-void setZedImuBuffer(uint8_t *buf,ZED_FRAME *z);
-void setZchImuBuffer(uint8_t *buf,ZCH_FRAME *z);
+void setZedBuffer(uint8_t *buf,ZXX_FRAME *z);
+void setZchBuffer(uint8_t *buf,ZXX_FRAME *z);
+void setImuBuffer(uint8_t *buf,ZXX_FRAME *z);
 bool isNoZingCb(uint32 loopCount,uint32 period,uint32 *zingCount);
 
 

@@ -21,13 +21,13 @@ ZxxKind inspect(const char *buf)
     return Unknown;
 }
 
-static int zedSscanf(const char *buf,ZED_FRAME *z)
+static int zedSscanf(const char *buf,ZXX_FRAME *z)
 {
     return sscanf(buf, ZED_SSCANF_FORMAT,
         &z->usb,&z->bnd,&z->ppid,&z->devid,&z->trt,&z->ack,&z->ppc,&z->txid,&z->rxid,&z->run,&z->cnt);
 }
 
-static int zchSscanf(const char *buf,ZCH_FRAME *z)
+static int zchSscanf(const char *buf,ZXX_FRAME *z)
 {
     return sscanf(buf, ZCH_SSCANF_FORMAT,
         &z->usb,&z->vnd,&z->prd,&z->bnd,&z->ppid,&z->devid,&z->fmt,&z->idx,&z->trt,&z->ack,&z->ppc,&z->txid,&z->rxid,&z->run,&z->cnt);
@@ -47,14 +47,14 @@ int parse(void *data, const char *buf)
     switch(k) {
         case ZED:
             {
-                ZED_FRAME *z = (ZED_FRAME*)data;
+                ZXX_FRAME *z = (ZXX_FRAME*)data;
                 rtn = zedSscanf(buf,z);
                 if(ZED_NUM == rtn) z->kind = ZED;
             }
             break;
         case ZCH:
             {
-                ZCH_FRAME *z = (ZCH_FRAME*)data;
+                ZXX_FRAME *z = (ZXX_FRAME*)data;
                 rtn = zchSscanf(buf,z);
                 if(ZCH_NUM == rtn) z->kind = ZCH;
             }
@@ -72,17 +72,10 @@ int parse(void *data, const char *buf)
     return rtn;
 }
 
-void *getFrame(ZED_FRAME *zed, ZCH_FRAME *zch)
-{
-    if(zxxKind==ZED) return zed;
-    if(zxxKind==ZCH) return zch;
-    return 0;
-}
-
 uint16 getFrameSize()
 {
-    if(zxxKind==ZED) return sizeof(ZED_FRAME);
-    if(zxxKind==ZCH) return sizeof(ZCH_FRAME);
+    if(zxxKind==ZED) return sizeof(ZXX_FRAME);
+    if(zxxKind==ZCH) return sizeof(ZXX_FRAME);
     if(zxxKind==ZCD) return sizeof(ZCD_FRAME);
     return 0;   //never reach here
 }
@@ -117,7 +110,7 @@ void setZcdBuffer(uint8_t *buf,ZCD_FRAME *z)
     memcpy(ptr, &z->frameDiff, sizeof(z->frameDiff));           ptr += sizeof(z->frameDiff);
 }
 
-void setZedImuBuffer(uint8_t *buf,ZED_FRAME *z)
+void setImuBuffer(uint8_t *buf,ZXX_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer
     
@@ -129,19 +122,7 @@ void setZedImuBuffer(uint8_t *buf,ZED_FRAME *z)
 	memcpy(ptr, &z->imuChecksum, sizeof(z->imuChecksum));       ptr += sizeof(z->imuChecksum);
 }
 
-void setZchImuBuffer(uint8_t *buf,ZCH_FRAME *z)
-{
-    uint8_t *ptr = buf; // Pointer to traverse the buffer
-    
-	memcpy(ptr, &z->imu1, sizeof(z->imu1));                     ptr += sizeof(z->imu1);
-	memcpy(ptr, &z->imu2, sizeof(z->imu2));                     ptr += sizeof(z->imu2);
-	memcpy(ptr, &z->imu3, sizeof(z->imu3));                     ptr += sizeof(z->imu3);
-	memcpy(ptr, &z->imu4, sizeof(z->imu4));                     ptr += sizeof(z->imu4);
-	memcpy(ptr, &z->imu5, sizeof(z->imu5));                     ptr += sizeof(z->imu5);
-	memcpy(ptr, &z->imuChecksum, sizeof(z->imuChecksum));       ptr += sizeof(z->imuChecksum);
-}
-
-void setZedBuffer(uint8_t *buf,ZED_FRAME *z)
+void setZedBuffer(uint8_t *buf,ZXX_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer
 
@@ -171,7 +152,7 @@ void setZedBuffer(uint8_t *buf,ZED_FRAME *z)
 	memcpy(ptr, &z->imuChecksum, sizeof(z->imuChecksum));       ptr += sizeof(z->imuChecksum);
 }
 
-void setZchBuffer(uint8_t *buf,ZCH_FRAME *z)
+void setZchBuffer(uint8_t *buf,ZXX_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer
 

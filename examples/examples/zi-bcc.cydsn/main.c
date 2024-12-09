@@ -35,7 +35,7 @@ void SendCommandToPeripheral(uint8_t command) {
     CYBLE_GATTC_WRITE_REQ_T writeReq;
     writeReq.attrHandle = attrHandle;
     writeReq.value.val = (uint8_t*)getZedFrame();
-    writeReq.value.len = sizeof(ZED_FRAME);
+    writeReq.value.len = sizeof(ZXX_FRAME);
 
     if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeCharVal++;
 }

@@ -53,7 +53,7 @@ void BleCallBack(uint32 event, void* eventParam)
             wrReqParam = (CYBLE_GATTS_WRITE_REQ_PARAM_T *) eventParam;
             
             if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE) {
-                if (wrReqParam->handleValPair.value.len == sizeof(ZED_FRAME)) {
+                if (wrReqParam->handleValPair.value.len == sizeof(ZXX_FRAME)) {
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
                     writereqCustom++;

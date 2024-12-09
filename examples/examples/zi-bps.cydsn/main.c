@@ -11,8 +11,7 @@
 
 static uint16 notifyCustom = 0;
 
-static ZED_FRAME zedFrame;
-static ZCH_FRAME zchFrame;
+static ZXX_FRAME zxxFrame;
 static uint32 ZingCbCount = 0;
 
 // Function to process data when a complete message is available
@@ -22,7 +21,7 @@ static void ZingCB(const char *buf)
     if(zxxKind!=ZED && zxxKind!=ZCH) return;
 
     // Parsing the values into the structure
-    void *frame = getFrame(&zedFrame,&zchFrame);
+    void *frame = &zxxFrame;
     CYASSERT(frame);
     if (!parse(frame,buf)) {
 #ifdef ZXX_DEBUG
@@ -37,16 +36,10 @@ static void ZingCB(const char *buf)
 }
 
 static void zxxLog()
-{
-    if(zxxKind==ZED) {
-        ZED_FRAME *z = &zedFrame;
-        L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,getWritereqCustom(),z->usb,z->cnt);
-    }
-    
-    if(zxxKind==ZCH) {
-        ZCH_FRAME *z = &zchFrame;
-        L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZCH USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,getWritereqCustom(),z->usb,z->cnt);
-    }
+{    
+    ZXX_FRAME *z = &zxxFrame;
+    if(zxxKind==ZED) L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,getWritereqCustom(),z->usb,z->cnt);
+    if(zxxKind==ZCH) L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZCH USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,getWritereqCustom(),z->usb,z->cnt);
 }
 
 static short toShort(const char *data)
@@ -56,25 +49,13 @@ static short toShort(const char *data)
 
 static void onImuFrame(const ImuFrame *imu)
 {
-    if(zxxKind==ZED) {
-        ZED_FRAME *z = &zedFrame;
-        z->imu1 = toShort(imu->data);
-        z->imu2 = toShort(imu->data+2);
-        z->imu3 = toShort(imu->data+4);
-        z->imu4 = toShort(imu->data+6);
-        z->imu5 = toShort(imu->data+8);
-        z->imuChecksum = toShort(imu->data+10);
-    }
-    
-    if(zxxKind==ZCH) {
-        ZCH_FRAME *z = &zchFrame;
-        z->imu1 = toShort(imu->data);
-        z->imu2 = toShort(imu->data+2);
-        z->imu3 = toShort(imu->data+4);
-        z->imu4 = toShort(imu->data+6);
-        z->imu5 = toShort(imu->data+8);
-        z->imuChecksum = toShort(imu->data+10);
-    }
+    ZXX_FRAME *z = &zxxFrame;
+    z->imu1 = toShort(imu->data);
+    z->imu2 = toShort(imu->data+2);
+    z->imu3 = toShort(imu->data+4);
+    z->imu4 = toShort(imu->data+6);
+    z->imu5 = toShort(imu->data+8);
+    z->imuChecksum = toShort(imu->data+10);
 }
 
 /***************************************************************
@@ -107,21 +88,18 @@ int main()
         /* if Capsense scan is done, read the value and start another scan */
         if(!capsense_IsBusy())
         {
-            if(zxxKind==ZED) zedFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
-            if(zxxKind==ZCH) zchFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
+            zxxFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
             capsense_UpdateEnabledBaselines();
             capsense_ScanEnabledWidgets();
         }
         
-        uint8_t *frame = (uint8_t *)getFrame(&zedFrame,&zchFrame);
-        if(frame) {
-            if(isNoZingCb(count,200,&ZingCbCount)) memset(frame,0,getFrameSize());  //reset on no zing data
-            
-            myDataHandle.value.val = frame;
-            myDataHandle.value.len = getFrameSize();
-            CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
-            if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
-        }
+        uint8_t *frame = (uint8_t *)&zxxFrame;
+        if(isNoZingCb(count,200,&ZingCbCount)) memset(frame,0,getFrameSize());  //reset on no zing data
+        
+        myDataHandle.value.val = frame;
+        myDataHandle.value.len = getFrameSize();
+        CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
+        if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
         
         zxxLog();
    

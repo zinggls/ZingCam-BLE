@@ -9,16 +9,14 @@ static uint16 notifiedCustom = 0;
 static uint16 writeRsp = 0;
 static CYBLE_GAPC_ADV_REPORT_T* scanReport;
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
-static ZED_FRAME zedFrame;
-static ZCH_FRAME zchFrame;
+static ZXX_FRAME zxxFrame;
 static ZCD_FRAME zcdFrame;
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
 const static uint8 CapLedService[] = { 0x03,0x03,0x9B,0x2C,
 	                            0x11,0x07,0xF0,0x34,0x9B,0x5F,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x00,0x00,0x00,0x00 };
 
-ZED_FRAME* getZedFrame() { return &zedFrame; }
-ZCH_FRAME* getZchFrame() { return &zchFrame; }
+ZXX_FRAME* getZxxFrame() { return &zxxFrame; }
 ZCD_FRAME* getZcdFrame() { return &zcdFrame; }
 
 SystemMode_t getSystemMode() { return systemMode; }
@@ -47,18 +45,11 @@ static void processingZxx()
         notifiedCustom++;
         
         // Process the received data                                
-        if(zxxKind==ZED) {
-            memcpy(&zedFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-            setZedBuffer(getI2CReadBuffer()+46,&zedFrame);
-            setZedImuBuffer(getI2CReadBuffer()+22,&zedFrame);   //ICD 무선영상 송신기 IMU
-            getZcdFrame()->pos = zedFrame.pos;
-        }
-        if(zxxKind==ZCH) {
-            memcpy(&zchFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-            setZchBuffer(getI2CReadBuffer()+46,&zchFrame);
-            setZchImuBuffer(getI2CReadBuffer()+22,&zchFrame);   //ICD 무선영상 송신기 IMU
-            getZcdFrame()->pos = zchFrame.pos;
-        }
+        memcpy(&zxxFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+        if(zxxKind==ZED) setZedBuffer(getI2CReadBuffer()+46,&zxxFrame);
+        if(zxxKind==ZCH) setZchBuffer(getI2CReadBuffer()+46,&zxxFrame);
+        setImuBuffer(getI2CReadBuffer()+22,&zxxFrame);   //ICD 무선영상 송신기 IMU
+        getZcdFrame()->pos = zxxFrame.pos;
     }
 }
 

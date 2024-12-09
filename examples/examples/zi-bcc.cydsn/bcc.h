@@ -13,8 +13,8 @@ typedef enum SystemMode {
     SM_CONNECTED
 } SystemMode_t;
 
-ZED_FRAME* getZedFrame();
-ZCH_FRAME* getZchFrame();
+ZXX_FRAME* getZedFrame();
+ZXX_FRAME* getZchFrame();
 ZCD_FRAME* getZcdFrame();
 void CyBle_AppCallback( uint32 eventCode, void *eventParam );
 SystemMode_t getSystemMode();
