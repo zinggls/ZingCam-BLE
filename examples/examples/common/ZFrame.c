@@ -163,6 +163,11 @@ void setZchBuffer(uint8_t *buf,ZXX_FRAME *z)
     memcpy(ptr, &z->prd, sizeof(z->prd));                       ptr += sizeof(z->prd);
 }
 
+void setZxxBuffer(uint8_t *buf,ZXX_FRAME *z)
+{
+    setZchBuffer(buf,z);
+}
+
 bool isNoZingCb(uint32 loopCount,uint32 period,uint32 *zingCount)
 {
     bool noZingCb = false;

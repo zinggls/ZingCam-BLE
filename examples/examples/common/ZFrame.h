@@ -75,6 +75,7 @@ uint16 getFrameSize();
 void setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd);
 void setZedBuffer(uint8_t *buf,ZXX_FRAME *z);
 void setZchBuffer(uint8_t *buf,ZXX_FRAME *z);
+void setZxxBuffer(uint8_t *buf,ZXX_FRAME *z);
 void setImuBuffer(uint8_t *buf,ZXX_FRAME *z);
 bool isNoZingCb(uint32 loopCount,uint32 period,uint32 *zingCount);
 
