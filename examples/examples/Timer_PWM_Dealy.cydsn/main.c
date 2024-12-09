@@ -26,8 +26,8 @@ CY_ISR(Isr_TC_Handler)
 	/* Clear the TC Interrupt */
    	PWM_ClearInterrupt(PWM_INTR_MASK_TC);
     
-    /* Decrement the PWM Compare value to increase the LED brightness */
-    PWM_WriteCompare(PWM_ReadCompare() - BRIGHTNESS_CHANGE);
+    LED_Green_Write(~LED_Green_Read());
+    CyDelay(1000);
 }
 
 
