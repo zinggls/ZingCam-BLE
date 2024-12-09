@@ -36,10 +36,9 @@ static void ZingCB(const char *buf)
 }
 
 static void zxxLog()
-{    
-    ZXX_FRAME *z = &zxxFrame;
-    if(zxxKind==ZED) L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZED USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,getWritereqCustom(),z->usb,z->cnt);
-    if(zxxKind==ZCH) L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, ZCH USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,z->pos,getWritereqCustom(),z->usb,z->cnt);
+{
+    const char *name = (zxxFrame.kind==ZCH)?"ZCH":"ZED";
+    L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, %s USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,zxxFrame.pos,getWritereqCustom(),name,zxxFrame.usb,zxxFrame.cnt);
 }
 
 static short toShort(const char *data)
