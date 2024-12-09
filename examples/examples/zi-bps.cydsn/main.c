@@ -57,6 +57,15 @@ static void onImuFrame(const ImuFrame *imu)
     z->imuChecksum = toShort(imu->data+10);
 }
 
+CY_ISR(Timer_ISR)
+{
+    // Clear the interrupt
+    Timer_ClearInterrupt(Timer_INTR_MASK_TC);
+
+    // Add your custom code here
+    LED_RED_Write(!LED_RED_Read());
+}
+
 /***************************************************************
  * Main
  **************************************************************/
@@ -77,6 +86,9 @@ int main()
     CyBle_Start(BleCallBack);
     
     UART_IMU_StartAndInitialize();
+    
+    Timer_Start();
+    Timer_ISR_StartEx(Timer_ISR);
 
     CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
     myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE;
