@@ -21,6 +21,24 @@ ZxxKind inspect(const char *buf)
     return Unknown;
 }
 
+static int zedSscanf(const char *buf,ZED_FRAME *z)
+{
+    return sscanf(buf, ZED_SSCANF_FORMAT,
+        &z->usb,&z->bnd,&z->ppid,&z->devid,&z->trt,&z->ack,&z->ppc,&z->txid,&z->rxid,&z->run,&z->cnt);
+}
+
+static int zchSscanf(const char *buf,ZCH_FRAME *z)
+{
+    return sscanf(buf, ZCH_SSCANF_FORMAT,
+        &z->usb,&z->vnd,&z->prd,&z->bnd,&z->ppid,&z->devid,&z->fmt,&z->idx,&z->trt,&z->ack,&z->ppc,&z->txid,&z->rxid,&z->run,&z->cnt);
+}
+
+static int zcdSscanf(const char *buf,ZCD_FRAME *z)
+{
+    return sscanf(buf, ZCD_SSCANF_FORMAT,
+                    &z->usb,&z->ppid,&z->devid,&z->fmt,&z->idx,&z->fps,&z->trt,&z->ack,&z->ppc,&z->run,&z->itf,&z->txid,&z->rxid,&z->destIdErrCnt,&z->destIdDiff,&z->phyRxFrameCnt,&z->frameDiff,&z->destIdDiff,&z->frameDiff,&z->cnt);
+}
+
 int parse(ZxxKind k, void *data, const char *buf)
 {
     int rtn = 0;
@@ -29,31 +47,22 @@ int parse(ZxxKind k, void *data, const char *buf)
         case ZED:
             {
                 ZED_FRAME *z = (ZED_FRAME*)data;
-                if(ZED_NUM == sscanf(buf, ZED_SSCANF_FORMAT,
-                                    &z->usb,&z->bnd,&z->ppid,&z->devid,&z->trt,&z->ack,&z->ppc,&z->txid,&z->rxid,&z->run,&z->cnt)) {
-                                        z->kind = ZED;
-                                        rtn = 1;
-                                    }
+                rtn = zedSscanf(buf,z);
+                if(ZED_NUM == rtn) z->kind = ZED;
             }
             break;
         case ZCH:
             {
                 ZCH_FRAME *z = (ZCH_FRAME*)data;
-                if(ZCH_NUM == sscanf(buf, ZCH_SSCANF_FORMAT,
-                                    &z->usb,&z->vnd,&z->prd,&z->bnd,&z->ppid,&z->devid,&z->fmt,&z->idx,&z->trt,&z->ack,&z->ppc,&z->txid,&z->rxid,&z->run,&z->cnt)) {
-                                        z->kind = ZCH;
-                                        rtn=1;
-                                    }
+                rtn = zchSscanf(buf,z);
+                if(ZCH_NUM == rtn) z->kind = ZCH;
             }
             break;
         case ZCD:
             {
                 ZCD_FRAME *z = (ZCD_FRAME*)data;
-                if(ZCD_NUM == sscanf(buf, ZCD_SSCANF_FORMAT,
-                                    &z->usb,&z->ppid,&z->devid,&z->fmt,&z->idx,&z->fps,&z->trt,&z->ack,&z->ppc,&z->run,&z->itf,&z->txid,&z->rxid,&z->destIdErrCnt,&z->destIdDiff,&z->phyRxFrameCnt,&z->frameDiff,&z->destIdDiff,&z->frameDiff,&z->cnt)) {
-                                        z->kind = ZCD;
-                                        rtn=1;
-                                    }
+                rtn = zcdSscanf(buf,z);
+                if(ZCD_NUM == rtn) z->kind = ZCD;
             }
             break;
         default:
