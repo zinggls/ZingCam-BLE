@@ -26,20 +26,6 @@ static void ZingCB(const char *buf)
     }
 }
 
-void SendCommandToPeripheral(uint8_t command) {
-    // Use the characteristic index to obtain the attribute handle    
-    CYBLE_GATT_DB_ATTR_HANDLE_T attrHandle = cyBle_customCServ[CYBLE_CUSTOMC_CUSTOM_SERVICE_SERVICE_INDEX]
-                                                .customServChar[CYBLE_CUSTOMC_CUSTOM_SERVICE_ZXX_CHAR_INDEX]
-                                                .customServCharHandle;
-
-    CYBLE_GATTC_WRITE_REQ_T writeReq;
-    writeReq.attrHandle = attrHandle;
-    writeReq.value.val = (uint8_t*)getZedFrame();
-    writeReq.value.len = sizeof(ZXX_FRAME);
-
-    if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeCharVal++;
-}
-
 static void onImuFrame(const ImuFrame *imu)
 {
     memcpy(getI2CReadBuffer()+34,imu->data,IMU_FRAME_SIZE); //무선영상 수신기IMU 34
