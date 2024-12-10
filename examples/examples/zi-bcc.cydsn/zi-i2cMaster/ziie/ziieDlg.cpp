@@ -1148,7 +1148,9 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		index = 0;
 		index = UpdateCommandData(dataOUT, index, m_ivf.read);
+		ASSERT(index == 11);
 		index = UpdateStateData(dataOUT, index, m_ivf.state);
+		ASSERT(index == 22);
 
 		UpdateCommandGUI(m_ivf.read);
 
