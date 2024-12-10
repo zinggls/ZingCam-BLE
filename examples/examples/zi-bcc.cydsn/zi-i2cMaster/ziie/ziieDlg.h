@@ -9,6 +9,20 @@
 #define READ_BUFFER_SIZE	(185)
 #define MAX_LIST_ITEMS		(1024*8)
 
+typedef struct {
+	byte ScopeKind;
+	byte ScopeOut;
+	byte WirelessChannelMode;
+	byte WirelessChannelInfo;
+	byte OpmodeScope;
+	byte OpmodeTx;
+	byte OpmodeRx;
+	byte TxImuType;
+	byte TxImuCalib;
+	byte RxImuType;
+	byte RxImuCalib;
+}I2C_IVF_COMMAND;
+
 class CCom;
 
 // CZiieDlg 대화 상자
