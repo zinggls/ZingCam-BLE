@@ -58,9 +58,31 @@ static void onImuFrame(const ImuFrame *imu)
     z->imuChecksum = toShort(imu->data+10);
 }
 
+static void clearZxxZingInfo(ZXX_FRAME *z)
+{
+    z->kind = 0;
+    z->usb = 0;
+    z->bnd = ' ';    
+    z->ppid = 0;
+    z->devid = 0;
+    z->fmt = 0;
+    z->idx = 0;
+    z->trt = ' ';
+    z->ack = ' ';
+    z->ppc = ' ';
+    z->run = ' ';
+    z->txid = 0;
+    z->rxid = 0;
+    z->cnt = 0;
+    z->pos = 0;
+}
+
 static void updateStateInfo()
 {
-    setZingState(getZingState(),0xE3,(uint8*)&zxxFrame.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
+    uint8 zingState = getZingState();
+    setZingState(zingState,0xE3,(uint8*)&zxxFrame.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
+    if(zingState==1) clearZxxZingInfo(&zxxFrame);
+    
     setImuState(getImuState(),0xE5,(uint8*)&zxxFrame.txStateIMU);         //송신기 IMU 상태 0x00: 정상, 0xE5: 무선영상 수신기 IMU 이상
 }
 
