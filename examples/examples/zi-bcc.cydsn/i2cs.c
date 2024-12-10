@@ -13,6 +13,7 @@
 #include "i2cs.h"
 #include "project.h"
 #include "ivf.h"
+#include "led.h"
 
 static uint8 i2cReadBuffer [I2C_RD_BUFFER_SIZE] = {0};
 static uint8 i2cWriteBuffer[I2C_WR_BUFFER_SIZE] = {0};

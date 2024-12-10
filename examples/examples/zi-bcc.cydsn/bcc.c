@@ -2,6 +2,7 @@
 #include "NoLog.h"
 #include "i2cs.h"
 #include "icd.h"
+#include "led.h"
 
 static SystemMode_t systemMode = SM_INITIALIZE; // Starting mode of statemachine 
 static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
