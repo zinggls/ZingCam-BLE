@@ -23,6 +23,20 @@ typedef struct I2C_IVF_COMMAND {
 	byte RxImuCalib;
 } I2C_IVF_COMMAND;
 
+typedef struct I2C_STATE {
+	byte ScopeStateKind;
+	byte ScopeStateOut;
+	byte ScopeStateBattery;
+	byte ScopeStateIR;
+	byte ScopeStateEO;
+	byte TxStateBattery;
+	byte TxStateModem;
+	byte TxStateImu;
+	byte RxStateModem;
+	byte RxStateImu;
+	byte BleState;
+} I2C_STATE;
+
 class CCom;
 
 // CZiieDlg 대화 상자
@@ -100,6 +114,8 @@ public:
 	void UpdateWriteBuffer();
 	static void UpdateCommandData(std::vector<byte>& dataOUT, I2C_IVF_COMMAND& ic);
 	void UpdateCommandGUI(I2C_IVF_COMMAND& ic);
+	static void UpdateStateData(std::vector<byte>& dataOUT, I2C_STATE& is);
+	void UpdateStateGUI(I2C_STATE& is);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
@@ -153,4 +169,5 @@ public:
 	CBitmap m_bmpRedCtrl;
 	CStatic m_bleStateCtrl;
 	I2C_IVF_COMMAND m_ivfReadCom;
+	I2C_STATE m_ivfState;
 };

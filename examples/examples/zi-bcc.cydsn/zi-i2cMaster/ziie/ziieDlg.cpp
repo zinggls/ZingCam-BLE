@@ -1086,6 +1086,29 @@ void CZiieDlg::UpdateCommandGUI(I2C_IVF_COMMAND& ic)
 	m_writeMap.SetAt(_T("RxImuCalib"), ic.RxImuCalib);
 }
 
+void CZiieDlg::UpdateStateData(std::vector<byte>& dataOUT, I2C_STATE& is)
+{
+	is.ScopeStateKind = dataOUT[11];
+	is.ScopeStateOut = dataOUT[12];
+	is.ScopeStateBattery = dataOUT[13];
+	is.TxStateBattery = dataOUT[14];
+	is.ScopeStateIR = dataOUT[15];
+	is.ScopeStateEO = dataOUT[16];
+	is.TxStateModem = dataOUT[17];
+	is.RxStateModem = dataOUT[18];
+	is.TxStateImu = dataOUT[19];
+	is.RxStateImu = dataOUT[20];
+	is.BleState = dataOUT[21];
+}
+
+void CZiieDlg::UpdateStateGUI(I2C_STATE& is)
+{
+	UpdateScopeState(is.ScopeStateKind, is.ScopeStateOut, is.ScopeStateBattery, is.ScopeStateIR, is.ScopeStateEO);
+	UpdateTxState(is.TxStateBattery, is.TxStateModem, is.TxStateImu);
+	UpdateRxState(is.RxStateModem, is.RxStateImu);
+	UpdateBleState(is.BleState);
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1108,10 +1131,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		UpdateWriteBuffer();
 
-		UpdateScopeState(dataOUT[11], dataOUT[12], dataOUT[13], dataOUT[15], dataOUT[16]);
-		UpdateTxState(dataOUT[14], dataOUT[17], dataOUT[19]);
-		UpdateRxState(dataOUT[18], dataOUT[20]);
-		UpdateBleState(dataOUT[21]);
+		UpdateStateData(dataOUT, m_ivfState);
+		UpdateStateGUI(m_ivfState);
 
 		str.Format(_T("[%Iu] "), dataOUT.size());
 		for (size_t i = 0; i < dataOUT.size(); i++) {
