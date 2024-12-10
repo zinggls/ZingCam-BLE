@@ -37,10 +37,21 @@ typedef struct I2C_STATE {
 	byte BleState;
 } I2C_STATE;
 
+typedef struct IMU {
+	short data1;
+	short data2;
+	short data3;
+	short data4;
+	short data5;
+	short checksum;
+} IMU;
+
 typedef struct IVF{
 	I2C_IVF_COMMAND read;
 	I2C_IVF_COMMAND write;
 	I2C_STATE state;
+	IMU txImu;
+	IMU rxImu;
 } IVF;
 
 class CCom;
