@@ -1107,6 +1107,18 @@ void CZiieDlg::UpdateStateGUI(I2C_STATE& is)
 	UpdateBleState(is.BleState);
 }
 
+CString CZiieDlg::RawString(std::vector<byte>& dataOUT)
+{
+	CString str;
+	str.Format(_T("[%Iu] "), dataOUT.size());
+	for (size_t i = 0; i < dataOUT.size(); i++) {
+		CString tmp;
+		tmp.Format(_T("%02X "), dataOUT[i]);
+		str += tmp;
+	}
+	return str;
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1132,13 +1144,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		UpdateStateData(dataOUT, m_ivfState);
 		UpdateStateGUI(m_ivfState);
 
-		str.Format(_T("[%Iu] "), dataOUT.size());
-		for (size_t i = 0; i < dataOUT.size(); i++) {
-			CString tmp;
-			tmp.Format(_T("%02X "), dataOUT[i]);
-			str += tmp;
-		}
-		L(str);
+		L(RawString(dataOUT));
 		if (bRead == FALSE) break;
 	}
 	return S_OK;
