@@ -58,11 +58,25 @@ ZxxKind zxxKind;
     unsigned int vnd;             \
     unsigned int prd;             \
 
+#define SCOPE_STATE_INFO_FIELDS   \
+    char scopeStateKind;          \
+    char scopeStateOut;           \
+    char scopeStateBattery;       \
+    char scopeStateIR;            \
+    char scopeStateEO;            \
+
+#define TX_STATE_INFO_FIELDS      \
+    char txStateBattery;          \
+    char txStateModem;            \
+    char txStateIMU;              \
+
 // Define ZXX_FRAME with additional specific fields
 typedef struct {
     COMMON_FIELDS
     IMU_FIELDS
     USB_VND_PRD_FIELDS
+    SCOPE_STATE_INFO_FIELDS
+    TX_STATE_INFO_FIELDS
 } ZXX_FRAME;
 
 // Define ZCD_FRAME, which includes the common fields and additional ZCD-specific fields

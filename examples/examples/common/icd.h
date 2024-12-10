@@ -30,11 +30,11 @@
 #define IMU_RX_OFFSET                       34
 #define ICD_IVF_SIZE                        46                  //ICD_SIZE + IMU_TX_SIZE + IMU_RX_SIZE = 22 + 12 + 12 = 46
     
-#define ZING_ZXX_SIZE                       65                  //sizeof(ZXX_FRAME)
+#define ZING_ZXX_SIZE                       73                  //sizeof(ZXX_FRAME)
 #define ZING_ZCD_SIZE                       66                  //sizeof(ZCD_FRAME)
 #define ZING_ZXX_OFFSET                     ICD_IVF_SIZE
-#define ZING_ZCD_OFFSET                     111                 //ZING_ZXX_OFFSET + ZING_ZXX_SIZE = 46 + 65 = 111
+#define ZING_ZCD_OFFSET                     119                 //ZING_ZXX_OFFSET + ZING_ZXX_SIZE = 46 + 73 = 119
 
-#define I2C_IVF_READ_BUFFER_SIZE            177                 //ICD_IVF_SIZE + ZING_ZXX_SIZE + ZING_ZCD_SIZE = 46 + 65 + 66 = 177
+#define I2C_IVF_READ_BUFFER_SIZE            185                 //ICD_IVF_SIZE + ZING_ZXX_SIZE + ZING_ZCD_SIZE = 46 + 73 + 66 = 185
     
 #endif //ICD_H

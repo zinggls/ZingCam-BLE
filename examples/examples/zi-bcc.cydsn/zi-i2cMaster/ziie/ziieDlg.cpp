@@ -679,7 +679,7 @@ void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
 {
 	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
 
-	size_t zcdIndex = 111;
+	size_t zcdIndex = 119;
 	CString strKind = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
 	CString strUSB = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
 	CString strBnd = ToCharStr(dataOUT, zcdIndex); zcdIndex += 1;	//firmware setZcdBuffer내에서 bnd값을 보내는데 이는 chatgpt가 생성한 코드를 쓰다보니 생긴 오류

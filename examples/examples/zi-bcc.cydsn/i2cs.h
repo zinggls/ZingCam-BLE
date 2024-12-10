@@ -16,7 +16,7 @@
 #include <ZFrame.h>
 
 #define I2C_WR_BUFFER_SIZE  (11u)
-#define I2C_RD_BUFFER_SIZE  (186u)   //ICD(46) + ZCH/ZED(56) + ZCD(72) + HIMU(12) = 186Bytes, Start Index ICD(0),ZCH/ZED(46),ZCD(46+53=99)
+#define I2C_RD_BUFFER_SIZE  (185u)  //ICD(46)+ZXX(73)+ZCD(66) = 185
 
 /* Buffer and packet size */
 #define PACKET_SIZE         (I2C_WR_BUFFER_SIZE)
