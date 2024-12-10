@@ -113,8 +113,6 @@ int main()
             capsense_ScanEnabledWidgets();
         }
         
-        if(isNoZingCb(count,200,&ZingCbCount)) memset(&zxxFrame,0,getFrameSize());  //reset on no zing data
-        
         myDataHandle.value.val = (uint8_t *)&zxxFrame;
         myDataHandle.value.len = getFrameSize();
         CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
