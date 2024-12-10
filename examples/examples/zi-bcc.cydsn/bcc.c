@@ -48,6 +48,7 @@ static void processingZxx()
         // Process the received data                                
         memcpy(&zxxFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
         setZxxBuffer(getI2CReadBuffer()+ZING_ZXX_OFFSET,&zxxFrame);
+        mapZxxToICD(getI2CReadBuffer(),&zxxFrame);
         setImuBuffer(getI2CReadBuffer()+IMU_TX_OFFSET,&zxxFrame);   //ICD 무선영상 송신기 IMU
         getZcdFrame()->pos = zxxFrame.pos;
     }

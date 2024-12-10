@@ -170,6 +170,19 @@ uint8_t *setZxxBuffer(uint8_t *buf,ZXX_FRAME *z)
     return ptr;
 }
 
+void mapZxxToICD(uint8_t *buf,ZXX_FRAME *z)
+{
+    *(buf+ICD_SCOPE_VIDEO_KIND_OFFSET) = z->scopeStateKind;
+    *(buf+ICD_SCOPE_OUTPUT_OFFSET) = z->scopeStateOut;
+    *(buf+ICD_SCOPE_BATTERY_OFFSET) = z->scopeStateBattery;
+    *(buf+ICD_SCOPE_IR_STATE_OFFSET) = z->scopeStateIR;
+    *(buf+ICD_SCOPE_EO_STATE_OFFSET) = z->scopeStateEO;
+    
+    *(buf+ICD_TX_BATTERY_OFFSET) = z->txStateBattery;
+    *(buf+ICD_TX_MODEM_STATE_OFFSET) = z->txStateModem;
+    *(buf+ICD_TX_IMU_STATE_OFFSET) = z->txStateIMU;
+}
+
 bool isNoZingCb(uint32 loopCount,uint32 period,uint32 *zingCount)
 {
     bool noZingCb = false;

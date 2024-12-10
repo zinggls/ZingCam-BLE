@@ -93,6 +93,7 @@ uint8_t * setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd);
 uint8_t * setZxxBuffer(uint8_t *buf,ZXX_FRAME *z);
 uint8_t * setImuBuffer(uint8_t *buf,ZXX_FRAME *z);
 bool isNoZingCb(uint32 loopCount,uint32 period,uint32 *zingCount);
+void mapZxxToICD(uint8_t *buf,ZXX_FRAME *z);
 
 
 #endif /* Z_FRAME_H */

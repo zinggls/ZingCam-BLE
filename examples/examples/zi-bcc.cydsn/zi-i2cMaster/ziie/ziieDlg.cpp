@@ -1091,8 +1091,6 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			return hr;
 		}
 
-		MapZxxToICD(dataOUT);
-
 		UpdateImuListCtrl(m_hImuListCtrl, dataOUT, 22);
 		UpdateImuListCtrl(m_dImuListCtrl, dataOUT, 34);
 		UpdateZxxListCtrl(dataOUT);
