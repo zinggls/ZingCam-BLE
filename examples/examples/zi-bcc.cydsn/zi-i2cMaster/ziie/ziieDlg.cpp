@@ -1071,6 +1071,21 @@ void CZiieDlg::UpdateCommandData(std::vector<byte>& dataOUT, I2C_IVF_COMMAND& ic
 	ic.RxImuCalib = dataOUT[10];
 }
 
+void CZiieDlg::UpdateCommandGUI(I2C_IVF_COMMAND& ic)
+{
+	UpdateScope(ic.ScopeKind, ic.ScopeOut);
+	UpdateWirelessChannel(ic.WirelessChannelMode, ic.WirelessChannelInfo);
+	UpdateOpmode(ic.OpmodeScope, ic.OpmodeTx, ic.OpmodeRx);
+
+	UpdateXIMU(m_strTxImuType, m_strTxImuCalib, ic.TxImuType, ic.TxImuCalib);
+	m_writeMap.SetAt(_T("TxImuType"), ic.TxImuType);
+	m_writeMap.SetAt(_T("TxImuCalib"), ic.TxImuCalib);
+
+	UpdateXIMU(m_strRxImuType, m_strRxImuCalib, ic.RxImuType, ic.RxImuCalib);
+	m_writeMap.SetAt(_T("RxImuType"), ic.RxImuType);
+	m_writeMap.SetAt(_T("RxImuCalib"), ic.RxImuCalib);
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1089,17 +1104,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		UpdateZcdListCtrl(dataOUT);
 
 		UpdateCommandData(dataOUT,m_ivfReadCom);
-
-		UpdateScope(dataOUT[0], dataOUT[1]);
-		UpdateWirelessChannel(dataOUT[2], dataOUT[3]);
-		UpdateOpmode(dataOUT[4], dataOUT[5], dataOUT[6]);
-		UpdateXIMU(m_strTxImuType, m_strTxImuCalib, dataOUT[7], dataOUT[8]);
-		m_writeMap.SetAt(_T("TxImuType"), dataOUT[7]);
-		m_writeMap.SetAt(_T("TxImuCalib"), dataOUT[8]);
-
-		UpdateXIMU(m_strRxImuType, m_strRxImuCalib, dataOUT[9], dataOUT[10]);
-		m_writeMap.SetAt(_T("RxImuType"), dataOUT[9]);
-		m_writeMap.SetAt(_T("RxImuCalib"), dataOUT[10]);
+		UpdateCommandGUI(m_ivfReadCom);
 
 		UpdateWriteBuffer();
 

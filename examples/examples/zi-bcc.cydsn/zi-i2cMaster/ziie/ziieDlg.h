@@ -99,6 +99,7 @@ public:
 	void UpdateBleState(byte dat);
 	void UpdateWriteBuffer();
 	static void UpdateCommandData(std::vector<byte>& dataOUT, I2C_IVF_COMMAND& ic);
+	void UpdateCommandGUI(I2C_IVF_COMMAND& ic);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
