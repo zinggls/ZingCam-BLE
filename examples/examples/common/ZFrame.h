@@ -54,12 +54,15 @@ ZxxKind zxxKind;
     unsigned int phyRxFrameCnt;   \
     int frameDiff;                \
 
+#define USB_VND_PRD_FIELDS        \
+    unsigned int vnd;             \
+    unsigned int prd;             \
+
 // Define ZXX_FRAME with additional specific fields
 typedef struct {
     COMMON_FIELDS
     IMU_FIELDS
-    unsigned int vnd;    // VENDOR, e.g., "0xEB1A"
-    unsigned int prd;    // PRODUCT, e.g., "0xB101"
+    USB_VND_PRD_FIELDS
 } ZXX_FRAME;
 
 // Define ZCD_FRAME, which includes the common fields and additional ZCD-specific fields
