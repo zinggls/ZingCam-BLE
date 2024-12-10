@@ -150,4 +150,5 @@ public:
 	CBitmap m_bmpYelloCtrl;
 	CBitmap m_bmpRedCtrl;
 	CStatic m_bleStateCtrl;
+	I2C_IVF_COMMAND m_ivfReadCom;
 };

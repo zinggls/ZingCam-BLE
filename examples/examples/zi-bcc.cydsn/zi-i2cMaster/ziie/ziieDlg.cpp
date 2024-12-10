@@ -1074,16 +1074,29 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		UpdateZcdListCtrl(dataOUT);
 
 		UpdateScope(dataOUT[0], dataOUT[1]);
+		m_ivfReadCom.ScopeKind = dataOUT[0];
+		m_ivfReadCom.ScopeOut = dataOUT[1];
+
 		UpdateWirelessChannel(dataOUT[2], dataOUT[3]);
+		m_ivfReadCom.WirelessChannelMode = dataOUT[2];
+		m_ivfReadCom.WirelessChannelInfo = dataOUT[3];
+
 		UpdateOpmode(dataOUT[4], dataOUT[5], dataOUT[6]);
+		m_ivfReadCom.OpmodeScope = dataOUT[4];
+		m_ivfReadCom.OpmodeTx = dataOUT[5];
+		m_ivfReadCom.OpmodeRx = dataOUT[6];
 
 		UpdateXIMU(m_strTxImuType, m_strTxImuCalib, dataOUT[7], dataOUT[8]);
 		m_writeMap.SetAt(_T("TxImuType"), dataOUT[7]);
 		m_writeMap.SetAt(_T("TxImuCalib"), dataOUT[8]);
+		m_ivfReadCom.TxImuType = dataOUT[7];
+		m_ivfReadCom.TxImuCalib = dataOUT[8];
 
 		UpdateXIMU(m_strRxImuType, m_strRxImuCalib, dataOUT[9], dataOUT[10]);
 		m_writeMap.SetAt(_T("RxImuType"), dataOUT[9]);
 		m_writeMap.SetAt(_T("RxImuCalib"), dataOUT[10]);
+		m_ivfReadCom.RxImuType = dataOUT[9];
+		m_ivfReadCom.RxImuCalib = dataOUT[10];
 
 		UpdateWriteBuffer();
 
