@@ -617,7 +617,7 @@ size_t CZiieDlg::UpdateImuListCtrl(CListCtrl& listCtrl, std::vector<byte>& dataO
 	return index;
 }
 
-void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex)
+size_t CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex)
 {
 	int nItem = InsertItem(m_zxxListCtrl, _T("ZXX"));
 
@@ -677,6 +677,14 @@ void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex)
 		m_zxxListCtrl.SetItemText(nItem, 2, _T(""));
 		m_zxxListCtrl.SetItemText(nItem, 3, _T(""));
 	}
+
+	/*
+	화기조준경 상태정보(종류,출력,배터리,IT상태,EO상태) : 5바이트
+	송신기 상태정보(배터리,모뎀상태,IMU상태) : 3바이트
+	상기 정보들을 ZXX구조체에 넣어서 BLE를 사용해 수신기로 보낸다. 즉, ZXX구조체 8바이트 증가
+	*/
+	zxxIndex += 8;
+	return zxxIndex;
 }
 
 void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex)
@@ -1141,9 +1149,6 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		Parse_I2C();
 
-		UpdateZxxListCtrl(dataOUT, 46);
-		UpdateZcdListCtrl(dataOUT, 119);
-
 		index = 0;
 		index = UpdateCommandData(dataOUT, index, m_ivf.read);
 		ASSERT(index == 11);
@@ -1153,6 +1158,9 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		ASSERT(index == 34);
 		index = UpdateImuListCtrl(m_dImuListCtrl, dataOUT, index);
 		ASSERT(index == 46);
+		index = UpdateZxxListCtrl(dataOUT, index);
+		ASSERT(index == 119);
+		UpdateZcdListCtrl(dataOUT, index);
 
 		UpdateCommandGUI(m_ivf.read);
 
