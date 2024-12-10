@@ -91,8 +91,8 @@ public:
 	HRESULT Control_I2C_SCB_Slave(int deviceAddress);
 	int InsertItem(CListCtrl& listCtrl, const CString& newItem);
 	size_t UpdateImuListCtrl(CListCtrl& listCtrl, std::vector<byte>& dataOUT, size_t index);
-	void UpdateZxxListCtrl(std::vector<byte>& dataOUT);
-	void UpdateZcdListCtrl(std::vector<byte>& dataOUT);
+	void UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex);
+	void UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex);
 	void UpdateScopeKind(byte dat);
 	void UpdateScopeOut(byte dat);
 	void UpdateScope(byte dat1, byte dat2);

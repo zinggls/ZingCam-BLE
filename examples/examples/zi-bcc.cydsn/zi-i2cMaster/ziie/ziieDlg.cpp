@@ -617,11 +617,10 @@ size_t CZiieDlg::UpdateImuListCtrl(CListCtrl& listCtrl, std::vector<byte>& dataO
 	return index;
 }
 
-void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT)
+void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex)
 {
 	int nItem = InsertItem(m_zxxListCtrl, _T("ZXX"));
 
-	size_t zxxIndex = 46;
 	CString strKind = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
 	CString strUSB = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
 	CString strBND = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
@@ -680,11 +679,10 @@ void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT)
 	}
 }
 
-void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
+void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex)
 {
 	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
 
-	size_t zcdIndex = 119;
 	CString strKind = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
 	CString strUSB = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
 	CString strBnd = ToCharStr(dataOUT, zcdIndex); zcdIndex += 1;	//firmware setZcdBuffer내에서 bnd값을 보내는데 이는 chatgpt가 생성한 코드를 쓰다보니 생긴 오류
@@ -1123,8 +1121,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		UpdateImuListCtrl(m_hImuListCtrl, dataOUT, 22);
 		UpdateImuListCtrl(m_dImuListCtrl, dataOUT, 34);
-		UpdateZxxListCtrl(dataOUT);
-		UpdateZcdListCtrl(dataOUT);
+		UpdateZxxListCtrl(dataOUT, 46);
+		UpdateZcdListCtrl(dataOUT, 119);
 
 		UpdateCommandData(dataOUT,m_ivfReadCom);
 		UpdateCommandGUI(m_ivfReadCom);
