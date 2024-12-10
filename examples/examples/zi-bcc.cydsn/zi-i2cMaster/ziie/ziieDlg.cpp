@@ -1085,19 +1085,20 @@ void CZiieDlg::UpdateCommandGUI(I2C_IVF_COMMAND& ic)
 	m_writeMap.SetAt(_T("RxImuCalib"), ic.RxImuCalib);
 }
 
-void CZiieDlg::UpdateStateData(std::vector<byte>& dataOUT, I2C_STATE& is)
+size_t CZiieDlg::UpdateStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is)
 {
-	is.ScopeStateKind = dataOUT[11];
-	is.ScopeStateOut = dataOUT[12];
-	is.ScopeStateBattery = dataOUT[13];
-	is.TxStateBattery = dataOUT[14];
-	is.ScopeStateIR = dataOUT[15];
-	is.ScopeStateEO = dataOUT[16];
-	is.TxStateModem = dataOUT[17];
-	is.RxStateModem = dataOUT[18];
-	is.TxStateImu = dataOUT[19];
-	is.RxStateImu = dataOUT[20];
-	is.BleState = dataOUT[21];
+	is.ScopeStateKind = dataOUT[index++];
+	is.ScopeStateOut = dataOUT[index++];
+	is.ScopeStateBattery = dataOUT[index++];
+	is.TxStateBattery = dataOUT[index++];
+	is.ScopeStateIR = dataOUT[index++];
+	is.ScopeStateEO = dataOUT[index++];
+	is.TxStateModem = dataOUT[index++];
+	is.RxStateModem = dataOUT[index++];
+	is.TxStateImu = dataOUT[index++];
+	is.RxStateImu = dataOUT[index++];
+	is.BleState = dataOUT[index++];
+	return index;
 }
 
 void CZiieDlg::UpdateStateGUI(I2C_STATE& is)
@@ -1130,6 +1131,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 	HRESULT hr;
 	CString str;
 	std::vector<byte> dataOUT;
+	size_t index;
 	while (1) {
 		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
 		if (!SUCCEEDED(hr)) {
@@ -1144,12 +1146,14 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		UpdateZxxListCtrl(dataOUT, 46);
 		UpdateZcdListCtrl(dataOUT, 119);
 
-		UpdateCommandData(dataOUT, 0, m_ivf.read);
+		index = 0;
+		index = UpdateCommandData(dataOUT, index, m_ivf.read);
+		index = UpdateStateData(dataOUT, index, m_ivf.state);
+
 		UpdateCommandGUI(m_ivf.read);
 
 		UpdateWriteBuffer();
 
-		UpdateStateData(dataOUT, m_ivf.state);
 		UpdateStateGUI(m_ivf.state);
 
 		L(RawString(dataOUT));
