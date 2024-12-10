@@ -1136,13 +1136,13 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		UpdateZxxListCtrl(dataOUT, 46);
 		UpdateZcdListCtrl(dataOUT, 119);
 
-		UpdateCommandData(dataOUT,m_ivfReadCom);
-		UpdateCommandGUI(m_ivfReadCom);
+		UpdateCommandData(dataOUT,m_ivf.read);
+		UpdateCommandGUI(m_ivf.read);
 
 		UpdateWriteBuffer();
 
-		UpdateStateData(dataOUT, m_ivfState);
-		UpdateStateGUI(m_ivfState);
+		UpdateStateData(dataOUT, m_ivf.state);
+		UpdateStateGUI(m_ivf.state);
 
 		L(RawString(dataOUT));
 		if (bRead == FALSE) break;

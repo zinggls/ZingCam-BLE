@@ -37,6 +37,12 @@ typedef struct I2C_STATE {
 	byte BleState;
 } I2C_STATE;
 
+typedef struct IVF{
+	I2C_IVF_COMMAND read;
+	I2C_IVF_COMMAND write;
+	I2C_STATE state;
+} IVF;
+
 class CCom;
 
 // CZiieDlg 대화 상자
@@ -169,6 +175,5 @@ public:
 	CBitmap m_bmpYelloCtrl;
 	CBitmap m_bmpRedCtrl;
 	CStatic m_bleStateCtrl;
-	I2C_IVF_COMMAND m_ivfReadCom;
-	I2C_STATE m_ivfState;
+	IVF m_ivf;
 };
