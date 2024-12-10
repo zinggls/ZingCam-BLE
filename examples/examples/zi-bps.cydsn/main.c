@@ -58,12 +58,19 @@ static void onImuFrame(const ImuFrame *imu)
     z->imuChecksum = toShort(imu->data+10);
 }
 
+static void updateStateInfo()
+{
+    setImuState(getImuState(),0xE5,(uint8*)&zxxFrame.txStateIMU);         //송신기 IMU 상태 0x00: 정상, 0xE5: 무선영상 수신기 IMU 이상
+}
+
 CY_ISR(Timer_ISR)
 {
     // Clear the interrupt
     Timer_ClearInterrupt(Timer_INTR_MASK_TC);
 
     // Add your custom code here
+    updateStateInfo();
+    
     LED_RED_Write(!LED_RED_Read());
 }
 
