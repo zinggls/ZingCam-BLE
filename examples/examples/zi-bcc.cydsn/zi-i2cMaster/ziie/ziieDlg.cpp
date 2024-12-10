@@ -1051,6 +1051,34 @@ void CZiieDlg::UpdateWriteBuffer()
 	}
 }
 
+void CZiieDlg::MapZxxToICD(std::vector<byte> &dataOUT)
+{
+/*
+		UpdateScopeState(dataOUT[11], dataOUT[12], dataOUT[13], dataOUT[15], dataOUT[16]);
+		UpdateTxState(dataOUT[14], dataOUT[17], dataOUT[19]);
+
+		#define SCOPE_STATE_INFO_FIELDS   \
+			char scopeStateKind;          \
+			char scopeStateOut;           \
+			char scopeStateBattery;       \
+			char scopeStateIR;            \
+			char scopeStateEO;            \
+
+		#define TX_STATE_INFO_FIELDS      \
+			char txStateBattery;          \
+			char txStateModem;            \
+			char txStateIMU;              \
+*/
+	dataOUT[11] = dataOUT[111];			//화기조준경 영상 종류
+	dataOUT[12] = dataOUT[112];			//화기조준경 영상 상태
+	dataOUT[13] = dataOUT[113];			//화기조준경 배터리 잔량
+	dataOUT[14] = dataOUT[114];			//무선영상 송신기 배터리 잔량
+	dataOUT[15] = dataOUT[115];			//화기조준경 IR 모듈 상태
+	dataOUT[16] = dataOUT[116];			//화기조준경 EO 모듈 상태
+	dataOUT[17] = dataOUT[117];			//송신기 모뎀 상태
+	dataOUT[19] = dataOUT[118];			//송신기 IMU 상태
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1062,6 +1090,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
 			return hr;
 		}
+
+		MapZxxToICD(dataOUT);
 
 		UpdateImuListCtrl(m_hImuListCtrl, dataOUT, 22);
 		UpdateImuListCtrl(m_dImuListCtrl, dataOUT, 34);
