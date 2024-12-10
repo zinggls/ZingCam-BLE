@@ -1119,6 +1119,11 @@ CString CZiieDlg::RawString(std::vector<byte>& dataOUT)
 	return str;
 }
 
+void CZiieDlg::Parse_I2C()
+{
+
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1130,6 +1135,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
 			return hr;
 		}
+
+		Parse_I2C();
 
 		UpdateImuListCtrl(m_hImuListCtrl, dataOUT, 22);
 		UpdateImuListCtrl(m_dImuListCtrl, dataOUT, 34);
