@@ -79,6 +79,8 @@ static void clearZxxZingInfo(ZXX_FRAME *z)
 
 static void updateStateInfo()
 {
+    zxxFrame.txStateBattery = 78;   //TO DO 배터리 용량 파악하는 기능 구현전까지 하드코딩 상태로 둔다 (78%로 표시됨)
+    
     uint8 zingState = getZingState();
     setZingState(zingState,0xE3,(uint8*)&zxxFrame.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
     if(zingState==1) clearZxxZingInfo(&zxxFrame);
