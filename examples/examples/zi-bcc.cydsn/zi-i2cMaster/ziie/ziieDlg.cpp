@@ -1141,8 +1141,6 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		Parse_I2C();
 
-		UpdateImuListCtrl(m_hImuListCtrl, dataOUT, 22);
-		UpdateImuListCtrl(m_dImuListCtrl, dataOUT, 34);
 		UpdateZxxListCtrl(dataOUT, 46);
 		UpdateZcdListCtrl(dataOUT, 119);
 
@@ -1151,6 +1149,10 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		ASSERT(index == 11);
 		index = UpdateStateData(dataOUT, index, m_ivf.state);
 		ASSERT(index == 22);
+		index = UpdateImuListCtrl(m_hImuListCtrl, dataOUT, index);
+		ASSERT(index == 34);
+		index = UpdateImuListCtrl(m_dImuListCtrl, dataOUT, index);
+		ASSERT(index == 46);
 
 		UpdateCommandGUI(m_ivf.read);
 
