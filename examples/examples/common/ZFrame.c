@@ -80,7 +80,7 @@ uint16 getFrameSize()
     return 0;   //never reach here
 }
 
-void setZcdBuffer(uint8_t *buf,ZCD_FRAME *z)
+uint8_t *setZcdBuffer(uint8_t *buf,ZCD_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer
 
@@ -108,9 +108,11 @@ void setZcdBuffer(uint8_t *buf,ZCD_FRAME *z)
     memcpy(ptr, &z->destIdDiff, sizeof(z->destIdDiff));         ptr += sizeof(z->destIdDiff);
     memcpy(ptr, &z->phyRxFrameCnt, sizeof(z->phyRxFrameCnt));   ptr += sizeof(z->phyRxFrameCnt);
     memcpy(ptr, &z->frameDiff, sizeof(z->frameDiff));           ptr += sizeof(z->frameDiff);
+    
+    return ptr;
 }
 
-void setImuBuffer(uint8_t *buf,ZXX_FRAME *z)
+uint8_t *setImuBuffer(uint8_t *buf,ZXX_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer
     
@@ -120,9 +122,11 @@ void setImuBuffer(uint8_t *buf,ZXX_FRAME *z)
 	memcpy(ptr, &z->imu4, sizeof(z->imu4));                     ptr += sizeof(z->imu4);
 	memcpy(ptr, &z->imu5, sizeof(z->imu5));                     ptr += sizeof(z->imu5);
 	memcpy(ptr, &z->imuChecksum, sizeof(z->imuChecksum));       ptr += sizeof(z->imuChecksum);
+    
+    return ptr;
 }
 
-void setZedBuffer(uint8_t *buf,ZXX_FRAME *z)
+uint8_t *setZxxBuffer(uint8_t *buf,ZXX_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer
 
@@ -150,22 +154,24 @@ void setZedBuffer(uint8_t *buf,ZXX_FRAME *z)
 	memcpy(ptr, &z->imu4, sizeof(z->imu4));                     ptr += sizeof(z->imu4);
 	memcpy(ptr, &z->imu5, sizeof(z->imu5));                     ptr += sizeof(z->imu5);
 	memcpy(ptr, &z->imuChecksum, sizeof(z->imuChecksum));       ptr += sizeof(z->imuChecksum);
-}
-
-void setZchBuffer(uint8_t *buf,ZXX_FRAME *z)
-{
-    uint8_t *ptr = buf; // Pointer to traverse the buffer
-
-    setZedBuffer(buf,z);
     
-    // Write ZCD_ADDITIONAL_FIELDS
+    //USB_VND_PRD_FIELDS
     memcpy(ptr, &z->vnd, sizeof(z->vnd));                       ptr += sizeof(z->vnd);
     memcpy(ptr, &z->prd, sizeof(z->prd));                       ptr += sizeof(z->prd);
-}
-
-void setZxxBuffer(uint8_t *buf,ZXX_FRAME *z)
-{
-    setZchBuffer(buf,z);
+    
+    //SCOPE_STATE_INFO_FIELDS
+    memcpy(ptr, &z->scopeStateKind, sizeof(z->scopeStateKind));         ptr += sizeof(z->scopeStateKind);
+    memcpy(ptr, &z->scopeStateOut, sizeof(z->scopeStateOut));           ptr += sizeof(z->scopeStateOut);
+    memcpy(ptr, &z->scopeStateBattery, sizeof(z->scopeStateBattery));   ptr += sizeof(z->scopeStateBattery);
+    memcpy(ptr, &z->scopeStateIR, sizeof(z->scopeStateIR));             ptr += sizeof(z->scopeStateIR);
+    memcpy(ptr, &z->scopeStateEO, sizeof(z->scopeStateEO));             ptr += sizeof(z->scopeStateEO);
+    
+    //TX_STATE_INFO_FIELDS
+    memcpy(ptr, &z->txStateBattery, sizeof(z->txStateBattery));         ptr += sizeof(z->txStateBattery);
+    memcpy(ptr, &z->txStateModem, sizeof(z->txStateModem));             ptr += sizeof(z->txStateModem);
+    memcpy(ptr, &z->txStateIMU, sizeof(z->txStateIMU));                 ptr += sizeof(z->txStateIMU);
+    
+    return ptr;
 }
 
 bool isNoZingCb(uint32 loopCount,uint32 period,uint32 *zingCount)
