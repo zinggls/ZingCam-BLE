@@ -1155,6 +1155,12 @@ size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 	index = UpdateStateData(dataOUT, index, ivf.state);
 	ASSERT(index == 22);
 
+	index = UpdateImuData(dataOUT, index, ivf.txImu);
+	ASSERT(index == 34);
+
+	index = UpdateImuData(dataOUT, index, ivf.rxImu);
+	ASSERT(index == 46);
+
 	return index;
 }
 
@@ -1172,12 +1178,6 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		}
 
 		index = Parse_I2C(dataOUT, m_ivf);
-
-		index = UpdateImuData(dataOUT, index, m_ivf.txImu);
-		ASSERT(index == 34);
-
-		index = UpdateImuData(dataOUT, index, m_ivf.rxImu);
-		ASSERT(index == 46);
 
 		index = UpdateImuListCtrl(m_hImuListCtrl, dataOUT, 22);
 		ASSERT(index == 34);
