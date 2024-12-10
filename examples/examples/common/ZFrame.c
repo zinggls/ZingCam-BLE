@@ -1,4 +1,5 @@
 #include <ZFrame.h>
+#include "icd.h"
 
 static const char ZED_SSCANF_FORMAT[] = "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
 static const char ZCH_SSCANF_FORMAT[] = "ZCH USB:%d VND:0x%X PRD:0x%X BND:%c PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
@@ -148,12 +149,7 @@ uint8_t *setZxxBuffer(uint8_t *buf,ZXX_FRAME *z)
     memcpy(ptr, &z->pos, sizeof(z->pos));                       ptr += sizeof(z->pos);
 
     //IMU FIELDS
-	memcpy(ptr, &z->imu1, sizeof(z->imu1));                     ptr += sizeof(z->imu1);
-	memcpy(ptr, &z->imu2, sizeof(z->imu2));                     ptr += sizeof(z->imu2);
-	memcpy(ptr, &z->imu3, sizeof(z->imu3));                     ptr += sizeof(z->imu3);
-	memcpy(ptr, &z->imu4, sizeof(z->imu4));                     ptr += sizeof(z->imu4);
-	memcpy(ptr, &z->imu5, sizeof(z->imu5));                     ptr += sizeof(z->imu5);
-	memcpy(ptr, &z->imuChecksum, sizeof(z->imuChecksum));       ptr += sizeof(z->imuChecksum);
+    setImuBuffer(ptr,z);                                        ptr += IMU_TX_SIZE;
     
     //USB_VND_PRD_FIELDS
     memcpy(ptr, &z->vnd, sizeof(z->vnd));                       ptr += sizeof(z->vnd);
