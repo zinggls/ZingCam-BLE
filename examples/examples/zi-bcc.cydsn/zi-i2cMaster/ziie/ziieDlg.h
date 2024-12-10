@@ -9,7 +9,7 @@
 #define READ_BUFFER_SIZE	(185)
 #define MAX_LIST_ITEMS		(1024*8)
 
-typedef struct {
+typedef struct I2C_IVF_COMMAND {
 	byte ScopeKind;
 	byte ScopeOut;
 	byte WirelessChannelMode;
@@ -21,7 +21,7 @@ typedef struct {
 	byte TxImuCalib;
 	byte RxImuType;
 	byte RxImuCalib;
-}I2C_IVF_COMMAND;
+} I2C_IVF_COMMAND;
 
 class CCom;
 
