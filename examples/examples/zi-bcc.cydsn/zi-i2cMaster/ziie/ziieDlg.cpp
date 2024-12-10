@@ -1131,6 +1131,22 @@ CString CZiieDlg::RawString(std::vector<byte>& dataOUT)
 	return str;
 }
 
+short CZiieDlg::ToShort(byte high, byte low)
+{
+	return (high << 8) | low;
+}
+
+size_t CZiieDlg::UpdateImuData(std::vector<byte>& dataOUT, size_t index, IMU& imu)
+{
+	imu.data1 = ToShort(dataOUT[index + 1], dataOUT[index]); index += 2;
+	imu.data2 = ToShort(dataOUT[index + 1], dataOUT[index]); index += 2;
+	imu.data3 = ToShort(dataOUT[index + 1], dataOUT[index]); index += 2;
+	imu.data4 = ToShort(dataOUT[index + 1], dataOUT[index]); index += 2;
+	imu.data5 = ToShort(dataOUT[index + 1], dataOUT[index]); index += 2;
+	imu.checksum = ToShort(dataOUT[index + 1], dataOUT[index]); index += 2;
+	return index;
+}
+
 size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 {
 	size_t index = 0;
@@ -1157,9 +1173,15 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		index = Parse_I2C(dataOUT, m_ivf);
 
-		index = UpdateImuListCtrl(m_hImuListCtrl, dataOUT, index);
+		index = UpdateImuData(dataOUT, index, m_ivf.txImu);
 		ASSERT(index == 34);
-		index = UpdateImuListCtrl(m_dImuListCtrl, dataOUT, index);
+
+		index = UpdateImuData(dataOUT, index, m_ivf.rxImu);
+		ASSERT(index == 46);
+
+		index = UpdateImuListCtrl(m_hImuListCtrl, dataOUT, 22);
+		ASSERT(index == 34);
+		index = UpdateImuListCtrl(m_dImuListCtrl, dataOUT, 34);
 		ASSERT(index == 46);
 		index = UpdateZxxListCtrl(dataOUT, index);
 		ASSERT(index == 119);
