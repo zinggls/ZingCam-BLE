@@ -98,7 +98,7 @@ public:
 	int InsertItem(CListCtrl& listCtrl, const CString& newItem);
 	size_t UpdateImuListCtrl(CListCtrl& listCtrl, std::vector<byte>& dataOUT, size_t index);
 	size_t UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex);
-	void UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex);
+	size_t UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex);
 	void UpdateScopeKind(byte dat);
 	void UpdateScopeOut(byte dat);
 	void UpdateScope(byte dat1, byte dat2);

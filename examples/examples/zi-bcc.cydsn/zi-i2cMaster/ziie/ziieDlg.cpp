@@ -687,7 +687,7 @@ size_t CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex)
 	return zxxIndex;
 }
 
-void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex)
+size_t CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex)
 {
 	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
 
@@ -731,6 +731,8 @@ void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex)
 	m_zcdListCtrl.SetItemText(nItem, 15, strPhyRx);
 	m_zcdListCtrl.SetItemText(nItem, 16, strPos);
 	m_zcdListCtrl.SetItemText(nItem, 17, strCnt);
+
+	return zcdIndex;
 }
 
 void CZiieDlg::UpdateScopeKind(byte dat)
@@ -1160,7 +1162,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		ASSERT(index == 46);
 		index = UpdateZxxListCtrl(dataOUT, index);
 		ASSERT(index == 119);
-		UpdateZcdListCtrl(dataOUT, index);
+		index = UpdateZcdListCtrl(dataOUT, index);
+		ASSERT(index == 185);
 
 		UpdateCommandGUI(m_ivf.read);
 
