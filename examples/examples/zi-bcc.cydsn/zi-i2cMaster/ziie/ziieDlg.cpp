@@ -1054,19 +1054,20 @@ void CZiieDlg::UpdateWriteBuffer()
 	}
 }
 
-void CZiieDlg::UpdateCommandData(std::vector<byte>& dataOUT, I2C_IVF_COMMAND& ic)
+size_t CZiieDlg::UpdateCommandData(std::vector<byte>& dataOUT, size_t index, I2C_IVF_COMMAND& ic)
 {
-	ic.ScopeKind = dataOUT[0];
-	ic.ScopeOut = dataOUT[1];
-	ic.WirelessChannelMode = dataOUT[2];
-	ic.WirelessChannelInfo = dataOUT[3];
-	ic.OpmodeScope = dataOUT[4];
-	ic.OpmodeTx = dataOUT[5];
-	ic.OpmodeRx = dataOUT[6];
-	ic.TxImuType = dataOUT[7];
-	ic.TxImuCalib = dataOUT[8];
-	ic.RxImuType = dataOUT[9];
-	ic.RxImuCalib = dataOUT[10];
+	ic.ScopeKind = dataOUT[index++];
+	ic.ScopeOut = dataOUT[index++];
+	ic.WirelessChannelMode = dataOUT[index++];
+	ic.WirelessChannelInfo = dataOUT[index++];
+	ic.OpmodeScope = dataOUT[index++];
+	ic.OpmodeTx = dataOUT[index++];
+	ic.OpmodeRx = dataOUT[index++];
+	ic.TxImuType = dataOUT[index++];
+	ic.TxImuCalib = dataOUT[index++];
+	ic.RxImuType = dataOUT[index++];
+	ic.RxImuCalib = dataOUT[index++];
+	return index;
 }
 
 void CZiieDlg::UpdateCommandGUI(I2C_IVF_COMMAND& ic)
@@ -1143,7 +1144,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		UpdateZxxListCtrl(dataOUT, 46);
 		UpdateZcdListCtrl(dataOUT, 119);
 
-		UpdateCommandData(dataOUT,m_ivf.read);
+		UpdateCommandData(dataOUT, 0, m_ivf.read);
 		UpdateCommandGUI(m_ivf.read);
 
 		UpdateWriteBuffer();
