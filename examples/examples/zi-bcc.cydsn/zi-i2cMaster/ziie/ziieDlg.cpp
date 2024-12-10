@@ -673,6 +673,11 @@ void CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT)
 		m_zxxListCtrl.SetItemText(nItem, 2, strVND);
 		m_zxxListCtrl.SetItemText(nItem, 3, strPRD);
 	}
+	else {
+		GetDlgItem(IDC_ZXX_STATIC)->SetWindowText(_T("ZXX"));
+		m_zxxListCtrl.SetItemText(nItem, 2, _T(""));
+		m_zxxListCtrl.SetItemText(nItem, 3, _T(""));
+	}
 }
 
 void CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT)
