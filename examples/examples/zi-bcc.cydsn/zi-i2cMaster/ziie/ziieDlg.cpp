@@ -1131,9 +1131,15 @@ CString CZiieDlg::RawString(std::vector<byte>& dataOUT)
 	return str;
 }
 
-void CZiieDlg::Parse_I2C()
+size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 {
+	size_t index = 0;
+	index = UpdateCommandData(dataOUT, index, ivf.read);
+	ASSERT(index == 11);
+	index = UpdateStateData(dataOUT, index, ivf.state);
+	ASSERT(index == 22);
 
+	return index;
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
@@ -1149,13 +1155,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			return hr;
 		}
 
-		Parse_I2C();
+		index = Parse_I2C(dataOUT, m_ivf);
 
-		index = 0;
-		index = UpdateCommandData(dataOUT, index, m_ivf.read);
-		ASSERT(index == 11);
-		index = UpdateStateData(dataOUT, index, m_ivf.state);
-		ASSERT(index == 22);
 		index = UpdateImuListCtrl(m_hImuListCtrl, dataOUT, index);
 		ASSERT(index == 34);
 		index = UpdateImuListCtrl(m_dImuListCtrl, dataOUT, index);

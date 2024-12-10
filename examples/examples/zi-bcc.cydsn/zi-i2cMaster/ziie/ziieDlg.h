@@ -123,7 +123,7 @@ public:
 	static size_t UpdateStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is);
 	void UpdateStateGUI(I2C_STATE& is);
 	static CString RawString(std::vector<byte>& dataOUT);
-	void Parse_I2C();
+	static size_t Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
