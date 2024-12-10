@@ -26,30 +26,22 @@ uint8 changeScope(ScopeCamera cam)
     switch (cam)
     {
         case change_none:
-            LED_RED_Write  (LED_OFF);
-            LED_GREEN_Write(LED_OFF);
-            LED_BLUE_Write (LED_OFF);
+            setRGB(LED_OFF,LED_OFF,LED_OFF);
             result = change_none;
             break;
 
         case change_eo:
-            LED_RED_Write  (LED_ON);
-            LED_GREEN_Write(LED_OFF);
-            LED_BLUE_Write (LED_OFF);
+            setRGB(LED_ON,LED_OFF,LED_OFF);
             result = change_eo;
             break;
 
         case change_ir_white:
-            LED_RED_Write  (LED_OFF);
-            LED_GREEN_Write(LED_ON);
-            LED_BLUE_Write (LED_OFF);
+            setRGB(LED_OFF,LED_ON,LED_OFF);
             result = change_ir_white;
             break;
 
         case change_ir_black:
-            LED_RED_Write  (LED_OFF);
-            LED_GREEN_Write(LED_OFF);
-            LED_BLUE_Write (LED_ON);
+            setRGB(LED_OFF,LED_OFF,LED_ON);
             result = change_ir_black;
             break;
 

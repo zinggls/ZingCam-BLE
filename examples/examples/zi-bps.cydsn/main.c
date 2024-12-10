@@ -74,7 +74,7 @@ int main()
 {
     CyGlobalIntEnable; 
     
-    LED_GREEN_Write(LED_OFF);
+    setGreen(LED_OFF);
 
     UART_DBG_Start();
     Zing_Init(ZingCB);
