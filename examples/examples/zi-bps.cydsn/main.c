@@ -8,6 +8,7 @@
 #include "ZFrame.h"
 #include "imu.h"
 #include "bps.h"
+#include "led.h"
 
 static uint16 notifyCustom = 0;
 
@@ -73,7 +74,7 @@ int main()
 {
     CyGlobalIntEnable; 
     
-    LED_GREEN_Write(1);
+    LED_GREEN_Write(LED_OFF);
 
     UART_DBG_Start();
     Zing_Init(ZingCB);

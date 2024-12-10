@@ -1,6 +1,7 @@
 #include "bps.h"
 #include <Log.h>
 #include <ZFrame.h>
+#include "led.h"
 
 static uint16 writereqCustom = 0;
 
@@ -21,31 +22,31 @@ void BleCallBack(uint32 event, void* eventParam)
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
             L("Advertising fast\r\n");
-            LED_RED_Write(1);
-            LED_GREEN_Write(1);
-            LED_BLUE_Write(1);
+            LED_RED_Write(LED_OFF);
+            LED_GREEN_Write(LED_OFF);
+            LED_BLUE_Write(LED_OFF);
             break;
             
         case CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP:
             L("CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\r\n");
-            LED_RED_Write(0);
-            LED_GREEN_Write(0);
-            LED_BLUE_Write(0);
+            LED_RED_Write(LED_ON);
+            LED_GREEN_Write(LED_ON);
+            LED_BLUE_Write(LED_ON);
             break;
         
         /* when a connection is made, update the LED and Capsense states in the GATT database and stop blinking the LED */    
         case CYBLE_EVT_GATT_CONNECT_IND:
             L("CYBLE_EVT_GATT_CONNECT_IND\r\n");
-            LED_RED_Write(1);
-            LED_GREEN_Write(0);
-            LED_BLUE_Write(0);
+            LED_RED_Write(LED_OFF);
+            LED_GREEN_Write(LED_ON);
+            LED_BLUE_Write(LED_ON);
 		    break;
             
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:
             L("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
-            LED_RED_Write(1);
-            LED_GREEN_Write(0);
-            LED_BLUE_Write(1);
+            LED_RED_Write(LED_OFF);
+            LED_GREEN_Write(LED_ON);
+            LED_BLUE_Write(LED_OFF);
             break;
 
         /* handle a write request */
@@ -63,9 +64,9 @@ void BleCallBack(uint32 event, void* eventParam)
             
         case CYBLE_EVT_GATT_DISCONNECT_IND:
             L("CYBLE_EVT_GATT_DISCONNECT_IND\r\n");
-            LED_RED_Write(0);
-            LED_GREEN_Write(1);
-            LED_BLUE_Write(1);
+            LED_RED_Write(LED_ON);
+            LED_GREEN_Write(LED_OFF);
+            LED_BLUE_Write(LED_OFF);
             break;
             
         case CYBLE_EVT_STACK_BUSY_STATUS:
@@ -95,9 +96,9 @@ void BleCallBack(uint32 event, void* eventParam)
             break;
             
         default:
-            LED_RED_Write(0);
-            LED_GREEN_Write(1);
-            LED_BLUE_Write(0);
+            LED_RED_Write(LED_ON);
+            LED_GREEN_Write(LED_OFF);
+            LED_BLUE_Write(LED_ON);
             L("unhandled BLE event = 0x%lx\r\n",event);
             break;
     }
