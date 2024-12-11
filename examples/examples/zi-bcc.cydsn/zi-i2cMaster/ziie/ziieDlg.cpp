@@ -676,31 +676,31 @@ void CZiieDlg::UpdateZxxGUI(ZXX z)
 	}
 }
 
-size_t CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex)
+void CZiieDlg::UpdateZcdGUI(ZCD z)
 {
 	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
 
-	CString strKind = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
-	CString strUSB = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
-	CString strBnd = ToCharStr(dataOUT, zcdIndex); zcdIndex += 1;	//firmware setZcdBuffer내에서 bnd값을 보내는데 이는 chatgpt가 생성한 코드를 쓰다보니 생긴 오류
-	CString strPPID = ToHex(dataOUT, zcdIndex);	zcdIndex += 4;
-	CString strDeviceID = ToHex(dataOUT, zcdIndex);	zcdIndex += 4;
-	CString strFMT = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
-	CString strIDX = ToIntStr(dataOUT, zcdIndex);	zcdIndex += 4;
-	CString strTrt = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
-	CString strAck = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
-	CString strPpc = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
-	CString strRun = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
-	CString strTxid = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
-	CString strRxid = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
-	CString strCnt = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
-	CString strPos = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
-	CString strFps = ToHex(dataOUT, zcdIndex); zcdIndex += 4;
-	CString strItf = ToCharStr(dataOUT, zcdIndex);	zcdIndex += 1;
-	CString strDestErr = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
-	CString strDestDif = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
-	CString strPhyRx = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
-	CString strFrameDif = ToIntStr(dataOUT, zcdIndex); zcdIndex += 4;
+	CString strKind = DecStr(z.zb.kind);
+	CString strUSB = DecStr(z.zb.usb);
+	CString strBND = CharStr(z.zb.bnd);
+	CString strPPID = IntHexStr(z.zb.ppid);
+	CString strDeviceID = IntHexStr(z.zb.devid);
+	CString strFMT = DecStr(z.zb.fmt);
+	CString strIDX = DecStr(z.zb.idx);
+	CString strTrt = CharStr(z.zb.trt);
+	CString strAck = CharStr(z.zb.ack);
+	CString strPpc = CharStr(z.zb.ppc);
+	CString strRun = CharStr(z.zb.run);
+	CString strTxid = IntHexStr(z.zb.txid);
+	CString strRxid = IntHexStr(z.zb.rxid);
+	CString strCnt = DecStr(z.zb.cnt);
+	CString strPos = IntHexStr(z.zb.pos);
+	CString strFps = IntHexStr(z.fps);
+	CString strItf = CharStr(z.itf);
+	CString strDestErr = DecStr(z.destIdErrCnt);
+	CString strDestDif = DecStr(z.destIdDiff);
+	CString strPhyRx = DecStr(z.phyRxFrameCnt);
+	CString strFrameDif = DecStr(z.frameDiff);
 
 	m_zcdListCtrl.SetItemText(nItem, 0, strKind);
 	m_zcdListCtrl.SetItemText(nItem, 1, strUSB);
@@ -720,8 +720,6 @@ size_t CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex)
 	m_zcdListCtrl.SetItemText(nItem, 15, strPhyRx);
 	m_zcdListCtrl.SetItemText(nItem, 16, strPos);
 	m_zcdListCtrl.SetItemText(nItem, 17, strCnt);
-
-	return zcdIndex;
 }
 
 void CZiieDlg::UpdateScopeKind(byte dat)
@@ -1259,9 +1257,6 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		index = Parse_I2C(dataOUT, m_ivf);
 		ASSERT(index == 185);
 
-		index = UpdateZcdListCtrl(dataOUT, 119);
-		ASSERT(index == 185);
-
 		UpdateWriteBuffer();
 
 		UpdateCommandGUI(m_ivf.read);
@@ -1269,6 +1264,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		UpdateImuGUI(m_hImuListCtrl, m_ivf.txImu);
 		UpdateImuGUI(m_dImuListCtrl, m_ivf.rxImu);
 		UpdateZxxGUI(m_ivf.zxx);
+		UpdateZcdGUI(m_ivf.zcd);
 
 		L(RawString(dataOUT));
 		if (bRead == FALSE) break;
