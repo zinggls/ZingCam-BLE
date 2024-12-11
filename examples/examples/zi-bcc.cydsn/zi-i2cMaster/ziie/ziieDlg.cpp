@@ -1199,20 +1199,19 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		}
 
 		index = Parse_I2C(dataOUT, m_ivf);
-
-		UpdateImuGUI(m_hImuListCtrl, m_ivf.txImu);
-		UpdateImuGUI(m_dImuListCtrl, m_ivf.rxImu);
+		ASSERT(index == 46);
 
 		index = UpdateZxxListCtrl(dataOUT, index);
 		ASSERT(index == 119);
 		index = UpdateZcdListCtrl(dataOUT, index);
 		ASSERT(index == 185);
 
-		UpdateCommandGUI(m_ivf.read);
-
 		UpdateWriteBuffer();
 
+		UpdateCommandGUI(m_ivf.read);
 		UpdateStateGUI(m_ivf.state);
+		UpdateImuGUI(m_hImuListCtrl, m_ivf.txImu);
+		UpdateImuGUI(m_dImuListCtrl, m_ivf.rxImu);
 
 		L(RawString(dataOUT));
 		if (bRead == FALSE) break;
