@@ -151,6 +151,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_OPMODE_TX_COMBO, &CZiieDlg::OnCbnSelchangeOpmodeTxCombo)
 	ON_CBN_SELCHANGE(IDC_OPMODE_RX_COMBO, &CZiieDlg::OnCbnSelchangeOpmodeRxCombo)
 	ON_CBN_SELCHANGE(IDC_TX_IMU_TYPE_COMBO, &CZiieDlg::OnCbnSelchangeTxImuTypeCombo)
+	ON_CBN_SELCHANGE(IDC_TX_IMU_CALIB_COMBO, &CZiieDlg::OnCbnSelchangeTxImuCalibCombo)
 END_MESSAGE_MAP()
 
 
@@ -1422,4 +1423,16 @@ void CZiieDlg::OnCbnSelchangeTxImuTypeCombo()
 	CString str;
 	str.Format(_T("%d"), m_ivf.write.TxImuType);
 	m_writeBufferListCtrl.SetItemText(0, 7, str);
+}
+
+
+void CZiieDlg::OnCbnSelchangeTxImuCalibCombo()
+{
+	int nSel = m_txImuCalibCombo.GetCurSel();	//0x00 : (default) 0x01 : 자이로 보정 0x02 : 가속도 보정 0x03 : 지자계 보정 0x04 : 지자계 보정 종료
+
+	m_ivf.write.TxImuCalib = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_ivf.write.TxImuCalib);
+	m_writeBufferListCtrl.SetItemText(0, 8, str);
 }
