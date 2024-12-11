@@ -145,6 +145,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_I2C_WRITE_BUTTON, &CZiieDlg::OnBnClickedI2cWriteButton)
 	ON_CBN_SELCHANGE(IDC_SCOPE_KIND_COMBO, &CZiieDlg::OnSelchangeScopeKindCombo)
 	ON_CBN_SELCHANGE(IDC_SCOPE_OUT_COMBO, &CZiieDlg::OnSelchangeScopeOutCombo)
+	ON_CBN_SELCHANGE(IDC_WIRELESS_CHANNEL_MODE_COMBO, &CZiieDlg::OnSelchangeWirelessChannelModeCombo)
 END_MESSAGE_MAP()
 
 
@@ -1340,4 +1341,17 @@ void CZiieDlg::OnSelchangeScopeOutCombo()
 	CString str;
 	str.Format(_T("%d"), m_ivf.write.ScopeOut);
 	m_writeBufferListCtrl.SetItemText(0, 1, str);
+}
+
+
+void CZiieDlg::OnSelchangeWirelessChannelModeCombo()
+{
+	int nSel = m_wirelessChannelModeCombo.GetCurSel();
+	nSel += 1;	//인덱스 값은 0은 존재하지 않고 1부터 시작함 cf. "0x01 : 자동(Default) 0x02 : 수동"
+
+	m_ivf.write.WirelessChannelMode = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_ivf.write.WirelessChannelMode);
+	m_writeBufferListCtrl.SetItemText(0, 2, str);
 }

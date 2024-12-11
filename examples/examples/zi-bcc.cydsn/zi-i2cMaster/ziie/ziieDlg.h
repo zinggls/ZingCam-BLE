@@ -151,4 +151,5 @@ public:
 	IVF m_ivf;
 	afx_msg void OnSelchangeScopeKindCombo();
 	afx_msg void OnSelchangeScopeOutCombo();
+	afx_msg void OnSelchangeWirelessChannelModeCombo();
 };
