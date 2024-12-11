@@ -178,7 +178,6 @@ BOOL CZiieDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	m_bmpGreyCtrl.LoadBitmap(IDB_GREY_BITMAP);
 	m_bmpGreenCtrl.LoadBitmap(IDB_GREEN_BITMAP);
 	m_bmpYelloCtrl.LoadBitmap(IDB_YELLOW_BITMAP);
@@ -463,7 +462,6 @@ void CZiieDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
 
-	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 	m_pCom->ClosePort();
 	CoUninitialize();
 	delete m_pCom;
@@ -1290,7 +1288,6 @@ cleanup:
 
 void CZiieDlg::OnBnClickedI2cReadButton()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (bRead == FALSE) {
 		bRead = TRUE;
 		m_pReadThread = AfxBeginThread(I2C_Read, this);
@@ -1311,7 +1308,6 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 
 void CZiieDlg::OnTimer(UINT_PTR nIDEvent)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	UpdateData(FALSE);
 
 	CDialogEx::OnTimer(nIDEvent);
@@ -1326,7 +1322,6 @@ void CZiieDlg::OnBnClickedI2cWriteButton()
 
 void CZiieDlg::OnSelchangeScopeKindCombo()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	int nSel = m_scopeKindCombo.GetCurSel();
 	m_ivf.write.ScopeKind = nSel & 0xff;
 
