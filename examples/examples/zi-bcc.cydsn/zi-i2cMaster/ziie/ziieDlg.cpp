@@ -1209,7 +1209,6 @@ size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 	size_t index = 0;
 	index = ParseCommandData(dataOUT, index, ivf.read);
 	ASSERT(index == 11);
-	memcpy(&ivf.write, &ivf.read,sizeof(I2C_IVF_COMMAND));
 
 	index = ParseStateData(dataOUT, index, ivf.state);
 	ASSERT(index == 22);
