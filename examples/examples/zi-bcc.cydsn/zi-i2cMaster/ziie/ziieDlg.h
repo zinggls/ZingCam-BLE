@@ -172,13 +172,13 @@ public:
 	void UpdateRxState(byte dat1, byte dat2);
 	void UpdateBleState(byte dat);
 	void UpdateWriteBuffer();
-	static size_t UpdateCommandData(std::vector<byte>& dataOUT, size_t index, I2C_IVF_COMMAND& ic);
+	static size_t ParseCommandData(std::vector<byte>& dataOUT, size_t index, I2C_IVF_COMMAND& ic);
 	void UpdateCommandGUI(I2C_IVF_COMMAND& ic);
-	static size_t UpdateStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is);
+	static size_t ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is);
 	void UpdateStateGUI(I2C_STATE& is);
 	static CString RawString(std::vector<byte>& dataOUT);
 	static short ToShort(byte high, byte low);
-	static size_t UpdateImuData(std::vector<byte>& dataOUT, size_t index, IMU& imu);
+	static size_t ParseImuData(std::vector<byte>& dataOUT, size_t index, IMU& imu);
 	static size_t Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf);
 	static CString ShortToStr(short val);
 	void UpdateImuGUI(CListCtrl& listCtrl, IMU& i);

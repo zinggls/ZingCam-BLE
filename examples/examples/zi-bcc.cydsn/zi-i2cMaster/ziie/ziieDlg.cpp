@@ -1064,7 +1064,7 @@ void CZiieDlg::UpdateWriteBuffer()
 	}
 }
 
-size_t CZiieDlg::UpdateCommandData(std::vector<byte>& dataOUT, size_t index, I2C_IVF_COMMAND& ic)
+size_t CZiieDlg::ParseCommandData(std::vector<byte>& dataOUT, size_t index, I2C_IVF_COMMAND& ic)
 {
 	ic.ScopeKind = dataOUT[index++];
 	ic.ScopeOut = dataOUT[index++];
@@ -1095,7 +1095,7 @@ void CZiieDlg::UpdateCommandGUI(I2C_IVF_COMMAND& ic)
 	m_writeMap.SetAt(_T("RxImuCalib"), ic.RxImuCalib);
 }
 
-size_t CZiieDlg::UpdateStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is)
+size_t CZiieDlg::ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is)
 {
 	is.ScopeStateKind = dataOUT[index++];
 	is.ScopeStateOut = dataOUT[index++];
@@ -1136,7 +1136,7 @@ short CZiieDlg::ToShort(byte high, byte low)
 	return (high << 8) | low;
 }
 
-size_t CZiieDlg::UpdateImuData(std::vector<byte>& dataOUT, size_t index, IMU& imu)
+size_t CZiieDlg::ParseImuData(std::vector<byte>& dataOUT, size_t index, IMU& imu)
 {
 	imu.data1 = ToShort(dataOUT[index + 1], dataOUT[index]); index += 2;
 	imu.data2 = ToShort(dataOUT[index + 1], dataOUT[index]); index += 2;
@@ -1150,15 +1150,15 @@ size_t CZiieDlg::UpdateImuData(std::vector<byte>& dataOUT, size_t index, IMU& im
 size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 {
 	size_t index = 0;
-	index = UpdateCommandData(dataOUT, index, ivf.read);
+	index = ParseCommandData(dataOUT, index, ivf.read);
 	ASSERT(index == 11);
-	index = UpdateStateData(dataOUT, index, ivf.state);
+	index = ParseStateData(dataOUT, index, ivf.state);
 	ASSERT(index == 22);
 
-	index = UpdateImuData(dataOUT, index, ivf.txImu);
+	index = ParseImuData(dataOUT, index, ivf.txImu);
 	ASSERT(index == 34);
 
-	index = UpdateImuData(dataOUT, index, ivf.rxImu);
+	index = ParseImuData(dataOUT, index, ivf.rxImu);
 	ASSERT(index == 46);
 
 	return index;
