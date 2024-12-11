@@ -731,6 +731,21 @@ void CZiieDlg::UpdateZcdGUI(ZCD& z)
 	m_zcdListCtrl.SetItemText(nItem, 17, strCnt);
 }
 
+void CZiieDlg::UpdateWriteBufferGUI(I2C_IVF_COMMAND& ic)
+{
+	m_writeBufferListCtrl.SetItemText(0, 0, DecStr(ic.ScopeKind));
+	m_writeBufferListCtrl.SetItemText(0, 1, DecStr(ic.ScopeOut));
+	m_writeBufferListCtrl.SetItemText(0, 2, DecStr(ic.WirelessChannelMode));
+	m_writeBufferListCtrl.SetItemText(0, 3, DecStr(ic.WirelessChannelInfo));
+	m_writeBufferListCtrl.SetItemText(0, 4, DecStr(ic.OpmodeScope));
+	m_writeBufferListCtrl.SetItemText(0, 5, DecStr(ic.OpmodeTx));
+	m_writeBufferListCtrl.SetItemText(0, 6, DecStr(ic.OpmodeRx));
+	m_writeBufferListCtrl.SetItemText(0, 7, DecStr(ic.TxImuType));
+	m_writeBufferListCtrl.SetItemText(0, 8, DecStr(ic.TxImuCalib));
+	m_writeBufferListCtrl.SetItemText(0, 9, DecStr(ic.RxImuType));
+	m_writeBufferListCtrl.SetItemText(0,10, DecStr(ic.RxImuCalib));
+}
+
 void CZiieDlg::UpdateScopeKind(byte dat)
 {
 	m_strScopeKind = _T("종류: ");
@@ -1243,6 +1258,7 @@ void CZiieDlg::UpdateGUI(IVF& ivf)
 	UpdateImuGUI(m_dImuListCtrl, ivf.rxImu);
 	UpdateZxxGUI(ivf.zxx);
 	UpdateZcdGUI(ivf.zcd);
+	UpdateWriteBufferGUI(ivf.write);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)

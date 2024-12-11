@@ -65,6 +65,7 @@ public:
 	int InsertItem(CListCtrl& listCtrl, const CString& newItem);
 	void UpdateZxxGUI(ZXX& z);
 	void UpdateZcdGUI(ZCD& z);
+	void UpdateWriteBufferGUI(I2C_IVF_COMMAND& ic);
 	void UpdateScopeKind(byte dat);
 	void UpdateScopeOut(byte dat);
 	void UpdateScope(byte dat1, byte dat2);
