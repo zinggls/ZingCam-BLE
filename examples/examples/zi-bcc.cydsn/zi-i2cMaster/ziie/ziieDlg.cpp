@@ -259,6 +259,8 @@ BOOL CZiieDlg::OnInitDialog()
 	m_rxImuCalibCombo.AddString(_T("지자계 보정"));
 	m_rxImuCalibCombo.AddString(_T("지자계 보정 종료"));
 
+	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
+
 	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -439,6 +441,7 @@ void CZiieDlg::ResetI2CReadButton()
 	bRead = FALSE;
 	GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
 	GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(TRUE);
+	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
 	m_bleStateCtrl.ShowWindow(SW_HIDE);
 }
 
@@ -1378,6 +1381,7 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
 		GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(FALSE);
+		GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(TRUE);
 		m_bleStateCtrl.ShowWindow(SW_SHOW);
 	}
 	else {
