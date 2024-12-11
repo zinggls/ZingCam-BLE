@@ -64,12 +64,7 @@ typedef struct ZXX {
 	unsigned int pos;
 
 	//IMU_FIELDS (무선영상송신기의 IMU 데이터들로 BLE를 통해 수신기로 전달되는 데이터들)
-	short imu1;
-	short imu2;
-	short imu3;
-	short imu4;
-	short imu5;
-	short imuChecksum;
+	IMU txImu;
 
 	//USB_VND_PRD_FIELDS
 	unsigned int vnd;

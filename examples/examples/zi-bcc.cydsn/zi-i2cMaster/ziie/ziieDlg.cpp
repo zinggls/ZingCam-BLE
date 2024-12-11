@@ -1165,12 +1165,7 @@ size_t CZiieDlg::ParseZxxData(std::vector<byte>& dataOUT, size_t index, ZXX& zxx
 	zxx.cnt = ToInt(dataOUT,index);			index += 4;
 	zxx.pos = ToInt(dataOUT,index);			index += 4;
 
-	zxx.imu1 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
-	zxx.imu2 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
-	zxx.imu3 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
-	zxx.imu4 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
-	zxx.imu5 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
-	zxx.imuChecksum = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
+	index = ParseImuData(dataOUT, index, zxx.txImu);
 
 	zxx.vnd = ToInt(dataOUT,index);			index += 4;
 	zxx.prd = ToInt(dataOUT,index);			index += 4;
