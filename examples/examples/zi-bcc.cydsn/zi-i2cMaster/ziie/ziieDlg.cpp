@@ -85,6 +85,8 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strRxStateModem(_T("모뎀상태:"))
 	, m_strRxStateImu(_T("IMU상태:"))
 	, m_strBleState(_T("BLE상태:"))
+	, m_bReadBuffer(TRUE)
+	, m_bWriteBuffer(TRUE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -133,6 +135,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RX_IMU_CALIB_COMBO, m_rxImuCalibCombo);
 	DDX_Control(pDX, IDC_WRITE_BUFFER_LIST, m_writeBufferListCtrl);
 	DDX_Control(pDX, IDC_BLE_STATUS_LED_STATIC, m_bleStateCtrl);
+	DDX_Check(pDX, IDC_READ_BUFFER_CHECK, m_bReadBuffer);
+	DDX_Check(pDX, IDC_WRITE_BUFFER_CHECK, m_bWriteBuffer);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -154,6 +158,8 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_TX_IMU_CALIB_COMBO, &CZiieDlg::OnCbnSelchangeTxImuCalibCombo)
 	ON_CBN_SELCHANGE(IDC_RX_IMU_TYPE_COMBO, &CZiieDlg::OnCbnSelchangeRxImuTypeCombo)
 	ON_CBN_SELCHANGE(IDC_RX_IMU_CALIB_COMBO, &CZiieDlg::OnCbnSelchangeRxImuCalibCombo)
+	ON_BN_CLICKED(IDC_READ_BUFFER_CHECK, &CZiieDlg::OnBnClickedReadBufferCheck)
+	ON_BN_CLICKED(IDC_WRITE_BUFFER_CHECK, &CZiieDlg::OnBnClickedWriteBufferCheck)
 END_MESSAGE_MAP()
 
 
@@ -1267,7 +1273,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		ASSERT(index == READ_BUFFER_SIZE);
 		UpdateGUI(m_ivf);
 
-		L(RawString(dataOUT));
+		if(m_bReadBuffer) L(RawString(dataOUT));
 		if (bRead == FALSE) break;
 	}
 	return S_OK;
@@ -1349,9 +1355,11 @@ void CZiieDlg::OnTimer(UINT_PTR nIDEvent)
 
 void CZiieDlg::OnBnClickedI2cWriteButton()
 {
-	I2C_IVF_COMMAND& i = m_ivf.write;
-	L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
-		sizeof(I2C_IVF_COMMAND), i.ScopeKind, i.ScopeOut, i.WirelessChannelMode, i.WirelessChannelInfo, i.OpmodeScope, i.OpmodeTx, i.OpmodeRx, i.TxImuType, i.TxImuCalib, i.RxImuType, i.RxImuCalib);
+	if (m_bWriteBuffer) {
+		I2C_IVF_COMMAND& i = m_ivf.write;
+		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
+			sizeof(I2C_IVF_COMMAND), i.ScopeKind, i.ScopeOut, i.WirelessChannelMode, i.WirelessChannelInfo, i.OpmodeScope, i.OpmodeTx, i.OpmodeRx, i.TxImuType, i.TxImuCalib, i.RxImuType, i.RxImuCalib);
+	}
 }
 
 
@@ -1485,4 +1493,18 @@ void CZiieDlg::OnCbnSelchangeRxImuCalibCombo()
 	CString str;
 	str.Format(_T("%d"), m_ivf.write.RxImuCalib);
 	m_writeBufferListCtrl.SetItemText(0, 10, str);
+}
+
+
+void CZiieDlg::OnBnClickedReadBufferCheck()
+{
+	m_bReadBuffer = !m_bReadBuffer;
+	UpdateData(FALSE);
+}
+
+
+void CZiieDlg::OnBnClickedWriteBufferCheck()
+{
+	m_bWriteBuffer = !m_bWriteBuffer;
+	UpdateData(FALSE);
 }

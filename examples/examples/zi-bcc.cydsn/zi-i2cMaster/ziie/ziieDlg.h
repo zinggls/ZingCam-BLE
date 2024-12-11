@@ -164,4 +164,8 @@ public:
 	static CString DecStr(int val);
 	static CString CharStr(char c);
 	static CString IntHexStr(int val);
+	BOOL m_bReadBuffer;
+	BOOL m_bWriteBuffer;
+	afx_msg void OnBnClickedReadBufferCheck();
+	afx_msg void OnBnClickedWriteBufferCheck();
 };

@@ -65,6 +65,9 @@
 #define IDC_I2C_WRITE_BUTTON            1043
 #define IDC_LOGO_STATIC                 1044
 #define IDC_BLE_STATUS_LED_STATIC       1045
+#define IDC_READ_BUFFER_CHECK           1046
+#define IDC_CHECK2                      1047
+#define IDC_WRITE_BUFFER_CHECK          1047
 
 // Next default values for new objects
 // 
@@ -72,7 +75,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        136
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1046
+#define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
