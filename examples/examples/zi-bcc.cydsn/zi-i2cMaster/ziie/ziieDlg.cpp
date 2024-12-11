@@ -612,21 +612,21 @@ int CZiieDlg::InsertItem(CListCtrl& listCtrl, const CString& newItem)
 	return index;
 }
 
-static CString DecStr(int val)
+CString CZiieDlg::DecStr(int val)
 {
 	CString str;
 	str.Format(_T("%d"), val);
 	return str;
 }
 
-static CString CharStr(char c)
+CString CZiieDlg::CharStr(char c)
 {
 	CString str;
 	str.Format(_T("%c"), c);
 	return str;
 }
 
-static CString IntHexStr(int val)
+CString CZiieDlg::IntHexStr(int val)
 {
 	CString str;
 	str.Format(_T("0x%0X"), val);
