@@ -603,37 +603,48 @@ int CZiieDlg::InsertItem(CListCtrl& listCtrl, const CString& newItem)
 	return index;
 }
 
-size_t CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex)
+static CString DecStr(int val)
+{
+	CString str;
+	str.Format(_T("%d"), val);
+	return str;
+}
+
+static CString CharStr(char c)
+{
+	CString str;
+	str.Format(_T("%c"), c);
+	return str;
+}
+
+static CString IntHexStr(int val)
+{
+	CString str;
+	str.Format(_T("0x%0X"), val);
+	return str;
+}
+
+void CZiieDlg::UpdateZxxGUI(ZXX z)
 {
 	int nItem = InsertItem(m_zxxListCtrl, _T("ZXX"));
 
-	CString strKind = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
-	CString strUSB = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
-	CString strBND = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
-	CString strPPID = ToHex(dataOUT, zxxIndex);	zxxIndex += 4;
-	CString strDeviceID = ToHex(dataOUT, zxxIndex);	zxxIndex += 4;
-	CString strFMT = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
-	CString strIDX = ToIntStr(dataOUT, zxxIndex);	zxxIndex += 4;
-	CString strTrt = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
-	CString strAck = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
-	CString strPpc = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
-	CString strRun = ToCharStr(dataOUT, zxxIndex);	zxxIndex += 1;
-	CString strTxid = ToHex(dataOUT, zxxIndex); zxxIndex += 4;
-	CString strRxid = ToHex(dataOUT, zxxIndex); zxxIndex += 4;
-	CString strCnt = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
-	CString strPos = ToIntStr(dataOUT, zxxIndex); zxxIndex += 4;
-
-	//IMU 12bytes
-	zxxIndex += 12;
-
-	//ZCD_ADDITIONAL_FIELDS
-	size_t idx = zxxIndex;
-	CString strVND;
-	strVND.Format(_T("0x%02X%02X"), dataOUT[idx + 1], dataOUT[idx]);	zxxIndex += 4;
-
-	idx = zxxIndex;
-	CString strPRD;
-	strPRD.Format(_T("0x%02X%02X"), dataOUT[idx + 1], dataOUT[idx]);	zxxIndex += 4;
+	CString strKind = DecStr(z.kind);
+	CString strUSB = DecStr(z.usb);
+	CString strBND = CharStr(z.bnd);
+	CString strPPID = IntHexStr(z.ppid);
+	CString strDeviceID = IntHexStr(z.devid);
+	CString strFMT = DecStr(z.fmt);
+	CString strIDX = DecStr(z.idx);
+	CString strTrt = CharStr(z.trt);
+	CString strAck = CharStr(z.ack);
+	CString strPpc = CharStr(z.ppc);
+	CString strRun = CharStr(z.run);
+	CString strTxid = IntHexStr(z.txid);
+	CString strRxid = IntHexStr(z.rxid);
+	CString strCnt = DecStr(z.cnt);
+	CString strPos = IntHexStr(z.pos);
+	CString strVND = IntHexStr(z.vnd);
+	CString strPRD = IntHexStr(z.prd);
 
 	m_zxxListCtrl.SetItemText(nItem, 0, strKind);
 	m_zxxListCtrl.SetItemText(nItem, 1, strUSB);
@@ -663,14 +674,6 @@ size_t CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex)
 		m_zxxListCtrl.SetItemText(nItem, 2, _T(""));
 		m_zxxListCtrl.SetItemText(nItem, 3, _T(""));
 	}
-
-	/*
-	화기조준경 상태정보(종류,출력,배터리,IT상태,EO상태) : 5바이트
-	송신기 상태정보(배터리,모뎀상태,IMU상태) : 3바이트
-	상기 정보들을 ZXX구조체에 넣어서 BLE를 사용해 수신기로 보낸다. 즉, ZXX구조체 8바이트 증가
-	*/
-	zxxIndex += 8;
-	return zxxIndex;
 }
 
 size_t CZiieDlg::UpdateZcdListCtrl(std::vector<byte>& dataOUT, size_t zcdIndex)
@@ -1225,8 +1228,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		index = Parse_I2C(dataOUT, m_ivf);
 		ASSERT(index == 119);
 
-		index = UpdateZxxListCtrl(dataOUT, 46);
-		ASSERT(index == 119);
+		UpdateZxxGUI(m_ivf.zxx);
+
 		index = UpdateZcdListCtrl(dataOUT, 119);
 		ASSERT(index == 185);
 
