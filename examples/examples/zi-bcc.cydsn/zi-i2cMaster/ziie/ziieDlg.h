@@ -83,7 +83,6 @@ public:
 	void UpdateTxState(byte dat1, byte dat2, byte dat3);
 	void UpdateRxState(byte dat1, byte dat2);
 	void UpdateBleState(byte dat);
-	void UpdateWriteBuffer();
 	static size_t ParseCommandData(std::vector<byte>& dataOUT, size_t index, I2C_IVF_COMMAND& ic);
 	void UpdateCommandGUI(I2C_IVF_COMMAND& ic);
 	static size_t ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is);

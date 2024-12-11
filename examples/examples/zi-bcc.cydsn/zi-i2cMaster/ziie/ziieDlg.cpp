@@ -1035,22 +1035,6 @@ void CZiieDlg::UpdateBleState(byte dat)
 	m_strBleState += str;
 }
 
-void CZiieDlg::UpdateWriteBuffer()
-{
-	CString key;
-	byte value;
-	int index = 0;
-	POSITION pos = m_writeMap.GetStartPosition();
-	while (pos != nullptr) {
-		m_writeMap.GetNextAssoc(pos, key, value);
-
-		CString str;
-		str.Format(_T("%02X"), value);
-		m_writeBufferListCtrl.SetItemText(0, index, str);
-		index++;
-	}
-}
-
 size_t CZiieDlg::ParseCommandData(std::vector<byte>& dataOUT, size_t index, I2C_IVF_COMMAND& ic)
 {
 	ic.ScopeKind = dataOUT[index++];
@@ -1266,9 +1250,6 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		index = Parse_I2C(dataOUT, m_ivf);
 		ASSERT(index == READ_BUFFER_SIZE);
-
-		UpdateWriteBuffer();
-
 		UpdateGUI(m_ivf);
 
 		L(RawString(dataOUT));
