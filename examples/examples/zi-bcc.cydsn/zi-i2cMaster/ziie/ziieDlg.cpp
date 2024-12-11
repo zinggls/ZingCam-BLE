@@ -624,7 +624,7 @@ static CString IntHexStr(int val)
 	return str;
 }
 
-void CZiieDlg::UpdateZxxGUI(ZXX z)
+void CZiieDlg::UpdateZxxGUI(ZXX& z)
 {
 	int nItem = InsertItem(m_zxxListCtrl, _T("ZXX"));
 
@@ -676,7 +676,7 @@ void CZiieDlg::UpdateZxxGUI(ZXX z)
 	}
 }
 
-void CZiieDlg::UpdateZcdGUI(ZCD z)
+void CZiieDlg::UpdateZcdGUI(ZCD& z)
 {
 	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
 
