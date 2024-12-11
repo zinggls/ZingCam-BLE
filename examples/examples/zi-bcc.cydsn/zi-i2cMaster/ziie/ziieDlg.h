@@ -159,4 +159,5 @@ public:
 	afx_msg void OnCbnSelchangeTxImuTypeCombo();
 	afx_msg void OnCbnSelchangeTxImuCalibCombo();
 	afx_msg void OnCbnSelchangeRxImuTypeCombo();
+	afx_msg void OnCbnSelchangeRxImuCalibCombo();
 };
