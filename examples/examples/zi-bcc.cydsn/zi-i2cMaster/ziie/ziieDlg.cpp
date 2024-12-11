@@ -794,232 +794,232 @@ void CZiieDlg::UpdateScopeOut(byte dat)
 	m_strScopeOut += str;
 }
 
-void CZiieDlg::UpdateScope(byte dat1, byte dat2)
+void CZiieDlg::UpdateScope(byte scopeKind, byte scopeOut)
 {
-	UpdateScopeKind(dat1);
-	UpdateScopeOut(dat2);
+	UpdateScopeKind(scopeKind);
+	UpdateScopeOut(scopeOut);
 }
 
-void CZiieDlg::UpdateWirelessChannel(byte dat1, byte dat2)
+void CZiieDlg::UpdateWirelessChannel(byte mode, byte info)
 {
-	switch (dat1) {
+	switch (mode) {
 	case 0:
-		m_strWirelessChannelMode.Format(_T("모드: 자동(%x)"), dat1);
+		m_strWirelessChannelMode.Format(_T("모드: 자동(%x)"), mode);
 		break;
 	case 1:
-		m_strWirelessChannelMode.Format(_T("모드: 자동(Default)(%x)"), dat1);
+		m_strWirelessChannelMode.Format(_T("모드: 자동(Default)(%x)"), mode);
 		break;
 	case 2:
-		m_strWirelessChannelMode .Format(_T("모드: 수동(%x)"),dat1);
+		m_strWirelessChannelMode .Format(_T("모드: 수동(%x)"), mode);
 		break;
 	default:
-		m_strWirelessChannelMode.Format(_T("모드: 미정의(%x)"), dat1);
+		m_strWirelessChannelMode.Format(_T("모드: 미정의(%x)"), mode);
 		break;
 	}
 
-	switch (dat2) {
+	switch (info) {
 	case 0:
-		m_strWirelessChannelInfo.Format(_T("정보: 선택 안함(Default)(%x)"), dat2);
+		m_strWirelessChannelInfo.Format(_T("정보: 선택 안함(Default)(%x)"), info);
 		break;
 	case 1:
-		m_strWirelessChannelInfo.Format(_T("정보: 수동 1채널(%x)"), dat2);
+		m_strWirelessChannelInfo.Format(_T("정보: 수동 1채널(%x)"), info);
 		break;
 	case 2:
-		m_strWirelessChannelInfo.Format(_T("정보: 수동 2채널(%x)"), dat2);
+		m_strWirelessChannelInfo.Format(_T("정보: 수동 2채널(%x)"), info);
 		break;
 	default:
-		m_strWirelessChannelInfo.Format(_T("정보: 미정의(%x)"), dat2);
+		m_strWirelessChannelInfo.Format(_T("정보: 미정의(%x)"), info);
 		break;
 	}
 }
 
-CString CZiieDlg::Opmode(byte dat)
+CString CZiieDlg::Opmode(byte mode)
 {
 	CString str;
-	switch (dat) {
+	switch (mode) {
 	case 0:
-		str.Format(_T("(%x)"), dat);
+		str.Format(_T("(%x)"), mode);
 		break;
 	case 1:
-		str.Format(_T("운용(%x)"), dat);
+		str.Format(_T("운용(%x)"), mode);
 		break;
 	case 2:
-		str.Format(_T("대기(%x)"), dat);
+		str.Format(_T("대기(%x)"), mode);
 		break;
 	case 4:
-		str.Format(_T("절전(%x)"), dat);
+		str.Format(_T("절전(%x)"), mode);
 		break;
 	default:
-		str.Format(_T("미정의(%x)"), dat);
+		str.Format(_T("미정의(%x)"), mode);
 		break;
 	}
 	return str;
 }
 
-void CZiieDlg::UpdateOpmode(byte dat1, byte dat2, byte dat3)
+void CZiieDlg::UpdateOpmode(byte scope, byte tx, byte rx)
 {
-	m_strOpmodeScope = _T("화기:") + Opmode(dat1);
+	m_strOpmodeScope = _T("화기:") + Opmode(scope);
 
-	m_strOpmodeTx = _T("송신기:") + Opmode(dat2);
+	m_strOpmodeTx = _T("송신기:") + Opmode(tx);
 
-	m_strOpmodeRx = _T("수신기:") + Opmode(dat3);
+	m_strOpmodeRx = _T("수신기:") + Opmode(rx);
 }
 
-void CZiieDlg::UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byte dat2)
+void CZiieDlg::UpdateXIMU(CString& strImuType, CString& strCalib, byte type, byte calib)
 {
-	switch (dat1) {
+	switch (type) {
 	case 0:
-		strImuType.Format(_T("타입:*Euler(%x)"), dat1);
+		strImuType.Format(_T("타입:*Euler(%x)"), type);
 		break;
 	case 1:
-		strImuType.Format(_T("타입:Quaternion(%x)"), dat1);
+		strImuType.Format(_T("타입:Quaternion(%x)"), type);
 		break;
 	default:
-		strImuType.Format(_T("타입:미정의(%x)"), dat1);
+		strImuType.Format(_T("타입:미정의(%x)"), type);
 		break;
 	}
 
-	switch (dat2)
+	switch (calib)
 	{
 	case 0:
-		strCalib.Format(_T("보정:*(%x)"), dat2);
+		strCalib.Format(_T("보정:*(%x)"), calib);
 		break;
 	case 1:
-		strCalib.Format(_T("보정:자이로(%x)"), dat2);
+		strCalib.Format(_T("보정:자이로(%x)"), calib);
 		break;
 	case 2:
-		strCalib.Format(_T("보정:가속도(%x)"), dat2);
+		strCalib.Format(_T("보정:가속도(%x)"), calib);
 		break;
 	case 3:
-		strCalib.Format(_T("보정:지자계S(%x)"), dat2);
+		strCalib.Format(_T("보정:지자계S(%x)"), calib);
 		break;
 	case 4:
-		strCalib.Format(_T("보정:지자계E(%x)"), dat2);
+		strCalib.Format(_T("보정:지자계E(%x)"), calib);
 		break;
 	default:
 		break;
 	}
 }
 
-void CZiieDlg::UpdateScopeStateKind(byte dat)
+void CZiieDlg::UpdateScopeStateKind(byte kind)
 {
 	m_strScopeStateKind = _T("종류: ");
 
 	CString str;
-	switch (dat) {
+	switch (kind) {
 	case 1:
-		str.Format(_T("EO(%x)"), dat);
+		str.Format(_T("EO(%x)"), kind);
 		break;
 	case 2:
-		str.Format(_T("IR백상(%x)"), dat);
+		str.Format(_T("IR백상(%x)"), kind);
 		break;
 	case 3:
-		str.Format(_T("IR흑상(%x)"), dat);
+		str.Format(_T("IR흑상(%x)"), kind);
 		break;
 	case 4:
-		str.Format(_T("경II EO(%x)"), dat);
+		str.Format(_T("경II EO(%x)"), kind);
 		break;
 	case 8:
-		str.Format(_T("경II IR(%x)"), dat);
+		str.Format(_T("경II IR(%x)"), kind);
 		break;
 	default:
-		str.Format(_T("미정의(%x)"), dat);
+		str.Format(_T("미정의(%x)"), kind);
 		break;
 	}
 	m_strScopeStateKind += str;
 }
 
-void CZiieDlg::UpdateScopeStateOut(byte dat)
+void CZiieDlg::UpdateScopeStateOut(byte out)
 {
 	m_strScopeStateOut = _T("출력: ");
 
 	CString str;
-	switch (dat) {
+	switch (out) {
 	case 0:
-		str.Format(_T("출력(%x)"), dat);
+		str.Format(_T("출력(%x)"), out);
 		break;
 	case 1:
-		str.Format(_T("미출력(%x)"), dat);
+		str.Format(_T("미출력(%x)"), out);
 		break;
 	default:
-		str.Format(_T("미정의(%x)"), dat);
+		str.Format(_T("미정의(%x)"), out);
 		break;
 	}
 	m_strScopeStateOut += str;
 }
 
-void CZiieDlg::BatteryInfo(CString& str, byte dat)
+void CZiieDlg::BatteryInfo(CString& str, byte val)
 {
-	if (dat < 0 || dat>100) {
-		str.Format(_T("배터리: 범위밖(%d)"), dat);
+	if (val < 0 || val>100) {
+		str.Format(_T("배터리: 범위밖(%d)"), val);
 		return;
 	}
 
-	str.Format(_T("배터리: %d%%"), dat);
+	str.Format(_T("배터리: %d%%"), val);
 }
 
-void CZiieDlg::UpdateScopeStateBattery(byte dat)
+void CZiieDlg::UpdateScopeStateBattery(byte val)
 {
-	BatteryInfo(m_strScopeStateBattery, dat);
+	BatteryInfo(m_strScopeStateBattery, val);
 }
 
-CString CZiieDlg::ModuleSanity(CString strName, byte dat, byte errCode)
+CString CZiieDlg::ModuleSanity(CString strName, byte code, byte errCode)
 {
 	CString strResult(strName);
 
 	CString str;
-	if (dat == 0) {
-		str.Format(_T("정상(%x)"), dat);
+	if (code == 0) {
+		str.Format(_T("정상(%x)"), code);
 	}
-	else if (dat == errCode) {
-		str.Format(_T("모듈이상(%x)"), dat);
+	else if (code == errCode) {
+		str.Format(_T("모듈이상(%x)"), code);
 	}
 	else {
-		str.Format(_T("미정의(%x)"), dat);
+		str.Format(_T("미정의(%x)"), code);
 	}
 	return strResult + str;
 }
 
-void CZiieDlg::UpdateScopeStateIR(byte dat)
+void CZiieDlg::UpdateScopeStateIR(byte code)
 {
 	/*
 	0x00 : 정상
 	0xE1 : 화기조준경 IR 모듈 이상
 	0xff : unkown
 	*/
-	m_strScopeStateIR = ModuleSanity(_T("IR상태: "), dat, 0xE1);
+	m_strScopeStateIR = ModuleSanity(_T("IR상태: "), code, 0xE1);
 }
 
-void CZiieDlg::UpdateScopeStateEO(byte dat)
+void CZiieDlg::UpdateScopeStateEO(byte code)
 {
 	/*
 	0x00 : 정상
 	0xE2 : 화기조준경 EO 모듈 이상
 	0xff : unkown
 	*/
-	m_strScopeStateEO = ModuleSanity(_T("EO상태: "), dat, 0xE2);
+	m_strScopeStateEO = ModuleSanity(_T("EO상태: "), code, 0xE2);
 }
 
-void CZiieDlg::UpdateScopeState(byte dat1, byte dat2, byte dat3, byte dat4, byte dat5)
+void CZiieDlg::UpdateScopeState(byte kind, byte out, byte val, byte irCode, byte eoCode)
 {
-	UpdateScopeStateKind(dat1);
-	UpdateScopeStateOut(dat2);
-	UpdateScopeStateBattery(dat3);
-	UpdateScopeStateIR(dat4);
-	UpdateScopeStateEO(dat5);
+	UpdateScopeStateKind(kind);
+	UpdateScopeStateOut(out);
+	UpdateScopeStateBattery(val);
+	UpdateScopeStateIR(irCode);
+	UpdateScopeStateEO(eoCode);
 }
 
-void CZiieDlg::UpdateTxState(byte dat1, byte dat2, byte dat3)
+void CZiieDlg::UpdateTxState(byte val, byte modemCode, byte imuCode)
 {
-	BatteryInfo(m_strTxStateBattery, dat1);
-	m_strTxStateModem = ModuleSanity(_T("모뎀상태: "), dat2, 0xE3);
-	m_strTxStateImu = ModuleSanity(_T("IMU상태: "), dat3, 0xE5);
+	BatteryInfo(m_strTxStateBattery, val);
+	m_strTxStateModem = ModuleSanity(_T("모뎀상태: "), modemCode, 0xE3);
+	m_strTxStateImu = ModuleSanity(_T("IMU상태: "), imuCode, 0xE5);
 }
 
-void CZiieDlg::UpdateRxState(byte dat1, byte dat2)
+void CZiieDlg::UpdateRxState(byte modemCode, byte imuCode)
 {
-	m_strRxStateModem = ModuleSanity(_T("모뎀상태: "), dat1, 0xE4);
-	m_strRxStateImu = ModuleSanity(_T("IMU상태: "), dat2, 0xE6);
+	m_strRxStateModem = ModuleSanity(_T("모뎀상태: "), modemCode, 0xE4);
+	m_strRxStateImu = ModuleSanity(_T("IMU상태: "), imuCode, 0xE6);
 }
 
 void CZiieDlg::UpdateBleState(byte dat)
