@@ -87,6 +87,17 @@ typedef struct ZXX {
 	char txStateIMU;
 } ZXX;
 
+typedef struct ZCD {
+	ZING_BASE zb;
+
+	unsigned int fps;
+	char itf;
+	unsigned int destIdErrCnt;
+	int destIdDiff;
+	unsigned int phyRxFrameCnt;
+	int frameDiff;
+} ZCD;
+
 typedef struct IVF{
 	I2C_IVF_COMMAND read;
 	I2C_IVF_COMMAND write;
@@ -94,6 +105,7 @@ typedef struct IVF{
 	IMU txImu;
 	IMU rxImu;
 	ZXX zxx;
+	ZCD zcd;
 } IVF;
 
 class CCom;
