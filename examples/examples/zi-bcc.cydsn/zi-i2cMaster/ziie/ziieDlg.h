@@ -46,12 +46,55 @@ typedef struct IMU {
 	short checksum;
 } IMU;
 
+typedef struct ZXX {
+	int kind;
+	int usb;
+	char bnd;
+	unsigned int ppid;
+	unsigned int devid;
+	int fmt;
+	int idx;
+	char trt;
+	char ack;
+	char ppc;
+	char run;
+	unsigned int txid;
+	unsigned int rxid;
+	unsigned int cnt;
+	unsigned int pos;
+
+	//IMU_FIELDS (무선영상송신기의 IMU 데이터들로 BLE를 통해 수신기로 전달되는 데이터들)
+	short imu1;
+	short imu2;
+	short imu3;
+	short imu4;
+	short imu5;
+	short imuChecksum;
+
+	//USB_VND_PRD_FIELDS
+	unsigned int vnd;
+	unsigned int prd;
+
+	//SCOPE_STATE_INFO_FIELDS
+	char scopeStateKind;
+	char scopeStateOut;
+	char scopeStateBattery;
+	char scopeStateIR;
+	char scopeStateEO;
+
+	//TX_STATE_INFO_FIELDS
+    char txStateBattery;
+	char txStateModem;
+	char txStateIMU;
+} ZXX;
+
 typedef struct IVF{
 	I2C_IVF_COMMAND read;
 	I2C_IVF_COMMAND write;
 	I2C_STATE state;
 	IMU txImu;
 	IMU rxImu;
+	ZXX zxx;
 } IVF;
 
 class CCom;
