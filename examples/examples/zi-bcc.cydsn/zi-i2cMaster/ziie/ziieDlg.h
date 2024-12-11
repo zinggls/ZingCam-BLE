@@ -46,7 +46,7 @@ typedef struct IMU {
 	short checksum;
 } IMU;
 
-typedef struct ZXX {
+typedef struct ZING_BASE {
 	int kind;
 	int usb;
 	char bnd;
@@ -62,6 +62,10 @@ typedef struct ZXX {
 	unsigned int rxid;
 	unsigned int cnt;
 	unsigned int pos;
+} ZING_BASE;
+
+typedef struct ZXX {
+	ZING_BASE zb;
 
 	//IMU_FIELDS (무선영상송신기의 IMU 데이터들로 BLE를 통해 수신기로 전달되는 데이터들)
 	IMU txImu;

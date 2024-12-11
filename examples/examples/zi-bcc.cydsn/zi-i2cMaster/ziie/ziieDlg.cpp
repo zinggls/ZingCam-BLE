@@ -628,21 +628,21 @@ void CZiieDlg::UpdateZxxGUI(ZXX z)
 {
 	int nItem = InsertItem(m_zxxListCtrl, _T("ZXX"));
 
-	CString strKind = DecStr(z.kind);
-	CString strUSB = DecStr(z.usb);
-	CString strBND = CharStr(z.bnd);
-	CString strPPID = IntHexStr(z.ppid);
-	CString strDeviceID = IntHexStr(z.devid);
-	CString strFMT = DecStr(z.fmt);
-	CString strIDX = DecStr(z.idx);
-	CString strTrt = CharStr(z.trt);
-	CString strAck = CharStr(z.ack);
-	CString strPpc = CharStr(z.ppc);
-	CString strRun = CharStr(z.run);
-	CString strTxid = IntHexStr(z.txid);
-	CString strRxid = IntHexStr(z.rxid);
-	CString strCnt = DecStr(z.cnt);
-	CString strPos = IntHexStr(z.pos);
+	CString strKind = DecStr(z.zb.kind);
+	CString strUSB = DecStr(z.zb.usb);
+	CString strBND = CharStr(z.zb.bnd);
+	CString strPPID = IntHexStr(z.zb.ppid);
+	CString strDeviceID = IntHexStr(z.zb.devid);
+	CString strFMT = DecStr(z.zb.fmt);
+	CString strIDX = DecStr(z.zb.idx);
+	CString strTrt = CharStr(z.zb.trt);
+	CString strAck = CharStr(z.zb.ack);
+	CString strPpc = CharStr(z.zb.ppc);
+	CString strRun = CharStr(z.zb.run);
+	CString strTxid = IntHexStr(z.zb.txid);
+	CString strRxid = IntHexStr(z.zb.rxid);
+	CString strCnt = DecStr(z.zb.cnt);
+	CString strPos = IntHexStr(z.zb.pos);
 	CString strVND = IntHexStr(z.vnd);
 	CString strPRD = IntHexStr(z.prd);
 
@@ -1138,21 +1138,21 @@ size_t CZiieDlg::ParseImuData(std::vector<byte>& dataOUT, size_t index, IMU& imu
 
 size_t CZiieDlg::ParseZxxData(std::vector<byte>& dataOUT, size_t index, ZXX& zxx)
 {
-	zxx.kind = ToInt(dataOUT,index);		index += 4;
-	zxx.usb = ToInt(dataOUT,index);			index += 4;
-	zxx.bnd = dataOUT[index];				index += 1;
-	zxx.ppid = ToInt(dataOUT,index);		index += 4;
-	zxx.devid = ToInt(dataOUT,index);		index += 4;
-	zxx.fmt = ToInt(dataOUT,index);			index += 4;
-	zxx.idx = ToInt(dataOUT,index);			index += 4;
-	zxx.trt = dataOUT[index];				index += 1;
-	zxx.ack = dataOUT[index];				index += 1;
-	zxx.ppc = dataOUT[index];				index += 1;
-	zxx.run = dataOUT[index];				index += 1;
-	zxx.txid = ToInt(dataOUT,index);		index += 4;
-	zxx.rxid = ToInt(dataOUT,index);		index += 4;
-	zxx.cnt = ToInt(dataOUT,index);			index += 4;
-	zxx.pos = ToInt(dataOUT,index);			index += 4;
+	zxx.zb.kind = ToInt(dataOUT,index);		index += 4;
+	zxx.zb.usb = ToInt(dataOUT,index);		index += 4;
+	zxx.zb.bnd = dataOUT[index];			index += 1;
+	zxx.zb.ppid = ToInt(dataOUT,index);		index += 4;
+	zxx.zb.devid = ToInt(dataOUT,index);	index += 4;
+	zxx.zb.fmt = ToInt(dataOUT,index);		index += 4;
+	zxx.zb.idx = ToInt(dataOUT,index);		index += 4;
+	zxx.zb.trt = dataOUT[index];			index += 1;
+	zxx.zb.ack = dataOUT[index];			index += 1;
+	zxx.zb.ppc = dataOUT[index];			index += 1;
+	zxx.zb.run = dataOUT[index];			index += 1;
+	zxx.zb.txid = ToInt(dataOUT,index);		index += 4;
+	zxx.zb.rxid = ToInt(dataOUT,index);		index += 4;
+	zxx.zb.cnt = ToInt(dataOUT,index);		index += 4;
+	zxx.zb.pos = ToInt(dataOUT,index);		index += 4;
 
 	index = ParseImuData(dataOUT, index, zxx.txImu);
 
