@@ -770,8 +770,6 @@ void CZiieDlg::UpdateScopeKind(byte dat)
 		break;
 	}
 	m_strScopeKind += str;
-
-	m_writeMap.SetAt(_T("ScopeKind"), dat);
 }
 
 void CZiieDlg::UpdateScopeOut(byte dat)
@@ -794,8 +792,6 @@ void CZiieDlg::UpdateScopeOut(byte dat)
 		break;
 	}
 	m_strScopeOut += str;
-
-	m_writeMap.SetAt(_T("ScopeOut"), dat);
 }
 
 void CZiieDlg::UpdateScope(byte dat1, byte dat2)
@@ -820,7 +816,6 @@ void CZiieDlg::UpdateWirelessChannel(byte dat1, byte dat2)
 		m_strWirelessChannelMode.Format(_T("모드: 미정의(%x)"), dat1);
 		break;
 	}
-	m_writeMap.SetAt(_T("WirelessChannelMode"), dat1);
 
 	switch (dat2) {
 	case 0:
@@ -836,7 +831,6 @@ void CZiieDlg::UpdateWirelessChannel(byte dat1, byte dat2)
 		m_strWirelessChannelInfo.Format(_T("정보: 미정의(%x)"), dat2);
 		break;
 	}
-	m_writeMap.SetAt(_T("WirelessChannelInfo"), dat2);
 }
 
 CString CZiieDlg::Opmode(byte dat)
@@ -865,13 +859,10 @@ CString CZiieDlg::Opmode(byte dat)
 void CZiieDlg::UpdateOpmode(byte dat1, byte dat2, byte dat3)
 {
 	m_strOpmodeScope = _T("화기:") + Opmode(dat1);
-	m_writeMap.SetAt(_T("OpmodeScope"), dat1);
 
 	m_strOpmodeTx = _T("송신기:") + Opmode(dat2);
-	m_writeMap.SetAt(_T("OpmodeTx"), dat2);
 
 	m_strOpmodeRx = _T("수신기:") + Opmode(dat3);
-	m_writeMap.SetAt(_T("OpmodeRx"), dat3);
 }
 
 void CZiieDlg::UpdateXIMU(CString& strImuType, CString& strCalib, byte dat1, byte dat2)
@@ -1086,12 +1077,7 @@ void CZiieDlg::UpdateCommandGUI(I2C_IVF_COMMAND& ic)
 	UpdateOpmode(ic.OpmodeScope, ic.OpmodeTx, ic.OpmodeRx);
 
 	UpdateXIMU(m_strTxImuType, m_strTxImuCalib, ic.TxImuType, ic.TxImuCalib);
-	m_writeMap.SetAt(_T("TxImuType"), ic.TxImuType);
-	m_writeMap.SetAt(_T("TxImuCalib"), ic.TxImuCalib);
-
 	UpdateXIMU(m_strRxImuType, m_strRxImuCalib, ic.RxImuType, ic.RxImuCalib);
-	m_writeMap.SetAt(_T("RxImuType"), ic.RxImuType);
-	m_writeMap.SetAt(_T("RxImuCalib"), ic.RxImuCalib);
 }
 
 size_t CZiieDlg::ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is)
