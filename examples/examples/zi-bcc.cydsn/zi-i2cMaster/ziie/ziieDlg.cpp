@@ -1349,7 +1349,9 @@ void CZiieDlg::OnTimer(UINT_PTR nIDEvent)
 
 void CZiieDlg::OnBnClickedI2cWriteButton()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	I2C_IVF_COMMAND& i = m_ivf.write;
+	L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
+		sizeof(I2C_IVF_COMMAND), i.ScopeKind, i.ScopeOut, i.WirelessChannelMode, i.WirelessChannelInfo, i.OpmodeScope, i.OpmodeTx, i.OpmodeRx, i.TxImuType, i.TxImuCalib, i.RxImuType, i.RxImuCalib);
 }
 
 
