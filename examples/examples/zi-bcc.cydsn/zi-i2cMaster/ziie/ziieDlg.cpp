@@ -210,6 +210,7 @@ BOOL CZiieDlg::OnInitDialog()
 	m_scopeOutCombo.AddString(_T("조준경 영상출력"));
 	m_scopeOutCombo.AddString(_T("조준경 영상미출력"));
 
+	m_wirelessChannelModeCombo.AddString(_T("자동"));
 	m_wirelessChannelModeCombo.AddString(_T("자동(Default)"));
 	m_wirelessChannelModeCombo.AddString(_T("수동"));
 
@@ -806,6 +807,9 @@ void CZiieDlg::UpdateScope(byte dat1, byte dat2)
 void CZiieDlg::UpdateWirelessChannel(byte dat1, byte dat2)
 {
 	switch (dat1) {
+	case 0:
+		m_strWirelessChannelMode.Format(_T("모드: 자동(%x)"), dat1);
+		break;
 	case 1:
 		m_strWirelessChannelMode.Format(_T("모드: 자동(Default)(%x)"), dat1);
 		break;
@@ -1369,8 +1373,7 @@ void CZiieDlg::OnSelchangeScopeOutCombo()
 
 void CZiieDlg::OnSelchangeWirelessChannelModeCombo()
 {
-	int nSel = m_wirelessChannelModeCombo.GetCurSel();
-	nSel += 1;	//인덱스 값은 0은 존재하지 않고 1부터 시작함 cf. "0x01 : 자동(Default) 0x02 : 수동"
+	int nSel = m_wirelessChannelModeCombo.GetCurSel();	//"0x0: 자동(ICD에는 정의되어 있지 않으나 일관성을 위해 부여함) 0x01 : 자동(Default) 0x02 : 수동"
 
 	m_ivf.write.WirelessChannelMode = nSel & 0xff;
 
