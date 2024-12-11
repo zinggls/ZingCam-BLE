@@ -1203,13 +1203,6 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		UpdateImuGUI(m_hImuListCtrl, m_ivf.txImu);
 		UpdateImuGUI(m_dImuListCtrl, m_ivf.rxImu);
 
-		/*
-		index = UpdateImuListCtrl(m_hImuListCtrl, dataOUT, 22);
-		ASSERT(index == 34);
-		index = UpdateImuListCtrl(m_dImuListCtrl, dataOUT, 34);
-		ASSERT(index == 46);
-		*/
-
 		index = UpdateZxxListCtrl(dataOUT, index);
 		ASSERT(index == 119);
 		index = UpdateZcdListCtrl(dataOUT, index);
