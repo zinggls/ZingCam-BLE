@@ -156,4 +156,5 @@ public:
 	afx_msg void OnCbnSelchangeOpmodeScopeCombo();
 	afx_msg void OnCbnSelchangeOpmodeTxCombo();
 	afx_msg void OnCbnSelchangeOpmodeRxCombo();
+	afx_msg void OnCbnSelchangeTxImuTypeCombo();
 };

@@ -150,6 +150,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_OPMODE_SCOPE_COMBO, &CZiieDlg::OnCbnSelchangeOpmodeScopeCombo)
 	ON_CBN_SELCHANGE(IDC_OPMODE_TX_COMBO, &CZiieDlg::OnCbnSelchangeOpmodeTxCombo)
 	ON_CBN_SELCHANGE(IDC_OPMODE_RX_COMBO, &CZiieDlg::OnCbnSelchangeOpmodeRxCombo)
+	ON_CBN_SELCHANGE(IDC_TX_IMU_TYPE_COMBO, &CZiieDlg::OnCbnSelchangeTxImuTypeCombo)
 END_MESSAGE_MAP()
 
 
@@ -1409,4 +1410,16 @@ void CZiieDlg::OnCbnSelchangeOpmodeRxCombo()
 	CString str;
 	str.Format(_T("%d"), m_ivf.write.OpmodeRx);
 	m_writeBufferListCtrl.SetItemText(0, 6, str);
+}
+
+
+void CZiieDlg::OnCbnSelchangeTxImuTypeCombo()
+{
+	int nSel = m_txImuTypeCombo.GetCurSel();	//0x00 : Euler Angle (Default) 0x01 : Quaternion
+
+	m_ivf.write.TxImuType = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_ivf.write.TxImuType);
+	m_writeBufferListCtrl.SetItemText(0, 7, str);
 }
