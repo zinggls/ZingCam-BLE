@@ -148,6 +148,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_WIRELESS_CHANNEL_MODE_COMBO, &CZiieDlg::OnSelchangeWirelessChannelModeCombo)
 	ON_CBN_SELCHANGE(IDC_WIRELESS_CHANNEL_INFO_COMBO, &CZiieDlg::OnSelchangeWirelessChannelInfoCombo)
 	ON_CBN_SELCHANGE(IDC_OPMODE_SCOPE_COMBO, &CZiieDlg::OnCbnSelchangeOpmodeScopeCombo)
+	ON_CBN_SELCHANGE(IDC_OPMODE_TX_COMBO, &CZiieDlg::OnCbnSelchangeOpmodeTxCombo)
 END_MESSAGE_MAP()
 
 
@@ -1381,4 +1382,17 @@ void CZiieDlg::OnCbnSelchangeOpmodeScopeCombo()
 	CString str;
 	str.Format(_T("%d"), m_ivf.write.OpmodeScope);
 	m_writeBufferListCtrl.SetItemText(0, 4, str);
+}
+
+
+void CZiieDlg::OnCbnSelchangeOpmodeTxCombo()
+{
+	int nSel = m_opmodeTxCombo.GetCurSel();	//0x00 : (default) 0x01 : 운용모드 0x02 : 대기모드 0x04 : 절전모드
+
+	m_ivf.write.OpmodeTx = nSel & 0xff;
+	if (nSel == 3) m_ivf.write.OpmodeTx++;	//세번째 선택은 0x04 절전모드로 정의되어 값을 증가 시킴
+
+	CString str;
+	str.Format(_T("%d"), m_ivf.write.OpmodeTx);
+	m_writeBufferListCtrl.SetItemText(0, 5, str);
 }
