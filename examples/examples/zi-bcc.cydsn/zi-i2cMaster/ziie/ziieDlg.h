@@ -168,4 +168,5 @@ public:
 	BOOL m_bWriteBuffer;
 	afx_msg void OnBnClickedReadBufferCheck();
 	afx_msg void OnBnClickedWriteBufferCheck();
+	afx_msg void OnBnClickedRawClearButton();
 };

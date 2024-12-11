@@ -160,6 +160,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_RX_IMU_CALIB_COMBO, &CZiieDlg::OnCbnSelchangeRxImuCalibCombo)
 	ON_BN_CLICKED(IDC_READ_BUFFER_CHECK, &CZiieDlg::OnBnClickedReadBufferCheck)
 	ON_BN_CLICKED(IDC_WRITE_BUFFER_CHECK, &CZiieDlg::OnBnClickedWriteBufferCheck)
+	ON_BN_CLICKED(IDC_RAW_CLEAR_BUTTON, &CZiieDlg::OnBnClickedRawClearButton)
 END_MESSAGE_MAP()
 
 
@@ -1507,4 +1508,10 @@ void CZiieDlg::OnBnClickedWriteBufferCheck()
 {
 	m_bWriteBuffer = !m_bWriteBuffer;
 	UpdateData(FALSE);
+}
+
+
+void CZiieDlg::OnBnClickedRawClearButton()
+{
+	m_log.ResetContent();
 }
