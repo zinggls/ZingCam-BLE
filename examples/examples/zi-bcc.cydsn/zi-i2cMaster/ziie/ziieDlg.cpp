@@ -146,6 +146,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_SCOPE_KIND_COMBO, &CZiieDlg::OnSelchangeScopeKindCombo)
 	ON_CBN_SELCHANGE(IDC_SCOPE_OUT_COMBO, &CZiieDlg::OnSelchangeScopeOutCombo)
 	ON_CBN_SELCHANGE(IDC_WIRELESS_CHANNEL_MODE_COMBO, &CZiieDlg::OnSelchangeWirelessChannelModeCombo)
+	ON_CBN_SELCHANGE(IDC_WIRELESS_CHANNEL_INFO_COMBO, &CZiieDlg::OnSelchangeWirelessChannelInfoCombo)
 END_MESSAGE_MAP()
 
 
@@ -1354,4 +1355,16 @@ void CZiieDlg::OnSelchangeWirelessChannelModeCombo()
 	CString str;
 	str.Format(_T("%d"), m_ivf.write.WirelessChannelMode);
 	m_writeBufferListCtrl.SetItemText(0, 2, str);
+}
+
+
+void CZiieDlg::OnSelchangeWirelessChannelInfoCombo()
+{
+	int nSel = m_wirelessChannelInfoCombo.GetCurSel();	//0x00 : 선택 안함(Default) 0x01 : 수동 1채널 0x02 : 수동 2채널
+
+	m_ivf.write.WirelessChannelInfo = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_ivf.write.WirelessChannelInfo);
+	m_writeBufferListCtrl.SetItemText(0, 3, str);
 }

@@ -152,4 +152,5 @@ public:
 	afx_msg void OnSelchangeScopeKindCombo();
 	afx_msg void OnSelchangeScopeOutCombo();
 	afx_msg void OnSelchangeWirelessChannelModeCombo();
+	afx_msg void OnSelchangeWirelessChannelInfoCombo();
 };
