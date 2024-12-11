@@ -1170,6 +1170,34 @@ size_t CZiieDlg::ParseZxxData(std::vector<byte>& dataOUT, size_t index, ZXX& zxx
 	return index;
 }
 
+size_t CZiieDlg::ParseZcdData(std::vector<byte>& dataOUT, size_t index, ZCD& zcd)
+{
+	zcd.zb.kind = ToInt(dataOUT, index);		index += 4;
+	zcd.zb.usb = ToInt(dataOUT, index);			index += 4;
+	zcd.zb.bnd = dataOUT[index];				index += 1;
+	zcd.zb.ppid = ToInt(dataOUT, index);		index += 4;
+	zcd.zb.devid = ToInt(dataOUT, index);		index += 4;
+	zcd.zb.fmt = ToInt(dataOUT, index);			index += 4;
+	zcd.zb.idx = ToInt(dataOUT, index);			index += 4;
+	zcd.zb.trt = dataOUT[index];				index += 1;
+	zcd.zb.ack = dataOUT[index];				index += 1;
+	zcd.zb.ppc = dataOUT[index];				index += 1;
+	zcd.zb.run = dataOUT[index];				index += 1;
+	zcd.zb.txid = ToInt(dataOUT, index);		index += 4;
+	zcd.zb.rxid = ToInt(dataOUT, index);		index += 4;
+	zcd.zb.cnt = ToInt(dataOUT, index);			index += 4;
+	zcd.zb.pos = ToInt(dataOUT, index);			index += 4;
+
+	zcd.fps = ToInt(dataOUT, index);			index += 4;
+	zcd.itf = dataOUT[index];					index += 1;
+	zcd.destIdErrCnt = ToInt(dataOUT, index);	index += 4;
+	zcd.destIdDiff = ToInt(dataOUT, index);		index += 4;
+	zcd.phyRxFrameCnt = ToInt(dataOUT, index);	index += 4;
+	zcd.frameDiff = ToInt(dataOUT, index);		index += 4;
+
+	return index;
+}
+
 size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 {
 	size_t index = 0;
@@ -1187,6 +1215,9 @@ size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 
 	index = ParseZxxData(dataOUT, index, ivf.zxx);
 	ASSERT(index == 119);
+
+	index = ParseZcdData(dataOUT, index, ivf.zcd);
+	ASSERT(index == 185);
 
 	return index;
 }
@@ -1226,7 +1257,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		}
 
 		index = Parse_I2C(dataOUT, m_ivf);
-		ASSERT(index == 119);
+		ASSERT(index == 185);
 
 		index = UpdateZcdListCtrl(dataOUT, 119);
 		ASSERT(index == 185);
