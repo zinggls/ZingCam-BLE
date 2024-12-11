@@ -190,6 +190,7 @@
     <ClInclude Include="..\..\..\common\com.h" />
     <ClInclude Include="..\..\..\common\util.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ivf.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
