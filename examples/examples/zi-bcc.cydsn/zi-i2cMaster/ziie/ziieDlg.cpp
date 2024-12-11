@@ -603,20 +603,6 @@ int CZiieDlg::InsertItem(CListCtrl& listCtrl, const CString& newItem)
 	return index;
 }
 
-size_t CZiieDlg::UpdateImuListCtrl(CListCtrl& listCtrl, std::vector<byte>& dataOUT, size_t index)
-{
-	int nItem = InsertItem(listCtrl, _T("DIMU"));
-
-	listCtrl.SetItemText(nItem, 0, ToHexStr(dataOUT, index, 2)); index += 2;
-	listCtrl.SetItemText(nItem, 1, ToHexStr(dataOUT, index, 2)); index += 2;
-	listCtrl.SetItemText(nItem, 2, ToHexStr(dataOUT, index, 2)); index += 2;
-	listCtrl.SetItemText(nItem, 3, ToHexStr(dataOUT, index, 2)); index += 2;
-	listCtrl.SetItemText(nItem, 4, ToHexStr(dataOUT, index, 2)); index += 2;
-	listCtrl.SetItemText(nItem, 5, ToHexStr(dataOUT, index, 2)); index += 2;
-
-	return index;
-}
-
 size_t CZiieDlg::UpdateZxxListCtrl(std::vector<byte>& dataOUT, size_t zxxIndex)
 {
 	int nItem = InsertItem(m_zxxListCtrl, _T("ZXX"));
