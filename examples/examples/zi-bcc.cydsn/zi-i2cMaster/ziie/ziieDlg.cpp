@@ -144,6 +144,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_I2C_WRITE_BUTTON, &CZiieDlg::OnBnClickedI2cWriteButton)
 	ON_CBN_SELCHANGE(IDC_SCOPE_KIND_COMBO, &CZiieDlg::OnSelchangeScopeKindCombo)
+	ON_CBN_SELCHANGE(IDC_SCOPE_OUT_COMBO, &CZiieDlg::OnSelchangeScopeOutCombo)
 END_MESSAGE_MAP()
 
 
@@ -1328,4 +1329,15 @@ void CZiieDlg::OnSelchangeScopeKindCombo()
 	CString str;
 	str.Format(_T("%d"), m_ivf.write.ScopeKind);
 	m_writeBufferListCtrl.SetItemText(0, 0, str);
+}
+
+
+void CZiieDlg::OnSelchangeScopeOutCombo()
+{
+	int nSel = m_scopeOutCombo.GetCurSel();
+	m_ivf.write.ScopeOut = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_ivf.write.ScopeOut);
+	m_writeBufferListCtrl.SetItemText(0, 1, str);
 }

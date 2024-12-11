@@ -150,4 +150,5 @@ public:
 	CStatic m_bleStateCtrl;
 	IVF m_ivf;
 	afx_msg void OnSelchangeScopeKindCombo();
+	afx_msg void OnSelchangeScopeOutCombo();
 };
