@@ -149,4 +149,5 @@ public:
 	CBitmap m_bmpRedCtrl;
 	CStatic m_bleStateCtrl;
 	IVF m_ivf;
+	afx_msg void OnSelchangeScopeKindCombo();
 };

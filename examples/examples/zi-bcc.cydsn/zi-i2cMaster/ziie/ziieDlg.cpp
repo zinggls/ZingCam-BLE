@@ -143,6 +143,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_I2C_READ_BUTTON, &CZiieDlg::OnBnClickedI2cReadButton)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_I2C_WRITE_BUTTON, &CZiieDlg::OnBnClickedI2cWriteButton)
+	ON_CBN_SELCHANGE(IDC_SCOPE_KIND_COMBO, &CZiieDlg::OnSelchangeScopeKindCombo)
 END_MESSAGE_MAP()
 
 
@@ -1320,4 +1321,16 @@ void CZiieDlg::OnTimer(UINT_PTR nIDEvent)
 void CZiieDlg::OnBnClickedI2cWriteButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CZiieDlg::OnSelchangeScopeKindCombo()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	int nSel = m_scopeKindCombo.GetCurSel();
+	m_ivf.write.ScopeKind = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_ivf.write.ScopeKind);
+	m_writeBufferListCtrl.SetItemText(0, 0, str);
 }
