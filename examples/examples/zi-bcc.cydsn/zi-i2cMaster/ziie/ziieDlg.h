@@ -96,6 +96,7 @@ public:
 	static size_t Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf);
 	static CString ShortToStr(short val);
 	void UpdateImuGUI(CListCtrl& listCtrl, IMU& i);
+	void UpdateGUI(IVF& ivf);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);

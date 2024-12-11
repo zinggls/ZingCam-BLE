@@ -1241,6 +1241,16 @@ void CZiieDlg::UpdateImuGUI(CListCtrl& listCtrl, IMU& i)
 	listCtrl.SetItemText(nItem, 5, ShortToStr(i.checksum));
 }
 
+void CZiieDlg::UpdateGUI(IVF& ivf)
+{
+	UpdateCommandGUI(ivf.read);
+	UpdateStateGUI(ivf.state);
+	UpdateImuGUI(m_hImuListCtrl, ivf.txImu);
+	UpdateImuGUI(m_dImuListCtrl, ivf.rxImu);
+	UpdateZxxGUI(ivf.zxx);
+	UpdateZcdGUI(ivf.zcd);
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1259,12 +1269,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		UpdateWriteBuffer();
 
-		UpdateCommandGUI(m_ivf.read);
-		UpdateStateGUI(m_ivf.state);
-		UpdateImuGUI(m_hImuListCtrl, m_ivf.txImu);
-		UpdateImuGUI(m_dImuListCtrl, m_ivf.rxImu);
-		UpdateZxxGUI(m_ivf.zxx);
-		UpdateZcdGUI(m_ivf.zcd);
+		UpdateGUI(m_ivf);
 
 		L(RawString(dataOUT));
 		if (bRead == FALSE) break;
