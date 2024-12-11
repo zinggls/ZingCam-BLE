@@ -179,6 +179,7 @@ public:
 	static CString RawString(std::vector<byte>& dataOUT);
 	static short ToShort(byte high, byte low);
 	static size_t ParseImuData(std::vector<byte>& dataOUT, size_t index, IMU& imu);
+	static size_t ParseZxxData(std::vector<byte>& dataOUT, size_t index, ZXX& zxx);
 	static size_t Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf);
 	static CString ShortToStr(short val);
 	void UpdateImuGUI(CListCtrl& listCtrl, IMU& i);

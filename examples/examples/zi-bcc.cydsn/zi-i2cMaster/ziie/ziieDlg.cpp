@@ -1147,6 +1147,45 @@ size_t CZiieDlg::ParseImuData(std::vector<byte>& dataOUT, size_t index, IMU& imu
 	return index;
 }
 
+size_t CZiieDlg::ParseZxxData(std::vector<byte>& dataOUT, size_t index, ZXX& zxx)
+{
+	zxx.kind = ToInt(dataOUT,index);		index += 4;
+	zxx.usb = ToInt(dataOUT,index);			index += 4;
+	zxx.bnd = dataOUT[index];				index += 1;
+	zxx.ppid = ToInt(dataOUT,index);		index += 4;
+	zxx.devid = ToInt(dataOUT,index);		index += 4;
+	zxx.fmt = ToInt(dataOUT,index);			index += 4;
+	zxx.idx = ToInt(dataOUT,index);			index += 4;
+	zxx.trt = dataOUT[index];				index += 1;
+	zxx.ack = dataOUT[index];				index += 1;
+	zxx.ppc = dataOUT[index];				index += 1;
+	zxx.run = dataOUT[index];				index += 1;
+	zxx.txid = ToInt(dataOUT,index);		index += 4;
+	zxx.rxid = ToInt(dataOUT,index);		index += 4;
+	zxx.cnt = ToInt(dataOUT,index);			index += 4;
+	zxx.pos = ToInt(dataOUT,index);			index += 4;
+
+	zxx.imu1 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
+	zxx.imu2 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
+	zxx.imu3 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
+	zxx.imu4 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
+	zxx.imu5 = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
+	zxx.imuChecksum = ToShort(dataOUT[index + 1], dataOUT[index]);		index += 2;
+
+	zxx.vnd = ToInt(dataOUT,index);			index += 4;
+	zxx.prd = ToInt(dataOUT,index);			index += 4;
+	zxx.scopeStateKind = dataOUT[index];	index += 1;
+	zxx.scopeStateOut = dataOUT[index];		index += 1;
+	zxx.scopeStateBattery = dataOUT[index];	index += 1;
+	zxx.scopeStateIR = dataOUT[index];		index += 1;
+	zxx.scopeStateEO = dataOUT[index];		index += 1;
+	zxx.txStateBattery = dataOUT[index];	index += 1;
+	zxx.txStateModem = dataOUT[index];		index += 1;
+	zxx.txStateIMU = dataOUT[index];		index += 1;
+
+	return index;
+}
+
 size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 {
 	size_t index = 0;
@@ -1161,6 +1200,9 @@ size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 
 	index = ParseImuData(dataOUT, index, ivf.rxImu);
 	ASSERT(index == 46);
+
+	index = ParseZxxData(dataOUT, index, ivf.zxx);
+	ASSERT(index == 119);
 
 	return index;
 }
@@ -1200,11 +1242,11 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		}
 
 		index = Parse_I2C(dataOUT, m_ivf);
-		ASSERT(index == 46);
-
-		index = UpdateZxxListCtrl(dataOUT, index);
 		ASSERT(index == 119);
-		index = UpdateZcdListCtrl(dataOUT, index);
+
+		index = UpdateZxxListCtrl(dataOUT, 46);
+		ASSERT(index == 119);
+		index = UpdateZcdListCtrl(dataOUT, 119);
 		ASSERT(index == 185);
 
 		UpdateWriteBuffer();
