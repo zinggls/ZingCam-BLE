@@ -1301,6 +1301,21 @@ cleanup:
 	return 0;
 }
 
+void CZiieDlg::InitWriteBufferCombo(I2C_IVF_COMMAND& ic)
+{
+	m_scopeKindCombo.SetCurSel(ic.ScopeKind);
+	m_scopeOutCombo.SetCurSel(ic.ScopeOut);
+	m_wirelessChannelModeCombo.SetCurSel(ic.WirelessChannelMode);
+	m_wirelessChannelInfoCombo.SetCurSel(ic.WirelessChannelInfo);
+	m_opmodeScopeCombo.SetCurSel(ic.OpmodeScope);
+	m_opmodeTxCombo.SetCurSel(ic.OpmodeTx);
+	m_opmodeRxCombo.SetCurSel(ic.OpmodeRx);
+	m_txImuTypeCombo.SetCurSel(ic.TxImuType);
+	m_txImuCalibCombo.SetCurSel(ic.TxImuCalib);
+	m_rxImuTypeCombo.SetCurSel(ic.RxImuType);
+	m_rxImuCalibCombo.SetCurSel(ic.RxImuCalib);
+}
+
 void CZiieDlg::OnBnClickedI2cReadButton()
 {
 	if (bRead == FALSE) {
@@ -1311,6 +1326,9 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 			ResetI2CReadButton();
 			return;
 		}
+
+		InitWriteBufferCombo(m_ivf.read);
+
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
 		GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(FALSE);
 		m_bleStateCtrl.ShowWindow(SW_SHOW);

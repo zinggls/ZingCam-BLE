@@ -101,6 +101,7 @@ public:
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
 	afx_msg void OnDestroy();
+	void InitWriteBufferCombo(I2C_IVF_COMMAND& ic);
 	afx_msg void OnBnClickedI2cReadButton();
 	CListCtrl m_zcdListCtrl;
 	CListCtrl m_zxxListCtrl;
