@@ -747,48 +747,48 @@ void CZiieDlg::UpdateWriteBufferGUI(I2C_IVF_COMMAND& ic)
 	m_writeBufferListCtrl.SetItemText(0,10, DecStr(ic.RxImuCalib));
 }
 
-void CZiieDlg::UpdateScopeKind(byte dat)
+void CZiieDlg::UpdateScopeKind(byte kind)
 {
 	m_strScopeKind = _T("종류: ");
 
 	CString str;
-	switch (dat) {
+	switch (kind) {
 	case 0:
 		str = _T("(0)");
 		break;
 	case 4:
-		str.Format(_T("EO(%x)"), dat);
+		str.Format(_T("EO(%x)"), kind);
 		break;
 	case 5:
-		str.Format(_T("IR백상(%x)"),dat);
+		str.Format(_T("IR백상(%x)"), kind);
 		break;
 	case 6:
-		str.Format(_T("IR흑상(%x)"), dat);
+		str.Format(_T("IR흑상(%x)"), kind);
 		break;
 	default:
-		str.Format(_T("미정의(%x)"), dat);
+		str.Format(_T("미정의(%x)"), kind);
 		break;
 	}
 	m_strScopeKind += str;
 }
 
-void CZiieDlg::UpdateScopeOut(byte dat)
+void CZiieDlg::UpdateScopeOut(byte out)
 {
 	m_strScopeOut = _T("출력: ");
 
 	CString str;
-	switch (dat) {
+	switch (out) {
 	case 0:
 		str = _T("(0)");
 		break;
 	case 3:
-		str.Format(_T("출력(%x)"), dat);
+		str.Format(_T("출력(%x)"), out);
 		break;
 	case 4:
-		str.Format(_T("미출력(%x)"), dat);
+		str.Format(_T("미출력(%x)"), out);
 		break;
 	default:
-		str.Format(_T("미정의(%x)"), dat);
+		str.Format(_T("미정의(%x)"), out);
 		break;
 	}
 	m_strScopeOut += str;

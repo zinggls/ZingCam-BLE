@@ -66,8 +66,8 @@ public:
 	void UpdateZxxGUI(ZXX& z);
 	void UpdateZcdGUI(ZCD& z);
 	void UpdateWriteBufferGUI(I2C_IVF_COMMAND& ic);
-	void UpdateScopeKind(byte dat);
-	void UpdateScopeOut(byte dat);
+	void UpdateScopeKind(byte kind);
+	void UpdateScopeOut(byte out);
 	void UpdateScope(byte scopeKind, byte scopeOut);
 	void UpdateWirelessChannel(byte mode, byte info);
 	CString Opmode(byte mode);
