@@ -87,6 +87,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strBleState(_T("BLE상태:"))
 	, m_bReadBuffer(TRUE)
 	, m_bWriteBuffer(TRUE)
+	, m_bSendWriteBuffer(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -1260,6 +1261,36 @@ void CZiieDlg::UpdateGUI(IVF& ivf)
 	UpdateWriteBufferGUI(ivf.write);
 }
 
+HRESULT CZiieDlg::Send_I2C_WriteBuffer(int deviceAddress)
+{
+	std::vector<byte> dataIN;
+	dataIN.resize(WRITE_BUFFER_SIZE);
+	dataIN[0] = m_ivf.write.ScopeKind;
+	dataIN[1] = m_ivf.write.ScopeOut;
+	dataIN[2] = m_ivf.write.WirelessChannelMode;
+	dataIN[3] = m_ivf.write.WirelessChannelInfo;
+	dataIN[4] = m_ivf.write.OpmodeScope;
+	dataIN[5] = m_ivf.write.OpmodeTx;
+	dataIN[6] = m_ivf.write.OpmodeRx;
+	dataIN[7] = m_ivf.write.TxImuType;
+	dataIN[8] = m_ivf.write.TxImuCalib;
+	dataIN[9] = m_ivf.write.RxImuType;
+	dataIN[10] = m_ivf.write.RxImuCalib;
+
+	HRESULT hr = m_pCom->writeI2C(deviceAddress, dataIN);
+	if (!SUCCEEDED(hr)) {
+		L(_T("Failed writeI2C,HRESULT: 0x%08X"), hr);
+		return hr;
+	}
+
+	if (m_bWriteBuffer) {
+		I2C_IVF_COMMAND& i = m_ivf.write;
+		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
+			sizeof(I2C_IVF_COMMAND), i.ScopeKind, i.ScopeOut, i.WirelessChannelMode, i.WirelessChannelInfo, i.OpmodeScope, i.OpmodeTx, i.OpmodeRx, i.TxImuType, i.TxImuCalib, i.RxImuType, i.RxImuCalib);
+	}
+	return S_OK;
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1278,6 +1309,12 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		UpdateGUI(m_ivf);
 
 		if(m_bReadBuffer) L(RawString(dataOUT));
+
+		if (m_bSendWriteBuffer) {
+			Send_I2C_WriteBuffer(deviceAddress);
+			m_bSendWriteBuffer = FALSE;
+		}
+
 		if (bRead == FALSE) break;
 	}
 	return S_OK;
@@ -1359,11 +1396,7 @@ void CZiieDlg::OnTimer(UINT_PTR nIDEvent)
 
 void CZiieDlg::OnBnClickedI2cWriteButton()
 {
-	if (m_bWriteBuffer) {
-		I2C_IVF_COMMAND& i = m_ivf.write;
-		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
-			sizeof(I2C_IVF_COMMAND), i.ScopeKind, i.ScopeOut, i.WirelessChannelMode, i.WirelessChannelInfo, i.OpmodeScope, i.OpmodeTx, i.OpmodeRx, i.TxImuType, i.TxImuCalib, i.RxImuType, i.RxImuCalib);
-	}
+	m_bSendWriteBuffer = TRUE;
 }
 
 

@@ -7,6 +7,7 @@
 #include <vector>
 #include "ivf.h"
 
+#define WRITE_BUFFER_SIZE	(11)
 #define READ_BUFFER_SIZE	(185)
 #define MAX_LIST_ITEMS		(1024*8)
 
@@ -97,6 +98,7 @@ public:
 	static CString ShortToStr(short val);
 	void UpdateImuGUI(CListCtrl& listCtrl, IMU& i);
 	void UpdateGUI(IVF& ivf);
+	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
@@ -169,4 +171,5 @@ public:
 	afx_msg void OnBnClickedReadBufferCheck();
 	afx_msg void OnBnClickedWriteBufferCheck();
 	afx_msg void OnBnClickedRawClearButton();
+	BOOL m_bSendWriteBuffer;
 };
