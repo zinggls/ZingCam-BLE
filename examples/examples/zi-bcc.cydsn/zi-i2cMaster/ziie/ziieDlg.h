@@ -72,7 +72,7 @@ public:
 	void UpdateWirelessChannel(byte mode, byte info);
 	CString Opmode(byte mode);
 	void UpdateOpmode(byte scope, byte tx, byte rx);
-	static void UpdateXIMU(CString& strImuType, CString& strCalib, byte type, byte calib);
+	static void UpdateXIMU(BOOL bTx, CString& strImuType, CString& strCalib, byte type, byte calib);
 	void UpdateScopeStateKind(byte kind);
 	void UpdateScopeStateOut(byte out);
 	static void BatteryInfo(CString& str, byte val);

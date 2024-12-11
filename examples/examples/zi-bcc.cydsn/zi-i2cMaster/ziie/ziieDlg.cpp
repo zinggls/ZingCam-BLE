@@ -63,17 +63,17 @@ END_MESSAGE_MAP()
 
 CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_ZIIE_DIALOG, pParent), m_pCom(NULL), m_pReadThread(NULL)
-	, m_strScopeKind(_T("종류:"))
-	, m_strScopeOut(_T("출력:"))
-	, m_strWirelessChannelMode(_T("설정모드:"))
-	, m_strWirelessChannelInfo(_T("채널정보:"))
-	, m_strOpmodeScope(_T("조준경모드:"))
-	, m_strOpmodeTx(_T("송신기모드:"))
-	, m_strOpmodeRx(_T("수신기모드:"))
-	, m_strTxImuType(_T("출력타입:"))
-	, m_strTxImuCalib(_T("보정:"))
-	, m_strRxImuType(_T("출력타입:"))
-	, m_strRxImuCalib(_T("보정:"))
+	, m_strScopeKind(_T("0.종류:"))
+	, m_strScopeOut(_T("1.출력:"))
+	, m_strWirelessChannelMode(_T("2.모드:"))
+	, m_strWirelessChannelInfo(_T("3.정보:"))
+	, m_strOpmodeScope(_T("4.화기:"))
+	, m_strOpmodeTx(_T("5.송신기:"))
+	, m_strOpmodeRx(_T("6.수신기:"))
+	, m_strTxImuType(_T("7.타입:"))
+	, m_strTxImuCalib(_T("8.보정:"))
+	, m_strRxImuType(_T("9.타입:"))
+	, m_strRxImuCalib(_T("10.보정:"))
 	, m_strScopeStateKind(_T("영상종류:"))
 	, m_strScopeStateOut(_T("영상상태:"))
 	, m_strScopeStateBattery(_T("배터리잔량:"))
@@ -756,7 +756,7 @@ void CZiieDlg::UpdateWriteBufferGUI(I2C_IVF_COMMAND& ic)
 
 void CZiieDlg::UpdateScopeKind(byte kind)
 {
-	m_strScopeKind = _T("종류: ");
+	m_strScopeKind = _T("0.종류: ");
 
 	CString str;
 	switch (kind) {
@@ -781,7 +781,7 @@ void CZiieDlg::UpdateScopeKind(byte kind)
 
 void CZiieDlg::UpdateScopeOut(byte out)
 {
-	m_strScopeOut = _T("출력: ");
+	m_strScopeOut = _T("1.출력: ");
 
 	CString str;
 	switch (out) {
@@ -811,31 +811,31 @@ void CZiieDlg::UpdateWirelessChannel(byte mode, byte info)
 {
 	switch (mode) {
 	case 0:
-		m_strWirelessChannelMode.Format(_T("모드: 자동(%x)"), mode);
+		m_strWirelessChannelMode.Format(_T("2.모드: 자동(%x)"), mode);
 		break;
 	case 1:
-		m_strWirelessChannelMode.Format(_T("모드: 자동(Default)(%x)"), mode);
+		m_strWirelessChannelMode.Format(_T("2.모드: 자동(Default)(%x)"), mode);
 		break;
 	case 2:
-		m_strWirelessChannelMode .Format(_T("모드: 수동(%x)"), mode);
+		m_strWirelessChannelMode .Format(_T("2.모드: 수동(%x)"), mode);
 		break;
 	default:
-		m_strWirelessChannelMode.Format(_T("모드: 미정의(%x)"), mode);
+		m_strWirelessChannelMode.Format(_T("2.모드: 미정의(%x)"), mode);
 		break;
 	}
 
 	switch (info) {
 	case 0:
-		m_strWirelessChannelInfo.Format(_T("정보: 선택 안함(Default)(%x)"), info);
+		m_strWirelessChannelInfo.Format(_T("3.정보: 선택 안함(Default)(%x)"), info);
 		break;
 	case 1:
-		m_strWirelessChannelInfo.Format(_T("정보: 수동 1채널(%x)"), info);
+		m_strWirelessChannelInfo.Format(_T("3.정보: 수동 1채널(%x)"), info);
 		break;
 	case 2:
-		m_strWirelessChannelInfo.Format(_T("정보: 수동 2채널(%x)"), info);
+		m_strWirelessChannelInfo.Format(_T("3.정보: 수동 2채널(%x)"), info);
 		break;
 	default:
-		m_strWirelessChannelInfo.Format(_T("정보: 미정의(%x)"), info);
+		m_strWirelessChannelInfo.Format(_T("3.정보: 미정의(%x)"), info);
 		break;
 	}
 }
@@ -865,43 +865,46 @@ CString CZiieDlg::Opmode(byte mode)
 
 void CZiieDlg::UpdateOpmode(byte scope, byte tx, byte rx)
 {
-	m_strOpmodeScope = _T("화기:") + Opmode(scope);
+	m_strOpmodeScope = _T("4.화기:") + Opmode(scope);
 
-	m_strOpmodeTx = _T("송신기:") + Opmode(tx);
+	m_strOpmodeTx = _T("5.송신기:") + Opmode(tx);
 
-	m_strOpmodeRx = _T("수신기:") + Opmode(rx);
+	m_strOpmodeRx = _T("6.수신기:") + Opmode(rx);
 }
 
-void CZiieDlg::UpdateXIMU(CString& strImuType, CString& strCalib, byte type, byte calib)
+void CZiieDlg::UpdateXIMU(BOOL bTx, CString& strImuType, CString& strCalib, byte type, byte calib)
 {
+	int refNum = 7;
+	if (!bTx) refNum = 9;
+
 	switch (type) {
 	case 0:
-		strImuType.Format(_T("타입:*Euler(%x)"), type);
+		strImuType.Format(_T("%d.타입:*Euler(%x)"), refNum, type);
 		break;
 	case 1:
-		strImuType.Format(_T("타입:Quaternion(%x)"), type);
+		strImuType.Format(_T("%d.타입:Quaternion(%x)"), refNum, type);
 		break;
 	default:
-		strImuType.Format(_T("타입:미정의(%x)"), type);
+		strImuType.Format(_T("%d.타입:미정의(%x)"), refNum, type);
 		break;
 	}
 
 	switch (calib)
 	{
 	case 0:
-		strCalib.Format(_T("보정:*(%x)"), calib);
+		strCalib.Format(_T("%d.보정:*(%x)"), refNum+1, calib);
 		break;
 	case 1:
-		strCalib.Format(_T("보정:자이로(%x)"), calib);
+		strCalib.Format(_T("%d.보정:자이로(%x)"), refNum+1, calib);
 		break;
 	case 2:
-		strCalib.Format(_T("보정:가속도(%x)"), calib);
+		strCalib.Format(_T("%d.보정:가속도(%x)"), refNum+1, calib);
 		break;
 	case 3:
-		strCalib.Format(_T("보정:지자계S(%x)"), calib);
+		strCalib.Format(_T("%d.보정:지자계S(%x)"), refNum+1, calib);
 		break;
 	case 4:
-		strCalib.Format(_T("보정:지자계E(%x)"), calib);
+		strCalib.Format(_T("%d.보정:지자계E(%x)"), refNum+1, calib);
 		break;
 	default:
 		break;
@@ -1083,8 +1086,8 @@ void CZiieDlg::UpdateCommandGUI(I2C_IVF_COMMAND& ic)
 	UpdateWirelessChannel(ic.WirelessChannelMode, ic.WirelessChannelInfo);
 	UpdateOpmode(ic.OpmodeScope, ic.OpmodeTx, ic.OpmodeRx);
 
-	UpdateXIMU(m_strTxImuType, m_strTxImuCalib, ic.TxImuType, ic.TxImuCalib);
-	UpdateXIMU(m_strRxImuType, m_strRxImuCalib, ic.RxImuType, ic.RxImuCalib);
+	UpdateXIMU(TRUE, m_strTxImuType, m_strTxImuCalib, ic.TxImuType, ic.TxImuCalib);
+	UpdateXIMU(FALSE, m_strRxImuType, m_strRxImuCalib, ic.RxImuType, ic.RxImuCalib);
 }
 
 size_t CZiieDlg::ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is)
