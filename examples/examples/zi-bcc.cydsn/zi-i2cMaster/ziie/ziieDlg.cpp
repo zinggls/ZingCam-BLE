@@ -1255,7 +1255,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		}
 
 		index = Parse_I2C(dataOUT, m_ivf);
-		ASSERT(index == 185);
+		ASSERT(index == READ_BUFFER_SIZE);
 
 		UpdateWriteBuffer();
 
