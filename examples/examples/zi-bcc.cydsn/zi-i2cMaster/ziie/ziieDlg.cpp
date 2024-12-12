@@ -965,11 +965,11 @@ void CZiieDlg::UpdateScopeStateOut(byte out)
 void CZiieDlg::BatteryInfo(CString& str, byte val)
 {
 	if (val < 0 || val>100) {
-		str.Format(_T("배터리: 범위밖(%d)"), val);
+		str.Format(_T("배터리잔량: 범위밖(%d)"), val);
 		return;
 	}
 
-	str.Format(_T("배터리: %d%%"), val);
+	str.Format(_T("배터리잔량: %d%%"), val);
 }
 
 void CZiieDlg::UpdateScopeStateBattery(byte val)
@@ -1118,10 +1118,10 @@ void CZiieDlg::UpdateStateGUI(I2C_STATE& is)
 	}else{
 		m_strScopeStateKind = _T("종류: -");
 		m_strScopeStateOut = _T("출력: -");
-		m_strScopeStateBattery = _T("배터리: -");
+		m_strScopeStateBattery = _T("배터리잔량: -");
 		m_strScopeStateIR = _T("IR상태: -");
 		m_strScopeStateEO = _T("EO상태: -");
-		m_strTxStateBattery = _T("배터리: -");
+		m_strTxStateBattery = _T("배터리잔량: -");
 		m_strTxStateModem = _T("모뎀상태: -");
 		m_strTxStateImu = _T("IMU상태: -");
 	}
