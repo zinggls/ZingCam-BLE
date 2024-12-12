@@ -216,7 +216,6 @@
     <None Include="res\ziie.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\..\Users\rossi\Downloads\p2p.png" />
     <Image Include="res\GLS.bmp" />
     <Image Include="res\Green.bmp" />
     <Image Include="res\Grey.bmp" />
