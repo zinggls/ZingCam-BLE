@@ -1112,8 +1112,19 @@ size_t CZiieDlg::ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_ST
 
 void CZiieDlg::UpdateStateGUI(I2C_STATE& is)
 {
-	UpdateScopeState(is.ScopeStateKind, is.ScopeStateOut, is.ScopeStateBattery, is.ScopeStateIR, is.ScopeStateEO);
-	UpdateTxState(is.TxStateBattery, is.TxStateModem, is.TxStateImu);
+	if (is.BleState == 2) {
+		UpdateScopeState(is.ScopeStateKind, is.ScopeStateOut, is.ScopeStateBattery, is.ScopeStateIR, is.ScopeStateEO);
+		UpdateTxState(is.TxStateBattery, is.TxStateModem, is.TxStateImu);
+	}else{
+		m_strScopeStateKind = _T("종류: -");
+		m_strScopeStateOut = _T("출력: -");
+		m_strScopeStateBattery = _T("배터리: -");
+		m_strScopeStateIR = _T("IR상태: -");
+		m_strScopeStateEO = _T("EO상태: -");
+		m_strTxStateBattery = _T("배터리: -");
+		m_strTxStateModem = _T("모뎀상태: -");
+		m_strTxStateImu = _T("IMU상태: -");
+	}
 	UpdateRxState(is.RxStateModem, is.RxStateImu);
 	UpdateBleState(is.BleState);
 }
@@ -1393,6 +1404,7 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 void CZiieDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	UpdateData(FALSE);
+	TRACE("UpdateData(FALSE)\n");
 
 	CDialogEx::OnTimer(nIDEvent);
 }
