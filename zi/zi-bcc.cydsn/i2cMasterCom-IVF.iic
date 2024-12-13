@@ -1,0 +1,39 @@
+; ScopeCamera change_none -----------1
+w 3C 00 00 01 00 00 00 00 00 00 00 00 p
+r 3C  x  x  x  x  x  x  x  x  x  x  x p
+[DELAY=500]
+
+; ScopeCamera change_eo
+w 3C 01 01 02 01 00 00 00 00 00 00 00 p
+r 3C  x  x  x  x  x  x  x  x  x  x  x p
+[DELAY=500]
+
+; ScopeCamera change_ir_white
+w 3C 02 02 01 02 00 00 00 00 00 00 00 p
+r 3C  x  x  x  x  x  x  x  x  x  x  x p
+[DELAY=500]
+
+; ScopeCamera change_ir_black
+w 3C 03 00 02 03 00 00 00 00 00 00 00 p
+r 3C  x  x  x  x  x  x  x  x  x  x  x p
+[DELAY=500]
+
+; ScopeCamera change_none -----------2
+w 3C 00 00 01 04 00 00 00 00 00 00 00 p
+r 3C  x  x  x  x  x  x  x  x  x  x  x p
+[DELAY=500]
+
+; ScopeCamera change_eo
+w 3C 01 01 02 00 00 00 00 00 00 00 00 p
+r 3C  x  x  x  x  x  x  x  x  x  x  x p
+[DELAY=500]
+
+; ScopeCamera change_ir_white
+w 3C 02 02 01 01 00 00 00 00 00 00 00 p
+r 3C  x  x  x  x  x  x  x  x  x  x  x p
+[DELAY=500]
+
+; ScopeCamera change_ir_black
+w 3C 03 00 02 02 00 00 00 00 00 00 00 p
+r 3C  x  x  x  x  x  x  x  x  x  x  x p
+[DELAY=500]
