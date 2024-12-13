@@ -65,6 +65,8 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             systemMode = SM_SCANNING;
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST); // Start scanning for peripherals
+            memset(getI2CReadBuffer()+IMU_TX_OFFSET,0,IMU_TX_SIZE);
+            memset(getI2CReadBuffer()+ZING_ZXX_OFFSET,0,ZING_ZXX_SIZE);
             L("Scanning...\r\n");
             setRGB(LED_OFF,LED_OFF,LED_OFF);
             break;
