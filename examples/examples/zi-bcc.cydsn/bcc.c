@@ -42,7 +42,7 @@ static void processingZxx()
 {
     if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
     
-    if(notificationParam->handleValPair.value.len == getFrameSize()) {
+    if(notificationParam->handleValPair.value.len == sizeof(ZXX_FRAME)) {
         notifiedCustom++;
         
         // Process the received data                                

@@ -138,7 +138,7 @@ int main()
         }
         
         myDataHandle.value.val = (uint8_t *)&zxxFrame;
-        myDataHandle.value.len = getFrameSize();
+        myDataHandle.value.len = sizeof(ZXX_FRAME);
         CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
         
