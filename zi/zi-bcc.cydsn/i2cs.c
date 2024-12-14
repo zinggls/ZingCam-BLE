@@ -19,35 +19,35 @@
 static uint8 i2cReadBuffer [I2C_RD_BUFFER_SIZE] = {0};
 static uint8 i2cWriteBuffer[I2C_WR_BUFFER_SIZE] = {0};
 
-uint8 changeScope(ScopeCamera cam)
+uint8 changeScope(uint8_t cam)
 {
     uint8 result;
 
     /* Execute the received command */
     switch (cam)
     {
-        case change_none:
+        case 0x00:          //0x00 :알림 없음/알림 반영 완료
             setRGB(LED_OFF,LED_OFF,LED_OFF);
-            result = change_none;
+            result = 0x00;
             break;
 
-        case change_eo:
+        case 0x01:          //0x01 : 영상융합처리기 -> 조준경 EO 변경 요청 알림
             setRGB(LED_ON,LED_OFF,LED_OFF);
-            result = change_eo;
+            result = 0x01;
             break;
 
-        case change_ir_white:
+        case 0x02:          //0x02 : 영상융합처리기 -> 조준경 IR 백상 변경 요청 알
             setRGB(LED_OFF,LED_ON,LED_OFF);
-            result = change_ir_white;
+            result = 0X02;
             break;
 
-        case change_ir_black:
+        case 0x03:          //0x03 : 영상융합처리기 -> 조준경 IR 흑상 변경 요청 알림
             setRGB(LED_OFF,LED_OFF,LED_ON);
-            result = change_ir_black;
+            result = 0x03;
             break;
 
         default:
-            result = change_none;
+            result = 0x00;
             break;
     }
 
