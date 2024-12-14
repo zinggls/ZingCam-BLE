@@ -2,6 +2,7 @@
 #include <Log.h>
 #include <ZFrame.h>
 #include "led.h"
+#include "ivf.h"
 
 static uint16 writereqCustom = 0;
 
@@ -46,7 +47,7 @@ void BleCallBack(uint32 event, void* eventParam)
             wrReqParam = (CYBLE_GATTS_WRITE_REQ_PARAM_T *) eventParam;
             
             if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE) {
-                if (wrReqParam->handleValPair.value.len == sizeof(ZXX_FRAME)) {
+                if (wrReqParam->handleValPair.value.len == sizeof(IvfCom)) {
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
                     writereqCustom++;

@@ -18,6 +18,7 @@
 
 static uint8 i2cReadBuffer [I2C_RD_BUFFER_SIZE] = {0};
 static uint8 i2cWriteBuffer[I2C_WR_BUFFER_SIZE] = {0};
+static uint32 writeReqCount = 0;
 
 uint8 changeScope(uint8_t cam)
 {
@@ -61,6 +62,20 @@ void i2cs_start(void)
     I2C_Start();
 }
 
+void i2c_command_to_bps() {
+    // Use the characteristic index to obtain the attribute handle    
+    CYBLE_GATT_DB_ATTR_HANDLE_T attrHandle = cyBle_customCServ[CYBLE_CUSTOMC_CUSTOM_SERVICE_SERVICE_INDEX]
+                                                .customServChar[CYBLE_CUSTOMC_CUSTOM_SERVICE_ZXX_CHAR_INDEX]
+                                                .customServCharHandle;
+
+    CYBLE_GATTC_WRITE_REQ_T writeReq;
+    writeReq.attrHandle = attrHandle;
+    writeReq.value.val = (uint8_t*)&ivfCom;
+    writeReq.value.len = sizeof(IvfCom);
+
+    if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeReqCount++;
+}
+
 void i2cs_process(ZCD_FRAME *zcd)
 {
     /* Write complete: parse the command packet */
@@ -80,6 +95,8 @@ void i2cs_process(ZCD_FRAME *zcd)
             ivfCom.wirelessVideoTransmitterImuCalibrate = i2cWriteBuffer[8];
             ivfCom.wirelssVideoReceiverImuOutputType = i2cWriteBuffer[9];
             ivfCom.wirelessVideoReceiverImuCalibrate = i2cWriteBuffer[10];
+            
+            i2c_command_to_bps();
         }
         
         /* Clear the slave write buffer and status */
