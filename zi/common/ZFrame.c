@@ -73,14 +73,6 @@ int parse(void *data, const char *buf)
     return rtn;
 }
 
-uint16 getFrameSize()
-{
-    if(zxxKind==ZED) return sizeof(ZXX_FRAME);
-    if(zxxKind==ZCH) return sizeof(ZXX_FRAME);
-    if(zxxKind==ZCD) return sizeof(ZCD_FRAME);
-    return 0;   //never reach here
-}
-
 uint8_t *setZcdBuffer(uint8_t *buf,ZCD_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer

@@ -88,7 +88,6 @@ typedef struct {
 ZxxKind detectZxx(const char *buf);
 ZxxKind inspect(const char *buf);
 int parse(void *data, const char *buf);
-uint16 getFrameSize();
 uint8_t * setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd);
 uint8_t * setZxxBuffer(uint8_t *buf,ZXX_FRAME *z);
 uint8_t * setImuBuffer(uint8_t *buf,ZXX_FRAME *z);
