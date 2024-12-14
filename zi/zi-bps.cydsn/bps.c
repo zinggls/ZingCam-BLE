@@ -3,6 +3,7 @@
 #include <ZFrame.h>
 #include "led.h"
 #include "ivf.h"
+#include "NoLog.h"
 
 static uint16 writereqCustom = 0;
 

@@ -10,6 +10,7 @@
 #include "bps.h"
 #include "led.h"
 #include "ivf.h"
+#include "NoLog.h"
 
 static uint16 notifyCustom = 0;
 
@@ -121,7 +122,6 @@ int main()
     
     setGreen(LED_OFF);
 
-    UART_DBG_Start();
     Zing_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
