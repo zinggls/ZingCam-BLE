@@ -9,6 +9,7 @@
 #include "imu.h"
 #include "bps.h"
 #include "led.h"
+#include "ivf.h"
 
 static uint16 notifyCustom = 0;
 
@@ -39,7 +40,19 @@ static void ZingCB(const char *buf)
 static void zxxLog()
 {
     const char *name = (zxxFrame.kind==ZCH)?"ZCH":"ZED";
-    L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, %s USB:%d CNT:%d\r\n", GIT_INFO,cyBle_state,notifyCustom,zxxFrame.pos,getWritereqCustom(),name,zxxFrame.usb,zxxFrame.cnt);
+    L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, %s USB:%d CNT:%d IvfCom{%d %d %d %d %d %d %d %d %d %d %d}\r\n", 
+        GIT_INFO,cyBle_state,notifyCustom,zxxFrame.pos,getWritereqCustom(),name,zxxFrame.usb,zxxFrame.cnt,
+        ivfCom.scopeCamera,
+        ivfCom.scopeOutput,
+        ivfCom.wirelessVideoChannelMode,
+        ivfCom.wirelessVideoChannelInformation,
+        ivfCom.scopeOperationMode,
+        ivfCom.wirelessVideoTransmitterOperationModeStatus,
+        ivfCom.wirelessVideoReceiverOperationModeStatus,
+        ivfCom.wirelessVideoTransmitterImuOutputType,
+        ivfCom.wirelessVideoTransmitterImuCalibrate,
+        ivfCom.wirelssVideoReceiverImuOutputType,
+        ivfCom.wirelessVideoReceiverImuCalibrate);
 }
 
 static short toShort(const char *data)
