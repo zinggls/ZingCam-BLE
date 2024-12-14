@@ -5,7 +5,7 @@
 #include <ZFrame.h>
 #include <gitcommit.h>
 #include <Zing.h>
-#include "ZFrame.h"
+#include "Peripheral.h"
 #include "imu.h"
 #include "bps.h"
 #include "led.h"
@@ -15,7 +15,7 @@
 
 static uint16 notifyCustom = 0;
 
-static ZXX_FRAME zxxFrame;
+static PERIPHERAL peripheral;
 static uint32 ZingCbCount = 0;
 
 // Function to process data when a complete message is available
@@ -25,7 +25,7 @@ static void ZingCB(const char *buf)
     if(zxxKind!=ZED && zxxKind!=ZCH) return;
 
     // Parsing the values into the structure
-    void *frame = &zxxFrame;
+    void *frame = &peripheral.zxxFrame;
     CYASSERT(frame);
     if (!parse(frame,buf)) {
 #ifdef ZXX_DEBUG
@@ -41,7 +41,7 @@ static void ZingCB(const char *buf)
 
 static void zxxLog()
 {
-    const char *name = (zxxFrame.kind==ZCH)?"ZCH":"ZED";
+    const char *name = (peripheral.zxxFrame.kind==ZCH)?"ZCH":"ZED";
     L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, %s USB:%d CNT:%d IvfCom{%d %d %d %d %d %d %d %d %d %d %d}\r\n", 
         GIT_INFO,cyBle_state,notifyCustom,zxxFrame.pos,getWritereqCustom(),name,zxxFrame.usb,zxxFrame.cnt,
         ivfCom.scopeCamera,
@@ -64,13 +64,13 @@ static short toShort(const char *data)
 
 static void onImuFrame(const ImuFrame *imu)
 {
-    ZXX_FRAME *z = &zxxFrame;
-    z->imu1 = toShort(imu->data);
-    z->imu2 = toShort(imu->data+2);
-    z->imu3 = toShort(imu->data+4);
-    z->imu4 = toShort(imu->data+6);
-    z->imu5 = toShort(imu->data+8);
-    z->imuChecksum = toShort(imu->data+10);
+    IMU *i = &peripheral.imu;
+    i->imu1 = toShort(imu->data);
+    i->imu2 = toShort(imu->data+2);
+    i->imu3 = toShort(imu->data+4);
+    i->imu4 = toShort(imu->data+6);
+    i->imu5 = toShort(imu->data+8);
+    i->imuChecksum = toShort(imu->data+10);
 }
 
 static void clearZxxZingInfo(ZXX_FRAME *z)
@@ -94,13 +94,13 @@ static void clearZxxZingInfo(ZXX_FRAME *z)
 
 static void updateStateInfo()
 {
-    zxxFrame.txStateBattery = 78;   //TO DO 배터리 용량 파악하는 기능 구현전까지 하드코딩 상태로 둔다 (78%로 표시됨)
+    peripheral.txState.txStateBattery = 78;   //TO DO 배터리 용량 파악하는 기능 구현전까지 하드코딩 상태로 둔다 (78%로 표시됨)
     
     uint8 zingState = getZingState();
-    setZingState(zingState,0xE3,(uint8*)&zxxFrame.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
-    if(zingState==1) clearZxxZingInfo(&zxxFrame);
+    setZingState(zingState,0xE3,(uint8*)&peripheral.txState.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
+    if(zingState==1) clearZxxZingInfo(&peripheral.zxxFrame);
     
-    setImuState(getImuState(),0xE5,(uint8*)&zxxFrame.txStateIMU);         //송신기 IMU 상태 0x00: 정상, 0xE5: 무선영상 수신기 IMU 이상
+    setImuState(getImuState(),0xE5,(uint8*)&peripheral.txState.txStateIMU);    //송신기 IMU 상태 0x00: 정상, 0xE5: 무선영상 수신기 IMU 이상
 }
 
 CY_ISR(Timer_ISR)
@@ -147,13 +147,13 @@ int main()
         /* if Capsense scan is done, read the value and start another scan */
         if(!capsense_IsBusy())
         {
-            zxxFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
+            peripheral.zxxFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
             capsense_UpdateEnabledBaselines();
             capsense_ScanEnabledWidgets();
         }
         
-        myDataHandle.value.val = (uint8_t *)&zxxFrame;
-        myDataHandle.value.len = sizeof(ZXX_FRAME);
+        myDataHandle.value.val = (uint8_t *)&peripheral;
+        myDataHandle.value.len = sizeof(PERIPHERAL);
         CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
         if(CyBle_GattsNotification(cyBle_connHandle,&myDataHandle)==CYBLE_ERROR_OK) notifyCustom++;
         

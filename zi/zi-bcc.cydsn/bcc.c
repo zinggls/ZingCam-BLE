@@ -3,6 +3,7 @@
 #include "i2cs.h"
 #include "icd.h"
 #include "led.h"
+#include "Peripheral.h"
 
 static SystemMode_t systemMode = SM_INITIALIZE; // Starting mode of statemachine 
 static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
@@ -11,7 +12,7 @@ static uint16 notifiedCustom = 0;
 static uint16 writeRsp = 0;
 static CYBLE_GAPC_ADV_REPORT_T* scanReport;
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
-static ZXX_FRAME zxxFrame;
+static PERIPHERAL peripheral;
 static ZCD_FRAME zcdFrame;
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
@@ -38,19 +39,46 @@ void setPairingState(SystemMode_t m, uint8 *buf)
     *buf = value;
 }    
 
+static void mapToICD(uint8_t *buf,PERIPHERAL *p)
+{
+    *(buf+ICD_SCOPE_VIDEO_KIND_OFFSET) = p->scope.scopeStateKind;
+    *(buf+ICD_SCOPE_OUTPUT_OFFSET) = p->scope.scopeStateOut;
+    *(buf+ICD_SCOPE_BATTERY_OFFSET) = p->scope.scopeStateBattery;
+    *(buf+ICD_SCOPE_IR_STATE_OFFSET) = p->scope.scopeStateIR;
+    *(buf+ICD_SCOPE_EO_STATE_OFFSET) = p->scope.scopeStateEO;
+
+    *(buf+ICD_TX_BATTERY_OFFSET) = p->txState.txStateBattery;
+    *(buf+ICD_TX_MODEM_STATE_OFFSET) = p->txState.txStateModem;
+    *(buf+ICD_TX_IMU_STATE_OFFSET) = p->txState.txStateIMU;
+}
+
+static uint8_t *setImuBuffer(uint8_t *buf,IMU *i)
+{
+    uint8_t *ptr = buf; // Pointer to traverse the buffer
+
+    memcpy(ptr, &i->imu1, sizeof(i->imu1));                     ptr += sizeof(i->imu1);
+    memcpy(ptr, &i->imu2, sizeof(i->imu2));                     ptr += sizeof(i->imu2);
+    memcpy(ptr, &i->imu3, sizeof(i->imu3));                     ptr += sizeof(i->imu3);
+    memcpy(ptr, &i->imu4, sizeof(i->imu4));                     ptr += sizeof(i->imu4);
+    memcpy(ptr, &i->imu5, sizeof(i->imu5));                     ptr += sizeof(i->imu5);
+    memcpy(ptr, &i->imuChecksum, sizeof(i->imuChecksum));       ptr += sizeof(i->imuChecksum);
+
+    return ptr;
+}
+
 static void processingZxx()
 {
     if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
     
-    if(notificationParam->handleValPair.value.len == sizeof(ZXX_FRAME)) {
+    if(notificationParam->handleValPair.value.len == sizeof(PERIPHERAL)) {
         notifiedCustom++;
         
         // Process the received data                                
-        memcpy(&zxxFrame,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
-        setZxxBuffer(getI2CReadBuffer()+ZING_ZXX_OFFSET,&zxxFrame);
-        mapZxxToICD(getI2CReadBuffer(),&zxxFrame);
-        setImuBuffer(getI2CReadBuffer()+IMU_TX_OFFSET,&zxxFrame);   //ICD 무선영상 송신기 IMU
-        getZcdFrame()->pos = zxxFrame.pos;
+        memcpy(&peripheral,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+        setZxxBuffer(getI2CReadBuffer()+ZING_ZXX_OFFSET,&peripheral.zxxFrame);
+        mapToICD(getI2CReadBuffer(),&peripheral);
+        setImuBuffer(getI2CReadBuffer()+IMU_TX_OFFSET,&peripheral.imu);   //ICD 무선영상 송신기 IMU
+        getZcdFrame()->pos = peripheral.zxxFrame.pos;
     }
 }
 

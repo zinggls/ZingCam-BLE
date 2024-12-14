@@ -105,20 +105,6 @@ uint8_t *setZcdBuffer(uint8_t *buf,ZCD_FRAME *z)
     return ptr;
 }
 
-uint8_t *setImuBuffer(uint8_t *buf,ZXX_FRAME *z)
-{
-    uint8_t *ptr = buf; // Pointer to traverse the buffer
-    
-	memcpy(ptr, &z->imu1, sizeof(z->imu1));                     ptr += sizeof(z->imu1);
-	memcpy(ptr, &z->imu2, sizeof(z->imu2));                     ptr += sizeof(z->imu2);
-	memcpy(ptr, &z->imu3, sizeof(z->imu3));                     ptr += sizeof(z->imu3);
-	memcpy(ptr, &z->imu4, sizeof(z->imu4));                     ptr += sizeof(z->imu4);
-	memcpy(ptr, &z->imu5, sizeof(z->imu5));                     ptr += sizeof(z->imu5);
-	memcpy(ptr, &z->imuChecksum, sizeof(z->imuChecksum));       ptr += sizeof(z->imuChecksum);
-    
-    return ptr;
-}
-
 uint8_t *setZxxBuffer(uint8_t *buf,ZXX_FRAME *z)
 {
     uint8_t *ptr = buf; // Pointer to traverse the buffer
@@ -140,39 +126,11 @@ uint8_t *setZxxBuffer(uint8_t *buf,ZXX_FRAME *z)
     memcpy(ptr, &z->cnt, sizeof(z->cnt));                       ptr += sizeof(z->cnt);
     memcpy(ptr, &z->pos, sizeof(z->pos));                       ptr += sizeof(z->pos);
 
-    //IMU FIELDS
-    setImuBuffer(ptr,z);                                        ptr += IMU_TX_SIZE;
-    
     //USB_VND_PRD_FIELDS
     memcpy(ptr, &z->vnd, sizeof(z->vnd));                       ptr += sizeof(z->vnd);
     memcpy(ptr, &z->prd, sizeof(z->prd));                       ptr += sizeof(z->prd);
-    
-    //SCOPE_STATE_INFO_FIELDS
-    memcpy(ptr, &z->scopeStateKind, sizeof(z->scopeStateKind));         ptr += sizeof(z->scopeStateKind);
-    memcpy(ptr, &z->scopeStateOut, sizeof(z->scopeStateOut));           ptr += sizeof(z->scopeStateOut);
-    memcpy(ptr, &z->scopeStateBattery, sizeof(z->scopeStateBattery));   ptr += sizeof(z->scopeStateBattery);
-    memcpy(ptr, &z->scopeStateIR, sizeof(z->scopeStateIR));             ptr += sizeof(z->scopeStateIR);
-    memcpy(ptr, &z->scopeStateEO, sizeof(z->scopeStateEO));             ptr += sizeof(z->scopeStateEO);
-    
-    //TX_STATE_INFO_FIELDS
-    memcpy(ptr, &z->txStateBattery, sizeof(z->txStateBattery));         ptr += sizeof(z->txStateBattery);
-    memcpy(ptr, &z->txStateModem, sizeof(z->txStateModem));             ptr += sizeof(z->txStateModem);
-    memcpy(ptr, &z->txStateIMU, sizeof(z->txStateIMU));                 ptr += sizeof(z->txStateIMU);
-    
-    return ptr;
-}
 
-void mapZxxToICD(uint8_t *buf,ZXX_FRAME *z)
-{
-    *(buf+ICD_SCOPE_VIDEO_KIND_OFFSET) = z->scopeStateKind;
-    *(buf+ICD_SCOPE_OUTPUT_OFFSET) = z->scopeStateOut;
-    *(buf+ICD_SCOPE_BATTERY_OFFSET) = z->scopeStateBattery;
-    *(buf+ICD_SCOPE_IR_STATE_OFFSET) = z->scopeStateIR;
-    *(buf+ICD_SCOPE_EO_STATE_OFFSET) = z->scopeStateEO;
-    
-    *(buf+ICD_TX_BATTERY_OFFSET) = z->txStateBattery;
-    *(buf+ICD_TX_MODEM_STATE_OFFSET) = z->txStateModem;
-    *(buf+ICD_TX_IMU_STATE_OFFSET) = z->txStateIMU;
+    return ptr;
 }
 
 bool isNoZingCb(uint32 loopCount,uint32 period,uint32 *zingCount)

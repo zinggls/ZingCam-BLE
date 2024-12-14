@@ -58,24 +58,9 @@ typedef struct ZING_BASE {
 typedef struct ZXX {
 	ZING_BASE zb;
 
-	//IMU_FIELDS (무선영상송신기의 IMU 데이터들로 BLE를 통해 수신기로 전달되는 데이터들)
-	IMU txImu;
-
 	//USB_VND_PRD_FIELDS
 	unsigned int vnd;
 	unsigned int prd;
-
-	//SCOPE_STATE_INFO_FIELDS
-	char scopeStateKind;
-	char scopeStateOut;
-	char scopeStateBattery;
-	char scopeStateIR;
-	char scopeStateEO;
-
-	//TX_STATE_INFO_FIELDS
-	char txStateBattery;
-	char txStateModem;
-	char txStateIMU;
 } ZXX;
 
 typedef struct ZCD {

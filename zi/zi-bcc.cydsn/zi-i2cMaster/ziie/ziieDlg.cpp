@@ -1175,18 +1175,8 @@ size_t CZiieDlg::ParseZxxData(std::vector<byte>& dataOUT, size_t index, ZXX& zxx
 	zxx.zb.cnt = ToInt(dataOUT,index);		index += 4;
 	zxx.zb.pos = ToInt(dataOUT,index);		index += 4;
 
-	index = ParseImuData(dataOUT, index, zxx.txImu);
-
 	zxx.vnd = ToInt(dataOUT,index);			index += 4;
 	zxx.prd = ToInt(dataOUT,index);			index += 4;
-	zxx.scopeStateKind = dataOUT[index];	index += 1;
-	zxx.scopeStateOut = dataOUT[index];		index += 1;
-	zxx.scopeStateBattery = dataOUT[index];	index += 1;
-	zxx.scopeStateIR = dataOUT[index];		index += 1;
-	zxx.scopeStateEO = dataOUT[index];		index += 1;
-	zxx.txStateBattery = dataOUT[index];	index += 1;
-	zxx.txStateModem = dataOUT[index];		index += 1;
-	zxx.txStateIMU = dataOUT[index];		index += 1;
 
 	return index;
 }
@@ -1235,10 +1225,10 @@ size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 	ASSERT(index == 46);
 
 	index = ParseZxxData(dataOUT, index, ivf.zxx);
-	ASSERT(index == 119);
+	ASSERT(index == 99);
 
 	index = ParseZcdData(dataOUT, index, ivf.zcd);
-	ASSERT(index == 185);
+	ASSERT(index == 165);
 
 	return index;
 }

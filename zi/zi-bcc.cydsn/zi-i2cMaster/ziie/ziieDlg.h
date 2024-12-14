@@ -8,7 +8,7 @@
 #include "ivf.h"
 
 #define WRITE_BUFFER_SIZE	(11)
-#define READ_BUFFER_SIZE	(185)
+#define READ_BUFFER_SIZE	(165)
 #define MAX_LIST_ITEMS		(1024*8)
 
 class CCom;

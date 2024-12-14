@@ -37,14 +37,6 @@ ZxxKind zxxKind;
     unsigned int cnt;   \
     unsigned int pos;   \
 
-#define IMU_FIELDS      \
-    short imu1;         \
-    short imu2;         \
-    short imu3;         \
-    short imu4;         \
-    short imu5;         \
-    short imuChecksum;  \
-
 // Define additional fields for ZCD_FRAME
 #define ZCD_ADDITIONAL_FIELDS     \
     unsigned int fps;             \
@@ -58,25 +50,10 @@ ZxxKind zxxKind;
     unsigned int vnd;             \
     unsigned int prd;             \
 
-#define SCOPE_STATE_INFO_FIELDS   \
-    char scopeStateKind;          \
-    char scopeStateOut;           \
-    char scopeStateBattery;       \
-    char scopeStateIR;            \
-    char scopeStateEO;            \
-
-#define TX_STATE_INFO_FIELDS      \
-    char txStateBattery;          \
-    char txStateModem;            \
-    char txStateIMU;              \
-
 // Define ZXX_FRAME with additional specific fields
 typedef struct {
     COMMON_FIELDS
-    IMU_FIELDS
     USB_VND_PRD_FIELDS
-    SCOPE_STATE_INFO_FIELDS
-    TX_STATE_INFO_FIELDS
 } ZXX_FRAME;
 
 // Define ZCD_FRAME, which includes the common fields and additional ZCD-specific fields
@@ -90,9 +67,7 @@ ZxxKind inspect(const char *buf);
 int parse(void *data, const char *buf);
 uint8_t * setZcdBuffer(uint8_t *buf,ZCD_FRAME *zcd);
 uint8_t * setZxxBuffer(uint8_t *buf,ZXX_FRAME *z);
-uint8_t * setImuBuffer(uint8_t *buf,ZXX_FRAME *z);
 bool isNoZingCb(uint32 loopCount,uint32 period,uint32 *zingCount);
-void mapZxxToICD(uint8_t *buf,ZXX_FRAME *z);
 
 
 #endif /* Z_FRAME_H */
