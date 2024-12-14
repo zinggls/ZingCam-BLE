@@ -14,8 +14,6 @@
 #include "i2cs.h"
 
 static uint16 notifyCustom = 0;
-
-static PERIPHERAL peripheral;
 static uint32 ZingCbCount = 0;
 
 // Function to process data when a complete message is available

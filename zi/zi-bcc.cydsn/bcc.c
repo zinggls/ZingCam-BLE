@@ -12,7 +12,6 @@ static uint16 notifiedCustom = 0;
 static uint16 writeRsp = 0;
 static CYBLE_GAPC_ADV_REPORT_T* scanReport;
 static CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
-static PERIPHERAL peripheral;
 static ZCD_FRAME zcdFrame;
 
 // UUID of CapsenseLED Service (from the GATT Server/Gap Peripheral
@@ -66,6 +65,21 @@ static uint8_t *setImuBuffer(uint8_t *buf,IMU *i)
     return ptr;
 }
 
+static void setScope(uint8_t *buf,SCOPE *s)
+{
+    /*
+    "지능형 영상융합처리기(Master) - 무선영상 수신기" Read Buffer에 값 설정
+    */
+    buf[0] = s->scopeKindChangeNotify;  //[0] 화기조준경 영상 종류 변경 알림
+    buf[1] = s->scopeOutChangeNotify;   //[1] 화기조준경 영상 출력종류 변경 알림
+    buf[4] = s->scopeOperMode;          //[4] 화기조준경 운용모드 상태
+    buf[11] = s->scopeStateKind;        //[11] 화기조준경 영상 종류
+    buf[12] = s->scopeStateOut;         //[12] 화기조준경 영상 상태
+    buf[13] = s->scopeStateBattery;     //[13] 화기조준경 배터리 잔량
+    buf[15] = s->scopeStateIR;          //[15] 화기조준경 IR 모듈 상태
+    buf[16] = s->scopeStateEO;          //[16] 화기조준경 EO 모듈 상태
+}
+
 static void processingZxx()
 {
     if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
@@ -75,6 +89,7 @@ static void processingZxx()
         
         // Process the received data                                
         memcpy(&peripheral,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
+        setScope(getI2CReadBuffer(),&peripheral.scope);
         setZxxBuffer(getI2CReadBuffer()+ZING_ZXX_OFFSET,&peripheral.zxxFrame);
         mapToICD(getI2CReadBuffer(),&peripheral);
         setImuBuffer(getI2CReadBuffer()+IMU_TX_OFFSET,&peripheral.imu);   //ICD 무선영상 송신기 IMU

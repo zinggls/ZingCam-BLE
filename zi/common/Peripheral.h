@@ -48,4 +48,6 @@ typedef struct {
     ZXX_FRAME zxxFrame;
 } PERIPHERAL;
 
+PERIPHERAL peripheral;
+
 #endif /* PERIPHERAL_H */
