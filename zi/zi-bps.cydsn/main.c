@@ -11,6 +11,7 @@
 #include "led.h"
 #include "icd.h"
 #include "NoLog.h"
+#include "i2cs.h"
 
 static uint16 notifyCustom = 0;
 
@@ -128,6 +129,7 @@ int main()
     capsense_Start();
     capsense_InitializeEnabledBaselines();
     
+    i2cs_start();
     /* Start BLE stack and register the callback function */
     CyBle_Start(BleCallBack);
     
@@ -159,6 +161,7 @@ int main()
    
         CyBle_ProcessEvents();
         zing_process_uart_data();
+        i2cs_process();
         imu_process_uart_data(onImuFrame);
         
         count++;
