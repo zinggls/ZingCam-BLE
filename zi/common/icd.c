@@ -10,7 +10,7 @@
  * ========================================
 */
 
-#include "ivf.h"
+#include "icd.h"
 
 void setReadBuffer_ScopeCamera(uint8_t* rdBuf,uint8_t sc)
 {

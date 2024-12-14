@@ -1,6 +1,8 @@
 #ifndef ICD_H
 #define ICD_H
 
+#include <stdint.h>
+
 #define ICD_SIZE                            22
 #define ICD_SCOPE_VIDEO_KIND_NOTIFY_OFFSET   0
 #define ICD_SCOPE_OUTPUT_NOTIFY_OFFSET       1
@@ -37,4 +39,23 @@
 
 #define I2C_IVF_READ_BUFFER_SIZE            185                 //ICD_IVF_SIZE + ZING_ZXX_SIZE + ZING_ZCD_SIZE = 46 + 73 + 66 = 185
     
+typedef struct {
+    uint8_t scopeCamera;
+    uint8_t scopeOutput;
+    uint8_t wirelessVideoChannelMode;
+    uint8_t wirelessVideoChannelInformation;
+    uint8_t scopeOperationMode;    
+    uint8_t wirelessVideoTransmitterOperationModeStatus;
+    uint8_t wirelessVideoReceiverOperationModeStatus;
+    uint8_t wirelessVideoTransmitterImuOutputType;
+    uint8_t wirelessVideoTransmitterImuCalibrate;
+    uint8_t wirelssVideoReceiverImuOutputType;
+    uint8_t wirelessVideoReceiverImuCalibrate;
+} IvfCom;
+
+IvfCom ivfCom;
+    
+void setReadBuffer_ScopeCamera(uint8_t* rdBuf,uint8_t sc);
+void setReadBuffer_ScopeOutput(uint8_t* rdBuf,uint8_t so);
+
 #endif //ICD_H
