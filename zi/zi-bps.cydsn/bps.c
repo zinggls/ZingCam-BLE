@@ -5,6 +5,7 @@
 #include "icd.h"
 #include "NoLog.h"
 #include "led.h"
+#include "i2cs.h"
 
 static uint16 writereqCustom = 0;
 
@@ -32,6 +33,14 @@ static void handleScope(uint8 sc)
             setRGB(LED_OFF,LED_OFF,LED_OFF);
             break;
     }
+}
+
+static void setI2cReadBuffer(IvfCom *ic)
+{
+    uint8_t *rb = getI2CReadBuffer();
+    rb[0] = ic->scopeCamera;
+    rb[1] = ic->scopeOutput;
+    rb[2] = ic->scopeOperationMode;
 }
 
 void BleCallBack(uint32 event, void* eventParam)
@@ -73,6 +82,7 @@ void BleCallBack(uint32 event, void* eventParam)
                 if (wrReqParam->handleValPair.value.len == sizeof(IvfCom)) {
                     memcpy(&ivfCom,wrReqParam->handleValPair.value.val,wrReqParam->handleValPair.value.len);
                     handleScope(ivfCom.scopeCamera);
+                    setI2cReadBuffer(&ivfCom);
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
                     writereqCustom++;
