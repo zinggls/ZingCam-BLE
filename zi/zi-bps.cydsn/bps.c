@@ -4,12 +4,34 @@
 #include "led.h"
 #include "icd.h"
 #include "NoLog.h"
+#include "led.h"
 
 static uint16 writereqCustom = 0;
 
 uint16 getWritereqCustom()
 {
     return writereqCustom;
+}
+
+static void handleScope(uint8 sc)
+{
+    switch(sc){
+        case 0x0:
+            setRGB(LED_OFF,LED_OFF,LED_OFF);
+            break;
+        case 0x1:
+            setRGB(LED_ON,LED_OFF,LED_OFF);
+            break;
+        case 0x2:
+            setRGB(LED_OFF,LED_ON,LED_OFF);
+            break;
+        case 0x3:
+            setRGB(LED_OFF,LED_OFF,LED_ON);
+            break;
+        default:
+            setRGB(LED_OFF,LED_OFF,LED_OFF);
+            break;
+    }
 }
 
 void BleCallBack(uint32 event, void* eventParam)
@@ -50,6 +72,7 @@ void BleCallBack(uint32 event, void* eventParam)
             if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE) {
                 if (wrReqParam->handleValPair.value.len == sizeof(IvfCom)) {
                     memcpy(&ivfCom,wrReqParam->handleValPair.value.val,wrReqParam->handleValPair.value.len);
+                    handleScope(ivfCom.scopeCamera);
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
                     writereqCustom++;
