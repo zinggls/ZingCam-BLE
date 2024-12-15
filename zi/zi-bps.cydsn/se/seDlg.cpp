@@ -63,9 +63,9 @@ END_MESSAGE_MAP()
 CseDlg::CseDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_SE_DIALOG, pParent)
 	, m_pCom(NULL)
-	, m_strScopeKindChangeNoti(_T("종류 변경알림:"))
-	, m_strScopeOutChangeNoti(_T("출력 변경 알림:"))
-	, m_strScopeOperationMode(_T("조준경모드:"))
+	, m_strScopeKindChangeNoti(_T("0.종류 변경 요청 알림: "))
+	, m_strScopeOutChangeNoti(_T("1.출력 변경알림:"))
+	, m_strScopeOperationMode(_T("2.조준경 운용모드:"))
 	, m_bReadBuffer(TRUE)
 	, m_bWriteBuffer(TRUE)
 	, m_bSendWriteBuffer(FALSE)
@@ -488,7 +488,7 @@ size_t CseDlg::Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc)
 
 void CseDlg::UpdateScopeKindChangeNoti(byte kind)
 {
-	m_strScopeKindChangeNoti = _T("0.종류 변경알림: ");
+	m_strScopeKindChangeNoti = _T("0.종류 변경 요청 알림: ");
 
 	/*
 	0x00 : 알림 없음/알림 반영 완료
@@ -503,13 +503,13 @@ void CseDlg::UpdateScopeKindChangeNoti(byte kind)
 		str = _T("(0)알림없음/알림반영완료");
 		break;
 	case 1:
-		str.Format(_T("EO 변경 요청 알림(%x)"), kind);
+		str.Format(_T("EO 변경 요청(%x)"), kind);
 		break;
 	case 2:
-		str.Format(_T("IR 백상 변경 요청 알림(%x)"), kind);
+		str.Format(_T("IR 백상 변경 요청(%x)"), kind);
 		break;
 	case 3:
-		str.Format(_T("IR 흑상 변경 요청 알림(%x)"), kind);
+		str.Format(_T("IR 흑상 변경 요청(%x)"), kind);
 		break;
 	default:
 		str.Format(_T("미정의(%x)"), kind);
@@ -520,7 +520,7 @@ void CseDlg::UpdateScopeKindChangeNoti(byte kind)
 
 void CseDlg::UpdateScopeOutChangeNoti(byte out)
 {
-	m_strScopeOutChangeNoti = _T("0.종류 변경알림: ");
+	m_strScopeOutChangeNoti = _T("1.출력 변경알림: ");
 
 	/*
 	0x00 : 알림 없음/알림 반영 완료
@@ -534,10 +534,10 @@ void CseDlg::UpdateScopeOutChangeNoti(byte out)
 		str = _T("(0)알림없음/알림반영완료");
 		break;
 	case 1:
-		str.Format(_T("영상 출력 변경 요청 알림(%x)"), out);
+		str.Format(_T("영상 출력 변경 요청(%x)"), out);
 		break;
 	case 2:
-		str.Format(_T("영상 미출력 변경 요청 알림(%x)"), out);
+		str.Format(_T("영상 미출력 변경 요청(%x)"), out);
 		break;
 	default:
 		str.Format(_T("미정의(%x)"), out);
@@ -548,7 +548,7 @@ void CseDlg::UpdateScopeOutChangeNoti(byte out)
 
 void CseDlg::UpdateScopeOperationMode(byte mode)
 {
-	m_strScopeOperationMode = _T("2.조준경모드: ");
+	m_strScopeOperationMode = _T("2.조준경 운용모드: ");
 
 	/*
 	0x00 : (default)
