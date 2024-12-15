@@ -260,6 +260,7 @@ BOOL CZiieDlg::OnInitDialog()
 	m_rxImuCalibCombo.AddString(_T("지자계 보정 종료"));
 
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
+	EnableCombos(FALSE);
 
 	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -312,6 +313,21 @@ void CZiieDlg::OnPaint()
 HCURSOR CZiieDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CZiieDlg::EnableCombos(BOOL b)
+{
+	m_scopeKindCombo.EnableWindow(b);
+	m_scopeOutCombo.EnableWindow(b);
+	m_wirelessChannelModeCombo.EnableWindow(b);
+	m_wirelessChannelInfoCombo.EnableWindow(b);
+	m_opmodeScopeCombo.EnableWindow(b);
+	m_opmodeTxCombo.EnableWindow(b);
+	m_opmodeRxCombo.EnableWindow(b);
+	m_txImuTypeCombo.EnableWindow(b);
+	m_txImuCalibCombo.EnableWindow(b);
+	m_rxImuTypeCombo.EnableWindow(b);
+	m_rxImuCalibCombo.EnableWindow(b);
 }
 
 void CZiieDlg::FillPortsCombo()
@@ -442,6 +458,7 @@ void CZiieDlg::ResetI2CReadButton()
 	GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
 	GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(TRUE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
+	EnableCombos(FALSE);
 	m_bleStateCtrl.ShowWindow(SW_HIDE);
 }
 
@@ -1383,6 +1400,7 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
 		GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(FALSE);
 		GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(TRUE);
+		EnableCombos(TRUE);
 		m_bleStateCtrl.ShowWindow(SW_SHOW);
 	}
 	else {

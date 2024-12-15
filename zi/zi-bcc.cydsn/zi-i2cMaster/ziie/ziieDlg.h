@@ -45,6 +45,7 @@ public:
 	std::vector<byte> m_devices;
 	CWinThread* m_pReadThread;
 
+	void EnableCombos(BOOL b);
 	void FillPortsCombo();
 	void CreateWriteBuffer();
 	void CreateColumnsIMU(CListCtrl& listCtrl);
