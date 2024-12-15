@@ -10,7 +10,7 @@
 #define READ_BUFFER_SIZE	(3)
 #define MAX_LIST_ITEMS		(1024*8)
 
-typedef struct IVF {
+typedef struct SCOPE {
 	byte scopeKindChangeNotify;
 	byte scopeOutChangeNotify;
 	byte scopeOperationMode;
