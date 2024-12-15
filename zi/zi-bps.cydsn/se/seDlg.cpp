@@ -483,13 +483,13 @@ BOOL CseDlg::I2C_GetDeviceList()
 	return TRUE;
 }
 
-size_t CseDlg::Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc)
+size_t CseDlg::Parse_I2C(std::vector<byte>& dataOUT, SCOPE_READ& sr)
 {
 	size_t index = 0;
 
-	sc.read.command.scopeKindChangeNotify = dataOUT[0];	index++;
-	sc.read.command.scopeOutChangeNotify = dataOUT[1];	index++;
-	sc.read.command.scopeOperationMode = dataOUT[2];	index++;
+	sr.command.scopeKindChangeNotify = dataOUT[0];	index++;
+	sr.command.scopeOutChangeNotify = dataOUT[1];	index++;
+	sr.command.scopeOperationMode = dataOUT[2];		index++;
 
 	return index;
 }
@@ -612,12 +612,12 @@ void CseDlg::UpdateWriteBufferGUI(SCOPE_WRITE& sw)
 	m_writeBufferListCtrl.SetItemText(0, 7, HexStr(sw.state.eo));
 }
 
-void CseDlg::UpdateGUI(SCOPE_WRITE& sw)
+void CseDlg::UpdateGUI(SCOPE& s)
 {
-	UpdateScopeKindChangeNoti(sw.command.scopeKindChangeNotify);
-	UpdateScopeOutChangeNoti(sw.command.scopeOutChangeNotify);
-	UpdateScopeOperationMode(sw.command.scopeOperationMode);
-	UpdateWriteBufferGUI(sw);
+	UpdateScopeKindChangeNoti(s.read.command.scopeKindChangeNotify);
+	UpdateScopeOutChangeNoti(s.read.command.scopeOutChangeNotify);
+	UpdateScopeOperationMode(s.read.command.scopeOperationMode);
+	UpdateWriteBufferGUI(s.write);
 }
 
 CString CseDlg::RawString(std::vector<byte>& dataOUT)
@@ -672,9 +672,9 @@ HRESULT CseDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			return hr;
 		}
 
-		index = Parse_I2C(dataOUT, m_scope);
+		index = Parse_I2C(dataOUT, m_scope.read);
 		ASSERT(index == READ_BUFFER_SIZE);
-		UpdateGUI(m_scope.write);
+		UpdateGUI(m_scope);
 
 		if (m_bReadBuffer) L(RawString(dataOUT));
 

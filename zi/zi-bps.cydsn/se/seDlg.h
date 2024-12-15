@@ -108,14 +108,14 @@ public:
 	BOOL I2C_SetSpeed();
 	BOOL I2C_GetSpeed();
 	BOOL I2C_GetDeviceList();
-	size_t Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc);
+	size_t Parse_I2C(std::vector<byte>& dataOUT, SCOPE_READ& sr);
 	void UpdateScopeKindChangeNoti(byte kind);
 	void UpdateScopeOutChangeNoti(byte out);
 	void UpdateScopeOperationMode(byte mode);
 	static CString DecStr(int val);
 	static CString HexStr(int val);
 	void UpdateWriteBufferGUI(SCOPE_WRITE& sw);
-	void UpdateGUI(SCOPE_WRITE& sw);
+	void UpdateGUI(SCOPE& s);
 	CString RawString(std::vector<byte>& dataOUT);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
