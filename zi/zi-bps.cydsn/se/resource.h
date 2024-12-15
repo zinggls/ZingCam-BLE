@@ -28,6 +28,8 @@
 #define IDC_SCOPE_STATE_EO_COMBO        1022
 #define IDC_SCOPE_STATE_OUT_COMBO       1023
 #define IDC_OPMODE_SCOPE_COMBO          1035
+#define IDC_WRITE_BUFFER_LIST           1042
+#define IDC_I2C_WRITE_BUTTON            1043
 #define IDC_LOGO_STATIC                 1044
 
 // Next default values for new objects

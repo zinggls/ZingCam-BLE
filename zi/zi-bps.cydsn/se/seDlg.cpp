@@ -76,6 +76,7 @@ void CseDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_SCOPE_KIND_CHANGE_NOTI_STATIC, m_strScopeKindChangeNoti);
 	DDX_Text(pDX, IDC_SCOPE_OUT_CHANGE_NOTI_STATIC, m_strScopeOutChangeNoti);
 	DDX_Text(pDX, IDC_OPMODE_SCOPE_STATIC, m_strScopeOperationMode);
+	DDX_Control(pDX, IDC_WRITE_BUFFER_LIST, m_writeBufferListCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
@@ -117,6 +118,8 @@ BOOL CseDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	FillPortsCombo();
+	CreateWriteBuffer();
+
 	m_scopeKindChangeNotiCombo.AddString(_T("알림 없음/알림 확인 완료"));
 	m_scopeKindChangeNotiCombo.AddString(_T("EO 변경 알림"));
 	m_scopeKindChangeNotiCombo.AddString(_T("IR 백상 변경 알림"));
@@ -259,6 +262,31 @@ void CseDlg::FillPortsCombo()
 	}
 
 	COM_UnInit();
+}
+
+void CseDlg::CreateWriteBuffer()
+{
+	m_writeBufferListCtrl.EnableWindow(FALSE);
+
+	int nHexWidth = 26;
+	m_writeBufferListCtrl.InsertColumn(0, _T("0"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(1, _T("1"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(2, _T("2"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(3, _T("3"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(4, _T("4"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(5, _T("5"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(6, _T("6"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(7, _T("7"), LVCFMT_RIGHT, nHexWidth);
+
+	m_writeBufferListCtrl.InsertItem(0, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 0, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 1, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 2, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 3, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 4, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 5, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 6, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 7, _T(""));
 }
 
 void CseDlg::EnableCombos(BOOL b)

@@ -40,6 +40,7 @@ public:
 	BOOL COM_Init();
 	void COM_UnInit();
 	void FillPortsCombo();
+	void CreateWriteBuffer();
 	void EnableCombos(BOOL b);
 	CComboBox m_scopeKindChangeNotiCombo;
 	CComboBox m_scopeOutChangeNotiCombo;
@@ -52,4 +53,5 @@ public:
 	CString m_strScopeKindChangeNoti;
 	CString m_strScopeOutChangeNoti;
 	CString m_strScopeOperationMode;
+	CListCtrl m_writeBufferListCtrl;
 };
