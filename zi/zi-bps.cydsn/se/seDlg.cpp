@@ -53,6 +53,9 @@ END_MESSAGE_MAP()
 
 CseDlg::CseDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_SE_DIALOG, pParent)
+	, m_strScopeKindChangeNoti(_T("종류 변경알림:"))
+	, m_strScopeOutChangeNoti(_T("출력 변경 알림:"))
+	, m_strScopeOperationMode(_T("조준경모드:"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -70,6 +73,9 @@ void CseDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SCOPE_STATE_BATTERY_COMBO, m_scopeStateBatteryCombo);
 	DDX_Control(pDX, IDC_SCOPE_STATE_IR_COMBO, m_scopeStateIrCombo);
 	DDX_Control(pDX, IDC_SCOPE_STATE_EO_COMBO, m_scopeStateEoCombo);
+	DDX_Text(pDX, IDC_SCOPE_KIND_CHANGE_NOTI_STATIC, m_strScopeKindChangeNoti);
+	DDX_Text(pDX, IDC_SCOPE_OUT_CHANGE_NOTI_STATIC, m_strScopeOutChangeNoti);
+	DDX_Text(pDX, IDC_OPMODE_SCOPE_STATIC, m_strScopeOperationMode);
 }
 
 BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
