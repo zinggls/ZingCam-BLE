@@ -16,6 +16,19 @@ typedef struct SCOPE {
 	byte scopeOperationMode;
 } SCOPE;
 
+typedef struct SCOPE_STATE {
+	byte kind;
+	byte out;
+	byte battery;
+	byte ir;
+	byte eo;
+} SCOPE_STATE;
+
+typedef struct SCOPE_WRITE_BUFFER {
+	SCOPE scope;
+	SCOPE_STATE scope_state;
+} SCOPE_WRITE_BUFFER;
+
 class CCom;
 
 // CseDlg 대화 상자
@@ -51,7 +64,7 @@ public:
 	CWinThread* m_pReadThread;
 	CCom* m_pCom;
 	std::vector<byte> m_devices;
-	SCOPE m_scope;
+	SCOPE_WRITE_BUFFER m_scope_write_buffer;
 	BOOL m_bSendWriteBuffer;
 
 	void L(const TCHAR* str, ...);

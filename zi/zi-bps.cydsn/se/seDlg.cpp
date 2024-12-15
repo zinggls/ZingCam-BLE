@@ -616,9 +616,9 @@ HRESULT CseDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			return hr;
 		}
 
-		index = Parse_I2C(dataOUT, m_scope);
+		index = Parse_I2C(dataOUT, m_scope_write_buffer.scope);
 		ASSERT(index == READ_BUFFER_SIZE);
-		UpdateGUI(m_scope);
+		UpdateGUI(m_scope_write_buffer.scope);
 
 		if (m_bReadBuffer) L(RawString(dataOUT));
 
@@ -685,7 +685,7 @@ void CseDlg::OnBnClickedI2cReadButton()
 			return;
 		}
 
-		InitWriteBufferCombo(m_scope);
+		InitWriteBufferCombo(m_scope_write_buffer.scope);
 
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
 		GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(FALSE);
