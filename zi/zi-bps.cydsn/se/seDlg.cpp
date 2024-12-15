@@ -56,6 +56,8 @@ CseDlg::CseDlg(CWnd* pParent /*=nullptr*/)
 	, m_strScopeKindChangeNoti(_T("종류 변경알림:"))
 	, m_strScopeOutChangeNoti(_T("출력 변경 알림:"))
 	, m_strScopeOperationMode(_T("조준경모드:"))
+	, m_bReadBuffer(FALSE)
+	, m_bWriteBuffer(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -77,12 +79,17 @@ void CseDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_SCOPE_OUT_CHANGE_NOTI_STATIC, m_strScopeOutChangeNoti);
 	DDX_Text(pDX, IDC_OPMODE_SCOPE_STATIC, m_strScopeOperationMode);
 	DDX_Control(pDX, IDC_WRITE_BUFFER_LIST, m_writeBufferListCtrl);
+	DDX_Check(pDX, IDC_READ_BUFFER_CHECK, m_bReadBuffer);
+	DDX_Check(pDX, IDC_WRITE_BUFFER_CHECK, m_bWriteBuffer);
 }
 
 BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_RAW_CLEAR_BUTTON, &CseDlg::OnBnClickedRawClearButton)
+	ON_BN_CLICKED(IDC_READ_BUFFER_CHECK, &CseDlg::OnBnClickedReadBufferCheck)
+	ON_BN_CLICKED(IDC_WRITE_BUFFER_CHECK, &CseDlg::OnBnClickedWriteBufferCheck)
 END_MESSAGE_MAP()
 
 
@@ -299,4 +306,22 @@ void CseDlg::EnableCombos(BOOL b)
 	m_scopeStateIrCombo.EnableWindow(b);
 	m_scopeStateEoCombo.EnableWindow(b);
 	m_scopeStateOutCombo.EnableWindow(b);
+}
+
+void CseDlg::OnBnClickedRawClearButton()
+{
+	m_log.ResetContent();
+}
+
+void CseDlg::OnBnClickedReadBufferCheck()
+{
+	m_bReadBuffer = !m_bReadBuffer;
+	UpdateData(FALSE);
+}
+
+
+void CseDlg::OnBnClickedWriteBufferCheck()
+{
+	m_bWriteBuffer = !m_bWriteBuffer;
+	UpdateData(FALSE);
 }

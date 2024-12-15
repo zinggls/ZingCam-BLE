@@ -54,4 +54,9 @@ public:
 	CString m_strScopeOutChangeNoti;
 	CString m_strScopeOperationMode;
 	CListCtrl m_writeBufferListCtrl;
+	BOOL m_bReadBuffer;
+	BOOL m_bWriteBuffer;
+	afx_msg void OnBnClickedRawClearButton();
+	afx_msg void OnBnClickedReadBufferCheck();
+	afx_msg void OnBnClickedWriteBufferCheck();
 };

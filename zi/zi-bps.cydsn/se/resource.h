@@ -31,6 +31,9 @@
 #define IDC_WRITE_BUFFER_LIST           1042
 #define IDC_I2C_WRITE_BUTTON            1043
 #define IDC_LOGO_STATIC                 1044
+#define IDC_READ_BUFFER_CHECK           1046
+#define IDC_WRITE_BUFFER_CHECK          1047
+#define IDC_RAW_CLEAR_BUTTON            1048
 
 // Next default values for new objects
 // 
