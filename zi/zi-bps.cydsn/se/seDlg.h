@@ -112,4 +112,12 @@ public:
 	afx_msg void OnBnClickedI2cReadButton();
 	afx_msg void OnBnClickedI2cWriteButton();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnCbnSelchangeScopeKindChangeNotiCombo();
+	afx_msg void OnCbnSelchangeScopeOutChangeNotiCombo();
+	afx_msg void OnCbnSelchangeOpmodeScopeCombo();
+	afx_msg void OnCbnSelchangeScopeStateKindCombo();
+	afx_msg void OnCbnSelchangeScopeStateOutCombo();
+	afx_msg void OnCbnSelchangeScopeStateBatteryCombo();
+	afx_msg void OnCbnSelchangeScopeStateIrCombo();
+	afx_msg void OnCbnSelchangeScopeStateEoCombo();
 };

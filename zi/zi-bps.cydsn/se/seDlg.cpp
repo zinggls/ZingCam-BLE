@@ -104,6 +104,14 @@ BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_I2C_READ_BUTTON, &CseDlg::OnBnClickedI2cReadButton)
 	ON_BN_CLICKED(IDC_I2C_WRITE_BUTTON, &CseDlg::OnBnClickedI2cWriteButton)
 	ON_WM_TIMER()
+	ON_CBN_SELCHANGE(IDC_SCOPE_KIND_CHANGE_NOTI_COMBO, &CseDlg::OnCbnSelchangeScopeKindChangeNotiCombo)
+	ON_CBN_SELCHANGE(IDC_SCOPE_OUT_CHANGE_NOTI_COMBO, &CseDlg::OnCbnSelchangeScopeOutChangeNotiCombo)
+	ON_CBN_SELCHANGE(IDC_OPMODE_SCOPE_COMBO, &CseDlg::OnCbnSelchangeOpmodeScopeCombo)
+	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_KIND_COMBO, &CseDlg::OnCbnSelchangeScopeStateKindCombo)
+	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_OUT_COMBO, &CseDlg::OnCbnSelchangeScopeStateOutCombo)
+	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_BATTERY_COMBO, &CseDlg::OnCbnSelchangeScopeStateBatteryCombo)
+	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_IR_COMBO, &CseDlg::OnCbnSelchangeScopeStateIrCombo)
+	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_EO_COMBO, &CseDlg::OnCbnSelchangeScopeStateEoCombo)
 END_MESSAGE_MAP()
 
 
@@ -709,4 +717,92 @@ void CseDlg::OnTimer(UINT_PTR nIDEvent)
 	TRACE("UpdateData(FALSE)\n");
 
 	CDialogEx::OnTimer(nIDEvent);
+}
+
+
+void CseDlg::OnCbnSelchangeScopeKindChangeNotiCombo()
+{
+	int nSel = m_scopeKindChangeNotiCombo.GetCurSel();
+	m_scope_write_buffer.scope.scopeKindChangeNotify = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_scope_write_buffer.scope.scopeKindChangeNotify);
+	m_writeBufferListCtrl.SetItemText(0, 0, str);
+}
+
+
+void CseDlg::OnCbnSelchangeScopeOutChangeNotiCombo()
+{
+	int nSel = m_scopeOutChangeNotiCombo.GetCurSel();
+	m_scope_write_buffer.scope.scopeOutChangeNotify = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_scope_write_buffer.scope.scopeOutChangeNotify);
+	m_writeBufferListCtrl.SetItemText(0, 1, str);
+}
+
+
+void CseDlg::OnCbnSelchangeOpmodeScopeCombo()
+{
+	int nSel = m_scopeOperationModeCombo.GetCurSel();
+	m_scope_write_buffer.scope.scopeOperationMode = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_scope_write_buffer.scope.scopeOperationMode);
+	m_writeBufferListCtrl.SetItemText(0, 2, str);
+}
+
+
+void CseDlg::OnCbnSelchangeScopeStateKindCombo()
+{
+	int nSel = m_scopeStateKindCombo.GetCurSel();
+	m_scope_write_buffer.scope_state.kind = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_scope_write_buffer.scope_state.kind);
+	m_writeBufferListCtrl.SetItemText(0, 3, str);
+}
+
+
+void CseDlg::OnCbnSelchangeScopeStateOutCombo()
+{
+	int nSel = m_scopeStateOutCombo.GetCurSel();
+	m_scope_write_buffer.scope_state.out = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_scope_write_buffer.scope_state.out);
+	m_writeBufferListCtrl.SetItemText(0, 4, str);
+}
+
+
+void CseDlg::OnCbnSelchangeScopeStateBatteryCombo()
+{
+	int nSel = m_scopeStateBatteryCombo.GetCurSel();
+	m_scope_write_buffer.scope_state.battery = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_scope_write_buffer.scope_state.battery);
+	m_writeBufferListCtrl.SetItemText(0, 5, str);
+}
+
+
+void CseDlg::OnCbnSelchangeScopeStateIrCombo()
+{
+	int nSel = m_scopeStateIrCombo.GetCurSel();
+	m_scope_write_buffer.scope_state.ir = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_scope_write_buffer.scope_state.ir);
+	m_writeBufferListCtrl.SetItemText(0, 6, str);
+}
+
+
+void CseDlg::OnCbnSelchangeScopeStateEoCombo()
+{
+	int nSel = m_scopeStateEoCombo.GetCurSel();
+	m_scope_write_buffer.scope_state.eo = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%d"), m_scope_write_buffer.scope_state.eo);
+	m_writeBufferListCtrl.SetItemText(0, 7, str);
 }
