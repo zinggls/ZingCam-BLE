@@ -35,10 +35,12 @@ protected:
 public:
 	CListBox m_log;
 	CComboBox m_portsCombo;
+	static BOOL bRead;
 
 	void L(const TCHAR* str, ...);
 	BOOL COM_Init();
 	void COM_UnInit();
+	void ResetI2CReadButton();
 	void FillPortsCombo();
 	void CreateWriteBuffer();
 	void EnableCombos(BOOL b);

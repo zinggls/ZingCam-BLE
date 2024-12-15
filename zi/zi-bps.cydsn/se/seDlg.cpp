@@ -13,6 +13,7 @@
 #define new DEBUG_NEW
 #endif
 
+BOOL CseDlg::bRead = FALSE;
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
@@ -246,6 +247,15 @@ void CseDlg::COM_UnInit()
 {
 	CoUninitialize();
 	L(_T("COM Uninitialized"));
+}
+
+void CseDlg::ResetI2CReadButton()
+{
+	bRead = FALSE;
+	GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
+	GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(TRUE);
+	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
+	EnableCombos(FALSE);
 }
 
 void CseDlg::FillPortsCombo()
