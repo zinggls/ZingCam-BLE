@@ -144,7 +144,7 @@ BOOL CseDlg::OnInitDialog()
 	m_scopeStateEoCombo.AddString(_T("정상"));
 	m_scopeStateEoCombo.AddString(_T("EO모듈 이상"));
 
-
+	EnableCombos(FALSE);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -253,4 +253,16 @@ void CseDlg::FillPortsCombo()
 	}
 
 	COM_UnInit();
+}
+
+void CseDlg::EnableCombos(BOOL b)
+{
+	m_scopeKindChangeNotiCombo.EnableWindow(b);
+	m_scopeOutChangeNotiCombo.EnableWindow(b);
+	m_scopeOperationModeCombo.EnableWindow(b);
+	m_scopeStateKindCombo.EnableWindow(b);
+	m_scopeStateBatteryCombo.EnableWindow(b);
+	m_scopeStateIrCombo.EnableWindow(b);
+	m_scopeStateEoCombo.EnableWindow(b);
+	m_scopeStateOutCombo.EnableWindow(b);
 }

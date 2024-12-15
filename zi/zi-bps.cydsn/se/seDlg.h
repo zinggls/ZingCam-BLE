@@ -40,6 +40,7 @@ public:
 	BOOL COM_Init();
 	void COM_UnInit();
 	void FillPortsCombo();
+	void EnableCombos(BOOL b);
 	CComboBox m_scopeKindChangeNotiCombo;
 	CComboBox m_scopeOutChangeNotiCombo;
 	CComboBox m_scopeOperationModeCombo;
