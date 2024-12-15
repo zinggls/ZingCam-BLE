@@ -627,7 +627,28 @@ CString CseDlg::RawString(std::vector<byte>& dataOUT)
 
 HRESULT CseDlg::Send_I2C_WriteBuffer(int deviceAddress)
 {
-	//TODO
+	std::vector<byte> dataIN;
+	dataIN.resize(WRITE_BUFFER_SIZE);
+	dataIN[0] = m_scope.write.command.scopeKindChangeNotify;
+	dataIN[1] = m_scope.write.command.scopeOutChangeNotify;
+	dataIN[2] = m_scope.write.command.scopeOperationMode;
+	dataIN[3] = m_scope.write.state.kind;
+	dataIN[4] = m_scope.write.state.out;
+	dataIN[5] = m_scope.write.state.battery;
+	dataIN[6] = m_scope.write.state.ir;
+	dataIN[7] = m_scope.write.state.eo;
+
+	HRESULT hr = m_pCom->writeI2C(deviceAddress, dataIN);
+	if (!SUCCEEDED(hr)) {
+		L(_T("Failed writeI2C,HRESULT: 0x%08X"), hr);
+		return hr;
+	}
+
+	if (m_bWriteBuffer) {
+		SCOPE_WRITE& s = m_scope.write;
+		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
+			sizeof(SCOPE_WRITE), s.command.scopeKindChangeNotify,s.command.scopeOutChangeNotify,s.command.scopeOperationMode,s.state.kind,s.state.out,s.state.battery,s.state.ir,s.state.eo);
+	}
 	return S_OK;
 }
 
