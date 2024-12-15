@@ -4,6 +4,7 @@
 
 #pragma once
 
+class CCom;
 
 // CseDlg 대화 상자
 class CseDlg : public CDialogEx
@@ -31,4 +32,12 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	CListBox m_log;
+	CComboBox m_portsCombo;
+
+	void L(const TCHAR* str, ...);
+	BOOL COM_Init();
+	void COM_UnInit();
+	void FillPortsCombo();
 };

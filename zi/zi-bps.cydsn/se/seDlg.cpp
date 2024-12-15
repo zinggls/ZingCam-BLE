@@ -7,6 +7,7 @@
 #include "se.h"
 #include "seDlg.h"
 #include "afxdialogex.h"
+#include "com.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -59,6 +60,8 @@ CseDlg::CseDlg(CWnd* pParent /*=nullptr*/)
 void CseDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_LOG_LIST, m_log);
+	DDX_Control(pDX, IDC_PORTS_COMBO, m_portsCombo);
 }
 
 BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
@@ -99,7 +102,7 @@ BOOL CseDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	FillPortsCombo();
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -153,3 +156,59 @@ HCURSOR CseDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CseDlg::L(const TCHAR* str, ...)
+{
+	va_list args;
+	va_start(args, str);
+
+	int len = _vsctprintf(str, args) + 1;	//_vscprintf doesn't count terminating '\0'
+	TCHAR* buffer = new TCHAR[len];
+	_vstprintf(buffer, len, str, args);
+	va_end(args);
+
+	m_log.AddString(buffer);
+	delete[](buffer);
+
+	m_log.SetTopIndex(m_log.GetCount() - 1);
+}
+
+BOOL CseDlg::COM_Init()
+{
+	L(_T("Initializing COM"));
+	if (FAILED(CoInitialize(NULL)))
+	{
+		L(_T("Unable to initialize COM"));
+		return FALSE;
+	}
+	L(_T("COM Initialized"));
+	return TRUE;
+}
+
+void CseDlg::COM_UnInit()
+{
+	CoUninitialize();
+	L(_T("COM Uninitialized"));
+}
+
+void CseDlg::FillPortsCombo()
+{
+	COM_Init();
+
+	CCom com;
+	std::vector<std::wstring> ports;
+	long hr = com.GetPorts(ports);
+	if (!SUCCEEDED(hr)) {
+		COM_UnInit();
+		return;
+	}
+	for (size_t i = 0; i < ports.size(); i++) m_portsCombo.AddString(ports[i].c_str());
+
+	if (ports.size() > 0) {
+		m_portsCombo.SetCurSel(0);
+	}
+	else {
+		GetDlgItem(IDC_I2C_READ_BUTTON)->EnableWindow(FALSE);
+	}
+
+	COM_UnInit();
+}

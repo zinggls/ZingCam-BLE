@@ -7,9 +7,9 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_SE_DIALOG                   102
 #define IDR_MAINFRAME                   128
-#define IDB_BITMAP1                     130
 #define IDB_GLS_BITMAP                  130
 #define IDC_LOG_LIST                    1000
+#define IDC_I2C_READ_BUTTON             1001
 #define IDC_PORTS_COMBO                 1007
 #define IDC_LOGO_STATIC                 1044
 
