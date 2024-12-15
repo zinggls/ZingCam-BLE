@@ -546,10 +546,43 @@ void CseDlg::UpdateScopeOutChangeNoti(byte out)
 	m_strScopeOutChangeNoti += str;
 }
 
+void CseDlg::UpdateScopeOperationMode(byte mode)
+{
+	m_strScopeOperationMode = _T("2.조준경모드: ");
+
+	/*
+	0x00 : (default)
+	0x01 : 운용모드
+	0x02 : 대기모드
+	0x04 : 절전모드
+	*/
+
+	CString str;
+	switch (mode) {
+	case 0:
+		str = _T("(0)(default)");
+		break;
+	case 1:
+		str.Format(_T("운용모드(%x)"), mode);
+		break;
+	case 2:
+		str.Format(_T("대기모드(%x)"), mode);
+		break;
+	case 4:
+		str.Format(_T("절전모드(%x)"), mode);
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), mode);
+		break;
+	}
+	m_strScopeOperationMode += str;
+}
+
 void CseDlg::UpdateGUI(SCOPE& sc)
 {
 	UpdateScopeKindChangeNoti(sc.scopeKindChangeNotify);
 	UpdateScopeOutChangeNoti(sc.scopeOutChangeNotify);
+	UpdateScopeOperationMode(sc.scopeOperationMode);
 }
 
 CString CseDlg::RawString(std::vector<byte>& dataOUT)

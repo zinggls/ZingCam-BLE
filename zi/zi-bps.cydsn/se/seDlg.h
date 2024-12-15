@@ -89,6 +89,7 @@ public:
 	size_t Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc);
 	void UpdateScopeKindChangeNoti(byte kind);
 	void UpdateScopeOutChangeNoti(byte out);
+	void UpdateScopeOperationMode(byte mode);
 	void UpdateGUI(SCOPE& sc);
 	CString RawString(std::vector<byte>& dataOUT);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
