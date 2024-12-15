@@ -58,6 +58,11 @@ void i2cs_process()
         /* Clear the slave write buffer and status */
         I2C_I2CSlaveClearWriteBuf();
         (void) I2C_I2CSlaveClearWriteStatus();
+        
+        /* Update the read buffer */
+        i2cReadBuffer[0] = peripheral.scope.scopeKindChangeNotify;
+        i2cReadBuffer[1] = peripheral.scope.scopeOutChangeNotify;
+        i2cReadBuffer[2] = peripheral.scope.scopeOperMode;
     }
     
     /* Read complete: expose buffer to master */
