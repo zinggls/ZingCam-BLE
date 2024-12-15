@@ -662,7 +662,16 @@ cleanup:
 
 void CseDlg::InitWriteBufferCombo(SCOPE& sc)
 {
-	//TODO
+	m_scopeKindChangeNotiCombo.SetCurSel(sc.scopeKindChangeNotify);
+	m_scopeOutChangeNotiCombo.SetCurSel(sc.scopeOutChangeNotify);
+	m_scopeOperationModeCombo.SetCurSel(sc.scopeOperationMode);
+
+	//읽기 버퍼가 없는 콤보들은 참고할 값이 없으므로 0으로 초기설정을 한다
+	m_scopeStateKindCombo.SetCurSel(0);
+	m_scopeStateBatteryCombo.SetCurSel(0);
+	m_scopeStateIrCombo.SetCurSel(0);
+	m_scopeStateEoCombo.SetCurSel(0);
+	m_scopeStateOutCombo.SetCurSel(0);
 }
 
 void CseDlg::OnBnClickedI2cReadButton()
