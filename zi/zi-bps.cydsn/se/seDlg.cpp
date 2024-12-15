@@ -163,6 +163,7 @@ BOOL CseDlg::OnInitDialog()
 	m_scopeOperationModeCombo.AddString(_T("대기모드"));
 	m_scopeOperationModeCombo.AddString(_T("절전모드"));
 
+	m_scopeStateKindCombo.AddString(_T("미정의"));
 	m_scopeStateKindCombo.AddString(_T("EO"));
 	m_scopeStateKindCombo.AddString(_T("IR 백상(Default)"));
 	m_scopeStateKindCombo.AddString(_T("IR 흑상"));
@@ -828,14 +829,13 @@ void CseDlg::OnCbnSelchangeOpmodeScopeCombo()
 void CseDlg::OnCbnSelchangeScopeStateKindCombo()
 {
 	/*
+	0x00 : 미정(규격에는 없으나 일관성을 위해 추가)
 	0x01 : EO
 	0x02 : IR 백상(Default)
 	0x03 : IR 흑상
 	*/
 	int nSel = m_scopeStateKindCombo.GetCurSel();
 	m_scope.write.state.kind = nSel & 0xff;
-
-	m_scope.write.state.kind++;
 
 	CString str;
 	str.Format(_T("%x"), m_scope.write.state.kind);
