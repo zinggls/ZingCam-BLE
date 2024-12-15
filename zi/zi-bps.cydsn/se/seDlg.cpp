@@ -62,6 +62,14 @@ void CseDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LOG_LIST, m_log);
 	DDX_Control(pDX, IDC_PORTS_COMBO, m_portsCombo);
+	DDX_Control(pDX, IDC_SCOPE_KIND_CHANGE_NOTI_COMBO, m_scopeKindChangeNotiCombo);
+	DDX_Control(pDX, IDC_SCOPE_OUT_CHANGE_NOTI_COMBO, m_scopeOutChangeNotiCombo);
+	DDX_Control(pDX, IDC_OPMODE_SCOPE_COMBO, m_scopeOperationModeCombo);
+	DDX_Control(pDX, IDC_SCOPE_STATE_KIND_COMBO, m_scopeStateKindCombo);
+	DDX_Control(pDX, IDC_SCOPE_STATE_OUT_COMBO, m_scopeStateOutCombo);
+	DDX_Control(pDX, IDC_SCOPE_STATE_BATTERY_COMBO, m_scopeStateBatteryCombo);
+	DDX_Control(pDX, IDC_SCOPE_STATE_IR_COMBO, m_scopeStateIrCombo);
+	DDX_Control(pDX, IDC_SCOPE_STATE_EO_COMBO, m_scopeStateEoCombo);
 }
 
 BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)

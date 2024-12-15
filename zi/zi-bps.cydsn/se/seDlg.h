@@ -40,4 +40,12 @@ public:
 	BOOL COM_Init();
 	void COM_UnInit();
 	void FillPortsCombo();
+	CComboBox m_scopeKindChangeNotiCombo;
+	CComboBox m_scopeOutChangeNotiCombo;
+	CComboBox m_scopeOperationModeCombo;
+	CComboBox m_scopeStateKindCombo;
+	CComboBox m_scopeStateBatteryCombo;
+	CComboBox m_scopeStateIrCombo;
+	CComboBox m_scopeStateEoCombo;
+	CComboBox m_scopeStateOutCombo;
 };
