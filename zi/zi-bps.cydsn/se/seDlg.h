@@ -103,6 +103,8 @@ public:
 	void UpdateScopeKindChangeNoti(byte kind);
 	void UpdateScopeOutChangeNoti(byte out);
 	void UpdateScopeOperationMode(byte mode);
+	static CString DecStr(int val);
+	void UpdateWriteBufferGUI(SCOPE_WRITE_BUFFER& swb);
 	void UpdateGUI(SCOPE_WRITE_BUFFER& swb);
 	CString RawString(std::vector<byte>& dataOUT);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);

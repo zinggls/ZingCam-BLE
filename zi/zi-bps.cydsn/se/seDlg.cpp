@@ -586,11 +586,31 @@ void CseDlg::UpdateScopeOperationMode(byte mode)
 	m_strScopeOperationMode += str;
 }
 
+CString CseDlg::DecStr(int val)
+{
+	CString str;
+	str.Format(_T("%d"), val);
+	return str;
+}
+
+void CseDlg::UpdateWriteBufferGUI(SCOPE_WRITE_BUFFER& swb)
+{
+	m_writeBufferListCtrl.SetItemText(0, 0, DecStr(swb.scope.scopeKindChangeNotify));
+	m_writeBufferListCtrl.SetItemText(0, 1, DecStr(swb.scope.scopeOutChangeNotify));
+	m_writeBufferListCtrl.SetItemText(0, 2, DecStr(swb.scope.scopeOperationMode));
+	m_writeBufferListCtrl.SetItemText(0, 3, DecStr(swb.scope_state.kind));
+	m_writeBufferListCtrl.SetItemText(0, 4, DecStr(swb.scope_state.out));
+	m_writeBufferListCtrl.SetItemText(0, 5, DecStr(swb.scope_state.battery));
+	m_writeBufferListCtrl.SetItemText(0, 6, DecStr(swb.scope_state.ir));
+	m_writeBufferListCtrl.SetItemText(0, 7, DecStr(swb.scope_state.eo));
+}
+
 void CseDlg::UpdateGUI(SCOPE_WRITE_BUFFER& swb)
 {
 	UpdateScopeKindChangeNoti(swb.scope.scopeKindChangeNotify);
 	UpdateScopeOutChangeNoti(swb.scope.scopeOutChangeNotify);
 	UpdateScopeOperationMode(swb.scope.scopeOperationMode);
+	UpdateWriteBufferGUI(swb);
 }
 
 CString CseDlg::RawString(std::vector<byte>& dataOUT)
