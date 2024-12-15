@@ -111,6 +111,40 @@ BOOL CseDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	FillPortsCombo();
+	m_scopeKindChangeNotiCombo.AddString(_T("알림 없음/알림 확인 완료"));
+	m_scopeKindChangeNotiCombo.AddString(_T("EO 변경 알림"));
+	m_scopeKindChangeNotiCombo.AddString(_T("IR 백상 변경 알림"));
+	m_scopeKindChangeNotiCombo.AddString(_T("IR 흑상 변경 알림"));
+
+	m_scopeOutChangeNotiCombo.AddString(_T("알림 없음/알림 확인 완료"));
+	m_scopeOutChangeNotiCombo.AddString(_T("영상 출력 변경 알림"));
+	m_scopeOutChangeNotiCombo.AddString(_T("영상 미출력 변경 알림"));
+
+	m_scopeOperationModeCombo.AddString(_T("(default)"));
+	m_scopeOperationModeCombo.AddString(_T("운용모드"));
+	m_scopeOperationModeCombo.AddString(_T("대기모드"));
+	m_scopeOperationModeCombo.AddString(_T("절전모드"));
+
+	m_scopeStateKindCombo.AddString(_T("EO"));
+	m_scopeStateKindCombo.AddString(_T("IR 백상(Default)"));
+	m_scopeStateKindCombo.AddString(_T("IR 흑상"));
+
+	m_scopeStateOutCombo.AddString(_T("출력"));
+	m_scopeStateOutCombo.AddString(_T("미출력"));
+
+	for (int i = 0; i <= 100; i++) {
+		CString str;
+		str.Format(_T("%d%%"), i);
+		m_scopeStateBatteryCombo.AddString(str);
+	}
+
+	m_scopeStateIrCombo.AddString(_T("정상"));
+	m_scopeStateIrCombo.AddString(_T("IR모듈 이상"));
+
+	m_scopeStateEoCombo.AddString(_T("정상"));
+	m_scopeStateEoCombo.AddString(_T("EO모듈 이상"));
+
+
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
