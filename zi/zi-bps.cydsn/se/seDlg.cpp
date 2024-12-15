@@ -66,8 +66,8 @@ CseDlg::CseDlg(CWnd* pParent /*=nullptr*/)
 	, m_strScopeKindChangeNoti(_T("종류 변경알림:"))
 	, m_strScopeOutChangeNoti(_T("출력 변경 알림:"))
 	, m_strScopeOperationMode(_T("조준경모드:"))
-	, m_bReadBuffer(FALSE)
-	, m_bWriteBuffer(FALSE)
+	, m_bReadBuffer(TRUE)
+	, m_bWriteBuffer(TRUE)
 	, m_bSendWriteBuffer(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
