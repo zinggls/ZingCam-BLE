@@ -59,12 +59,71 @@ void i2cs_process()
         I2C_I2CSlaveClearWriteBuf();
         (void) I2C_I2CSlaveClearWriteStatus();
         
-        /* Update the read buffer */
-        i2cReadBuffer[0] = peripheral.scope.scopeKindChangeNotify;
-        i2cReadBuffer[1] = peripheral.scope.scopeOutChangeNotify;
+        /*  Update the read buffer */
+        
+        /*  
+            화기조준경 영상 종류 변경 요청 알림
+
+            화기조준경 -> 무선영상 송신기 화기조준경 영상 종류 변경 알림
+            0x00 :알림 없음/알림 확인 완료
+            0x04 : 조준경 -> 영상융합처리기 EO 변경 알림
+            0x05 : 조준경 -> 영상융합처리기 IR 백상 변경 알림
+            0x06 : 조준경 -> 영상융합처리기 IR 흑상 변경 알림
+        
+            무선영상 송신기 -> 화기조준경 화기조준경 영상 종류 변경 요청 알림
+            0x00 :알림 없음/알림 반영 완료
+            0x01 : 영상융합처리기 -> 조준경 EO 변경 요청 알림
+            0x02 : 영상융합처리기 -> 조준경 IR 백상 변경 요청 알림
+            0x03 : 영상융합처리기 -> 조준경 IR 흑상 변경 요청 알림
+        */
+        switch(peripheral.scope.scopeKindChangeNotify){
+            case 0x0:
+                i2cReadBuffer[0] = 0x0;     //0x00 :알림 없음/알림 반영 완료
+                break;
+            case 0x4:
+                i2cReadBuffer[0] = 0x1;     //0x01 : 영상융합처리기 -> 조준경 EO 변경 요청 알림
+                break;
+            case 0x5:
+                i2cReadBuffer[0] = 0x2;     //0x02 : 영상융합처리기 -> 조준경 IR 백상 변경 요청 알림
+                break;
+            case 0x6:
+                i2cReadBuffer[0] = 0x3;     //0x03 : 영상융합처리기 -> 조준경 IR 흑상 변경 요청 알림
+                break;
+            default:
+                //정의 안되어 있음
+                break;
+        }
+        
+        /*  
+            화기조준경 영상 출력 종류 변경 요청 알림
+
+            화기조준경 -> 무선영상 송신기 화기조준경 영상 출력 종류 변경 알림
+            0x00 :알림 없음/알림 확인 완료
+            0x03 : 조준경 -> 영상융합처리기 영상 출력 변경 알림
+            0x04 : 조준경 -> 영상융합처리기 영상 미출력 변경 알림
+        
+            무선영상 송신기 -> 화기조준경 화기조준경 영상 출력 종류 변경 요청 알림
+            0x00 :알림 없음/알림 반영 완료
+            0x01 : 영상융합처리기 -> 조준경 영상 출력으로 변경 요청 알림
+            0x02 : 영상융합처리기 -> 조준경 영상 미출력으로 변경 요청 알림
+        */
+        switch(peripheral.scope.scopeOutChangeNotify){
+            case 0x0:
+                i2cReadBuffer[1] = 0x0;     //0x00 :알림 없음/알림 반영 완료
+                break;
+            case 0x3:
+                i2cReadBuffer[1] = 0x1;     //0x01 : 영상융합처리기 -> 조준경 영상 출력으로 변경 요청 알림
+                break;
+            case 0x4:
+                i2cReadBuffer[1] = 0x2;     //0x02 : 영상융합처리기 -> 조준경 영상 미출력으로 변경 요청 알림
+                break;
+            default:
+                //정의 안되어 있음
+                break;
+        }
         i2cReadBuffer[2] = peripheral.scope.scopeOperMode;
     }
-    
+
     /* Read complete: expose buffer to master */
     if (0u != (I2C_I2CSlaveStatus() & I2C_I2C_SSTAT_RD_CMPLT))
     {
