@@ -518,9 +518,38 @@ void CseDlg::UpdateScopeKindChangeNoti(byte kind)
 	m_strScopeKindChangeNoti += str;
 }
 
+void CseDlg::UpdateScopeOutChangeNoti(byte out)
+{
+	m_strScopeOutChangeNoti = _T("0.종류 변경알림: ");
+
+	/*
+	0x00 : 알림 없음/알림 반영 완료
+	0x01 : 영상융합처리기 -> 조준경 영상 출력으로 변경 요청 알림
+	0x02 : 영상융합처리기 -> 조준경 영상 미출력으로 변경 요청 알림
+	*/
+
+	CString str;
+	switch (out) {
+	case 0:
+		str = _T("(0)알림없음/알림반영완료");
+		break;
+	case 1:
+		str.Format(_T("영상 출력 변경 요청 알림(%x)"), out);
+		break;
+	case 2:
+		str.Format(_T("영상 미출력 변경 요청 알림(%x)"), out);
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), out);
+		break;
+	}
+	m_strScopeOutChangeNoti += str;
+}
+
 void CseDlg::UpdateGUI(SCOPE& sc)
 {
 	UpdateScopeKindChangeNoti(sc.scopeKindChangeNotify);
+	UpdateScopeOutChangeNoti(sc.scopeOutChangeNotify);
 }
 
 CString CseDlg::RawString(std::vector<byte>& dataOUT)

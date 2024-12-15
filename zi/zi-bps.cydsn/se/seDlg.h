@@ -88,6 +88,7 @@ public:
 	BOOL I2C_GetDeviceList();
 	size_t Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc);
 	void UpdateScopeKindChangeNoti(byte kind);
+	void UpdateScopeOutChangeNoti(byte out);
 	void UpdateGUI(SCOPE& sc);
 	CString RawString(std::vector<byte>& dataOUT);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
