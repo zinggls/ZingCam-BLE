@@ -10,11 +10,11 @@
 #define READ_BUFFER_SIZE	(3)
 #define MAX_LIST_ITEMS		(1024*8)
 
-typedef struct SCOPE {
+typedef struct SCOPE_COMMAND {
 	byte scopeKindChangeNotify;
 	byte scopeOutChangeNotify;
 	byte scopeOperationMode;
-} SCOPE;
+} SCOPE_COMMAND;
 
 typedef struct SCOPE_STATE {
 	byte kind;
@@ -24,10 +24,19 @@ typedef struct SCOPE_STATE {
 	byte eo;
 } SCOPE_STATE;
 
-typedef struct SCOPE_WRITE_BUFFER {
-	SCOPE scope;
-	SCOPE_STATE scope_state;
-} SCOPE_WRITE_BUFFER;
+typedef struct SCOPE_WRITE {
+	SCOPE_COMMAND command;
+	SCOPE_STATE state;
+} SCOPE_WRITE;
+
+typedef struct SCOPE_READ {
+	SCOPE_COMMAND command;
+} SCOPE_READ;
+
+typedef struct SCOPE {
+	SCOPE_READ read;
+	SCOPE_WRITE write;
+} SCOPE;
 
 class CCom;
 
@@ -64,7 +73,7 @@ public:
 	CWinThread* m_pReadThread;
 	CCom* m_pCom;
 	std::vector<byte> m_devices;
-	SCOPE_WRITE_BUFFER m_scope_write_buffer;
+	SCOPE m_scope;
 	BOOL m_bSendWriteBuffer;
 
 	void L(const TCHAR* str, ...);
@@ -104,8 +113,8 @@ public:
 	void UpdateScopeOutChangeNoti(byte out);
 	void UpdateScopeOperationMode(byte mode);
 	static CString DecStr(int val);
-	void UpdateWriteBufferGUI(SCOPE_WRITE_BUFFER& swb);
-	void UpdateGUI(SCOPE_WRITE_BUFFER& swb);
+	void UpdateWriteBufferGUI(SCOPE_WRITE& sw);
+	void UpdateGUI(SCOPE_WRITE& sw);
 	CString RawString(std::vector<byte>& dataOUT);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);

@@ -487,9 +487,9 @@ size_t CseDlg::Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc)
 {
 	size_t index = 0;
 
-	sc.scopeKindChangeNotify = dataOUT[0];	index++;
-	sc.scopeOutChangeNotify = dataOUT[1];	index++;
-	sc.scopeOperationMode = dataOUT[2];		index++;
+	sc.read.command.scopeKindChangeNotify = dataOUT[0];	index++;
+	sc.read.command.scopeOutChangeNotify = dataOUT[1];	index++;
+	sc.read.command.scopeOperationMode = dataOUT[2];	index++;
 
 	return index;
 }
@@ -593,24 +593,24 @@ CString CseDlg::DecStr(int val)
 	return str;
 }
 
-void CseDlg::UpdateWriteBufferGUI(SCOPE_WRITE_BUFFER& swb)
+void CseDlg::UpdateWriteBufferGUI(SCOPE_WRITE& sw)
 {
-	m_writeBufferListCtrl.SetItemText(0, 0, DecStr(swb.scope.scopeKindChangeNotify));
-	m_writeBufferListCtrl.SetItemText(0, 1, DecStr(swb.scope.scopeOutChangeNotify));
-	m_writeBufferListCtrl.SetItemText(0, 2, DecStr(swb.scope.scopeOperationMode));
-	m_writeBufferListCtrl.SetItemText(0, 3, DecStr(swb.scope_state.kind));
-	m_writeBufferListCtrl.SetItemText(0, 4, DecStr(swb.scope_state.out));
-	m_writeBufferListCtrl.SetItemText(0, 5, DecStr(swb.scope_state.battery));
-	m_writeBufferListCtrl.SetItemText(0, 6, DecStr(swb.scope_state.ir));
-	m_writeBufferListCtrl.SetItemText(0, 7, DecStr(swb.scope_state.eo));
+	m_writeBufferListCtrl.SetItemText(0, 0, DecStr(sw.command.scopeKindChangeNotify));
+	m_writeBufferListCtrl.SetItemText(0, 1, DecStr(sw.command.scopeOutChangeNotify));
+	m_writeBufferListCtrl.SetItemText(0, 2, DecStr(sw.command.scopeOperationMode));
+	m_writeBufferListCtrl.SetItemText(0, 3, DecStr(sw.state.kind));
+	m_writeBufferListCtrl.SetItemText(0, 4, DecStr(sw.state.out));
+	m_writeBufferListCtrl.SetItemText(0, 5, DecStr(sw.state.battery));
+	m_writeBufferListCtrl.SetItemText(0, 6, DecStr(sw.state.ir));
+	m_writeBufferListCtrl.SetItemText(0, 7, DecStr(sw.state.eo));
 }
 
-void CseDlg::UpdateGUI(SCOPE_WRITE_BUFFER& swb)
+void CseDlg::UpdateGUI(SCOPE_WRITE& sw)
 {
-	UpdateScopeKindChangeNoti(swb.scope.scopeKindChangeNotify);
-	UpdateScopeOutChangeNoti(swb.scope.scopeOutChangeNotify);
-	UpdateScopeOperationMode(swb.scope.scopeOperationMode);
-	UpdateWriteBufferGUI(swb);
+	UpdateScopeKindChangeNoti(sw.command.scopeKindChangeNotify);
+	UpdateScopeOutChangeNoti(sw.command.scopeOutChangeNotify);
+	UpdateScopeOperationMode(sw.command.scopeOperationMode);
+	UpdateWriteBufferGUI(sw);
 }
 
 CString CseDlg::RawString(std::vector<byte>& dataOUT)
@@ -644,9 +644,9 @@ HRESULT CseDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			return hr;
 		}
 
-		index = Parse_I2C(dataOUT, m_scope_write_buffer.scope);
+		index = Parse_I2C(dataOUT, m_scope);
 		ASSERT(index == READ_BUFFER_SIZE);
-		UpdateGUI(m_scope_write_buffer);
+		UpdateGUI(m_scope.write);
 
 		if (m_bReadBuffer) L(RawString(dataOUT));
 
@@ -690,9 +690,9 @@ cleanup:
 
 void CseDlg::InitWriteBufferCombo(SCOPE& sc)
 {
-	m_scopeKindChangeNotiCombo.SetCurSel(sc.scopeKindChangeNotify);
-	m_scopeOutChangeNotiCombo.SetCurSel(sc.scopeOutChangeNotify);
-	m_scopeOperationModeCombo.SetCurSel(sc.scopeOperationMode);
+	m_scopeKindChangeNotiCombo.SetCurSel(sc.read.command.scopeKindChangeNotify);
+	m_scopeOutChangeNotiCombo.SetCurSel(sc.read.command.scopeOutChangeNotify);
+	m_scopeOperationModeCombo.SetCurSel(sc.read.command.scopeOperationMode);
 
 	//읽기 버퍼가 없는 콤보들은 참고할 값이 없으므로 0으로 초기설정을 한다
 	m_scopeStateKindCombo.SetCurSel(0);
@@ -713,7 +713,7 @@ void CseDlg::OnBnClickedI2cReadButton()
 			return;
 		}
 
-		InitWriteBufferCombo(m_scope_write_buffer.scope);
+		InitWriteBufferCombo(m_scope);
 
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
 		GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(FALSE);
@@ -743,10 +743,10 @@ void CseDlg::OnTimer(UINT_PTR nIDEvent)
 void CseDlg::OnCbnSelchangeScopeKindChangeNotiCombo()
 {
 	int nSel = m_scopeKindChangeNotiCombo.GetCurSel();
-	m_scope_write_buffer.scope.scopeKindChangeNotify = nSel & 0xff;
+	m_scope.write.command.scopeKindChangeNotify = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope_write_buffer.scope.scopeKindChangeNotify);
+	str.Format(_T("%d"), m_scope.write.command.scopeKindChangeNotify);
 	m_writeBufferListCtrl.SetItemText(0, 0, str);
 }
 
@@ -754,10 +754,10 @@ void CseDlg::OnCbnSelchangeScopeKindChangeNotiCombo()
 void CseDlg::OnCbnSelchangeScopeOutChangeNotiCombo()
 {
 	int nSel = m_scopeOutChangeNotiCombo.GetCurSel();
-	m_scope_write_buffer.scope.scopeOutChangeNotify = nSel & 0xff;
+	m_scope.write.command.scopeOutChangeNotify = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope_write_buffer.scope.scopeOutChangeNotify);
+	str.Format(_T("%d"), m_scope.write.command.scopeOutChangeNotify);
 	m_writeBufferListCtrl.SetItemText(0, 1, str);
 }
 
@@ -765,10 +765,10 @@ void CseDlg::OnCbnSelchangeScopeOutChangeNotiCombo()
 void CseDlg::OnCbnSelchangeOpmodeScopeCombo()
 {
 	int nSel = m_scopeOperationModeCombo.GetCurSel();
-	m_scope_write_buffer.scope.scopeOperationMode = nSel & 0xff;
+	m_scope.write.command.scopeOperationMode = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope_write_buffer.scope.scopeOperationMode);
+	str.Format(_T("%d"), m_scope.write.command.scopeOperationMode);
 	m_writeBufferListCtrl.SetItemText(0, 2, str);
 }
 
@@ -776,10 +776,10 @@ void CseDlg::OnCbnSelchangeOpmodeScopeCombo()
 void CseDlg::OnCbnSelchangeScopeStateKindCombo()
 {
 	int nSel = m_scopeStateKindCombo.GetCurSel();
-	m_scope_write_buffer.scope_state.kind = nSel & 0xff;
+	m_scope.write.state.kind = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope_write_buffer.scope_state.kind);
+	str.Format(_T("%d"), m_scope.write.state.kind);
 	m_writeBufferListCtrl.SetItemText(0, 3, str);
 }
 
@@ -787,10 +787,10 @@ void CseDlg::OnCbnSelchangeScopeStateKindCombo()
 void CseDlg::OnCbnSelchangeScopeStateOutCombo()
 {
 	int nSel = m_scopeStateOutCombo.GetCurSel();
-	m_scope_write_buffer.scope_state.out = nSel & 0xff;
+	m_scope.write.state.out = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope_write_buffer.scope_state.out);
+	str.Format(_T("%d"), m_scope.write.state.out);
 	m_writeBufferListCtrl.SetItemText(0, 4, str);
 }
 
@@ -798,10 +798,10 @@ void CseDlg::OnCbnSelchangeScopeStateOutCombo()
 void CseDlg::OnCbnSelchangeScopeStateBatteryCombo()
 {
 	int nSel = m_scopeStateBatteryCombo.GetCurSel();
-	m_scope_write_buffer.scope_state.battery = nSel & 0xff;
+	m_scope.write.state.battery = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope_write_buffer.scope_state.battery);
+	str.Format(_T("%d"), m_scope.write.state.battery);
 	m_writeBufferListCtrl.SetItemText(0, 5, str);
 }
 
@@ -809,10 +809,10 @@ void CseDlg::OnCbnSelchangeScopeStateBatteryCombo()
 void CseDlg::OnCbnSelchangeScopeStateIrCombo()
 {
 	int nSel = m_scopeStateIrCombo.GetCurSel();
-	m_scope_write_buffer.scope_state.ir = nSel & 0xff;
+	m_scope.write.state.ir = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope_write_buffer.scope_state.ir);
+	str.Format(_T("%d"), m_scope.write.state.ir);
 	m_writeBufferListCtrl.SetItemText(0, 6, str);
 }
 
@@ -820,9 +820,9 @@ void CseDlg::OnCbnSelchangeScopeStateIrCombo()
 void CseDlg::OnCbnSelchangeScopeStateEoCombo()
 {
 	int nSel = m_scopeStateEoCombo.GetCurSel();
-	m_scope_write_buffer.scope_state.eo = nSel & 0xff;
+	m_scope.write.state.eo = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope_write_buffer.scope_state.eo);
+	str.Format(_T("%d"), m_scope.write.state.eo);
 	m_writeBufferListCtrl.SetItemText(0, 7, str);
 }
