@@ -33,13 +33,13 @@
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\common\util.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\common\com.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="ivf.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\com.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\util.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,10 +53,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\common\com.cpp">
+    <ClCompile Include="..\..\common\com.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\common\util.cpp">
+    <ClCompile Include="..\..\common\util.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -75,9 +75,6 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="res\GLS.bmp">
-      <Filter>리소스 파일</Filter>
-    </Image>
-    <Image Include="..\..\..\..\..\..\Users\rossi\Downloads\p2p.png">
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="res\Green.bmp">
