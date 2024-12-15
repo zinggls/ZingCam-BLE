@@ -103,7 +103,7 @@ public:
 	void UpdateScopeKindChangeNoti(byte kind);
 	void UpdateScopeOutChangeNoti(byte out);
 	void UpdateScopeOperationMode(byte mode);
-	void UpdateGUI(SCOPE& sc);
+	void UpdateGUI(SCOPE_WRITE_BUFFER& swb);
 	CString RawString(std::vector<byte>& dataOUT);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);

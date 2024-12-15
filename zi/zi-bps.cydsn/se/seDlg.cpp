@@ -586,11 +586,11 @@ void CseDlg::UpdateScopeOperationMode(byte mode)
 	m_strScopeOperationMode += str;
 }
 
-void CseDlg::UpdateGUI(SCOPE& sc)
+void CseDlg::UpdateGUI(SCOPE_WRITE_BUFFER& swb)
 {
-	UpdateScopeKindChangeNoti(sc.scopeKindChangeNotify);
-	UpdateScopeOutChangeNoti(sc.scopeOutChangeNotify);
-	UpdateScopeOperationMode(sc.scopeOperationMode);
+	UpdateScopeKindChangeNoti(swb.scope.scopeKindChangeNotify);
+	UpdateScopeOutChangeNoti(swb.scope.scopeOutChangeNotify);
+	UpdateScopeOperationMode(swb.scope.scopeOperationMode);
 }
 
 CString CseDlg::RawString(std::vector<byte>& dataOUT)
@@ -626,7 +626,7 @@ HRESULT CseDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		index = Parse_I2C(dataOUT, m_scope_write_buffer.scope);
 		ASSERT(index == READ_BUFFER_SIZE);
-		UpdateGUI(m_scope_write_buffer.scope);
+		UpdateGUI(m_scope_write_buffer);
 
 		if (m_bReadBuffer) L(RawString(dataOUT));
 
