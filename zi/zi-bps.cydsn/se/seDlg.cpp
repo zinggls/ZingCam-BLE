@@ -15,6 +15,14 @@
 
 BOOL CseDlg::bRead = FALSE;
 
+class CComAuto {
+public:
+	CComAuto(CseDlg* p) :m_p(p) { p->COM_Init(); }
+	~CComAuto() { m_p->COM_UnInit(); }
+private:
+	CseDlg* m_p;
+};
+
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -54,11 +62,13 @@ END_MESSAGE_MAP()
 
 CseDlg::CseDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_SE_DIALOG, pParent)
+	, m_pCom(NULL)
 	, m_strScopeKindChangeNoti(_T("종류 변경알림:"))
 	, m_strScopeOutChangeNoti(_T("출력 변경 알림:"))
 	, m_strScopeOperationMode(_T("조준경모드:"))
 	, m_bReadBuffer(FALSE)
 	, m_bWriteBuffer(FALSE)
+	, m_bSendWriteBuffer(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -91,6 +101,8 @@ BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RAW_CLEAR_BUTTON, &CseDlg::OnBnClickedRawClearButton)
 	ON_BN_CLICKED(IDC_READ_BUFFER_CHECK, &CseDlg::OnBnClickedReadBufferCheck)
 	ON_BN_CLICKED(IDC_WRITE_BUFFER_CHECK, &CseDlg::OnBnClickedWriteBufferCheck)
+	ON_BN_CLICKED(IDC_I2C_READ_BUTTON, &CseDlg::OnBnClickedI2cReadButton)
+	ON_BN_CLICKED(IDC_I2C_WRITE_BUTTON, &CseDlg::OnBnClickedI2cWriteButton)
 END_MESSAGE_MAP()
 
 
@@ -334,4 +346,253 @@ void CseDlg::OnBnClickedWriteBufferCheck()
 {
 	m_bWriteBuffer = !m_bWriteBuffer;
 	UpdateData(FALSE);
+}
+
+BOOL CseDlg::COM_OpenPort()
+{
+	m_pCom = new CCom();
+	ASSERT(m_pCom);
+
+	CString strPort;
+	m_portsCombo.GetLBText(m_portsCombo.GetCurSel(), strPort);
+
+	HRESULT hr = m_pCom->OpenPort(strPort.GetString());
+	if (!SUCCEEDED(hr)) {
+		L(_T("COM OpenPort failed, HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	else {
+		L(_T("COM OpenPort OK"));
+		return TRUE;
+	}
+}
+
+BOOL CseDlg::SetPowerVoltage()
+{
+	//Setup Power - "5.0V" and internal
+	HRESULT hr = m_pCom->SetPowerVoltage(_T("5.0"));
+	if (!SUCCEEDED(hr)) {
+		L(_T("Setup Power error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Setup Power - 5.0V and internal done"));
+	return TRUE;
+}
+
+BOOL CseDlg::PowerOn()
+{
+	HRESULT hr = m_pCom->PowerOn();
+	if (!SUCCEEDED(hr)) {
+		L(_T("Power On error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Power On"));
+	return TRUE;
+}
+
+BOOL CseDlg::SetProtocol()
+{
+	//Set protocol, connector and frequency
+	HRESULT hr = m_pCom->SetProtocol(enumInterfaces::I2C); //I2C-protocol
+	if (!SUCCEEDED(hr)) {
+		L(_T("SetProtocol error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Set protocol, connector and frequency"));
+	return TRUE;
+}
+
+BOOL CseDlg::I2C_ResetBus()
+{
+	//Reset bus
+	HRESULT hr = m_pCom->I2C_ResetBus();
+	if (!SUCCEEDED(hr)) {
+		L(_T("Reset bus error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Reset bus!"));
+	return TRUE;
+}
+
+BOOL CseDlg::I2C_SetSpeed()
+{
+	//Set I2C speed
+	HRESULT hr = m_pCom->I2C_SetSpeed((enumI2Cspeed)0x05);	//ppcom.h에는 CLK_1000K 0x05 정의가 안되어 있어서 강제로 타입변환
+	if (!SUCCEEDED(hr)) {
+		L(_T("Set speed: 1000K error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Set speed: 1000K"));
+	return TRUE;
+}
+
+BOOL CseDlg::I2C_GetSpeed()
+{
+	//Get I2C speed
+	long speed = 0;
+	CString val = _T("");
+	HRESULT hr = m_pCom->I2C_GetSpeed(speed);
+	if (!SUCCEEDED(hr)) {
+		L(_T("Get speed error,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+
+	if (speed == 1) {
+		val = _T("100K");
+	}
+	else if (speed == 4) {
+		val = _T("50K");
+	}
+	else if (speed == 2) {
+		val = _T("400K");
+	}
+	L(_T("Get speed: %s"), val);
+	return TRUE;
+}
+
+BOOL CseDlg::I2C_GetDeviceList()
+{
+	//Get device list
+	HRESULT hr = m_pCom->I2C_GetDeviceList(m_devices);
+	if (!SUCCEEDED(hr))
+	{
+		L(_T("Failed to enumerate I2C devices,HRESULT: 0x%08X"), hr);
+		return FALSE;
+	}
+	L(_T("Enumerate I2C devices"));
+
+	//Show devices
+	if (m_devices.size() == 0)
+	{
+		L(_T("No devices found"));
+		return FALSE;
+	}
+
+	L(_T("Devices list:  8bit  7bit"));
+	for (size_t i = 0; i < m_devices.size(); i++) L(_T("     address:  %02x    %02x"), m_devices[i] << 1, m_devices[i]);
+	return TRUE;
+}
+
+size_t CseDlg::Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc)
+{
+	size_t index = 0;
+
+	sc.scopeKindChangeNotify = dataOUT[0];	index++;
+	sc.scopeOutChangeNotify = dataOUT[1];	index++;
+	sc.scopeOperationMode = dataOUT[2];		index++;
+
+	return index;
+}
+
+void CseDlg::UpdateGUI(SCOPE& sc)
+{
+	//TODO
+}
+
+CString CseDlg::RawString(std::vector<byte>& dataOUT)
+{
+	CString str;
+	str.Format(_T("[%Iu] "), dataOUT.size());
+	for (size_t i = 0; i < dataOUT.size(); i++) {
+		CString tmp;
+		tmp.Format(_T("%02X "), dataOUT[i]);
+		str += tmp;
+	}
+	return str;
+}
+
+HRESULT CseDlg::Send_I2C_WriteBuffer(int deviceAddress)
+{
+	//TODO
+	return S_OK;
+}
+
+HRESULT CseDlg::Read_I2C_SCB_Slave(int deviceAddress)
+{
+	HRESULT hr;
+	CString str;
+	std::vector<byte> dataOUT;
+	size_t index;
+	while (1) {
+		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
+		if (!SUCCEEDED(hr)) {
+			L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
+			return hr;
+		}
+
+		index = Parse_I2C(dataOUT, m_scope);
+		ASSERT(index == READ_BUFFER_SIZE);
+		UpdateGUI(m_scope);
+
+		if (m_bReadBuffer) L(RawString(dataOUT));
+
+		if (m_bSendWriteBuffer) {
+			Send_I2C_WriteBuffer(deviceAddress);
+			m_bSendWriteBuffer = FALSE;
+		}
+
+		if (bRead == FALSE) break;
+	}
+	return S_OK;
+}
+
+UINT CseDlg::I2C_Read(LPVOID pParam)
+{
+	CseDlg* pDlg = (CseDlg*)pParam;
+
+	CComAuto ca(pDlg);
+
+	if (pDlg->COM_OpenPort() != TRUE) goto cleanup;
+
+	if (pDlg->SetPowerVoltage() != TRUE) goto cleanup;
+	if (pDlg->PowerOn() != TRUE) goto cleanup;
+	if (pDlg->SetProtocol() != TRUE) goto cleanup;
+	if (pDlg->I2C_ResetBus() != TRUE) goto cleanup;
+
+	//Sleep script for 100 milliseconds
+	Sleep(100);
+
+	if (pDlg->I2C_SetSpeed() != TRUE) goto cleanup;
+	if (pDlg->I2C_GetSpeed() != TRUE) goto cleanup;
+
+	if (pDlg->I2C_GetDeviceList() != TRUE) goto cleanup;
+
+	pDlg->Read_I2C_SCB_Slave(pDlg->m_devices[0]);
+
+cleanup:
+	pDlg->ResetI2CReadButton();
+	return 0;
+}
+
+void CseDlg::InitWriteBufferCombo(SCOPE& sc)
+{
+	//TODO
+}
+
+void CseDlg::OnBnClickedI2cReadButton()
+{
+	if (bRead == FALSE) {
+		bRead = TRUE;
+		m_pReadThread = AfxBeginThread(I2C_Read, this);
+		if (m_pReadThread == NULL) {
+			L(_T("Read thread AfxBeginThread failed"));
+			ResetI2CReadButton();
+			return;
+		}
+
+		InitWriteBufferCombo(m_scope);
+
+		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
+		GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(FALSE);
+		GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(TRUE);
+		EnableCombos(TRUE);
+	}
+	else {
+		ResetI2CReadButton();
+	}
+}
+
+void CseDlg::OnBnClickedI2cWriteButton()
+{
+	m_bSendWriteBuffer = TRUE;
 }

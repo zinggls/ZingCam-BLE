@@ -4,6 +4,18 @@
 
 #pragma once
 
+#include <vector>
+
+#define WRITE_BUFFER_SIZE	(8)
+#define READ_BUFFER_SIZE	(3)
+#define MAX_LIST_ITEMS		(1024*8)
+
+typedef struct IVF {
+	byte scopeKindChangeNotify;
+	byte scopeOutChangeNotify;
+	byte scopeOperationMode;
+} SCOPE;
+
 class CCom;
 
 // CseDlg 대화 상자
@@ -36,6 +48,11 @@ public:
 	CListBox m_log;
 	CComboBox m_portsCombo;
 	static BOOL bRead;
+	CWinThread* m_pReadThread;
+	CCom* m_pCom;
+	std::vector<byte> m_devices;
+	SCOPE m_scope;
+	BOOL m_bSendWriteBuffer;
 
 	void L(const TCHAR* str, ...);
 	BOOL COM_Init();
@@ -61,4 +78,21 @@ public:
 	afx_msg void OnBnClickedRawClearButton();
 	afx_msg void OnBnClickedReadBufferCheck();
 	afx_msg void OnBnClickedWriteBufferCheck();
+	BOOL COM_OpenPort();
+	BOOL SetPowerVoltage();
+	BOOL PowerOn();
+	BOOL SetProtocol();
+	BOOL I2C_ResetBus();
+	BOOL I2C_SetSpeed();
+	BOOL I2C_GetSpeed();
+	BOOL I2C_GetDeviceList();
+	size_t Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc);
+	void UpdateGUI(SCOPE& sc);
+	CString RawString(std::vector<byte>& dataOUT);
+	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
+	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
+	static UINT I2C_Read(LPVOID pParam);
+	void InitWriteBufferCombo(SCOPE& sc);
+	afx_msg void OnBnClickedI2cReadButton();
+	afx_msg void OnBnClickedI2cWriteButton();
 };
