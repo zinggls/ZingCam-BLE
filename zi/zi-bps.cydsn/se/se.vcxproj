@@ -224,6 +224,7 @@
   <ItemGroup>
     <Image Include="res\GLS.bmp" />
     <Image Include="res\se.ico" />
+    <Image Include="res\sniper-rifle.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
