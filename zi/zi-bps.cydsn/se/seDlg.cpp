@@ -103,6 +103,7 @@ BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_WRITE_BUFFER_CHECK, &CseDlg::OnBnClickedWriteBufferCheck)
 	ON_BN_CLICKED(IDC_I2C_READ_BUTTON, &CseDlg::OnBnClickedI2cReadButton)
 	ON_BN_CLICKED(IDC_I2C_WRITE_BUTTON, &CseDlg::OnBnClickedI2cWriteButton)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -175,6 +176,7 @@ BOOL CseDlg::OnInitDialog()
 
 	EnableCombos(FALSE);
 
+	SetTimer(1, 100, NULL);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -484,9 +486,41 @@ size_t CseDlg::Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc)
 	return index;
 }
 
+void CseDlg::UpdateScopeKindChangeNoti(byte kind)
+{
+	m_strScopeKindChangeNoti = _T("0.종류 변경알림: ");
+
+	/*
+	0x00 : 알림 없음/알림 반영 완료
+	0x01 : 영상융합처리기->조준경 EO 변경 요청 알림
+	0x02 : 영상융합처리기->조준경 IR 백상 변경 요청 알림
+	0x03 : 영상융합처리기->조준경 IR 흑상 변경 요청 알림
+	*/
+
+	CString str;
+	switch (kind) {
+	case 0:
+		str = _T("(0)알림없음/알림반영완료");
+		break;
+	case 1:
+		str.Format(_T("EO 변경 요청 알림(%x)"), kind);
+		break;
+	case 2:
+		str.Format(_T("IR 백상 변경 요청 알림(%x)"), kind);
+		break;
+	case 3:
+		str.Format(_T("IR 흑상 변경 요청 알림(%x)"), kind);
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), kind);
+		break;
+	}
+	m_strScopeKindChangeNoti += str;
+}
+
 void CseDlg::UpdateGUI(SCOPE& sc)
 {
-	//TODO
+	UpdateScopeKindChangeNoti(sc.scopeKindChangeNotify);
 }
 
 CString CseDlg::RawString(std::vector<byte>& dataOUT)
@@ -595,4 +629,13 @@ void CseDlg::OnBnClickedI2cReadButton()
 void CseDlg::OnBnClickedI2cWriteButton()
 {
 	m_bSendWriteBuffer = TRUE;
+}
+
+
+void CseDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	UpdateData(FALSE);
+	TRACE("UpdateData(FALSE)\n");
+
+	CDialogEx::OnTimer(nIDEvent);
 }

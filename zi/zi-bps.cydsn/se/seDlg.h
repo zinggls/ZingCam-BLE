@@ -87,6 +87,7 @@ public:
 	BOOL I2C_GetSpeed();
 	BOOL I2C_GetDeviceList();
 	size_t Parse_I2C(std::vector<byte>& dataOUT, SCOPE& sc);
+	void UpdateScopeKindChangeNoti(byte kind);
 	void UpdateGUI(SCOPE& sc);
 	CString RawString(std::vector<byte>& dataOUT);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
@@ -95,4 +96,5 @@ public:
 	void InitWriteBufferCombo(SCOPE& sc);
 	afx_msg void OnBnClickedI2cReadButton();
 	afx_msg void OnBnClickedI2cWriteButton();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
