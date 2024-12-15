@@ -308,15 +308,15 @@ void CseDlg::CreateWriteBuffer()
 {
 	m_writeBufferListCtrl.EnableWindow(FALSE);
 
-	int nHexWidth = 20;
+	int nHexWidth = 27;
 	m_writeBufferListCtrl.InsertColumn(0, _T("0"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(1, _T("1"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(2, _T("2"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(3, _T("3"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(4, _T("4"), LVCFMT_RIGHT, nHexWidth);
-	m_writeBufferListCtrl.InsertColumn(5, _T("5"), LVCFMT_RIGHT, 2*nHexWidth);
-	m_writeBufferListCtrl.InsertColumn(6, _T("6"), LVCFMT_RIGHT, 2*nHexWidth);
-	m_writeBufferListCtrl.InsertColumn(7, _T("7"), LVCFMT_RIGHT, 2*nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(5, _T("5"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(6, _T("6"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(7, _T("7"), LVCFMT_RIGHT, nHexWidth);
 
 	m_writeBufferListCtrl.InsertItem(0, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 0, _T(""));
