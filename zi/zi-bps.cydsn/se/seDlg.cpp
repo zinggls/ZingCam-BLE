@@ -770,8 +770,17 @@ void CseDlg::OnTimer(UINT_PTR nIDEvent)
 
 void CseDlg::OnCbnSelchangeScopeKindChangeNotiCombo()
 {
+	/*
+	0x00 :알림 없음/알림 확인 완료
+	0x04 : 조준경 -> 영상융합처리기 EO 변경 알림
+	0x05 : 조준경 -> 영상융합처리기 IR 백상 변경 알림
+	0x06 : 조준경 -> 영상융합처리기 IR 흑상 변경 알림
+	*/
+
 	int nSel = m_scopeKindChangeNotiCombo.GetCurSel();
 	m_scope.write.command.scopeKindChangeNotify = nSel & 0xff;
+
+	if (nSel > 0) m_scope.write.command.scopeKindChangeNotify += 3;
 
 	CString str;
 	str.Format(_T("%x"), m_scope.write.command.scopeKindChangeNotify);
@@ -781,8 +790,15 @@ void CseDlg::OnCbnSelchangeScopeKindChangeNotiCombo()
 
 void CseDlg::OnCbnSelchangeScopeOutChangeNotiCombo()
 {
+	/*
+	0x00 :알림 없음/알림 확인 완료
+	0x03 : 조준경 -> 영상융합처리기 영상 출력 변경 알림
+	0x04 : 조준경 -> 영상융합처리기 영상 미출력 변경 알림
+	*/
 	int nSel = m_scopeOutChangeNotiCombo.GetCurSel();
 	m_scope.write.command.scopeOutChangeNotify = nSel & 0xff;
+
+	if (nSel > 0) m_scope.write.command.scopeOutChangeNotify += 2;
 
 	CString str;
 	str.Format(_T("%x"), m_scope.write.command.scopeOutChangeNotify);
@@ -792,8 +808,16 @@ void CseDlg::OnCbnSelchangeScopeOutChangeNotiCombo()
 
 void CseDlg::OnCbnSelchangeOpmodeScopeCombo()
 {
+	/*
+	0x00 : (default)
+	0x01 : 운용모드
+	0x02 : 대기모드
+	0x04 : 절전모드
+	*/
 	int nSel = m_scopeOperationModeCombo.GetCurSel();
 	m_scope.write.command.scopeOperationMode = nSel & 0xff;
+
+	if (nSel == 3) m_scope.write.command.scopeOperationMode = 4;
 
 	CString str;
 	str.Format(_T("%x"), m_scope.write.command.scopeOperationMode);
@@ -803,8 +827,15 @@ void CseDlg::OnCbnSelchangeOpmodeScopeCombo()
 
 void CseDlg::OnCbnSelchangeScopeStateKindCombo()
 {
+	/*
+	0x01 : EO
+	0x02 : IR 백상(Default)
+	0x03 : IR 흑상
+	*/
 	int nSel = m_scopeStateKindCombo.GetCurSel();
 	m_scope.write.state.kind = nSel & 0xff;
+
+	m_scope.write.state.kind++;
 
 	CString str;
 	str.Format(_T("%x"), m_scope.write.state.kind);
