@@ -314,8 +314,8 @@ void CseDlg::CreateWriteBuffer()
 	m_writeBufferListCtrl.InsertColumn(3, _T("3"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(4, _T("4"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(5, _T("5"), LVCFMT_RIGHT, 2*nHexWidth);
-	m_writeBufferListCtrl.InsertColumn(6, _T("6"), LVCFMT_RIGHT, nHexWidth);
-	m_writeBufferListCtrl.InsertColumn(7, _T("7"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(6, _T("6"), LVCFMT_RIGHT, 2*nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(7, _T("7"), LVCFMT_RIGHT, 2*nHexWidth);
 
 	m_writeBufferListCtrl.InsertItem(0, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 0, _T(""));
@@ -593,16 +593,23 @@ CString CseDlg::DecStr(int val)
 	return str;
 }
 
+CString CseDlg::HexStr(int val)
+{
+	CString str;
+	str.Format(_T("%x"), val);
+	return str;
+}
+
 void CseDlg::UpdateWriteBufferGUI(SCOPE_WRITE& sw)
 {
-	m_writeBufferListCtrl.SetItemText(0, 0, DecStr(sw.command.scopeKindChangeNotify));
-	m_writeBufferListCtrl.SetItemText(0, 1, DecStr(sw.command.scopeOutChangeNotify));
-	m_writeBufferListCtrl.SetItemText(0, 2, DecStr(sw.command.scopeOperationMode));
-	m_writeBufferListCtrl.SetItemText(0, 3, DecStr(sw.state.kind));
-	m_writeBufferListCtrl.SetItemText(0, 4, DecStr(sw.state.out));
-	m_writeBufferListCtrl.SetItemText(0, 5, DecStr(sw.state.battery));
-	m_writeBufferListCtrl.SetItemText(0, 6, DecStr(sw.state.ir));
-	m_writeBufferListCtrl.SetItemText(0, 7, DecStr(sw.state.eo));
+	m_writeBufferListCtrl.SetItemText(0, 0, HexStr(sw.command.scopeKindChangeNotify));
+	m_writeBufferListCtrl.SetItemText(0, 1, HexStr(sw.command.scopeOutChangeNotify));
+	m_writeBufferListCtrl.SetItemText(0, 2, HexStr(sw.command.scopeOperationMode));
+	m_writeBufferListCtrl.SetItemText(0, 3, HexStr(sw.state.kind));
+	m_writeBufferListCtrl.SetItemText(0, 4, HexStr(sw.state.out));
+	m_writeBufferListCtrl.SetItemText(0, 5, HexStr(sw.state.battery));
+	m_writeBufferListCtrl.SetItemText(0, 6, HexStr(sw.state.ir));
+	m_writeBufferListCtrl.SetItemText(0, 7, HexStr(sw.state.eo));
 }
 
 void CseDlg::UpdateGUI(SCOPE_WRITE& sw)
@@ -767,7 +774,7 @@ void CseDlg::OnCbnSelchangeScopeKindChangeNotiCombo()
 	m_scope.write.command.scopeKindChangeNotify = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope.write.command.scopeKindChangeNotify);
+	str.Format(_T("%x"), m_scope.write.command.scopeKindChangeNotify);
 	m_writeBufferListCtrl.SetItemText(0, 0, str);
 }
 
@@ -778,7 +785,7 @@ void CseDlg::OnCbnSelchangeScopeOutChangeNotiCombo()
 	m_scope.write.command.scopeOutChangeNotify = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope.write.command.scopeOutChangeNotify);
+	str.Format(_T("%x"), m_scope.write.command.scopeOutChangeNotify);
 	m_writeBufferListCtrl.SetItemText(0, 1, str);
 }
 
@@ -789,7 +796,7 @@ void CseDlg::OnCbnSelchangeOpmodeScopeCombo()
 	m_scope.write.command.scopeOperationMode = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope.write.command.scopeOperationMode);
+	str.Format(_T("%x"), m_scope.write.command.scopeOperationMode);
 	m_writeBufferListCtrl.SetItemText(0, 2, str);
 }
 
@@ -800,7 +807,7 @@ void CseDlg::OnCbnSelchangeScopeStateKindCombo()
 	m_scope.write.state.kind = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope.write.state.kind);
+	str.Format(_T("%x"), m_scope.write.state.kind);
 	m_writeBufferListCtrl.SetItemText(0, 3, str);
 }
 
@@ -811,7 +818,7 @@ void CseDlg::OnCbnSelchangeScopeStateOutCombo()
 	m_scope.write.state.out = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope.write.state.out);
+	str.Format(_T("%x"), m_scope.write.state.out);
 	m_writeBufferListCtrl.SetItemText(0, 4, str);
 }
 
@@ -822,7 +829,7 @@ void CseDlg::OnCbnSelchangeScopeStateBatteryCombo()
 	m_scope.write.state.battery = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_scope.write.state.battery);
+	str.Format(_T("%x"), m_scope.write.state.battery);
 	m_writeBufferListCtrl.SetItemText(0, 5, str);
 }
 
@@ -832,8 +839,10 @@ void CseDlg::OnCbnSelchangeScopeStateIrCombo()
 	int nSel = m_scopeStateIrCombo.GetCurSel();
 	m_scope.write.state.ir = nSel & 0xff;
 
+	if (nSel == 1) m_scope.write.state.ir = 0xE1;	//0xE1 : 화기조준경 IR 모듈 이상
+
 	CString str;
-	str.Format(_T("%d"), m_scope.write.state.ir);
+	str.Format(_T("%x"), m_scope.write.state.ir);
 	m_writeBufferListCtrl.SetItemText(0, 6, str);
 }
 
@@ -843,7 +852,9 @@ void CseDlg::OnCbnSelchangeScopeStateEoCombo()
 	int nSel = m_scopeStateEoCombo.GetCurSel();
 	m_scope.write.state.eo = nSel & 0xff;
 
+	if (nSel == 1) m_scope.write.state.eo = 0xE2;	//0xE2 : 화기조준경 EO 모듈 이상
+
 	CString str;
-	str.Format(_T("%d"), m_scope.write.state.eo);
+	str.Format(_T("%x"), m_scope.write.state.eo);
 	m_writeBufferListCtrl.SetItemText(0, 7, str);
 }

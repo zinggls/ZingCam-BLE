@@ -113,6 +113,7 @@ public:
 	void UpdateScopeOutChangeNoti(byte out);
 	void UpdateScopeOperationMode(byte mode);
 	static CString DecStr(int val);
+	static CString HexStr(int val);
 	void UpdateWriteBufferGUI(SCOPE_WRITE& sw);
 	void UpdateGUI(SCOPE_WRITE& sw);
 	CString RawString(std::vector<byte>& dataOUT);
