@@ -569,7 +569,7 @@ void CseDlg::UpdateScopeOperationMode(byte mode)
 	CString str;
 	switch (mode) {
 	case 0:
-		str = _T("(0)(default)");
+		str = _T("(default)(0)");
 		break;
 	case 1:
 		str.Format(_T("운용모드(%x)"), mode);
