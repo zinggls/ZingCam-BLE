@@ -34,12 +34,13 @@
 #define IDC_READ_BUFFER_CHECK           1046
 #define IDC_WRITE_BUFFER_CHECK          1047
 #define IDC_RAW_CLEAR_BUTTON            1048
+#define IDC_VERSION_STATIC              1049
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        131
+#define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
