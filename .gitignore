@@ -43,3 +43,4 @@ gitcommit.h
 *.user
 *.aps
 /examples/examples/zi-bcc.cydsn/zi-i2cMaster/ziie/*.aps
+version.h

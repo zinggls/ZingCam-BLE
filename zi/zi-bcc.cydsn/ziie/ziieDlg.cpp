@@ -9,6 +9,7 @@
 #include "afxdialogex.h"
 #include "com.h"
 #include "util.h"
+#include "version.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -42,15 +43,19 @@ public:
 // 구현입니다.
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	CString m_strVersion;
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
+, m_strVersion(_T(""))
 {
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_VERSION_STATIC, m_strVersion);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
@@ -271,6 +276,7 @@ void CZiieDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
 		CAboutDlg dlgAbout;
+		dlgAbout.m_strVersion = VER_INFO;
 		dlgAbout.DoModal();
 	}
 	else
