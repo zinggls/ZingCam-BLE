@@ -1,0 +1,1 @@
+git log --date=short --pretty=format:"#define VER_INFO_PRESENT %%nstatic const char* VER_INFO = \"%%h %%an %%ad\"; " -n 1 > version.h
