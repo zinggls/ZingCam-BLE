@@ -63,8 +63,8 @@ END_MESSAGE_MAP()
 CseDlg::CseDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_SE_DIALOG, pParent)
 	, m_pCom(NULL)
-	, m_strScopeKindChangeNoti(_T("0.종류 변경 요청 알림: "))
-	, m_strScopeOutChangeNoti(_T("1.출력 변경알림:"))
+	, m_strScopeKindChangeNoti(_T("0.종류 변경요청: "))
+	, m_strScopeOutChangeNoti(_T("1.출력 변경요청:"))
 	, m_strScopeOperationMode(_T("2.조준경 운용모드:"))
 	, m_bReadBuffer(TRUE)
 	, m_bWriteBuffer(TRUE)
@@ -497,7 +497,7 @@ size_t CseDlg::Parse_I2C(std::vector<byte>& dataOUT, SCOPE_READ& sr)
 
 void CseDlg::UpdateScopeKindChangeNoti(byte kind)
 {
-	m_strScopeKindChangeNoti = _T("0.종류 변경 요청 알림: ");
+	m_strScopeKindChangeNoti = _T("0.종류 변경요청: ");
 
 	/*
 	0x00 : 알림 없음/알림 반영 완료
@@ -509,16 +509,16 @@ void CseDlg::UpdateScopeKindChangeNoti(byte kind)
 	CString str;
 	switch (kind) {
 	case 0:
-		str = _T("(0)알림없음/알림반영완료");
+		str = _T("알림없음/알림반영완료(0)");
 		break;
 	case 1:
-		str.Format(_T("EO 변경 요청(%x)"), kind);
+		str.Format(_T("EO 변경요청(%x)"), kind);
 		break;
 	case 2:
-		str.Format(_T("IR 백상 변경 요청(%x)"), kind);
+		str.Format(_T("IR 백상 변경요청(%x)"), kind);
 		break;
 	case 3:
-		str.Format(_T("IR 흑상 변경 요청(%x)"), kind);
+		str.Format(_T("IR 흑상 변경요청(%x)"), kind);
 		break;
 	default:
 		str.Format(_T("미정의(%x)"), kind);
@@ -529,7 +529,7 @@ void CseDlg::UpdateScopeKindChangeNoti(byte kind)
 
 void CseDlg::UpdateScopeOutChangeNoti(byte out)
 {
-	m_strScopeOutChangeNoti = _T("1.출력 변경알림: ");
+	m_strScopeOutChangeNoti = _T("1.출력 변경요청: ");
 
 	/*
 	0x00 : 알림 없음/알림 반영 완료
@@ -540,13 +540,13 @@ void CseDlg::UpdateScopeOutChangeNoti(byte out)
 	CString str;
 	switch (out) {
 	case 0:
-		str = _T("(0)알림없음/알림반영완료");
+		str = _T("알림없음/알림반영완료(0)");
 		break;
 	case 1:
-		str.Format(_T("영상 출력 변경 요청(%x)"), out);
+		str.Format(_T("영상 출력 변경요청(%x)"), out);
 		break;
 	case 2:
-		str.Format(_T("영상 미출력 변경 요청(%x)"), out);
+		str.Format(_T("영상 미출력 변경요청(%x)"), out);
 		break;
 	default:
 		str.Format(_T("미정의(%x)"), out);
