@@ -68,6 +68,7 @@ public:
 	BOOL IsNULL(ZING_BASE& z);
 	BOOL IsNULL(ZXX& z);
 	void UpdateZxxGUI(ZXX& z);
+	BOOL IsNULL(ZCD& z);
 	void UpdateZcdGUI(ZCD& z);
 	void UpdateWriteBufferGUI(I2C_IVF_COMMAND& ic);
 	void UpdateScopeKind(byte kind);

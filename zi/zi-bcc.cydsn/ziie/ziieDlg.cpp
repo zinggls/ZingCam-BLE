@@ -672,15 +672,15 @@ BOOL CZiieDlg::IsNULL(ZING_BASE& z)
 {
 	if (z.kind != 0) return FALSE;
 	if (z.usb != 0) return FALSE;
-	if (z.bnd != 0) return FALSE;
+	if (z.bnd != 0x20 && z.bnd != 0x0) return FALSE;		//space or null
 	if (z.ppid != 0) return FALSE;
 	if (z.devid != 0) return FALSE;
 	if (z.fmt != 0) return FALSE;
 	if (z.idx != 0) return FALSE;
-	if (z.trt != 0) return FALSE;
-	if (z.ack != 0) return FALSE;
-	if (z.ppc != 0) return FALSE;
-	if (z.run != 0) return FALSE;
+	if (z.trt != 0x20 && z.trt != 0x0) return FALSE;		//space or null
+	if (z.ack != 0x20 && z.ack != 0x0) return FALSE;		//space or null
+	if (z.ppc != 0x20 && z.ppc != 0x0) return FALSE;		//space or null
+	if (z.run != 0x20 && z.run != 0x0) return FALSE;		//space or null
 	if (z.txid != 0) return FALSE;
 	if (z.rxid != 0) return FALSE;
 	if (z.cnt != 0) return FALSE;
@@ -756,31 +756,53 @@ void CZiieDlg::UpdateZxxGUI(ZXX& z)
 	}
 }
 
+BOOL CZiieDlg::IsNULL(ZCD& z)
+{
+	if (z.fps != 0) return FALSE;
+	if (z.itf != 0x20 && z.itf != 0x0) return FALSE;	//space or null
+	if (z.destIdErrCnt != 0) return FALSE;
+	if (z.destIdDiff != 0) return FALSE;
+	if (z.phyRxFrameCnt != 0) return FALSE;
+	if (z.frameDiff != 0) return FALSE;
+	if (IsNULL(z.zb) != TRUE) return FALSE;
+	return TRUE;
+}
+
 void CZiieDlg::UpdateZcdGUI(ZCD& z)
 {
 	int nItem = InsertItem(m_zcdListCtrl, _T("ZCD"));
 
-	CString strKind = DecStr(z.zb.kind);
-	CString strUSB = DecStr(z.zb.usb);
-	CString strBND = CharStr(z.zb.bnd);
-	CString strPPID = IntHexStr(z.zb.ppid);
-	CString strDeviceID = IntHexStr(z.zb.devid);
-	CString strFMT = DecStr(z.zb.fmt);
-	CString strIDX = DecStr(z.zb.idx);
-	CString strTrt = CharStr(z.zb.trt);
-	CString strAck = CharStr(z.zb.ack);
-	CString strPpc = CharStr(z.zb.ppc);
-	CString strRun = CharStr(z.zb.run);
-	CString strTxid = IntHexStr(z.zb.txid);
-	CString strRxid = IntHexStr(z.zb.rxid);
-	CString strCnt = DecStr(z.zb.cnt);
-	CString strPos = IntHexStr(z.zb.pos);
-	CString strFps = IntHexStr(z.fps);
-	CString strItf = CharStr(z.itf);
-	CString strDestErr = DecStr(z.destIdErrCnt);
-	CString strDestDif = DecStr(z.destIdDiff);
-	CString strPhyRx = DecStr(z.phyRxFrameCnt);
-	CString strFrameDif = DecStr(z.frameDiff);
+	CString strNULL(_T("-")), strKind, strUSB, strBND, strPPID, strDeviceID, strFMT, strIDX, strTrt, strAck, strPpc, \
+		strRun, strTxid, strRxid, strCnt, strPos, strVND, strPRD, strFps, strItf, strDestErr, strDestDif, strPhyRx, strFrameDif;
+
+	if (IsNULL(z)) {
+		strKind = strUSB = strBND = strPPID = strDeviceID = strFMT = strIDX = strTrt = strAck = strPpc \
+			= strRun = strTxid = strRxid = strCnt = strPos = strVND = strPRD = strFps = strItf = strDestErr \
+			= strDestDif = strPhyRx = strFrameDif = strNULL;
+	}
+	else {
+		strKind = DecStr(z.zb.kind);
+		strUSB = DecStr(z.zb.usb);
+		strBND = CharStr(z.zb.bnd);
+		strPPID = IntHexStr(z.zb.ppid);
+		strDeviceID = IntHexStr(z.zb.devid);
+		strFMT = DecStr(z.zb.fmt);
+		strIDX = DecStr(z.zb.idx);
+		strTrt = CharStr(z.zb.trt);
+		strAck = CharStr(z.zb.ack);
+		strPpc = CharStr(z.zb.ppc);
+		strRun = CharStr(z.zb.run);
+		strTxid = IntHexStr(z.zb.txid);
+		strRxid = IntHexStr(z.zb.rxid);
+		strCnt = DecStr(z.zb.cnt);
+		strPos = IntHexStr(z.zb.pos);
+		strFps = IntHexStr(z.fps);
+		strItf = CharStr(z.itf);
+		strDestErr = DecStr(z.destIdErrCnt);
+		strDestDif = DecStr(z.destIdDiff);
+		strPhyRx = DecStr(z.phyRxFrameCnt);
+		strFrameDif = DecStr(z.frameDiff);
+	};
 
 	m_zcdListCtrl.SetItemText(nItem, 0, strKind);
 	m_zcdListCtrl.SetItemText(nItem, 1, strUSB);
