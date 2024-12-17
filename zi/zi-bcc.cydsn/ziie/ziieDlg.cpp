@@ -1269,6 +1269,18 @@ void CZiieDlg::UpdateImuGUI(CListCtrl& listCtrl, IMU& i)
 {
 	int nItem = InsertItem(listCtrl, _T(""));
 
+	if (i.data1 == 0 && i.data2 == 0 && i.data3 == 0 && i.data4 == 0 && i.data5 == 0 && i.checksum == 0)
+	{
+		CString str(_T("-"));
+		listCtrl.SetItemText(nItem, 0, str);
+		listCtrl.SetItemText(nItem, 1, str);
+		listCtrl.SetItemText(nItem, 2, str);
+		listCtrl.SetItemText(nItem, 3, str);
+		listCtrl.SetItemText(nItem, 4, str);
+		listCtrl.SetItemText(nItem, 5, str);
+		return;
+	}
+
 	listCtrl.SetItemText(nItem, 0, ShortToStr(i.data1));
 	listCtrl.SetItemText(nItem, 1, ShortToStr(i.data2));
 	listCtrl.SetItemText(nItem, 2, ShortToStr(i.data3));
