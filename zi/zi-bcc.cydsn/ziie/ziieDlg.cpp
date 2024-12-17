@@ -668,24 +668,30 @@ CString CZiieDlg::IntHexStr(int val)
 	return str;
 }
 
+BOOL CZiieDlg::IsNULL(ZING_BASE& z)
+{
+	if (z.kind != 0) return FALSE;
+	if (z.usb != 0) return FALSE;
+	if (z.bnd != 0) return FALSE;
+	if (z.ppid != 0) return FALSE;
+	if (z.devid != 0) return FALSE;
+	if (z.fmt != 0) return FALSE;
+	if (z.idx != 0) return FALSE;
+	if (z.trt != 0) return FALSE;
+	if (z.ack != 0) return FALSE;
+	if (z.ppc != 0) return FALSE;
+	if (z.run != 0) return FALSE;
+	if (z.txid != 0) return FALSE;
+	if (z.rxid != 0) return FALSE;
+	if (z.cnt != 0) return FALSE;
+	return TRUE;
+}
+
 BOOL CZiieDlg::IsNULL(ZXX& z)
 {
 	if (z.prd != 0) return FALSE;
 	if (z.vnd != 0) return FALSE;
-	if (z.zb.kind != 0) return FALSE;
-	if (z.zb.usb != 0) return FALSE;
-	if (z.zb.bnd != 0) return FALSE;
-	if (z.zb.ppid != 0) return FALSE;
-	if (z.zb.devid != 0) return FALSE;
-	if (z.zb.fmt != 0) return FALSE;
-	if (z.zb.idx != 0) return FALSE;
-	if (z.zb.trt != 0) return FALSE;
-	if (z.zb.ack != 0) return FALSE;
-	if (z.zb.ppc != 0) return FALSE;
-	if (z.zb.run != 0) return FALSE;
-	if (z.zb.txid != 0) return FALSE;
-	if (z.zb.rxid != 0) return FALSE;
-	if (z.zb.cnt != 0) return FALSE;
+	if (IsNULL(z.zb) != TRUE) return FALSE;
 	return TRUE;
 }
 
