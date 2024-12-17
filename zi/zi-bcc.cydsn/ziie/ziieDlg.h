@@ -65,6 +65,7 @@ public:
 	BOOL I2C_GetDeviceList();
 	HRESULT Control_I2C_SCB_Slave(int deviceAddress);
 	int InsertItem(CListCtrl& listCtrl, const CString& newItem);
+	BOOL IsNULL(ZXX& z);
 	void UpdateZxxGUI(ZXX& z);
 	void UpdateZcdGUI(ZCD& z);
 	void UpdateWriteBufferGUI(I2C_IVF_COMMAND& ic);

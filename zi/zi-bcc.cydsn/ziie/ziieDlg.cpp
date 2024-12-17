@@ -668,27 +668,57 @@ CString CZiieDlg::IntHexStr(int val)
 	return str;
 }
 
+BOOL CZiieDlg::IsNULL(ZXX& z)
+{
+	if (z.prd != 0) return FALSE;
+	if (z.vnd != 0) return FALSE;
+	if (z.zb.kind != 0) return FALSE;
+	if (z.zb.usb != 0) return FALSE;
+	if (z.zb.bnd != 0) return FALSE;
+	if (z.zb.ppid != 0) return FALSE;
+	if (z.zb.devid != 0) return FALSE;
+	if (z.zb.fmt != 0) return FALSE;
+	if (z.zb.idx != 0) return FALSE;
+	if (z.zb.trt != 0) return FALSE;
+	if (z.zb.ack != 0) return FALSE;
+	if (z.zb.ppc != 0) return FALSE;
+	if (z.zb.run != 0) return FALSE;
+	if (z.zb.txid != 0) return FALSE;
+	if (z.zb.rxid != 0) return FALSE;
+	if (z.zb.cnt != 0) return FALSE;
+	return TRUE;
+}
+
 void CZiieDlg::UpdateZxxGUI(ZXX& z)
 {
 	int nItem = InsertItem(m_zxxListCtrl, _T("ZXX"));
 
-	CString strKind = DecStr(z.zb.kind);
-	CString strUSB = DecStr(z.zb.usb);
-	CString strBND = CharStr(z.zb.bnd);
-	CString strPPID = IntHexStr(z.zb.ppid);
-	CString strDeviceID = IntHexStr(z.zb.devid);
-	CString strFMT = DecStr(z.zb.fmt);
-	CString strIDX = DecStr(z.zb.idx);
-	CString strTrt = CharStr(z.zb.trt);
-	CString strAck = CharStr(z.zb.ack);
-	CString strPpc = CharStr(z.zb.ppc);
-	CString strRun = CharStr(z.zb.run);
-	CString strTxid = IntHexStr(z.zb.txid);
-	CString strRxid = IntHexStr(z.zb.rxid);
-	CString strCnt = DecStr(z.zb.cnt);
-	CString strPos = IntHexStr(z.zb.pos);
-	CString strVND = IntHexStr(z.vnd);
-	CString strPRD = IntHexStr(z.prd);
+	CString strNULL(_T("-")),strKind, strUSB, strBND,strPPID, strDeviceID, strFMT, strIDX, strTrt, strAck, strPpc, \
+			strRun, strTxid, strRxid, strCnt, strPos, strVND, strPRD;
+
+	if (IsNULL(z)) {
+		strKind = strUSB = strBND = strPPID = strDeviceID = strFMT = strIDX = strTrt = strAck = strPpc \
+			= strRun = strTxid = strRxid = strCnt = strPos = strVND = strPRD = strNULL;
+	}
+	else {
+		strKind = DecStr(z.zb.kind);
+		strUSB = DecStr(z.zb.usb);
+		strBND = CharStr(z.zb.bnd);
+		strPPID = IntHexStr(z.zb.ppid);
+		strDeviceID = IntHexStr(z.zb.devid);
+		strFMT = DecStr(z.zb.fmt);
+		strIDX = DecStr(z.zb.idx);
+		strTrt = CharStr(z.zb.trt);
+		strAck = CharStr(z.zb.ack);
+		strPpc = CharStr(z.zb.ppc);
+		strRun = CharStr(z.zb.run);
+		strTxid = IntHexStr(z.zb.txid);
+		strRxid = IntHexStr(z.zb.rxid);
+		strCnt = DecStr(z.zb.cnt);
+		strPos = IntHexStr(z.zb.pos);
+		strVND = IntHexStr(z.vnd);
+		strPRD = IntHexStr(z.prd);
+	}
 
 	m_zxxListCtrl.SetItemText(nItem, 0, strKind);
 	m_zxxListCtrl.SetItemText(nItem, 1, strUSB);
