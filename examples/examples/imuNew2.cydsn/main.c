@@ -65,8 +65,9 @@ static uint32 imuFrameCount = 0;
 
 static void onImuFrame(const ImuFrame *imu)
 {
-    sprintf(msg, "[%x] ", imuCommand);
-    UART_DBG_UartPutString(msg);
+    if(sof==1) UART_DBG_UartPutString("[Euler] ");
+    if(sof==2) UART_DBG_UartPutString("[Quaternion] ");
+
     for(int i=0;i<ImuFrame_size();i++) {
         sprintf(msg, "%X ", imu->data[i]);
         UART_DBG_UartPutString(msg);
