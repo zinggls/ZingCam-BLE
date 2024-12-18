@@ -37,7 +37,7 @@ int main(void)
     for(;;)
     {
         /* Place your application code here. */
-        process_uart_data(onImuFrame);
+        imu_process_uart_data(onImuFrame);
     }
 }
 
