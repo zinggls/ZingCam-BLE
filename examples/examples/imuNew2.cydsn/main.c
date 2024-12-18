@@ -14,6 +14,7 @@
 #include "imu.h"
 
 static char msg[128];
+volatile uint8 receivedData = 0;
 
 static void onImuFrame(const ImuFrame *imu)
 {
@@ -21,8 +22,19 @@ static void onImuFrame(const ImuFrame *imu)
         sprintf(msg, "%X ", imu->data[i]);
         UART_DBG_UartPutString(msg);
     }
-    sprintf(msg, "\r\n");
     UART_DBG_UartPutString(msg);
+    sprintf(msg, ",receivedData=0x%x\r\n",receivedData);
+    UART_DBG_UartPutString(msg);
+}
+
+CY_ISR_PROTO(UART_DBG_RX_ISR)
+{
+    // Check if data is received
+    if (UART_DBG_SpiUartGetRxBufferSize() > 0)
+    {
+        // Read the received byte
+        receivedData = UART_DBG_UartGetChar();
+    }
 }
 
 int main(void)
@@ -31,6 +43,7 @@ int main(void)
 
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */    
     UART_DBG_Start();
+    UART_DBG_SetCustomInterruptHandler(UART_DBG_RX_ISR);
     UART_IMU_StartAndInitialize();
     
     UART_DBG_UartPutString("Start\r\n");
