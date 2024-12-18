@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include "imu.h"
 
+static uint8 sof = 1;   //Euler angles as default
 static uint8 imuCommand = 0;
 static char msg[128];
 
@@ -21,13 +22,25 @@ static void process(uint8 command)
     if(command == 0) return;
 
     if(command==0x65) {         //<sof1>	SET OUTPUT FORMAT, 1:Euler Angles	'e'	0x65
+        if(sof==1) {
+            UART_DBG_UartPutString("skip <sof1>\r\n");  //already sof is 1
+            goto cleanup;
+        }
+        
         UART_IMU_UartPutString("<sof1>");
-        ImuFrame_setSof(1);
         UART_DBG_UartPutString("<sof1>\r\n");
+        sof = 1;
+        ImuFrame_setSof(sof);
     }else if(command==0x71) {   //<sof2>	SET OUTPUT FORMAT, 2:Quaternion	    'q'	0x71
+        if(sof==2) {
+            UART_DBG_UartPutString("skip <sof2>\r\n");  //already sof is 2
+            goto cleanup;
+        }
+        
         UART_IMU_UartPutString("<sof2>");
         UART_DBG_UartPutString("<sof2>\r\n");
-        ImuFrame_setSof(2);
+        sof = 2;
+        ImuFrame_setSof(sof);
     }else if(command==0x67) {   //<cg>      CALIBRATION GYRO, 자이로 보정	        'g'	0x67
         UART_IMU_UartPutString("<cg>");
         UART_DBG_UartPutString("<cg>\r\n");
@@ -40,9 +53,14 @@ static void process(uint8 command)
     }else if(command==0x3e) {   //>	        cmf 종료명령	                        '>'	0x3e
         UART_IMU_UartPutString(">");
         UART_DBG_UartPutString(">\r\n");
+    }else{
+        goto cleanup;
     }
-    imuCommand = 0;   //reset
+    
     CyDelay(1000);
+    
+cleanup:
+    imuCommand = 0;   //reset
 }
 
 static uint32 imuFrameCount = 0;
