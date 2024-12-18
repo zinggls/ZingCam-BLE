@@ -49,12 +49,14 @@ static uint32 imuFrameCount = 0;
 
 static void onImuFrame(const ImuFrame *imu)
 {
-    for(int i=0;i<IMU_FRAME_SIZE;i++) {
+    sprintf(msg, "[%x] ", imuCommand);
+    UART_DBG_UartPutString(msg);
+    for(int i=0;i<ImuFrame_size();i++) {
         sprintf(msg, "%X ", imu->data[i]);
-        //UART_DBG_UartPutString(msg);
+        UART_DBG_UartPutString(msg);
     }
     sprintf(msg, "\r\n");
-    //UART_DBG_UartPutString(msg);
+    UART_DBG_UartPutString(msg);
     imuFrameCount++;
 }
 
@@ -83,9 +85,6 @@ int main(void)
         /* Place your application code here. */
         imu_process_uart_data(onImuFrame);
         process(imuCommand);
-        
-        sprintf(msg, "[%lu]\r\n", imuFrameCount);
-        UART_DBG_UartPutString(msg);
     }
 }
 
