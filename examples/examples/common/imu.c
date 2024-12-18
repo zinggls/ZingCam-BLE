@@ -24,7 +24,7 @@ void UART_IMU_StartAndInitialize()
     
     UART_IMU_UartPutString("<lf>");
     CyDelay(1000);
-    UART_IMU_UartPutString("<sor1>");
+    UART_IMU_UartPutString("<sor10>");
     CyDelay(100);
     UART_IMU_UartPutString("<soc2>");
     CyDelay(100);
