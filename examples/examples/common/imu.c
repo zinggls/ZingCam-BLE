@@ -34,6 +34,26 @@ void UART_IMU_StartAndInitialize()
     cbCountPrev = cbCount = 0;
 }
 
+void UART_IMU_StartAndInitializeOutputFormat(uint8 sof)
+{
+    UartBuf_init(&uBuf);
+    ImuFrame_init(&imu);
+    
+    UART_IMU_UartPutString("<lf>");
+    CyDelay(1000);
+    UART_IMU_UartPutString("<sor10>");
+    CyDelay(100);
+    UART_IMU_UartPutString("<soc2>");
+    CyDelay(100);
+    UART_IMU_UartPutString("<sots1>");
+    CyDelay(100);
+    
+    if(sof==1) UART_IMU_UartPutString("<sof1>");
+    if(sof==2) UART_IMU_UartPutString("<sof2>");
+    
+    cbCountPrev = cbCount = 0;
+}
+
 // Function to process data when a complete message is available
 void imu_process_uart_data(ImuFrameCallback cb)
 {

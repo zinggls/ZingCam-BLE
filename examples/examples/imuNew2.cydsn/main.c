@@ -27,20 +27,18 @@ static void process(uint8 command)
             goto cleanup;
         }
         
-        UART_IMU_UartPutString("<sof1>");
-        UART_DBG_UartPutString("<sof1>\r\n");
         sof = 1;
         ImuFrame_setSof(sof);
+        UART_IMU_StartAndInitializeOutputFormat(sof);
     }else if(command==0x71) {   //<sof2>	SET OUTPUT FORMAT, 2:Quaternion	    'q'	0x71
         if(sof==2) {
             UART_DBG_UartPutString("skip <sof2>\r\n");  //already sof is 2
             goto cleanup;
         }
         
-        UART_IMU_UartPutString("<sof2>");
-        UART_DBG_UartPutString("<sof2>\r\n");
         sof = 2;
         ImuFrame_setSof(sof);
+        UART_IMU_StartAndInitializeOutputFormat(sof);
     }else if(command==0x67) {   //<cg>      CALIBRATION GYRO, 자이로 보정	        'g'	0x67
         UART_IMU_UartPutString("<cg>");
         UART_DBG_UartPutString("<cg>\r\n");

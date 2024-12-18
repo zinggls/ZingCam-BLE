@@ -8,6 +8,7 @@
 typedef void (*ImuFrameCallback)(const ImuFrame *imu);
 
 void UART_IMU_StartAndInitialize();
+void UART_IMU_StartAndInitializeOutputFormat(uint8 sof);
 void imu_process_uart_data(ImuFrameCallback cb);
 void setImuState(uint8 val, uint8 errCode, uint8 *buf);
 uint8 getImuState();
