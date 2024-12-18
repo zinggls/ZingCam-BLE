@@ -16,6 +16,24 @@
 static char msg[128];
 volatile uint8 receivedData = 0;
 
+static void process(uint8 command)
+{
+    if(command==0x65) {         //<sof1>	SET OUTPUT FORMAT, 1:Euler Angles	'e'	0x65
+        UART_IMU_UartPutString("<sof1>");
+    }else if(command==0x71) {   //<sof2>	SET OUTPUT FORMAT, 2:Quaternion	    'q'	0x71
+        UART_IMU_UartPutString("<sof2>");
+    }else if(command==0x67) {   //<cg>      CALIBRATION GYRO, 자이로 보정	        'g'	0x67
+        UART_IMU_UartPutString("<cg>");
+    }else if(command==0x61) {   //<cas>	    CALIBRATION ACCELERO SIMPLE 가속도 보정	'a'	0x61
+        UART_IMU_UartPutString("<cas>");
+    }else if(command==0x6d) {   //<cmf>	    CALIBRATION MAGNETO FREE 지자계 보정	'm'	0x6d
+        UART_IMU_UartPutString("<cmf>");
+    }else if(command==0x3e) {   //>	        cmf 종료명령	                        '>'	0x3e
+        UART_IMU_UartPutString(">");
+    }
+    receivedData = 0;   //reset
+}
+
 static void onImuFrame(const ImuFrame *imu)
 {
     for(int i=0;i<IMU_FRAME_SIZE;i++) {
@@ -23,6 +41,7 @@ static void onImuFrame(const ImuFrame *imu)
         UART_DBG_UartPutString(msg);
     }
     UART_DBG_UartPutString(msg);
+    process(receivedData);
     sprintf(msg, ",receivedData=0x%x\r\n",receivedData);
     UART_DBG_UartPutString(msg);
 }
