@@ -69,7 +69,7 @@ static void onImuFrame(const ImuFrame *imu)
     if(sof==2) UART_DBG_UartPutString("[Quaternion] ");
 
     for(int i=0;i<ImuFrame_size();i++) {
-        sprintf(msg, "%X ", imu->data[i]);
+        sprintf(msg, "%02X ", imu->data[i]);
         UART_DBG_UartPutString(msg);
     }
     sprintf(msg, "\r\n");
