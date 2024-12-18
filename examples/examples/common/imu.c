@@ -53,12 +53,12 @@ void imu_process_uart_data(ImuFrameCallback cb)
                     ImuFrame_init(&imu);
                     continue;
                 }
-            }else if(imu.index>0 && imu.index<(IMU_FRAME_SIZE-1)){
+            }else if(imu.index>0 && imu.index<(ImuFrame_size()-1)){
                 imu.data[++imu.index] = ch;
             }else{
-                CYASSERT(imu.index==(IMU_FRAME_SIZE-1));
+                CYASSERT(imu.index==(ImuFrame_size()-1));
                 
-                if(ImuFrame_integrity(&imu)) {
+                if(ImuFrame_integrity2(&imu,ImuFrame_size())) {
                     //valid checksum
                     imu.isFull = true;
                 }else{
