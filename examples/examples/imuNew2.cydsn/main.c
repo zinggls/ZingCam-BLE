@@ -13,37 +13,47 @@
 #include <stdio.h>
 #include "imu.h"
 
+static uint8 imuCommand = 0;
 static char msg[128];
-volatile uint8 receivedData = 0;
 
 static void process(uint8 command)
 {
+    if(command == 0) return;
+
     if(command==0x65) {         //<sof1>	SET OUTPUT FORMAT, 1:Euler Angles	'e'	0x65
         UART_IMU_UartPutString("<sof1>");
+        UART_DBG_UartPutString("<sof1>\r\n");
     }else if(command==0x71) {   //<sof2>	SET OUTPUT FORMAT, 2:Quaternion	    'q'	0x71
         UART_IMU_UartPutString("<sof2>");
+        UART_DBG_UartPutString("<sof2>\r\n");
     }else if(command==0x67) {   //<cg>      CALIBRATION GYRO, 자이로 보정	        'g'	0x67
         UART_IMU_UartPutString("<cg>");
+        UART_DBG_UartPutString("<cg>\r\n");
     }else if(command==0x61) {   //<cas>	    CALIBRATION ACCELERO SIMPLE 가속도 보정	'a'	0x61
         UART_IMU_UartPutString("<cas>");
+        UART_DBG_UartPutString("<cas>\r\n");
     }else if(command==0x6d) {   //<cmf>	    CALIBRATION MAGNETO FREE 지자계 보정	'm'	0x6d
         UART_IMU_UartPutString("<cmf>");
+        UART_DBG_UartPutString("<cmf>\r\n");
     }else if(command==0x3e) {   //>	        cmf 종료명령	                        '>'	0x3e
         UART_IMU_UartPutString(">");
+        UART_DBG_UartPutString(">\r\n");
     }
-    receivedData = 0;   //reset
+    imuCommand = 0;   //reset
+    CyDelay(1000);
 }
+
+static uint32 imuFrameCount = 0;
 
 static void onImuFrame(const ImuFrame *imu)
 {
     for(int i=0;i<IMU_FRAME_SIZE;i++) {
         sprintf(msg, "%X ", imu->data[i]);
-        UART_DBG_UartPutString(msg);
+        //UART_DBG_UartPutString(msg);
     }
-    UART_DBG_UartPutString(msg);
-    process(receivedData);
-    sprintf(msg, ",receivedData=0x%x\r\n",receivedData);
-    UART_DBG_UartPutString(msg);
+    sprintf(msg, "\r\n");
+    //UART_DBG_UartPutString(msg);
+    imuFrameCount++;
 }
 
 CY_ISR_PROTO(UART_DBG_RX_ISR)
@@ -52,7 +62,7 @@ CY_ISR_PROTO(UART_DBG_RX_ISR)
     if (UART_DBG_SpiUartGetRxBufferSize() > 0)
     {
         // Read the received byte
-        receivedData = UART_DBG_UartGetChar();
+        imuCommand = UART_DBG_UartGetChar();
     }
 }
 
@@ -70,6 +80,10 @@ int main(void)
     {
         /* Place your application code here. */
         imu_process_uart_data(onImuFrame);
+        process(imuCommand);
+        
+        sprintf(msg, "[%lu]\r\n", imuFrameCount);
+        UART_DBG_UartPutString(msg);
     }
 }
 
