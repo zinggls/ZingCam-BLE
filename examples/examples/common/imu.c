@@ -34,7 +34,7 @@ void UART_IMU_StartAndInitialize()
     cbCountPrev = cbCount = 0;
 }
 
-void UART_IMU_StartAndInitializeOutputFormat(uint8 sof)
+void UART_IMU_InitializeOutputFormat(uint8 sof)
 {
     UartBuf_init(&uBuf);
     ImuFrame_init(&imu);
