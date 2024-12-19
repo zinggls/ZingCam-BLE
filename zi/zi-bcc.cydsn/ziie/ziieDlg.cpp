@@ -347,6 +347,8 @@ void CZiieDlg::FillPortsCombo()
 		COM_UnInit();
 		return;
 	}
+
+	m_portsCombo.ResetContent();
 	for (size_t i = 0; i < ports.size(); i++) m_portsCombo.AddString(ports[i].c_str());
 
 	if (ports.size() > 0) {
