@@ -176,4 +176,5 @@ public:
 	afx_msg void OnBnClickedWriteBufferCheck();
 	afx_msg void OnBnClickedRawClearButton();
 	BOOL m_bSendWriteBuffer;
+	afx_msg void OnCbnDropdownPortsCombo();
 };

@@ -167,6 +167,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_READ_BUFFER_CHECK, &CZiieDlg::OnBnClickedReadBufferCheck)
 	ON_BN_CLICKED(IDC_WRITE_BUFFER_CHECK, &CZiieDlg::OnBnClickedWriteBufferCheck)
 	ON_BN_CLICKED(IDC_RAW_CLEAR_BUTTON, &CZiieDlg::OnBnClickedRawClearButton)
+	ON_CBN_DROPDOWN(IDC_PORTS_COMBO, &CZiieDlg::OnCbnDropdownPortsCombo)
 END_MESSAGE_MAP()
 
 
@@ -1652,4 +1653,10 @@ void CZiieDlg::OnBnClickedWriteBufferCheck()
 void CZiieDlg::OnBnClickedRawClearButton()
 {
 	m_log.ResetContent();
+}
+
+
+void CZiieDlg::OnCbnDropdownPortsCombo()
+{
+	FillPortsCombo();
 }
