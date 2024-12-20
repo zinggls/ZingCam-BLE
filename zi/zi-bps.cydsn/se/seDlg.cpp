@@ -117,6 +117,7 @@ BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_BATTERY_COMBO, &CseDlg::OnCbnSelchangeScopeStateBatteryCombo)
 	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_IR_COMBO, &CseDlg::OnCbnSelchangeScopeStateIrCombo)
 	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_EO_COMBO, &CseDlg::OnCbnSelchangeScopeStateEoCombo)
+	ON_CBN_DROPDOWN(IDC_PORTS_COMBO, &CseDlg::OnCbnDropdownPortsCombo)
 END_MESSAGE_MAP()
 
 
@@ -895,4 +896,10 @@ void CseDlg::OnCbnSelchangeScopeStateEoCombo()
 	CString str;
 	str.Format(_T("%x"), m_scope.write.state.eo);
 	m_writeBufferListCtrl.SetItemText(0, 7, str);
+}
+
+
+void CseDlg::OnCbnDropdownPortsCombo()
+{
+	FillPortsCombo();
 }

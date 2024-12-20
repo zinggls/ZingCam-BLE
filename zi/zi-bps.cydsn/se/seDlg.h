@@ -132,4 +132,5 @@ public:
 	afx_msg void OnCbnSelchangeScopeStateBatteryCombo();
 	afx_msg void OnCbnSelchangeScopeStateIrCombo();
 	afx_msg void OnCbnSelchangeScopeStateEoCombo();
+	afx_msg void OnCbnDropdownPortsCombo();
 };
