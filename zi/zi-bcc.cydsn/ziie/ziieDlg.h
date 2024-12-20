@@ -51,8 +51,8 @@ public:
 	void CreateColumnsIMU(CListCtrl& listCtrl);
 	void CreateColumnsZXX(CListCtrl& listCtrl);
 	void CreateColumnsZCD(CListCtrl& listCtrl);
-	BOOL COM_Init();
-	void COM_UnInit();
+	BOOL COM_Init(BOOL bSilent = FALSE);
+	void COM_UnInit(BOOL bSilent = FALSE);
 	void ResetI2CReadButton();
 	BOOL COM_OpenPort();
 	void L(const TCHAR* str, ...);

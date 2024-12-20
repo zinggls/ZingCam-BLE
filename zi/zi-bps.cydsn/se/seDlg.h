@@ -77,8 +77,8 @@ public:
 	BOOL m_bSendWriteBuffer;
 
 	void L(const TCHAR* str, ...);
-	BOOL COM_Init();
-	void COM_UnInit();
+	BOOL COM_Init(BOOL bSilent = FALSE);
+	void COM_UnInit(BOOL bSilent = FALSE);
 	void ResetI2CReadButton();
 	void FillPortsCombo();
 	void CreateWriteBuffer();

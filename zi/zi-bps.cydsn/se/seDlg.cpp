@@ -261,22 +261,22 @@ void CseDlg::L(const TCHAR* str, ...)
 	m_log.SetTopIndex(m_log.GetCount() - 1);
 }
 
-BOOL CseDlg::COM_Init()
+BOOL CseDlg::COM_Init(BOOL bSilent)
 {
-	L(_T("Initializing COM"));
+	if(!bSilent) L(_T("Initializing COM"));
 	if (FAILED(CoInitialize(NULL)))
 	{
 		L(_T("Unable to initialize COM"));
 		return FALSE;
 	}
-	L(_T("COM Initialized"));
+	if (!bSilent) L(_T("COM Initialized"));
 	return TRUE;
 }
 
-void CseDlg::COM_UnInit()
+void CseDlg::COM_UnInit(BOOL bSilent)
 {
 	CoUninitialize();
-	L(_T("COM Uninitialized"));
+	if (!bSilent) L(_T("COM Uninitialized"));
 }
 
 void CseDlg::ResetI2CReadButton()
@@ -290,7 +290,7 @@ void CseDlg::ResetI2CReadButton()
 
 void CseDlg::FillPortsCombo()
 {
-	COM_Init();
+	COM_Init(TRUE);
 
 	CCom com;
 	std::vector<std::wstring> ports;
@@ -311,7 +311,7 @@ void CseDlg::FillPortsCombo()
 		GetDlgItem(IDC_I2C_READ_BUTTON)->EnableWindow(FALSE);
 	}
 
-	COM_UnInit();
+	COM_UnInit(TRUE);
 }
 
 void CseDlg::CreateWriteBuffer()

@@ -339,7 +339,7 @@ void CZiieDlg::EnableCombos(BOOL b)
 
 void CZiieDlg::FillPortsCombo()
 {
-	COM_Init();
+	COM_Init(TRUE);
 
 	CCom com;
 	std::vector<std::wstring> ports;
@@ -360,7 +360,7 @@ void CZiieDlg::FillPortsCombo()
 		GetDlgItem(IDC_I2C_READ_BUTTON)->EnableWindow(FALSE);
 	}
 
-	COM_UnInit();
+	COM_UnInit(TRUE);
 }
 
 void CZiieDlg::CreateWriteBuffer()
@@ -444,22 +444,22 @@ void CZiieDlg::CreateColumnsZCD(CListCtrl& listCtrl)
 	listCtrl.InsertColumn(17, _T("CNT"), LVCFMT_RIGHT, 85);
 }
 
-BOOL CZiieDlg::COM_Init()
+BOOL CZiieDlg::COM_Init(BOOL bSilent)
 {
-	L(_T("Initializing COM"));
+	if (!bSilent) L(_T("Initializing COM"));
 	if (FAILED(CoInitialize(NULL)))
 	{
 		L(_T("Unable to initialize COM"));
 		return FALSE;
 	}
-	L(_T("COM Initialized"));
+	if (!bSilent) L(_T("COM Initialized"));
 	return TRUE;
 }
 
-void CZiieDlg::COM_UnInit()
+void CZiieDlg::COM_UnInit(BOOL bSilent)
 {
 	CoUninitialize();
-	L(_T("COM Uninitialized"));
+	if(!bSilent) L(_T("COM Uninitialized"));
 }
 
 void CZiieDlg::ResetI2CReadButton()
