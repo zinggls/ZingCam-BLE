@@ -354,6 +354,7 @@ void CZiieDlg::FillPortsCombo()
 
 	if (ports.size() > 0) {
 		m_portsCombo.SetCurSel(0);
+		GetDlgItem(IDC_I2C_READ_BUTTON)->EnableWindow(TRUE);
 	}
 	else {
 		GetDlgItem(IDC_I2C_READ_BUTTON)->EnableWindow(FALSE);
