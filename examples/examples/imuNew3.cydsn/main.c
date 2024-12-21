@@ -51,6 +51,15 @@ static void process(uint8 command)
     }else if(command==0x3e) {   //>	        cmf 종료명령	                        '>'	0x3e
         UART_IMU_UartPutString(">");
         UART_DBG_UartPutString(">\r\n");
+    }else if(command==0x66) {   //<sem0>	지자계off  	                        'f'	0x66
+        UART_IMU_UartPutString("<sem0>");
+        UART_DBG_UartPutString("<sem0>\r\n");
+    }else if(command==0x6f) {   //<sem1>	지자계off  	                        'o'	0x6f
+        UART_IMU_UartPutString("<sem1>");
+        UART_DBG_UartPutString("<sem1>\r\n");
+    }else if(command==0x4d) {   //<sem2>	지자계능동형On  	                        'M'	0x4d
+        UART_IMU_UartPutString("<sem2>");
+        UART_DBG_UartPutString("<sem2>\r\n");
     }else{
         goto cleanup;
     }
