@@ -156,8 +156,8 @@ static void onImuFrame(const ImuFrame *imu)
     if(sof==2) {    //Quaternion
         i->imu1 = toShort(imu->data+2);
         i->imu2 = toShort(imu->data+4);
-        i->imu3 = toShort(imu->data+5);
-        i->imu4 = toShort(imu->data+6);
+        i->imu3 = toShort(imu->data+6);
+        i->imu4 = toShort(imu->data+8);
         i->imu5 = toShort(imu->data+10);
         i->imuChecksum = toShort(imu->data+12);
     }
