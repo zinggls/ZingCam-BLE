@@ -24,12 +24,32 @@ void UART_IMU_StartAndInitialize()
     
     UART_IMU_UartPutString("<lf>");
     CyDelay(1000);
-    UART_IMU_UartPutString("<sor1>");
+    UART_IMU_UartPutString("<sor10>");
     CyDelay(100);
     UART_IMU_UartPutString("<soc2>");
     CyDelay(100);
     UART_IMU_UartPutString("<sots1>");
     CyDelay(100);
+    
+    cbCountPrev = cbCount = 0;
+}
+
+void UART_IMU_InitializeOutputFormat(uint8 sof)
+{
+    UartBuf_init(&uBuf);
+    ImuFrame_init(&imu);
+    
+    UART_IMU_UartPutString("<lf>");
+    CyDelay(1000);
+    UART_IMU_UartPutString("<sor10>");
+    CyDelay(100);
+    UART_IMU_UartPutString("<soc2>");
+    CyDelay(100);
+    UART_IMU_UartPutString("<sots1>");
+    CyDelay(100);
+    
+    if(sof==1) UART_IMU_UartPutString("<sof1>");
+    if(sof==2) UART_IMU_UartPutString("<sof2>");
     
     cbCountPrev = cbCount = 0;
 }
@@ -53,12 +73,12 @@ void imu_process_uart_data(ImuFrameCallback cb)
                     ImuFrame_init(&imu);
                     continue;
                 }
-            }else if(imu.index>0 && imu.index<(IMU_FRAME_SIZE-1)){
+            }else if(imu.index>0 && imu.index<(ImuFrame_size()-1)){
                 imu.data[++imu.index] = ch;
             }else{
-                CYASSERT(imu.index==(IMU_FRAME_SIZE-1));
+                CYASSERT(imu.index==(ImuFrame_size()-1));
                 
-                if(ImuFrame_integrity(&imu)) {
+                if(ImuFrame_integrity2(&imu,ImuFrame_size())) {
                     //valid checksum
                     imu.isFull = true;
                 }else{
