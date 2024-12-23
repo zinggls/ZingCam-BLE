@@ -103,6 +103,7 @@ public:
 	void UpdateImuGUI(CListCtrl& listCtrl, IMU& i);
 	void UpdateGUI(IVF& ivf);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
+	static BOOL AllValues(std::vector<byte>& dataOUT, byte value);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);

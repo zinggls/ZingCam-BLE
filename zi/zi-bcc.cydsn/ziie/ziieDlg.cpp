@@ -1392,6 +1392,18 @@ HRESULT CZiieDlg::Send_I2C_WriteBuffer(int deviceAddress)
 	return S_OK;
 }
 
+BOOL CZiieDlg::AllValues(std::vector<byte> &dataOUT, byte value)
+{
+	bool all = true;
+	for (size_t i = 0; i < dataOUT.size(); ++i) {
+		if (dataOUT[i] != value) {
+			all = false;
+			break;
+		}
+	}
+	return all;
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1405,9 +1417,11 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			return hr;
 		}
 
-		index = Parse_I2C(dataOUT, m_ivf);
-		ASSERT(index == READ_BUFFER_SIZE);
-		UpdateGUI(m_ivf);
+		if (!AllValues(dataOUT, 0xFF)) {
+			index = Parse_I2C(dataOUT, m_ivf);
+			ASSERT(index == READ_BUFFER_SIZE);
+			UpdateGUI(m_ivf);
+		}
 
 		if(m_bReadBuffer) L(RawString(dataOUT));
 
