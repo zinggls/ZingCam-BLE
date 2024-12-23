@@ -10,6 +10,7 @@
 #include "NoLog.h"
 #include "bcc.h"
 #include "icd.h"
+#include "Peripheral.h"
 
 // Function to process data when a complete message is available
 static void ZingCB(const char *buf)
@@ -25,9 +26,114 @@ static void ZingCB(const char *buf)
     }
 }
 
+static uint8 sof = 1;                       //Euler angles as default
+static uint8_t currentImuOutputType = 0x0;  //default
+static uint8_t currentImuCalibrate = 0x0;   //default
+
+static void processImuOutputType(uint8_t imuOutputType)
+{
+    if(imuOutputType != currentImuOutputType) {
+        /*
+        SET OUTPUT FORMAT, 1:Euler Angles, 2:Quaternion
+        */
+        sof = imuOutputType+1;  //ICD, 0x00 : Euler Angle (Default) 0x01 : Quaternion
+        
+        ImuFrame_setSof(sof);
+        UART_IMU_InitializeOutputFormat(sof);
+        currentImuOutputType = imuOutputType;
+        
+        CyDelay(1000);
+    }
+}
+
+static void processImuCalibrate(uint8_t imuCalibrate)
+{
+    if(imuCalibrate != currentImuCalibrate) {
+        /*
+        0x00 : (default)
+        0x01 : 자이로 보정
+        0x02 : 가속도 보정
+        0x03 : 지자계 보정
+        0x04 : 지자계 보정 종료
+        0x05 : 지자기 Off
+        0x06 : 지자기 On
+        0x07 : 지자기 능동형 On
+        */
+        
+        bool bProcessed = false;
+        switch(imuCalibrate) {
+        case 0x0:
+            break;
+        case 0x1:   //자이로 보정
+            UART_IMU_UartPutString("<cg>");
+            bProcessed = true;
+            break;
+        case 0x2:   //가속도 보정
+            UART_IMU_UartPutString("<cas>");
+            bProcessed = true;
+            break;
+        case 0x3:   //지자계 보정
+            UART_IMU_UartPutString("<cmf>");
+            bProcessed = true;
+            break;
+        case 0x4:   //지자계 보정 종료
+            UART_IMU_UartPutString(">");
+            bProcessed = true;
+            break;
+        case 0x5:   //지자기 Off
+            UART_IMU_UartPutString("<sem0>");
+            bProcessed = true;
+            break;
+        case 0x6:   //지자기 On
+            UART_IMU_UartPutString("<sem1>");
+            bProcessed = true;
+            break;
+        case 0x7:   //지자기 능동형 On
+            UART_IMU_UartPutString("<sem2>");
+            bProcessed = true;
+            break;
+        default:
+            break;
+        }
+        currentImuCalibrate = imuCalibrate;
+        if(bProcessed) CyDelay(1000);
+    }
+}
+
+static void processImuCommand(uint8_t imuOutputType,uint8_t imuCalibrate)
+{
+    processImuOutputType(imuOutputType);
+    processImuCalibrate(imuCalibrate);
+}
+
+static short toShort(const char *data)
+{
+    return (short)((data[1] << 8) | data[0]);
+}
+
 static void onImuFrame(const ImuFrame *imu)
 {
-    memcpy(getI2CReadBuffer()+IMU_RX_OFFSET,imu->data,IMU_FRAME_SIZE); //무선영상 수신기IMU 34
+    IMU i;
+    
+    if(sof==1) {    //Euler
+        i.imu1 = 0x0000;
+        i.imu2 = toShort(imu->data+2);
+        i.imu3 = toShort(imu->data+4);
+        i.imu4 = toShort(imu->data+6);
+        i.imu5 = toShort(imu->data+8);
+        i.imuChecksum = toShort(imu->data+10);
+    }
+    
+    if(sof==2) {    //Quaternion
+        i.imu1 = toShort(imu->data+2);
+        i.imu2 = toShort(imu->data+4);
+        i.imu3 = toShort(imu->data+6);
+        i.imu4 = toShort(imu->data+8);
+        i.imu5 = toShort(imu->data+10);
+        i.imuChecksum = toShort(imu->data+12);
+    }
+    
+    memcpy(getI2CReadBuffer()+IMU_RX_OFFSET,&i,IMU_FRAME_SIZE); //무선영상 수신기IMU 34
 }
 
 static void clearZcdZingInfo(ZCD_FRAME *z)
@@ -99,5 +205,6 @@ int main(void)
         zing_process_uart_data();
         i2cs_process(getZcdFrame());
         imu_process_uart_data(onImuFrame);
+        processImuCommand(ivfCom.wirelssVideoReceiverImuOutputType,ivfCom.wirelessVideoReceiverImuCalibrate);
     }
 }
