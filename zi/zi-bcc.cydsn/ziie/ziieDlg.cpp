@@ -255,6 +255,9 @@ BOOL CZiieDlg::OnInitDialog()
 	m_txImuCalibCombo.AddString(_T("가속도 보정"));
 	m_txImuCalibCombo.AddString(_T("지자계 보정"));
 	m_txImuCalibCombo.AddString(_T("지자계 보정 종료"));
+	m_txImuCalibCombo.AddString(_T("지자기Off"));
+	m_txImuCalibCombo.AddString(_T("지자기On"));
+	m_txImuCalibCombo.AddString(_T("지자기 능동형On"));
 
 	m_rxImuTypeCombo.AddString(_T("Euler Angle(Default)"));
 	m_rxImuTypeCombo.AddString(_T("Quaternion"));
@@ -264,6 +267,9 @@ BOOL CZiieDlg::OnInitDialog()
 	m_rxImuCalibCombo.AddString(_T("가속도 보정"));
 	m_rxImuCalibCombo.AddString(_T("지자계 보정"));
 	m_rxImuCalibCombo.AddString(_T("지자계 보정 종료"));
+	m_rxImuCalibCombo.AddString(_T("지자기Off"));
+	m_rxImuCalibCombo.AddString(_T("지자기On"));
+	m_rxImuCalibCombo.AddString(_T("지자기 능동형On"));
 
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
 	EnableCombos(FALSE);
@@ -1617,7 +1623,7 @@ void CZiieDlg::OnCbnSelchangeTxImuTypeCombo()
 
 void CZiieDlg::OnCbnSelchangeTxImuCalibCombo()
 {
-	int nSel = m_txImuCalibCombo.GetCurSel();	//0x00 : (default) 0x01 : 자이로 보정 0x02 : 가속도 보정 0x03 : 지자계 보정 0x04 : 지자계 보정 종료
+	int nSel = m_txImuCalibCombo.GetCurSel();	//0x00 : (default) 0x01 : 자이로 보정 0x02 : 가속도 보정 0x03 : 지자계 보정 0x04 : 지자계 보정 종료 0x05 : 지자기Off 0x06 : 지자기On 0x07 : 지자기 능동형On
 
 	m_ivf.write.TxImuCalib = nSel & 0xff;
 
@@ -1641,7 +1647,7 @@ void CZiieDlg::OnCbnSelchangeRxImuTypeCombo()
 
 void CZiieDlg::OnCbnSelchangeRxImuCalibCombo()
 {
-	int nSel = m_rxImuCalibCombo.GetCurSel();	//0x00 : (default) 0x01 : 자이로 보정 0x02 : 가속도 보정 0x03 : 지자계 보정 0x04 : 지자계 보정 종료
+	int nSel = m_rxImuCalibCombo.GetCurSel();	//0x00 : (default) 0x01 : 자이로 보정 0x02 : 가속도 보정 0x03 : 지자계 보정 0x04 : 지자계 보정 종료 0x05 : 지자기Off 0x06 : 지자기On 0x07 : 지자기 능동형On
 
 	m_ivf.write.RxImuCalib = nSel & 0xff;
 
