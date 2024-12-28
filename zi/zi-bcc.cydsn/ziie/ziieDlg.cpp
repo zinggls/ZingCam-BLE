@@ -168,6 +168,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_WRITE_BUFFER_CHECK, &CZiieDlg::OnBnClickedWriteBufferCheck)
 	ON_BN_CLICKED(IDC_RAW_CLEAR_BUTTON, &CZiieDlg::OnBnClickedRawClearButton)
 	ON_CBN_DROPDOWN(IDC_PORTS_COMBO, &CZiieDlg::OnCbnDropdownPortsCombo)
+	ON_BN_CLICKED(IDC_I2C_RESET_BUTTON, &CZiieDlg::OnBnClickedI2cResetButton)
 END_MESSAGE_MAP()
 
 
@@ -1410,6 +1411,13 @@ BOOL CZiieDlg::AllValues(std::vector<byte> &dataOUT, byte value)
 	return all;
 }
 
+void CZiieDlg::ResetWriteBufferList()
+{
+	memset(&m_ivf.write, 0, sizeof(I2C_IVF_COMMAND));
+	CString str(_T("0"));
+	for (int i = 0; i <= 10; i++) m_writeBufferListCtrl.SetItemText(0, i, str);
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1680,4 +1688,10 @@ void CZiieDlg::OnBnClickedRawClearButton()
 void CZiieDlg::OnCbnDropdownPortsCombo()
 {
 	FillPortsCombo();
+}
+
+
+void CZiieDlg::OnBnClickedI2cResetButton()
+{
+	ResetWriteBufferList();
 }

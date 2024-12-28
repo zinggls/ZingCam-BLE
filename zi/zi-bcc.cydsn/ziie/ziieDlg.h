@@ -104,6 +104,7 @@ public:
 	void UpdateGUI(IVF& ivf);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
 	static BOOL AllValues(std::vector<byte>& dataOUT, byte value);
+	void ResetWriteBufferList();
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
@@ -178,4 +179,5 @@ public:
 	afx_msg void OnBnClickedRawClearButton();
 	BOOL m_bSendWriteBuffer;
 	afx_msg void OnCbnDropdownPortsCombo();
+	afx_msg void OnBnClickedI2cResetButton();
 };
