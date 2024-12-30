@@ -1441,6 +1441,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 		if (m_bSendWriteBuffer) {
 			Send_I2C_WriteBuffer(deviceAddress);
+			Sleep(1000);
 			m_bSendWriteBuffer = FALSE;
 		}
 
