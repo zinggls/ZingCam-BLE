@@ -50,21 +50,21 @@ int parse(void *data, const char *buf)
             {
                 ZXX_FRAME *z = (ZXX_FRAME*)data;
                 rtn = zedSscanf(buf,z);
-                if(ZED_NUM == rtn) z->kind = ZED;
+                if(ZED_NUM == rtn) { z->kind = ZED; }else{ z->kind = -1; }
             }
             break;
         case ZCH:
             {
                 ZXX_FRAME *z = (ZXX_FRAME*)data;
                 rtn = zchSscanf(buf,z);
-                if(ZCH_NUM == rtn) z->kind = ZCH;
+                if(ZCH_NUM == rtn) { z->kind = ZCH; }else{ z->kind = -1; }
             }
             break;
         case ZCD:
             {
                 ZCD_FRAME *z = (ZCD_FRAME*)data;
                 rtn = zcdSscanf(buf,z);
-                if(ZCD_NUM == rtn) z->kind = ZCD;
+                if(ZCD_NUM == rtn) { z->kind = ZCD; }else{ z->kind = -1; }
             }
             break;
         default:
