@@ -19,23 +19,9 @@ CY_ISR(UART_IMU_RX_INTERRUPT)
 
 void UART_IMU_StartAndInitialize()
 {
-    UartBuf_init(&uBuf);
-    ImuFrame_init(&imu);
-    
     UART_IMU_Start();
-    
-    UART_IMU_SetCustomInterruptHandler(UART_IMU_RX_INTERRUPT);    
-    
-    UART_IMU_UartPutString("<lf>");
-    CyDelay(1000);
-    UART_IMU_UartPutString("<sor10>");
-    CyDelay(100);
-    UART_IMU_UartPutString("<soc2>");
-    CyDelay(100);
-    UART_IMU_UartPutString("<sots1>");
-    CyDelay(100);
-    
-    cbCountPrev = cbCount = 0;
+    UART_IMU_SetCustomInterruptHandler(UART_IMU_RX_INTERRUPT);
+    UART_IMU_InitializeOutputFormat(1); //sof 1
 }
 
 void UART_IMU_InitializeOutputFormat(uint8 sof)
