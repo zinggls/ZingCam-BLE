@@ -677,6 +677,7 @@ HRESULT CseDlg::Read_I2C_SCB_Slave(int deviceAddress)
 	std::vector<byte> dataOUT;
 	size_t index;
 	while (1) {
+		Sleep(100);
 		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
 		if (!SUCCEEDED(hr)) {
 			L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
