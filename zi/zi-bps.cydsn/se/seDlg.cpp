@@ -631,10 +631,12 @@ void CseDlg::UpdateGUI(SCOPE& s)
 	UpdateWriteBufferGUI(s.write);
 }
 
+static unsigned long count = 0;
+
 CString CseDlg::RawString(std::vector<byte>& dataOUT)
 {
 	CString str;
-	str.Format(_T("[%Iu] "), dataOUT.size());
+	str.Format(_T("%lu [%Iu] "), count++, dataOUT.size());
 	for (size_t i = 0; i < dataOUT.size(); i++) {
 		CString tmp;
 		tmp.Format(_T("%02X "), dataOUT[i]);
