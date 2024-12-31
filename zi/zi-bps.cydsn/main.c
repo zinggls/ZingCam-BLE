@@ -225,6 +225,7 @@ int main()
     /* Start BLE stack and register the callback function */
     CyBle_Start(BleCallBack);
     
+    CyDelay(1000);
     UART_IMU_StartAndInitialize();
     
     Timer_Start();
