@@ -118,6 +118,7 @@ public:
 	void UpdateGUI(SCOPE& s);
 	CString RawString(std::vector<byte>& dataOUT);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
+	void ResetWriteBufferList();
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static UINT I2C_Read(LPVOID pParam);
 	void InitWriteBufferCombo(SCOPE& sc);
@@ -133,4 +134,5 @@ public:
 	afx_msg void OnCbnSelchangeScopeStateIrCombo();
 	afx_msg void OnCbnSelchangeScopeStateEoCombo();
 	afx_msg void OnCbnDropdownPortsCombo();
+	afx_msg void OnBnClickedI2cResetButton();
 };

@@ -35,6 +35,7 @@
 #define IDC_WRITE_BUFFER_CHECK          1047
 #define IDC_RAW_CLEAR_BUTTON            1048
 #define IDC_VERSION_STATIC              1049
+#define IDC_I2C_RESET_BUTTON            1049
 
 // Next default values for new objects
 // 

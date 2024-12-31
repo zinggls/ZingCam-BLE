@@ -118,6 +118,7 @@ BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_IR_COMBO, &CseDlg::OnCbnSelchangeScopeStateIrCombo)
 	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_EO_COMBO, &CseDlg::OnCbnSelchangeScopeStateEoCombo)
 	ON_CBN_DROPDOWN(IDC_PORTS_COMBO, &CseDlg::OnCbnDropdownPortsCombo)
+	ON_BN_CLICKED(IDC_I2C_RESET_BUTTON, &CseDlg::OnBnClickedI2cResetButton)
 END_MESSAGE_MAP()
 
 
@@ -672,6 +673,13 @@ HRESULT CseDlg::Send_I2C_WriteBuffer(int deviceAddress)
 	return S_OK;
 }
 
+void CseDlg::ResetWriteBufferList()
+{
+	memset(&m_scope.write, 0, sizeof(SCOPE_WRITE));
+	CString str(_T("0"));
+	for (int i = 0; i <= 7; i++) m_writeBufferListCtrl.SetItemText(0, i, str);
+}
+
 HRESULT CseDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -908,4 +916,10 @@ void CseDlg::OnCbnSelchangeScopeStateEoCombo()
 void CseDlg::OnCbnDropdownPortsCombo()
 {
 	FillPortsCombo();
+}
+
+
+void CseDlg::OnBnClickedI2cResetButton()
+{
+	ResetWriteBufferList();
 }
