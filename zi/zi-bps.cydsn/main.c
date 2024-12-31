@@ -131,10 +131,8 @@ static void processImuCalibrate(uint8_t imuCalibrate)
 
 static void processImuCommand(uint8_t imuOutputType,uint8_t imuCalibrate)
 {
-    uint32_t interruptState = CyEnterCriticalSection();
     processImuOutputType(imuOutputType);
     processImuCalibrate(imuCalibrate);
-    CyExitCriticalSection(interruptState);
 }
 
 static short toShort(const char *data)
