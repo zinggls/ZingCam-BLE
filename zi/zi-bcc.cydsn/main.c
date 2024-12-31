@@ -199,6 +199,8 @@ int main(void)
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     i2cs_start();
     CyBle_Start( CyBle_AppCallback );
+    
+    CyDelay(1000);
     UART_IMU_StartAndInitialize();
     
     for(;;)
