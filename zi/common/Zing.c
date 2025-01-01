@@ -12,9 +12,7 @@ void Zing_Init(ZingRxCallback cb)
 }
     
 CY_ISR(UART_ZING_RX_INTERRUPT)
-{
-    uint32_t interruptState = CyEnterCriticalSection();
-    
+{    
     char ch = UART_ZING_GetChar();
     if (ch != 0) {
         UartBuf_write_char(&zingBuf,ch);  // Write character to circular buffer
@@ -27,8 +25,6 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
 
     // Clear the interrupt to prevent retriggering
     UART_ZING_RX_ClearInterrupt();
-    
-    CyExitCriticalSection(interruptState);
 }
 
 // Function to process data when a complete message is available

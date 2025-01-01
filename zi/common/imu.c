@@ -6,15 +6,11 @@ static ImuFrame imu;
 static uint16 cbCountPrev,cbCount;
 
 CY_ISR(UART_IMU_RX_INTERRUPT)
-{
-    uint32_t interruptState = CyEnterCriticalSection();
-    
+{   
     UartBuf_write_char(&imuBuf,UART_IMU_UartGetByte());  // Write character to circular buffer
 
     // Clear the interrupt to prevent retriggering
     UART_IMU_RX_ClearInterrupt();
-    
-    CyExitCriticalSection(interruptState);
 }
 
 void UART_IMU_StartAndInitialize()
