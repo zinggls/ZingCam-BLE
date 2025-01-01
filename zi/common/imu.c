@@ -1,7 +1,7 @@
 #include "project.h"
 #include "imu.h"
 
-static UartBuf uBuf;    //Circular buffer for UART data
+static UartBuf imuBuf;    //Circular buffer for UART data
 static ImuFrame imu;
 static uint16 cbCountPrev,cbCount;
 
@@ -9,7 +9,7 @@ CY_ISR(UART_IMU_RX_INTERRUPT)
 {
     uint32_t interruptState = CyEnterCriticalSection();
     
-    UartBuf_write_char(&uBuf,UART_IMU_UartGetByte());  // Write character to circular buffer
+    UartBuf_write_char(&imuBuf,UART_IMU_UartGetByte());  // Write character to circular buffer
 
     // Clear the interrupt to prevent retriggering
     UART_IMU_RX_ClearInterrupt();
@@ -26,7 +26,7 @@ void UART_IMU_StartAndInitialize()
 
 void UART_IMU_InitializeOutputFormat(uint8 sof)
 {
-    UartBuf_init(&uBuf);
+    UartBuf_init(&imuBuf);
     ImuFrame_init(&imu);
     
     UART_IMU_UartPutString("<lf>");
@@ -47,8 +47,8 @@ void UART_IMU_InitializeOutputFormat(uint8 sof)
 // Function to process data when a complete message is available
 void imu_process_uart_data(ImuFrameCallback cb)
 {
-    while (!UartBuf_is_empty(&uBuf)) {
-        char ch = UartBuf_read_char(&uBuf);
+    while (!UartBuf_is_empty(&imuBuf)) {
+        char ch = UartBuf_read_char(&imuBuf);
         if(imu.isEmpty) {
             if(ch!=0x55) continue;  //imu must start with 0x55
             
