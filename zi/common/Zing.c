@@ -3,6 +3,7 @@
 static UartBuf zingBuf;    //Circular buffer for UART data
 static ZingRxCallback zingRxCb = NULL;
 static uint16 zingRxCbCountPrev,zingRxCbCount;
+static char zing_status[MAX_BUFFER_LENGTH];
 
 void Zing_Init(ZingRxCallback cb)
 {
@@ -31,8 +32,8 @@ CY_ISR(UART_ZING_RX_INTERRUPT)
 void zing_process_uart_data()
 {
     if (zingBuf.message_complete) {
-        // Extract complete message from buffer        
-        char zing_status[MAX_BUFFER_LENGTH] = {0};
+        // Extract complete message from buffer
+        memset(zing_status,0,MAX_BUFFER_LENGTH);
         uint16_t cnt = 0;
         
         while (!UartBuf_is_empty(&zingBuf)) {
