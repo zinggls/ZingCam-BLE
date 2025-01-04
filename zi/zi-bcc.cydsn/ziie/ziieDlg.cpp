@@ -10,6 +10,7 @@
 #include "com.h"
 #include "util.h"
 #include "version.h"
+#include "git_describe.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -45,10 +46,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CString m_strVersion;
+	CString m_strDescribe;
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
 , m_strVersion(_T(""))
+, m_strDescribe(_T(""))
 {
 }
 
@@ -56,6 +59,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_VERSION_STATIC, m_strVersion);
+	DDX_Text(pDX, IDC_DESCRIBE_STATIC, m_strDescribe);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
@@ -285,6 +289,7 @@ void CZiieDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	{
 		CAboutDlg dlgAbout;
 		dlgAbout.m_strVersion = VER_INFO;
+		dlgAbout.m_strDescribe = GIT_DESCRIBE;
 		dlgAbout.DoModal();
 	}
 	else

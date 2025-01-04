@@ -73,6 +73,8 @@
 #define IDC_VERSION_STATIC              1049
 #define IDC_I2C_WRITE_BUTTON2           1049
 #define IDC_I2C_RESET_BUTTON            1049
+#define IDC_VERSION_STATIC2             1050
+#define IDC_DESCRIBE_STATIC             1050
 
 // Next default values for new objects
 // 
