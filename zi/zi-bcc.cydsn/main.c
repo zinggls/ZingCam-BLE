@@ -2,7 +2,6 @@
 #include "project.h"
 #include <stdio.h>
 #include <ZFrame.h>
-#include <gitcommit.h>
 #include <UartBuf.h>
 #include <Zing.h>
 #include <i2cs.h>

@@ -3,7 +3,6 @@
 #include <Log.h>
 #include <UartBuf.h>
 #include <ZFrame.h>
-#include <gitcommit.h>
 #include <Zing.h>
 #include "Peripheral.h"
 #include "imu.h"
