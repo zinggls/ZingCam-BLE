@@ -97,6 +97,10 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_bReadBuffer(TRUE)
 	, m_bWriteBuffer(TRUE)
 	, m_bSendWriteBuffer(FALSE)
+	, m_strFwHbleVer(_T(""))
+	, m_strFwDbleVer(_T(""))
+	, m_strFwZxxVer(_T(""))
+	, m_strFwZcdVer(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -147,6 +151,10 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BLE_STATUS_LED_STATIC, m_bleStateCtrl);
 	DDX_Check(pDX, IDC_READ_BUFFER_CHECK, m_bReadBuffer);
 	DDX_Check(pDX, IDC_WRITE_BUFFER_CHECK, m_bWriteBuffer);
+	DDX_Text(pDX, IDC_HBLE_VERSION_STATIC, m_strFwHbleVer);
+	DDX_Text(pDX, IDC_DBLE_VERSION_STATIC, m_strFwDbleVer);
+	DDX_Text(pDX, IDC_ZXX_VERSION_STATIC, m_strFwZxxVer);
+	DDX_Text(pDX, IDC_ZCD_VERSION_STATIC, m_strFwZcdVer);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -1430,6 +1438,34 @@ void CZiieDlg::ResetWriteBufferList()
 	for (int i = 0; i <= 10; i++) m_writeBufferListCtrl.SetItemText(0, i, str);
 }
 
+void CZiieDlg::ConvertVectorToCString(const std::vector<byte>& data, CString& result)
+{
+	// Ensure the vector is not empty
+	if (data.empty()) {
+		result = _T(""); // Assign an empty CString
+		return;
+	}
+
+	// Convert ASCII data to wide characters for Unicode CString
+	int length = static_cast<int>(data.size());
+	std::vector<wchar_t> wideData(length);
+	MultiByteToWideChar(CP_ACP, 0, reinterpret_cast<const char*>(data.data()), length, wideData.data(), length);
+
+	// Assign to CString
+	result = CString(wideData.data(), length);
+}
+
+void CZiieDlg::GetBccVersion(std::vector<byte>& data)
+{
+	if (!m_strFwDbleVer.IsEmpty()) return;
+
+	CString str;
+	ConvertVectorToCString(data, str);
+
+	m_strFwDbleVer = _T("DBLE: ");
+	m_strFwDbleVer += str;
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1437,11 +1473,14 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 	std::vector<byte> dataOUT;
 	size_t index;
 	while (1) {
-		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE, dataOUT);
+		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE + VERSION_SIZE, dataOUT);
 		if (!SUCCEEDED(hr)) {
 			L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
 			return hr;
 		}
+
+		std::vector<byte> bccVer(dataOUT.begin() + READ_BUFFER_SIZE, dataOUT.begin() + READ_BUFFER_SIZE + VERSION_SIZE);
+		GetBccVersion(bccVer);
 
 		if (!AllValues(dataOUT, 0xFF)) {
 			index = Parse_I2C(dataOUT, m_ivf);

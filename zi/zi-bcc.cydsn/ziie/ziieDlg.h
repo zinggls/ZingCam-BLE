@@ -9,6 +9,7 @@
 
 #define WRITE_BUFFER_SIZE	(11)
 #define READ_BUFFER_SIZE	(165)
+#define VERSION_SIZE		(25)
 #define MAX_LIST_ITEMS		(1024*8)
 
 class CCom;
@@ -105,6 +106,8 @@ public:
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
 	static BOOL AllValues(std::vector<byte>& dataOUT, byte value);
 	void ResetWriteBufferList();
+	static void ConvertVectorToCString(const std::vector<byte>& data, CString& result);
+	void GetBccVersion(std::vector<byte>& data);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
@@ -180,4 +183,8 @@ public:
 	BOOL m_bSendWriteBuffer;
 	afx_msg void OnCbnDropdownPortsCombo();
 	afx_msg void OnBnClickedI2cResetButton();
+	CString m_strFwHbleVer;
+	CString m_strFwDbleVer;
+	CString m_strFwZxxVer;
+	CString m_strFwZcdVer;
 };
