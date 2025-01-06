@@ -1457,8 +1457,6 @@ void CZiieDlg::ConvertVectorToCString(const std::vector<byte>& data, CString& re
 
 void CZiieDlg::GetBccVersion(std::vector<byte>& data)
 {
-	if (!m_strFwDbleVer.IsEmpty()) return;
-
 	CString str;
 	ConvertVectorToCString(data, str);
 
@@ -1477,8 +1475,6 @@ void CZiieDlg::GetZcdVersion(std::vector<byte>& data)
 
 void CZiieDlg::GetBpsVersion(std::vector<byte>& data)
 {
-	if (!m_strFwHbleVer.IsEmpty()) return;
-
 	CString str;
 	ConvertVectorToCString(data, str);
 
