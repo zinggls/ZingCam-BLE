@@ -1491,7 +1491,10 @@ void CZiieDlg::GetZxxVersion(std::vector<byte>& data)
 	CString str;
 	ConvertVectorToCString(data, str);
 
-	m_strFwZxxVer = _T("ZXX: ");
+    CString strZxx;
+    GetDlgItemText(IDC_ZXX_STATIC, strZxx);
+
+	m_strFwZxxVer = strZxx + _T(": ");
 	m_strFwZxxVer += str;
 }
 
