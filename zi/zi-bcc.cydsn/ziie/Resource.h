@@ -75,6 +75,10 @@
 #define IDC_I2C_RESET_BUTTON            1049
 #define IDC_VERSION_STATIC2             1050
 #define IDC_DESCRIBE_STATIC             1050
+#define IDC_ZXX_VERSION_STATIC          1050
+#define IDC_ZCD_VERSION_STATIC          1051
+#define IDC_HBLE_VERSION_STATIC         1052
+#define IDC_DBLE_VERSION_STATIC         1053
 
 // Next default values for new objects
 // 
@@ -82,7 +86,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
