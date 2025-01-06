@@ -10,6 +10,16 @@
 #include "bcc.h"
 #include "icd.h"
 #include "Peripheral.h"
+#include "git_describe.h"
+#include "versionInfo.h"
+
+static void setBccVersion()
+{
+    Version ver;
+    memset(&ver,0,sizeof(Version));
+    strcpy(ver.info,GIT_DESCRIBE);
+    memcpy(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE,ver.info,VERSION_SIZE);
+}
 
 // Function to process data when a complete message is available
 static void ZingCB(const char *buf)
@@ -186,6 +196,7 @@ CY_ISR(TimerCallback)
 
 int main(void)
 {
+    setBccVersion();
     Timer_Start();
     timer_isr_StartEx(TimerCallback);
     
