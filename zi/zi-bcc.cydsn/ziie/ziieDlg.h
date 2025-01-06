@@ -109,6 +109,7 @@ public:
 	static void ConvertVectorToCString(const std::vector<byte>& data, CString& result);
 	void GetBccVersion(std::vector<byte>& data);
 	void GetZcdVersion(std::vector<byte>& data);
+	void GetBpsVersion(std::vector<byte>& data);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);

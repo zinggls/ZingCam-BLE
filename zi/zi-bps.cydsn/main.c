@@ -11,9 +11,17 @@
 #include "icd.h"
 #include "NoLog.h"
 #include "i2cs.h"
+#include "git_describe.h"
+#include "versionInfo.h"
 
 static uint16 notifyCustom = 0;
 static uint32 ZingCbCount = 0;
+
+static void setBbsVersion()
+{
+    memset(&peripheral.bpsVer,0,sizeof(Version));
+    strcpy(peripheral.bpsVer.info,GIT_DESCRIBE);
+}
 
 // Function to process data when a complete message is available
 static void ZingCB(const char *buf)
@@ -210,6 +218,7 @@ int main()
 {
     CyGlobalIntEnable; 
     
+    setBbsVersion();
     setGreen(LED_OFF);
 
     Zing_Init(ZingCB);
