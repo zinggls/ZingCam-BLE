@@ -1,9 +1,13 @@
 #include <ZFrame.h>
 #include "icd.h"
+#include "versionInfo.h"
+#include "i2cs.h"
 
 static const char ZED_SSCANF_FORMAT[] = "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
 static const char ZCH_SSCANF_FORMAT[] = "ZCH USB:%d VND:0x%X PRD:0x%X BND:%c PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
 static const char ZCD_SSCANF_FORMAT[] = "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d DestID_DIFF:%d PHY_RX_FRAME_CNT:%d PHY_RX_DIFF:%d CNT:%d";
+static char git_describe[128];
+static char git_info[128];
 
 ZxxKind detectZxx(const char *buf)
 {
@@ -40,6 +44,16 @@ static int zcdSscanf(const char *buf,ZCD_FRAME *z)
                     &z->usb,&z->ppid,&z->devid,&z->fmt,&z->idx,&z->fps,&z->trt,&z->ack,&z->ppc,&z->run,&z->itf,&z->txid,&z->rxid,&z->destIdErrCnt,&z->destIdDiff,&z->phyRxFrameCnt,&z->frameDiff,&z->cnt);
 }
 
+static int parse_log(const char *log, char *git_describe, char *git_info)
+{
+    // Initialize buffers to empty strings
+    git_describe[0] = '\0';
+    git_info[0] = '\0';
+
+    // Use sscanf to extract the required fields and return its result
+    return sscanf(log, "GIT DESCRIBE:%[^ ] GIT_INFO:Version Information=%s", git_describe, git_info);
+}
+
 int parse(void *data, const char *buf)
 {
     int rtn = 0;
@@ -68,6 +82,15 @@ int parse(void *data, const char *buf)
             }
             break;
         default:
+            {
+                rtn = parse_log(buf,git_describe,git_info);
+                if(GIT_DES == rtn){
+                    Version ver;
+                    memset(&ver,0,sizeof(Version));
+                    strcpy(ver.info,git_describe);
+                    memcpy(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+VERSION_SIZE,ver.info,VERSION_SIZE);
+                }
+            }
             break;
     }
     return rtn;

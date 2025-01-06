@@ -9,6 +9,7 @@
 #define ZED_NUM  11
 #define ZCH_NUM  15
 #define ZCD_NUM  18
+#define GIT_DES  2
     
 typedef enum {
     Unknown = 0,
