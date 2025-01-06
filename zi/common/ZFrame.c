@@ -2,6 +2,7 @@
 #include "icd.h"
 #include "versionInfo.h"
 #include "i2cs.h"
+#include "Peripheral.h"
 
 static const char ZED_SSCANF_FORMAT[] = "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
 static const char ZCH_SSCANF_FORMAT[] = "ZCH USB:%d VND:0x%X PRD:0x%X BND:%c PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
@@ -54,6 +55,8 @@ static int parse_log(const char *log, char *git_describe, char *git_info)
     return sscanf(log, "GIT DESCRIBE:%[^ ] GIT_INFO:Version Information=%s", git_describe, git_info);
 }
 
+static ZxxKind Kind = Unknown;
+
 int parse(void *data, const char *buf)
 {
     int rtn = 0;
@@ -62,6 +65,7 @@ int parse(void *data, const char *buf)
     switch(k) {
         case ZED:
             {
+                Kind = ZED;
                 ZXX_FRAME *z = (ZXX_FRAME*)data;
                 rtn = zedSscanf(buf,z);
                 if(ZED_NUM == rtn) { z->kind = ZED; }else{ z->kind = -1; }
@@ -69,6 +73,7 @@ int parse(void *data, const char *buf)
             break;
         case ZCH:
             {
+                Kind = ZCH;
                 ZXX_FRAME *z = (ZXX_FRAME*)data;
                 rtn = zchSscanf(buf,z);
                 if(ZCH_NUM == rtn) { z->kind = ZCH; }else{ z->kind = -1; }
@@ -76,6 +81,7 @@ int parse(void *data, const char *buf)
             break;
         case ZCD:
             {
+                Kind = ZCD;
                 ZCD_FRAME *z = (ZCD_FRAME*)data;
                 rtn = zcdSscanf(buf,z);
                 if(ZCD_NUM == rtn) { z->kind = ZCD; }else{ z->kind = -1; }
@@ -88,7 +94,12 @@ int parse(void *data, const char *buf)
                     Version ver;
                     memset(&ver,0,sizeof(Version));
                     strcpy(ver.info,git_describe);
-                    memcpy(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+VERSION_SIZE,ver.info,VERSION_SIZE);
+                    
+                    if(Kind==ZCD) {
+                        memcpy(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+VERSION_SIZE,ver.info,VERSION_SIZE);
+                    }else if(Kind==ZED || Kind==ZCH) {
+                        memcpy(peripheral.zxxVer.info,git_describe,VERSION_SIZE);
+                    }
                 }
             }
             break;

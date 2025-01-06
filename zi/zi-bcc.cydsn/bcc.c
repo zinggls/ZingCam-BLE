@@ -85,6 +85,11 @@ static void setBpsVerBuffer(uint8_t *buf,Version *v)
     memcpy(buf,v->info,VERSION_SIZE);
 }
 
+static void setZxxVerBuffer(uint8_t *buf,Version *v)
+{
+    memcpy(buf,v->info,VERSION_SIZE);
+}
+
 static void processingZxx()
 {
     if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
@@ -100,6 +105,7 @@ static void processingZxx()
         setImuBuffer(getI2CReadBuffer()+IMU_TX_OFFSET,&peripheral.imu);   //ICD 무선영상 송신기 IMU
         getZcdFrame()->pos = peripheral.zxxFrame.pos;
         setBpsVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+2*VERSION_SIZE,&peripheral.bpsVer);
+        setZxxVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+3*VERSION_SIZE,&peripheral.zxxVer);
     }
 }
 
