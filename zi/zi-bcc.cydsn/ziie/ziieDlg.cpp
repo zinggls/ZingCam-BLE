@@ -276,6 +276,7 @@ BOOL CZiieDlg::OnInitDialog()
 	m_rxImuCalibCombo.AddString(_T("지자기On"));
 	m_rxImuCalibCombo.AddString(_T("지자기 능동형On"));
 
+	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
 	EnableCombos(FALSE);
 
@@ -484,6 +485,7 @@ void CZiieDlg::ResetI2CReadButton()
 	bRead = FALSE;
 	GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
 	GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(TRUE);
+	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
 	EnableCombos(FALSE);
 	m_bleStateCtrl.ShowWindow(SW_HIDE);
@@ -1519,6 +1521,7 @@ void CZiieDlg::OnBnClickedI2cReadButton()
 
 		GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Stop"));
 		GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(FALSE);
+		GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(TRUE);
 		GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(TRUE);
 		EnableCombos(TRUE);
 		m_bleStateCtrl.ShowWindow(SW_SHOW);
