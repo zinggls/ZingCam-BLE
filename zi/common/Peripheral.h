@@ -2,6 +2,7 @@
 #define PERIPHERAL_H
     
 #include "ZFrame.h"
+#include "versionInfo.h"
 
 #define SCOPE_COMMAND_FIELDS      \
     char scopeKindChangeNotify;   \
@@ -46,6 +47,8 @@ typedef struct {
     TX_STATE txState;
     IMU imu;
     ZXX_FRAME zxxFrame;
+    Version bpsVer;
+    Version zxxVer;
 } PERIPHERAL;
 
 PERIPHERAL peripheral;
