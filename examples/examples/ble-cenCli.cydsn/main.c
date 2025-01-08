@@ -89,6 +89,11 @@ typedef struct {
     uint8 index;
 }WhiteList;
 
+void InitWhiteList(WhiteList *wl)
+{
+    memset(wl,0,sizeof(WhiteList));
+}
+
 bool IsAddressInWhiteList(WhiteList *wl, uint8 *bdAddr)
 {
     // Iterate through the whitelist
@@ -256,7 +261,7 @@ void SendCommandToPeripheral(uint8_t command) {
 
 int main(void)
 {
-    memset(&whiteList,0,sizeof(WhiteList));
+    InitWhiteList(&whiteList);
     
     CyGlobalIntEnable; /* Enable global interrupts. */
     UART_DBG_Start();
