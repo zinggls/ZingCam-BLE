@@ -108,6 +108,16 @@ bool IsAddressInWhiteList(WhiteList *wl, uint8 *bdAddr)
 
 static WhiteList whiteList;
 
+void setupForConnection()
+{
+    L("setup for connection\r\n");
+    remoteDevice.type = scanReport->peerAddrType;          // setup the BD addr
+    memcpy(&remoteDevice.bdAddr,scanReport->peerBdAddr,6); // 6 bytes in BD addr
+    systemMode = SM_CONNECTING;
+    CyBle_GapcStopScan();                                  // stop scanning for peripherals
+    L("Stop scan\r\n");
+}
+
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 {
@@ -143,18 +153,18 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             L("\n");
             
             bool inWhiteList = IsAddressInWhiteList(&whiteList,scanReport->peerBdAddr);
-            if(!inWhiteList) L("Device is not in the Whitelist\r\n");
-            
-            if(whiteList.index==0 || inWhiteList){  //whitelist is empty or Device in the list
-                if(whiteList.index==0) L("Whitelist is empty\r\n");
-                if(inWhiteList) L("Device exists in the Whitelist\r\n");
+            if(!inWhiteList) {
+                L("Device is not in the Whitelist\r\n");
                 
-                // Setup for the connection
-                remoteDevice.type = scanReport->peerAddrType;          // setup the BD addr
-                memcpy(&remoteDevice.bdAddr,scanReport->peerBdAddr,6); // 6 bytes in BD addr
-                systemMode = SM_CONNECTING;
-                CyBle_GapcStopScan();                                  // stop scanning for peripherals
-                L(" Stop scan\r\n");
+                if(whiteList.index==0) {
+                    L("Whitelist is empty\r\n");
+                    setupForConnection();
+                }else{
+                    L("Whitelist is not empty(%d)\r\n",whiteList.index);
+                }
+            }else{
+                L("Device is in the Whitelist\r\n");
+                setupForConnection();
             }
             break;
 
