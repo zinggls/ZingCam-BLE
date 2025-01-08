@@ -2,6 +2,7 @@
 #include "project.h"
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdbool.h>
 
 #define LOG_BUFFER_SIZE 1024
 
@@ -83,6 +84,30 @@ CYBLE_GAPC_ADV_REPORT_T* scanReport;
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *capsenseNTF;    
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 
+typedef struct {
+    CYBLE_GAP_BD_ADDR_T list[1];
+    uint8 index;
+}WhiteList;
+
+bool IsAddressInWhiteList(WhiteList *wl, uint8 *bdAddr)
+{
+    // Iterate through the whitelist
+    for (uint8 i = 0; i < wl->index; i++)
+    {
+        // Compare the address bytes
+        if (memcmp(wl->list[i].bdAddr, bdAddr, CYBLE_GAP_BD_ADDR_SIZE) == 0)
+        {
+            // Address matches
+            return true;
+        }
+    }
+    
+    // Address not found
+    return false;
+}
+
+static WhiteList whiteList;
+
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 {
@@ -116,18 +141,33 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 if (i < CYBLE_GAP_BD_ADDR_SIZE - 1) L(":");
             }
             L("\n");
-                  
-            // Setup for the connection
-            remoteDevice.type = scanReport->peerAddrType;          // setup the BD addr
-            memcpy(&remoteDevice.bdAddr,scanReport->peerBdAddr,6); // 6 bytes in BD addr
-            systemMode = SM_CONNECTING;
-            CyBle_GapcStopScan();                                  // stop scanning for peripherals
-            L(" Stop scan\r\n");
+            
+            bool inWhiteList = IsAddressInWhiteList(&whiteList,scanReport->peerBdAddr);
+            if(!inWhiteList) L("Device is not in the Whitelist\r\n");
+            
+            if(whiteList.index==0 || inWhiteList){  //whitelist is empty or Device in the list
+                if(whiteList.index==0) L("Whitelist is empty\r\n");
+                if(inWhiteList) L("Device exists in the Whitelist\r\n");
+                
+                // Setup for the connection
+                remoteDevice.type = scanReport->peerAddrType;          // setup the BD addr
+                memcpy(&remoteDevice.bdAddr,scanReport->peerBdAddr,6); // 6 bytes in BD addr
+                systemMode = SM_CONNECTING;
+                CyBle_GapcStopScan();                                  // stop scanning for peripherals
+                L(" Stop scan\r\n");
+            }
             break;
 
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
-            if(systemMode == SM_CONNECTING ) 
+            if(systemMode == SM_CONNECTING ) {
                 CyBle_GapcConnectDevice(&remoteDevice);
+                if (whiteList.index==0 && CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
+                    //Copying the address to the BackUp Array
+                    whiteList.list[whiteList.index] = remoteDevice;
+                    whiteList.index++;
+                    L("Device Added to WhiteList(%d)\r\n",whiteList.index);
+                }
+            }
                 
             L("CYBLE_EVT_GAPC_SCAN_START_STOP\r\n");
             break;
@@ -206,6 +246,8 @@ void SendCommandToPeripheral(uint8_t command) {
 
 int main(void)
 {
+    memset(&whiteList,0,sizeof(WhiteList));
+    
     CyGlobalIntEnable; /* Enable global interrupts. */
     UART_DBG_Start();
     CyBle_Start( CyBle_AppCallback );
