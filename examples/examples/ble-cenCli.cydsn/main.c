@@ -108,6 +108,14 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 L("m");
                 return;
             }
+            
+            L("RSSI = %d, Address = ", scanReport->rssi);
+            for (unsigned int i = 0; i < CYBLE_GAP_BD_ADDR_SIZE; i++)
+            {
+                L("%02X", scanReport->peerBdAddr[i]);
+                if (i < CYBLE_GAP_BD_ADDR_SIZE - 1) L(":");
+            }
+            L("\n");
                   
             // Setup for the connection
             remoteDevice.type = scanReport->peerAddrType;          // setup the BD addr
@@ -208,7 +216,7 @@ int main(void)
         SendCommandToPeripheral(123);
         
 #ifndef _VERBOSE
-        L("[ble-cenCli] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
+        //L("[ble-cenCli] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
 #endif
         CyDelay(10);
     }
