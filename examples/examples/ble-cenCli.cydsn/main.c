@@ -136,11 +136,11 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:                     // Advertising packet
             scanReport = (CYBLE_GAPC_ADV_REPORT_T*)eventParam;
             if(scanReport->dataLen != 31) {                             // Number of bytes in ledcapsense advertising packet
-                L("x");
+                //L("x");
                 break;
             }
             if(memcmp(&CapLedService,&scanReport->data[9],sizeof(CapLedService))) { // if service is in packet
-                L("m");
+                //L("m");
                 return;
             }
             
