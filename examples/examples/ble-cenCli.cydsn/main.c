@@ -98,10 +98,10 @@ void printAddress(CYBLE_GAP_BD_ADDR_T *addr)
 
 int cmpAddr(CYBLE_GAP_BD_ADDR_T *addr1,CYBLE_GAP_BD_ADDR_T *addr2)
 {
-    L("[addr1] ");
+    L("Comparing stored addr ");
     printAddress(addr1);
-    L(" , ");
-    L("[addr2] ");
+    L(" and ");
+    L("scanned addr ");
     printAddress(addr2);
     L("\r\n");
     
