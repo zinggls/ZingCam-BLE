@@ -6,6 +6,7 @@
 #include <FlashRow.h>
 
 #define LOG_BUFFER_SIZE 1024
+#define BUTTON_HOLD_TIME_SEC  3   //3 seconds
 
 static char buffer[LOG_BUFFER_SIZE];
 
@@ -263,20 +264,34 @@ void SendCommandToPeripheral(uint8_t command) {
     }
 }
 
+static uint32 tickCounter = 0;
+
+void SysTickISRCallback(void)
+{
+    tickCounter++;
+}
+
 CY_ISR( Pin_SW2_Handler )
 {   
     Pin_Red_Write( ~Pin_Red_Read() );
     
     if(Pin_SW2_Read()==0) { // Button pressed
-        //do nothing yet
+        CySysTickStart();
+        tickCounter = 0;
     }else{ // Button released
-        cystatus status;
-        if(ClearPeripheralAddress(&status)) {
-            L("Address in flash cleared\r\n");
-            CyDelay(100);
-            CySoftwareReset();
-        }else{
-             L("Clearing Address in flash failed(0x%02X)\r\n",status);
+        CySysTickStop();
+        
+        uint32 sec = tickCounter/1000;
+        L("Button hold time %d second(s)\r\n",sec);
+        if(sec>BUTTON_HOLD_TIME_SEC) {
+            cystatus status;
+            if(ClearPeripheralAddress(&status)) {
+                L("Address in flash cleared\r\n");
+                CyDelay(100);
+                CySoftwareReset();
+            }else{
+                 L("Clearing Address in flash failed(0x%02X)\r\n",status);
+            }
         }
     }
     
@@ -289,6 +304,19 @@ int main(void)
     UART_DBG_Start();
     CyBle_Start( CyBle_AppCallback );
     Pin_SW2_Int_StartEx( Pin_SW2_Handler );
+    
+    CySysTickStart();
+    /* Find unused callback slot and assign the callback. */
+    for (uint8 i = 0u; i < CY_SYS_SYST_NUM_OF_CALLBACKS; ++i)
+    {
+        if (CySysTickGetCallback(i) == NULL)
+        {
+            /* Set callback */
+            CySysTickSetCallback(i, SysTickISRCallback);
+            break;
+        }
+    }
+    CySysTickStop();
     
     //Load stored address from flash
     if(LoadStoredPeripheralAddress(&flashData)) {
