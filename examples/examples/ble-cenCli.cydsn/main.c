@@ -326,9 +326,13 @@ void SendCommandToPeripheral(uint8_t command) {
     }
 }
 
+static uint8 sw2Counter = 0;
+
 CY_ISR( Pin_SW2_Handler )
 {
-    ClearPeripheralAddress();
+    sw2Counter++;
+    
+    if(sw2Counter==2) ClearPeripheralAddress();
     Pin_Red_Write( ~Pin_Red_Read() );
     
     Pin_SW2_ClearInterrupt();
