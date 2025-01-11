@@ -151,6 +151,22 @@ void SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr) {
     }
 }
 
+void ClearPeripheralAddress() {
+    uint8_t flashRow[CY_FLASH_SIZEOF_ROW] = {0xFF}; // Prepare a buffer for the full flash row
+    cystatus flashStatus;
+
+    // Write the flash row
+    flashStatus = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
+
+    // Check the status of the write operation
+    if (flashStatus == CY_SYS_FLASH_SUCCESS) {
+        L("Address in flash cleared\r\n");
+    } else {
+        L("Clearing Address in flash failed(0x%02X)\r\n",flashStatus);
+    }
+    isAddressStored = false;
+}
+
 int cmpAddr(CYBLE_GAP_BD_ADDR_T *addr1,CYBLE_GAP_BD_ADDR_T *addr2)
 {
     L("[addr1] ");
@@ -312,6 +328,7 @@ void SendCommandToPeripheral(uint8_t command) {
 
 CY_ISR( Pin_SW2_Handler )
 {
+    ClearPeripheralAddress();
     Pin_Red_Write( ~Pin_Red_Read() );
     
     Pin_SW2_ClearInterrupt();
