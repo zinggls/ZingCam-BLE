@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <FlashRow.h>
 
 #define LOG_BUFFER_SIZE 1024
 
@@ -83,6 +84,7 @@ void updateCapsenseNotification()
 CYBLE_GAPC_ADV_REPORT_T* scanReport;
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *capsenseNTF;    
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
+bool isAddressStored;
 
 void printAddress(CYBLE_GAP_BD_ADDR_T *addr)
 {
@@ -91,75 +93,6 @@ void printAddress(CYBLE_GAP_BD_ADDR_T *addr)
     {
         L("%02X", addr->bdAddr[i]);
         if (i < CYBLE_GAP_BD_ADDR_SIZE - 1) L(":");
-    }
-}
-
-#define FLASH_ROW_NUMBER    (CY_FLASH_NUMBER_ROWS - 1u)
-#define FLASH_BASE_ADDR     (CY_FLASH_BASE + (FLASH_ROW_NUMBER * CY_FLASH_SIZEOF_ROW))
-#define FLASH_DATA_SIZE     (sizeof(FlashData_t))
-#define MAGIC_NUMBER        0xA5A5A5A5  // Define a unique identifier for valid data
-
-typedef struct {
-    uint32_t magic;                  // Magic number for validation
-    CYBLE_GAP_BD_ADDR_T bdAddr;      // Bluetooth device address
-} FlashData_t;
-
-FlashData_t flashData;              // Struct to hold flash data
-bool isAddressStored = false;
-
-bool LoadStoredPeripheralAddress(FlashData_t *fData) {
-    // Read data directly from flash memory
-    const FlashData_t *flashPtr = (const FlashData_t *)FLASH_BASE_ADDR;
-
-    // Validate magic number
-    if (flashPtr->magic == MAGIC_NUMBER) {
-        // Copy data if valid
-        memcpy(fData, flashPtr, FLASH_DATA_SIZE);
-        isAddressStored = true;
-        printAddress(&fData->bdAddr);
-        return true;
-    } else {
-        // Mark as no valid data
-        isAddressStored = false;
-        return false;
-    }
-}
-
-bool WriteToFlashRow(const void *data, size_t dataSize, cystatus *status) {
-    uint8_t flashRow[CY_FLASH_SIZEOF_ROW] = {0xFF}; // Prepare a buffer for the full flash row
-
-    // Copy the provided data into the row buffer
-    if (data != NULL && dataSize > 0) {
-        memcpy(flashRow, data, dataSize);
-    }
-
-    // Write the flash row
-    *status = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
-
-    // Check the status of the write operation
-    return (*status == CY_SYS_FLASH_SUCCESS);
-}
-
-bool SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr, cystatus *status) {
-    FlashData_t fd;
-    fd.magic = MAGIC_NUMBER;
-    memcpy(&fd.bdAddr, addr, sizeof(CYBLE_GAP_BD_ADDR_T));
-
-    if (WriteToFlashRow(&fd, FLASH_DATA_SIZE, status)) {
-        isAddressStored = true;
-        return true;
-    } else {
-        isAddressStored = false;
-        return false;
-    }
-}
-
-bool ClearPeripheralAddress(cystatus *status) {
-    if (WriteToFlashRow(NULL, 0, status)) {
-        isAddressStored = false;
-        return true;
-    } else {
-        return false;
     }
 }
 
@@ -360,9 +293,11 @@ int main(void)
     
     //Load stored address from flash
     if(LoadStoredPeripheralAddress(&flashData)) {
+        isAddressStored = true;
         printAddress(&flashData.bdAddr);
         L(" loaded from flash\r\n");
     }else{
+        isAddressStored = false;
         L("could not load from empty flash\r\n");
     }
     
