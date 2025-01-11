@@ -322,6 +322,7 @@ int main(void)
     {          
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
+        Pin_Red_Write( Pin_SW2_Read() );
         
 #ifndef _VERBOSE
         //L("[ble-cenCli] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
