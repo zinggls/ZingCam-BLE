@@ -113,6 +113,85 @@ bool IsAddressInWhiteList(WhiteList *wl, uint8 *bdAddr)
 
 static WhiteList whiteList;
 
+void printAddress(CYBLE_GAP_BD_ADDR_T *addr)
+{
+    L("[%d] ",addr->type);
+    for (unsigned int i = 0; i < CYBLE_GAP_BD_ADDR_SIZE; i++)
+    {
+        L("%02X", addr->bdAddr[i]);
+        if (i < CYBLE_GAP_BD_ADDR_SIZE - 1) L(":");
+    }
+}
+
+#define FLASH_ROW_NUMBER    (CY_FLASH_NUMBER_ROWS - 1u)
+#define FLASH_BASE_ADDR     (CY_FLASH_BASE + (FLASH_ROW_NUMBER * CY_FLASH_SIZEOF_ROW))
+#define FLASH_DATA_SIZE     (sizeof(FlashData_t))
+#define MAGIC_NUMBER        0xA5A5A5A5  // Define a unique identifier for valid data
+
+typedef struct {
+    uint32_t magic;                  // Magic number for validation
+    CYBLE_GAP_BD_ADDR_T bdAddr;      // Bluetooth device address
+} FlashData_t;
+
+FlashData_t flashData;              // Struct to hold flash data
+bool isAddressStored = false;
+
+void LoadStoredPeripheralAddress() {
+    // Read data directly from flash memory
+    const FlashData_t *flashPtr = (const FlashData_t *)FLASH_BASE_ADDR;
+
+    // Validate magic number
+    if (flashPtr->magic == MAGIC_NUMBER) {
+        // Copy data if valid
+        memcpy(&flashData, flashPtr, FLASH_DATA_SIZE);
+        isAddressStored = true;
+        printAddress(&flashData.bdAddr);
+        L(" loaded from flash\r\n");
+    } else {
+        // Mark as no valid data
+        isAddressStored = false;
+        L("could not load from empty flash\r\n");
+    }
+}
+
+void SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr) {
+    uint8_t flashRow[CY_FLASH_SIZEOF_ROW] = {0xFF}; // Prepare a buffer for the full flash row
+    cystatus flashStatus;
+
+    // Populate flash data structure
+    flashData.magic = MAGIC_NUMBER;
+    memcpy(&flashData.bdAddr, addr, sizeof(CYBLE_GAP_BD_ADDR_T));
+
+    // Copy the flash data structure into the row buffer
+    memcpy(flashRow, &flashData, FLASH_DATA_SIZE);
+
+    // Write the flash row
+    flashStatus = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
+
+    // Check the status of the write operation
+    if (flashStatus == CY_SYS_FLASH_SUCCESS) {
+        isAddressStored = true;
+        printAddress(&flashData.bdAddr);
+        L(" Address saved in flash\r\n");
+    } else {
+        isAddressStored = false;
+        L("Address failed to save in flash\r\n");
+    }
+}
+
+int cmpAddr(CYBLE_GAP_BD_ADDR_T *addr1,CYBLE_GAP_BD_ADDR_T *addr2)
+{
+    L("[addr1] ");
+    printAddress(addr1);
+    L(" , ");
+    L("[addr1] ");
+    printAddress(addr2);
+    L("\r\n");
+    
+    if(addr1->type != addr2->type) return -1;    
+    return memcmp(addr1->bdAddr, addr2->bdAddr, CYBLE_GAP_BD_ADDR_SIZE);
+}
+
 void setupForConnection()
 {
     L("setup for connection\r\n");
@@ -157,6 +236,24 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             }
             L("\n");
             
+            CYBLE_GAP_BD_ADDR_T addr;
+            memcpy(&addr.bdAddr,scanReport->peerBdAddr,CYBLE_GAP_BD_ADDR_SIZE);
+            addr.type = scanReport->peerAddrType;
+            if(isAddressStored) {
+                if(cmpAddr(&flashData.bdAddr,&addr)==0) {
+                    printAddress(&addr);
+                    L(" Device found in whitelist\r\n");
+                    setupForConnection();             
+                }else{
+                    printAddress(&addr);
+                    L(" Device not found in Whitelist\r\n");
+                }
+            }else{
+                L("Empty Whitelist\r\n");
+                setupForConnection();
+            }
+            
+            /*
             bool inWhiteList = IsAddressInWhiteList(&whiteList,scanReport->peerBdAddr);
             if(!inWhiteList) {
                 L("Device is not in the Whitelist\r\n");
@@ -171,16 +268,20 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 L("Device is in the Whitelist\r\n");
                 setupForConnection();
             }
+            */
             break;
 
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
             if(systemMode == SM_CONNECTING ) {
                 if(CyBle_GapcConnectDevice(&remoteDevice)==CYBLE_ERROR_OK) {
                     if (CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
+                        if(!isAddressStored) SavePeripheralAddress(&remoteDevice);
+                        /*
                         //Copying the address to the BackUp Array
                         whiteList.list[whiteList.index] = remoteDevice;
                         whiteList.index++;
                         L("Device Added to WhiteList(%d)\r\n",whiteList.index);
+                        */
                     }
                 }
             }
@@ -267,6 +368,8 @@ int main(void)
     CyGlobalIntEnable; /* Enable global interrupts. */
     UART_DBG_Start();
     CyBle_Start( CyBle_AppCallback );
+    
+    LoadStoredPeripheralAddress();  //Load stored address from flash
     
     for(;;)
     {          
