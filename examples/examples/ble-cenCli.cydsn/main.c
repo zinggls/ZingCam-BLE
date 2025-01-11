@@ -107,7 +107,7 @@ typedef struct {
 FlashData_t flashData;              // Struct to hold flash data
 bool isAddressStored = false;
 
-void LoadStoredPeripheralAddress(FlashData_t *fData) {
+bool LoadStoredPeripheralAddress(FlashData_t *fData) {
     // Read data directly from flash memory
     const FlashData_t *flashPtr = (const FlashData_t *)FLASH_BASE_ADDR;
 
@@ -117,17 +117,16 @@ void LoadStoredPeripheralAddress(FlashData_t *fData) {
         memcpy(fData, flashPtr, FLASH_DATA_SIZE);
         isAddressStored = true;
         printAddress(&fData->bdAddr);
-        L(" loaded from flash\r\n");
+        return true;
     } else {
         // Mark as no valid data
         isAddressStored = false;
-        L("could not load from empty flash\r\n");
+        return false;
     }
 }
 
-void SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr) {
+bool SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr,cystatus *status) {
     uint8_t flashRow[CY_FLASH_SIZEOF_ROW] = {0xFF}; // Prepare a buffer for the full flash row
-    cystatus flashStatus;
 
     // Populate flash data structure
     FlashData_t fd;
@@ -138,33 +137,31 @@ void SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr) {
     memcpy(flashRow, &fd, FLASH_DATA_SIZE);
 
     // Write the flash row
-    flashStatus = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
+    *status = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
 
     // Check the status of the write operation
-    if (flashStatus == CY_SYS_FLASH_SUCCESS) {
+    if ((*status) == CY_SYS_FLASH_SUCCESS) {
         isAddressStored = true;
-        printAddress(&fd.bdAddr);
-        L(" Address saved in flash\r\n");
+        return true;
     } else {
         isAddressStored = false;
-        L("Address failed to save in flash\r\n");
+        return false;
     }
 }
 
-void ClearPeripheralAddress() {
+bool ClearPeripheralAddress(cystatus *status) {
     uint8_t flashRow[CY_FLASH_SIZEOF_ROW] = {0xFF}; // Prepare a buffer for the full flash row
-    cystatus flashStatus;
 
     // Write the flash row
-    flashStatus = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
-
-    // Check the status of the write operation
-    if (flashStatus == CY_SYS_FLASH_SUCCESS) {
-        L("Address in flash cleared\r\n");
-    } else {
-        L("Clearing Address in flash failed(0x%02X)\r\n",flashStatus);
-    }
+    *status = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
+    
     isAddressStored = false;
+    // Check the status of the write operation
+    if ((*status) == CY_SYS_FLASH_SUCCESS) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 int cmpAddr(CYBLE_GAP_BD_ADDR_T *addr1,CYBLE_GAP_BD_ADDR_T *addr2)
@@ -246,7 +243,15 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             if(systemMode == SM_CONNECTING ) {
                 if(CyBle_GapcConnectDevice(&remoteDevice)==CYBLE_ERROR_OK) {
                     if (CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
-                        if(!isAddressStored) SavePeripheralAddress(&remoteDevice);
+                        if(!isAddressStored) {
+                            printAddress(&remoteDevice);
+                            cystatus status;
+                            if(SavePeripheralAddress(&remoteDevice,&status)) {
+                                L(" Address saved in flash\r\n");
+                            }else{
+                                L(" Address failed to save in flash(0x%02X)\r\n",status);
+                            }
+                        }
                     }
                 }
             }
@@ -334,9 +339,14 @@ CY_ISR( Pin_SW2_Handler )
     
     Pin_Red_Write( ~Pin_Red_Read() );
     if(sw2Counter==2) {
-        ClearPeripheralAddress();
-        CyDelay(100);
-        CySoftwareReset();
+        cystatus status;
+        if(ClearPeripheralAddress(&status)) {
+            L("Address in flash cleared\r\n");
+            CyDelay(100);
+            CySoftwareReset();
+        }else{
+             L("Clearing Address in flash failed(0x%02X)\r\n",status);
+        }
     }
     
     Pin_SW2_ClearInterrupt();
@@ -349,7 +359,13 @@ int main(void)
     CyBle_Start( CyBle_AppCallback );
     Pin_SW2_Int_StartEx( Pin_SW2_Handler );
     
-    LoadStoredPeripheralAddress(&flashData);  //Load stored address from flash
+    //Load stored address from flash
+    if(LoadStoredPeripheralAddress(&flashData)) {
+        printAddress(&flashData.bdAddr);
+        L(" loaded from flash\r\n");
+    }else{
+        L("could not load from empty flash\r\n");
+    }
     
     for(;;)
     {          
