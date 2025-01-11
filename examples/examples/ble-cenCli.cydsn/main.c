@@ -263,14 +263,13 @@ void SendCommandToPeripheral(uint8_t command) {
     }
 }
 
-static uint8 sw2Counter = 0;
-
 CY_ISR( Pin_SW2_Handler )
-{
-    sw2Counter++;
-    
+{   
     Pin_Red_Write( ~Pin_Red_Read() );
-    if(sw2Counter==2) {
+    
+    if(Pin_SW2_Read()==0) { // Button pressed
+        //do nothing yet
+    }else{ // Button released
         cystatus status;
         if(ClearPeripheralAddress(&status)) {
             L("Address in flash cleared\r\n");
