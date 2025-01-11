@@ -9,7 +9,6 @@ bool LoadStoredPeripheralAddress(FlashData_t *fData)
     if (flashPtr->magic == MAGIC_NUMBER) {
         // Copy data if valid
         memcpy(fData, flashPtr, FLASH_DATA_SIZE);
-        //printAddress(&fData->bdAddr); //TODO
         return true;
     } else {
         return false;
