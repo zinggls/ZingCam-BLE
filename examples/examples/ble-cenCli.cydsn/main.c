@@ -136,16 +136,16 @@ typedef struct {
 FlashData_t flashData;              // Struct to hold flash data
 bool isAddressStored = false;
 
-void LoadStoredPeripheralAddress() {
+void LoadStoredPeripheralAddress(FlashData_t *fData) {
     // Read data directly from flash memory
     const FlashData_t *flashPtr = (const FlashData_t *)FLASH_BASE_ADDR;
 
     // Validate magic number
     if (flashPtr->magic == MAGIC_NUMBER) {
         // Copy data if valid
-        memcpy(&flashData, flashPtr, FLASH_DATA_SIZE);
+        memcpy(fData, flashPtr, FLASH_DATA_SIZE);
         isAddressStored = true;
-        printAddress(&flashData.bdAddr);
+        printAddress(&fData->bdAddr);
         L(" loaded from flash\r\n");
     } else {
         // Mark as no valid data
@@ -159,11 +159,12 @@ void SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr) {
     cystatus flashStatus;
 
     // Populate flash data structure
-    flashData.magic = MAGIC_NUMBER;
-    memcpy(&flashData.bdAddr, addr, sizeof(CYBLE_GAP_BD_ADDR_T));
+    FlashData_t fd;
+    fd.magic = MAGIC_NUMBER;
+    memcpy(&fd.bdAddr, addr, sizeof(CYBLE_GAP_BD_ADDR_T));
 
     // Copy the flash data structure into the row buffer
-    memcpy(flashRow, &flashData, FLASH_DATA_SIZE);
+    memcpy(flashRow, &fd, FLASH_DATA_SIZE);
 
     // Write the flash row
     flashStatus = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
@@ -171,7 +172,7 @@ void SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr) {
     // Check the status of the write operation
     if (flashStatus == CY_SYS_FLASH_SUCCESS) {
         isAddressStored = true;
-        printAddress(&flashData.bdAddr);
+        printAddress(&fd.bdAddr);
         L(" Address saved in flash\r\n");
     } else {
         isAddressStored = false;
@@ -346,7 +347,7 @@ int main(void)
     UART_DBG_Start();
     CyBle_Start( CyBle_AppCallback );
     
-    LoadStoredPeripheralAddress();  //Load stored address from flash
+    LoadStoredPeripheralAddress(&flashData);  //Load stored address from flash
     
     for(;;)
     {          
