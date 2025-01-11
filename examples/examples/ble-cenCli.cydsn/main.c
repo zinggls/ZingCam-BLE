@@ -332,8 +332,12 @@ CY_ISR( Pin_SW2_Handler )
 {
     sw2Counter++;
     
-    if(sw2Counter==2) ClearPeripheralAddress();
     Pin_Red_Write( ~Pin_Red_Read() );
+    if(sw2Counter==2) {
+        ClearPeripheralAddress();
+        CyDelay(100);
+        CySoftwareReset();
+    }
     
     Pin_SW2_ClearInterrupt();
 }
