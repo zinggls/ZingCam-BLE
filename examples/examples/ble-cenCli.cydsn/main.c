@@ -310,11 +310,19 @@ void SendCommandToPeripheral(uint8_t command) {
     }
 }
 
-int main(void)
+CY_ISR( Pin_SW2_Handler )
 {
+    Pin_Red_Write( ~Pin_Red_Read() );
+    
+    Pin_SW2_ClearInterrupt();
+}
+
+int main(void)
+{    
     CyGlobalIntEnable; /* Enable global interrupts. */
     UART_DBG_Start();
     CyBle_Start( CyBle_AppCallback );
+    Pin_SW2_Int_StartEx( Pin_SW2_Handler );
     
     LoadStoredPeripheralAddress(&flashData);  //Load stored address from flash
     
@@ -322,7 +330,6 @@ int main(void)
     {          
         CyBle_ProcessEvents();
         SendCommandToPeripheral(123);
-        Pin_Red_Write( Pin_SW2_Read() );
         
 #ifndef _VERBOSE
         //L("[ble-cenCli] SM:%d cyBle_state:0x%x OUT:WriteCharVal=%lu    IN:Notified { Custom=%lu,WriteRsp=%lu,CapsensePos=%d }\r\n", systemMode,cyBle_state,writeCharVal ,notifiedCustom,writeRsp,capsensePos);
