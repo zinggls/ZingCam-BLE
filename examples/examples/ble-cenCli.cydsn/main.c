@@ -84,35 +84,6 @@ CYBLE_GAPC_ADV_REPORT_T* scanReport;
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *capsenseNTF;    
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 
-typedef struct {
-    CYBLE_GAP_BD_ADDR_T list[1];
-    uint8 index;
-}WhiteList;
-
-void InitWhiteList(WhiteList *wl)
-{
-    memset(wl,0,sizeof(WhiteList));
-}
-
-bool IsAddressInWhiteList(WhiteList *wl, uint8 *bdAddr)
-{
-    // Iterate through the whitelist
-    for (uint8 i = 0; i < wl->index; i++)
-    {
-        // Compare the address bytes
-        if (memcmp(wl->list[i].bdAddr, bdAddr, CYBLE_GAP_BD_ADDR_SIZE) == 0)
-        {
-            // Address matches
-            return true;
-        }
-    }
-    
-    // Address not found
-    return false;
-}
-
-static WhiteList whiteList;
-
 void printAddress(CYBLE_GAP_BD_ADDR_T *addr)
 {
     L("[%d] ",addr->type);
@@ -341,8 +312,6 @@ void SendCommandToPeripheral(uint8_t command) {
 
 int main(void)
 {
-    InitWhiteList(&whiteList);
-    
     CyGlobalIntEnable; /* Enable global interrupts. */
     UART_DBG_Start();
     CyBle_Start( CyBle_AppCallback );
