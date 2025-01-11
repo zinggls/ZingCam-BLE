@@ -101,7 +101,7 @@ int cmpAddr(CYBLE_GAP_BD_ADDR_T *addr1,CYBLE_GAP_BD_ADDR_T *addr2)
     L("[addr1] ");
     printAddress(addr1);
     L(" , ");
-    L("[addr1] ");
+    L("[addr2] ");
     printAddress(addr2);
     L("\r\n");
     
