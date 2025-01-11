@@ -125,22 +125,27 @@ bool LoadStoredPeripheralAddress(FlashData_t *fData) {
     }
 }
 
-bool SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr,cystatus *status) {
+bool WriteToFlashRow(const void *data, size_t dataSize, cystatus *status) {
     uint8_t flashRow[CY_FLASH_SIZEOF_ROW] = {0xFF}; // Prepare a buffer for the full flash row
 
-    // Populate flash data structure
-    FlashData_t fd;
-    fd.magic = MAGIC_NUMBER;
-    memcpy(&fd.bdAddr, addr, sizeof(CYBLE_GAP_BD_ADDR_T));
-
-    // Copy the flash data structure into the row buffer
-    memcpy(flashRow, &fd, FLASH_DATA_SIZE);
+    // Copy the provided data into the row buffer
+    if (data != NULL && dataSize > 0) {
+        memcpy(flashRow, data, dataSize);
+    }
 
     // Write the flash row
     *status = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
 
     // Check the status of the write operation
-    if ((*status) == CY_SYS_FLASH_SUCCESS) {
+    return (*status == CY_SYS_FLASH_SUCCESS);
+}
+
+bool SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr, cystatus *status) {
+    FlashData_t fd;
+    fd.magic = MAGIC_NUMBER;
+    memcpy(&fd.bdAddr, addr, sizeof(CYBLE_GAP_BD_ADDR_T));
+
+    if (WriteToFlashRow(&fd, FLASH_DATA_SIZE, status)) {
         isAddressStored = true;
         return true;
     } else {
@@ -150,14 +155,8 @@ bool SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr,cystatus *status) {
 }
 
 bool ClearPeripheralAddress(cystatus *status) {
-    uint8_t flashRow[CY_FLASH_SIZEOF_ROW] = {0xFF}; // Prepare a buffer for the full flash row
-
-    // Write the flash row
-    *status = CySysFlashWriteRow(FLASH_ROW_NUMBER, flashRow);
-    
-    isAddressStored = false;
-    // Check the status of the write operation
-    if ((*status) == CY_SYS_FLASH_SUCCESS) {
+    if (WriteToFlashRow(NULL, 0, status)) {
+        isAddressStored = false;
         return true;
     } else {
         return false;
