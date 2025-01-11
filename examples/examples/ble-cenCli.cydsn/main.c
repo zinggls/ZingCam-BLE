@@ -252,23 +252,6 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 L("Empty Whitelist\r\n");
                 setupForConnection();
             }
-            
-            /*
-            bool inWhiteList = IsAddressInWhiteList(&whiteList,scanReport->peerBdAddr);
-            if(!inWhiteList) {
-                L("Device is not in the Whitelist\r\n");
-                
-                if(whiteList.index==0) {
-                    L("Whitelist is empty\r\n");
-                    setupForConnection();
-                }else{
-                    L("Whitelist is not empty(%d)\r\n",whiteList.index);
-                }
-            }else{
-                L("Device is in the Whitelist\r\n");
-                setupForConnection();
-            }
-            */
             break;
 
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
@@ -276,12 +259,6 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 if(CyBle_GapcConnectDevice(&remoteDevice)==CYBLE_ERROR_OK) {
                     if (CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
                         if(!isAddressStored) SavePeripheralAddress(&remoteDevice);
-                        /*
-                        //Copying the address to the BackUp Array
-                        whiteList.list[whiteList.index] = remoteDevice;
-                        whiteList.index++;
-                        L("Device Added to WhiteList(%d)\r\n",whiteList.index);
-                        */
                     }
                 }
             }
