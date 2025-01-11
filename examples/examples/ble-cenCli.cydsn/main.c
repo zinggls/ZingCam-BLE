@@ -284,10 +284,15 @@ CY_ISR( Pin_SW2_Handler )
         uint32 sec = tickCounter/1000;
         L("Button hold time %d second(s)\r\n",sec);
         if(sec>BUTTON_HOLD_TIME_SEC) {
+            Pin_Green_Write( 0 );
+            CyDelay(500);
+            Pin_Green_Write( 1 );
+            
             cystatus status;
             if(ClearPeripheralAddress(&status)) {
+                Pin_Blue_Write( 0 );
                 L("Address in flash cleared\r\n");
-                CyDelay(100);
+                CyDelay(500);
                 CySoftwareReset();
             }else{
                  L("Clearing Address in flash failed(0x%02X)\r\n",status);
