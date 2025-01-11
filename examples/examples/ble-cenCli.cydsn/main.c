@@ -175,12 +175,13 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
             if(systemMode == SM_CONNECTING ) {
-                CyBle_GapcConnectDevice(&remoteDevice);
-                if (CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
-                    //Copying the address to the BackUp Array
-                    whiteList.list[whiteList.index] = remoteDevice;
-                    whiteList.index++;
-                    L("Device Added to WhiteList(%d)\r\n",whiteList.index);
+                if(CyBle_GapcConnectDevice(&remoteDevice)==CYBLE_ERROR_OK) {
+                    if (CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
+                        //Copying the address to the BackUp Array
+                        whiteList.list[whiteList.index] = remoteDevice;
+                        whiteList.index++;
+                        L("Device Added to WhiteList(%d)\r\n",whiteList.index);
+                    }
                 }
             }
                 
