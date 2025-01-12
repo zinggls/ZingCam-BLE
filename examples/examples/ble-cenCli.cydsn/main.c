@@ -170,7 +170,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             memcpy(&addr.bdAddr,scanReport->peerBdAddr,CYBLE_GAP_BD_ADDR_SIZE);
             addr.type = scanReport->peerAddrType;
             if(isAddressStored) {
-                if(cmpAddr(&flashData.bdAddr,&addr)==0) {
+                if(cmpAddr(&gFlashData.bdAddr,&addr)==0) {
                     printAddress(&addr);
                     L(" Device found in whitelist\r\n");
                     setupForConnection();             
@@ -193,7 +193,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                             cystatus status;
                             if(SavePeripheralAddress(&remoteDevice,&status)) {
                                 L(" Address saved in flash\r\n");
-                                RetrieveStoredPeripheralAddress(&flashData);
+                                RetrieveStoredPeripheralAddress(&gFlashData);
                             }else{
                                 L(" Address failed to save in flash(0x%02X)\r\n",status);
                             }
@@ -337,7 +337,7 @@ int main(void)
     CySysTickStop();
     
     //Load stored address from flash
-    RetrieveStoredPeripheralAddress(&flashData);
+    RetrieveStoredPeripheralAddress(&gFlashData);
     
     for(;;)
     {          
