@@ -1,5 +1,12 @@
 #include "FlashRow.h"
 
+static bool stored = false;
+
+bool IsAddressStored()
+{
+    return stored;
+}
+
 bool LoadStoredPeripheralAddress(FlashData_t *fData)
 {
     // Read data directly from flash memory
@@ -9,8 +16,10 @@ bool LoadStoredPeripheralAddress(FlashData_t *fData)
     if (flashPtr->magic == MAGIC_NUMBER) {
         // Copy data if valid
         memcpy(fData, flashPtr, FLASH_DATA_SIZE);
+        stored = true;
         return true;
     } else {
+        stored = false;
         return false;
     }
 }

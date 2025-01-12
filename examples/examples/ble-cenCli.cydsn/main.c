@@ -66,7 +66,6 @@ void updateCapsenseNotification()
 CYBLE_GAPC_ADV_REPORT_T* scanReport;
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *capsenseNTF;    
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
-bool isAddressStored;
 
 void printAddress(CYBLE_GAP_BD_ADDR_T *addr)
 {
@@ -104,11 +103,9 @@ void setupForConnection()
 void RetrieveStoredPeripheralAddress(FlashData_t *fData)
 {
     if(LoadStoredPeripheralAddress(fData)) {
-        isAddressStored = true;
         printAddress(&fData->bdAddr);
         L(" loaded from flash\r\n");
     }else{
-        isAddressStored = false;
         L("could not load from empty flash\r\n");
     }
 }
@@ -150,7 +147,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             CYBLE_GAP_BD_ADDR_T addr;
             memcpy(&addr.bdAddr,scanReport->peerBdAddr,CYBLE_GAP_BD_ADDR_SIZE);
             addr.type = scanReport->peerAddrType;
-            if(isAddressStored) {
+            if(IsAddressStored()) {
                 if(cmpAddr(&gFlashData.bdAddr,&addr)==0) {
                     printAddress(&addr);
                     L(" Device found in whitelist\r\n");
@@ -169,7 +166,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             if(systemMode == SM_CONNECTING ) {
                 if(CyBle_GapcConnectDevice(&remoteDevice)==CYBLE_ERROR_OK) {
                     if (CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
-                        if(!isAddressStored) {
+                        if(!IsAddressStored()) {
                             printAddress(&remoteDevice);
                             cystatus status;
                             if(SavePeripheralAddress(&remoteDevice,&status)) {

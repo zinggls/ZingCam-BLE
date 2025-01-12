@@ -16,6 +16,7 @@ typedef struct {
 
 FlashData_t gFlashData;              // Struct to hold flash data
 
+bool IsAddressStored();
 bool LoadStoredPeripheralAddress(FlashData_t *fData);
 bool WriteToFlashRow(const void *data, size_t dataSize, cystatus *status);
 bool SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr, cystatus *status);
