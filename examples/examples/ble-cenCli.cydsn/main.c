@@ -120,6 +120,18 @@ void setupForConnection()
     L("Stop scan\r\n");
 }
 
+void RetrieveStoredPeripheralAddress()
+{
+    if(LoadStoredPeripheralAddress(&flashData)) {
+        isAddressStored = true;
+        printAddress(&flashData.bdAddr);
+        L(" loaded from flash\r\n");
+    }else{
+        isAddressStored = false;
+        L("could not load from empty flash\r\n");
+    }
+}
+
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 {
@@ -181,6 +193,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                             cystatus status;
                             if(SavePeripheralAddress(&remoteDevice,&status)) {
                                 L(" Address saved in flash\r\n");
+                                RetrieveStoredPeripheralAddress();
                             }else{
                                 L(" Address failed to save in flash(0x%02X)\r\n",status);
                             }
@@ -324,14 +337,7 @@ int main(void)
     CySysTickStop();
     
     //Load stored address from flash
-    if(LoadStoredPeripheralAddress(&flashData)) {
-        isAddressStored = true;
-        printAddress(&flashData.bdAddr);
-        L(" loaded from flash\r\n");
-    }else{
-        isAddressStored = false;
-        L("could not load from empty flash\r\n");
-    }
+    RetrieveStoredPeripheralAddress();
     
     for(;;)
     {          
