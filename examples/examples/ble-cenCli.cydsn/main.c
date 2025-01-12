@@ -120,9 +120,9 @@ void setupForConnection()
     L("Stop scan\r\n");
 }
 
-void RetrieveStoredPeripheralAddress()
+void RetrieveStoredPeripheralAddress(FlashData_t *fData)
 {
-    if(LoadStoredPeripheralAddress(&flashData)) {
+    if(LoadStoredPeripheralAddress(fData)) {
         isAddressStored = true;
         printAddress(&flashData.bdAddr);
         L(" loaded from flash\r\n");
@@ -193,7 +193,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                             cystatus status;
                             if(SavePeripheralAddress(&remoteDevice,&status)) {
                                 L(" Address saved in flash\r\n");
-                                RetrieveStoredPeripheralAddress();
+                                RetrieveStoredPeripheralAddress(&flashData);
                             }else{
                                 L(" Address failed to save in flash(0x%02X)\r\n",status);
                             }
@@ -337,7 +337,7 @@ int main(void)
     CySysTickStop();
     
     //Load stored address from flash
-    RetrieveStoredPeripheralAddress();
+    RetrieveStoredPeripheralAddress(&flashData);
     
     for(;;)
     {          
