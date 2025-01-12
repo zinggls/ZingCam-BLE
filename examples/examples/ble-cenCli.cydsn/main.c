@@ -124,7 +124,7 @@ void RetrieveStoredPeripheralAddress(FlashData_t *fData)
 {
     if(LoadStoredPeripheralAddress(fData)) {
         isAddressStored = true;
-        printAddress(&flashData.bdAddr);
+        printAddress(&fData->bdAddr);
         L(" loaded from flash\r\n");
     }else{
         isAddressStored = false;
