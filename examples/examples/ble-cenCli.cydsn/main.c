@@ -4,28 +4,9 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <FlashRow.h>
+#include "Log.h"
 
-#define LOG_BUFFER_SIZE 1024
 #define BUTTON_HOLD_TIME_SEC  3   //3 seconds
-
-static char buffer[LOG_BUFFER_SIZE];
-
-void L(const char *format, ...)
-{
-    va_list args;
-
-    // Initialize the variable argument list
-    va_start(args, format);
-
-    // Format the string
-    vsnprintf(buffer, LOG_BUFFER_SIZE, format, args);
-
-    // End using variable argument list
-    va_end(args);
-
-    // Send the formatted string over UART
-    UART_DBG_UartPutString(buffer);
-}
 
 // Modes for a statemachine
 typedef enum SystemMode {
