@@ -4,6 +4,7 @@
 #include "icd.h"
 #include "led.h"
 #include "Peripheral.h"
+#include "FlashRow.h"
 
 static SystemMode_t systemMode = SM_INITIALIZE; // Starting mode of statemachine 
 static CYBLE_GAP_BD_ADDR_T remoteDevice;        // BD address of GATT Server
@@ -109,6 +110,50 @@ static void processingZxx()
     }
 }
 
+void printAddress(const CYBLE_GAP_BD_ADDR_T *addr)
+{
+    L("[%d] ",addr->type);
+    for (unsigned int i = 0; i < CYBLE_GAP_BD_ADDR_SIZE; i++)
+    {
+        L("%02X", addr->bdAddr[i]);
+        if (i < CYBLE_GAP_BD_ADDR_SIZE - 1) L(":");
+    }
+}
+
+int cmpAddr(const CYBLE_GAP_BD_ADDR_T *addr1,const CYBLE_GAP_BD_ADDR_T *addr2)
+{
+    L("Comparing stored addr ");
+    printAddress(addr1);
+    L(" and ");
+    L("scanned addr ");
+    printAddress(addr2);
+    L("\r\n");
+    
+    if(addr1->type != addr2->type) return -1;    
+    return memcmp(addr1->bdAddr, addr2->bdAddr, CYBLE_GAP_BD_ADDR_SIZE);
+}
+
+void setupForConnection()
+{
+    L("setup for connection\r\n");
+    remoteDevice.type = scanReport->peerAddrType;          // setup the BD addr
+    memcpy(&remoteDevice.bdAddr,scanReport->peerBdAddr,6); // 6 bytes in BD addr
+    systemMode = SM_CONNECTING;
+    CyBle_GapcStopScan();                                  // stop scanning for peripherals
+    L("Stop scan\r\n");
+}
+
+void RetrieveStoredPeripheralAddress()
+{
+    const FlashData_t* fd = LoadStoredPeripheralAddress();
+    if(fd) {
+        printAddress(&fd->bdAddr);
+        L(" loaded from flash\r\n");
+    }else{
+        L("could not load from empty flash\r\n");
+    }
+}
+
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 {
@@ -137,18 +182,46 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                 return;
             }
                   
-            // Setup for the connection
-            remoteDevice.type = scanReport->peerAddrType;          // setup the BD addr
-            memcpy(&remoteDevice.bdAddr,scanReport->peerBdAddr,6); // 6 bytes in BD addr
-            systemMode = SM_CONNECTING;
-            CyBle_GapcStopScan();                                  // stop scanning for peripherals
-            L(" Stop scan\r\n");
+            CYBLE_GAP_BD_ADDR_T addr;
+            memcpy(&addr.bdAddr,scanReport->peerBdAddr,CYBLE_GAP_BD_ADDR_SIZE);
+            addr.type = scanReport->peerAddrType;
+            if(IsAddressStored()) {
+                if(cmpAddr(&GetFlashData()->bdAddr,&addr)==0) {
+                    printAddress(&addr);
+                    L(" Device found in whitelist\r\n");
+                    setupForConnection();             
+                }else{
+                    printAddress(&addr);
+                    L(" Device not found in Whitelist\r\n");
+                }
+            }else{
+                L("Empty Whitelist\r\n");
+                setupForConnection();
+            }
             setRGB(LED_OFF,LED_ON,LED_ON);
             break;
 
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
-            if(systemMode == SM_CONNECTING ) 
-                CyBle_GapcConnectDevice(&remoteDevice);
+            if(systemMode == SM_CONNECTING ) {
+                if(CyBle_GapcConnectDevice(&remoteDevice)==CYBLE_ERROR_OK) {
+                    if (CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
+                        if(!IsAddressStored()) {
+                            printAddress(&remoteDevice);
+                            cystatus status;
+                            if(SavePeripheralAddress(&remoteDevice,&status)) {
+                                for(int i=0;i<5;i++) {
+                                    LED_GREEN_Write(!LED_GREEN_Read()); //loaded from flash
+                                    CyDelay(100);
+                                }
+                                L(" Address saved in flash\r\n");
+                                RetrieveStoredPeripheralAddress();
+                            }else{
+                                L(" Address failed to save in flash(0x%02X)\r\n",status);
+                            }
+                        }
+                    }
+                }
+            }
                 
             L("CYBLE_EVT_GAPC_SCAN_START_STOP\r\n");
             break;
