@@ -14,6 +14,8 @@
 #include "versionInfo.h"
 #include "FlashRow.h"
 
+#define BUTTON_HOLD_TIME_SEC  3   //3 seconds
+
 static void setBccVersion()
 {
     Version ver;
@@ -182,6 +184,7 @@ static void updateStateInfo()
 }
 
 static uint16 timerCount = 0;
+static uint16 btnHoldCount = 0;
 
 void TimerCallback(void)
 {
@@ -192,7 +195,36 @@ void TimerCallback(void)
         
         LED_RED_Write(!LED_RED_Read());
         timerCount = 0;
+        btnHoldCount++;
     }
+}
+
+CY_ISR( Pin_SW2_Handler )
+{   
+    LED_RED_Write( ~LED_RED_Read() );
+    
+    if(Pin_SW2_Read()==0) { // Button pressed
+        btnHoldCount = 0;
+    }else{ // Button released
+        L("Button hold time %d second(s)\r\n",btnHoldCount);
+        if(btnHoldCount>BUTTON_HOLD_TIME_SEC) {
+            LED_GREEN_Write( 0 );
+            CyDelay(500);
+            LED_GREEN_Write( 1 );
+            
+            cystatus status;
+            if(ClearPeripheralAddress(&status)) {
+                LED_BLUE_Write( 0 );
+                L("Address in flash cleared\r\n");
+                CyDelay(500);
+                CySoftwareReset();
+            }else{
+                 L("Clearing Address in flash failed(0x%02X)\r\n",status);
+            }
+        }
+    }
+    
+    Pin_SW2_ClearInterrupt();
 }
 
 int main(void)
@@ -226,6 +258,7 @@ int main(void)
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     i2cs_start();
     CyBle_Start( CyBle_AppCallback );
+    Pin_SW2_Int_StartEx( Pin_SW2_Handler );
     
     CyDelay(1000);
     UART_IMU_StartAndInitialize();
