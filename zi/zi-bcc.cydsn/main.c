@@ -204,11 +204,8 @@ int main(void)
     //Load stored address from flash
     const FlashData_t* fd = LoadStoredPeripheralAddress();
     for(int i=0;i<5;i++) {
-        if(fd) {
-            LED_GREEN_Write(!LED_GREEN_Read()); //loaded from flash
-        }else{
-            LED_RED_Write(!LED_RED_Read());     //could not load from empty flash
-        }
+        if( fd) LED_BLUE_Write(!LED_BLUE_Read()); //loaded from flash
+        if(!fd) LED_RED_Write(!LED_RED_Read());     //could not load from empty flash
         CyDelay(100);
     }
     
