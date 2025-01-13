@@ -172,7 +172,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                             cystatus status;
                             if(SavePeripheralAddress(&remoteDevice,&status)) {
                                 L(" Address saved in flash\r\n");
-                                RetrieveStoredPeripheralAddress(GetFlashData());
+                                RetrieveStoredPeripheralAddress();
                             }else{
                                 L(" Address failed to save in flash(0x%02X)\r\n",status);
                             }
