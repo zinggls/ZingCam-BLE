@@ -14,10 +14,9 @@ typedef struct {
     CYBLE_GAP_BD_ADDR_T bdAddr;      // Bluetooth device address
 } FlashData_t;
 
-FlashData_t gFlashData;              // Struct to hold flash data
-
 bool IsAddressStored();
-bool LoadStoredPeripheralAddress(FlashData_t *fData);
+const FlashData_t* GetFlashData();
+const FlashData_t* LoadStoredPeripheralAddress();
 bool WriteToFlashRow(const void *data, size_t dataSize, cystatus *status);
 bool SavePeripheralAddress(const CYBLE_GAP_BD_ADDR_T *addr, cystatus *status);
 bool ClearPeripheralAddress(cystatus *status);
