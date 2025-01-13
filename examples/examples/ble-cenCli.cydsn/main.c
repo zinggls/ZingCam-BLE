@@ -67,7 +67,7 @@ CYBLE_GAPC_ADV_REPORT_T* scanReport;
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *capsenseNTF;    
 CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *notificationParam;
 
-void printAddress(CYBLE_GAP_BD_ADDR_T *addr)
+void printAddress(const CYBLE_GAP_BD_ADDR_T *addr)
 {
     L("[%d] ",addr->type);
     for (unsigned int i = 0; i < CYBLE_GAP_BD_ADDR_SIZE; i++)
@@ -77,7 +77,7 @@ void printAddress(CYBLE_GAP_BD_ADDR_T *addr)
     }
 }
 
-int cmpAddr(CYBLE_GAP_BD_ADDR_T *addr1,CYBLE_GAP_BD_ADDR_T *addr2)
+int cmpAddr(const CYBLE_GAP_BD_ADDR_T *addr1,const CYBLE_GAP_BD_ADDR_T *addr2)
 {
     L("Comparing stored addr ");
     printAddress(addr1);
