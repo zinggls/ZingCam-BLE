@@ -183,7 +183,7 @@ static void updateStateInfo()
 
 static uint16 timerCount = 0;
 
-CY_ISR(TimerCallback)
+void TimerCallback(void)
 {
     timerCount++;
     
@@ -198,8 +198,18 @@ CY_ISR(TimerCallback)
 int main(void)
 {
     setBccVersion();
-    Timer_Start();
-    timer_isr_StartEx(TimerCallback);
+    
+    CySysTickStart();
+    /* Find unused callback slot and assign the callback. */
+    for (uint8 i = 0u; i < CY_SYS_SYST_NUM_OF_CALLBACKS; ++i)
+    {
+        if (CySysTickGetCallback(i) == NULL)
+        {
+            /* Set callback */
+            CySysTickSetCallback(i, TimerCallback);
+            break;
+        }
+    }
     
     //Load stored address from flash
     const FlashData_t* fd = LoadStoredPeripheralAddress();
