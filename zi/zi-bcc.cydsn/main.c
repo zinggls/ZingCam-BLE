@@ -243,20 +243,23 @@ int main(void)
         }
     }
     
-    //Load stored address from flash
-    const FlashData_t* fd = LoadStoredPeripheralAddress();
-    for(int i=0;i<5;i++) {
-        if( fd) LED_BLUE_Write(!LED_BLUE_Read()); //loaded from flash
-        if(!fd) LED_RED_Write(!LED_RED_Read());     //could not load from empty flash
-        CyDelay(100);
-    }
-    
     CyGlobalIntEnable; /* Enable global interrupts. */
     
     Zing_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
     i2cs_start();
+
+    const FlashData_t* fd = LoadStoredPeripheralAddress();	//Load stored address from flash
+    for(int i=0;i<5;i++) {
+        if(fd) {
+            LED_GREEN_Write(!LED_GREEN_Read()); //loaded from flash
+        }else{
+            LED_RED_Write(!LED_RED_Read());     //could not load from empty flash
+        }
+        CyDelay(100);
+    }
+
     CyBle_Start( CyBle_AppCallback );
     Pin_SW2_Int_StartEx( Pin_SW2_Handler );
     
