@@ -155,6 +155,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_DBLE_VERSION_STATIC, m_strFwDbleVer);
 	DDX_Text(pDX, IDC_ZXX_VERSION_STATIC, m_strFwZxxVer);
 	DDX_Text(pDX, IDC_ZCD_VERSION_STATIC, m_strFwZcdVer);
+	DDX_Control(pDX, IDC_ICD_LOG_LIST, m_icdLog);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -1522,7 +1523,12 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			UpdateGUI(m_ivf);
 		}
 
-		if(m_bReadBuffer) L(RawString(dataOUT, READ_BUFFER_SIZE));
+		if (m_bReadBuffer) {
+			L(RawString(dataOUT, READ_BUFFER_SIZE));
+
+			m_icdLog.AddString(RawString(dataOUT,46));	//ICD_IVF_SIZE
+			m_icdLog.SetTopIndex(m_icdLog.GetCount() - 1);
+		}
 
 		if (m_bSendWriteBuffer) {
 			Send_I2C_WriteBuffer(deviceAddress);
