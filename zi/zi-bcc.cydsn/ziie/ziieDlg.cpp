@@ -1247,7 +1247,7 @@ void CZiieDlg::UpdateStateGUI(I2C_STATE& is)
 CString CZiieDlg::RawString(std::vector<byte>& dataOUT, size_t len)
 {
 	CString str;
-	str.Format(_T("[%Iu] "), len);
+	str.Format(_T("%Iu. "), len);
 	for (size_t i = 0; i < len; i++) {
 		CString tmp;
 		tmp.Format(_T("%02X "), dataOUT[i]);
