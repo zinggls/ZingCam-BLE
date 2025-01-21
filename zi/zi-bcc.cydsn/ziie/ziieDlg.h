@@ -192,4 +192,5 @@ public:
 	CString m_strFwZcdVer;
 	CListBox m_icdLog;
 	CListBox m_zxxLog;
+	CListBox m_zcdLog;
 };
