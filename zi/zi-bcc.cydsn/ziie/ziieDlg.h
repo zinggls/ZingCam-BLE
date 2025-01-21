@@ -94,7 +94,7 @@ public:
 	void UpdateCommandGUI(I2C_IVF_COMMAND& ic);
 	static size_t ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is);
 	void UpdateStateGUI(I2C_STATE& is);
-	static CString RawString(std::vector<byte>& dataOUT);
+	static CString RawString(std::vector<byte>& dataOUT, size_t len);
 	static short ToShort(byte high, byte low);
 	static size_t ParseImuData(std::vector<byte>& dataOUT, size_t index, IMU& imu);
 	static size_t ParseZxxData(std::vector<byte>& dataOUT, size_t index, ZXX& zxx);
