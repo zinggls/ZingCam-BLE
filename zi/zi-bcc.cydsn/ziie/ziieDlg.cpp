@@ -156,6 +156,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_ZXX_VERSION_STATIC, m_strFwZxxVer);
 	DDX_Text(pDX, IDC_ZCD_VERSION_STATIC, m_strFwZcdVer);
 	DDX_Control(pDX, IDC_ICD_LOG_LIST, m_icdLog);
+	DDX_Control(pDX, IDC_ZXX_LOG_LIST, m_zxxLog);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -1528,6 +1529,10 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 
 			m_icdLog.AddString(RawString(dataOUT,46));	//ICD_IVF_SIZE
 			m_icdLog.SetTopIndex(m_icdLog.GetCount() - 1);
+
+			std::vector<byte> zxx(dataOUT.begin() + 46, dataOUT.begin() + 46 + 53);	//ZING_ZXX_SIZE
+			m_zxxLog.AddString(RawString(zxx,53));
+			m_zxxLog.SetTopIndex(m_zxxLog.GetCount() - 1);
 		}
 
 		if (m_bSendWriteBuffer) {

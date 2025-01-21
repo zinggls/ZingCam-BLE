@@ -80,6 +80,7 @@
 #define IDC_HBLE_VERSION_STATIC         1052
 #define IDC_DBLE_VERSION_STATIC         1053
 #define IDC_ICD_LOG_LIST                1054
+#define IDC_ZXX_LOG_LIST                1055
 
 // Next default values for new objects
 // 
