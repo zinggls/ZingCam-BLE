@@ -160,6 +160,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ZCD_LOG_LIST, m_zcdLog);
 	DDX_Control(pDX, IDC_DBLE_VER_LOG_LIST, m_dbleVerLog);
 	DDX_Control(pDX, IDC_ZCD_VER_LOG_LIST, m_zcdVerLog);
+	DDX_Control(pDX, IDC_HBLE_VER_LOG_LIST, m_hbleVerLog);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -1548,6 +1549,10 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			std::vector<byte> zcdv(dataOUT.begin() + READ_BUFFER_SIZE + VERSION_SIZE, dataOUT.begin() + READ_BUFFER_SIZE + 2 * VERSION_SIZE);
 			m_zcdVerLog.AddString(RawString(zcdv, VERSION_SIZE));
 			m_zcdVerLog.SetTopIndex(m_zcdVerLog.GetCount() - 1);
+
+			std::vector<byte> hblev(dataOUT.begin() + READ_BUFFER_SIZE + 2 * VERSION_SIZE, dataOUT.begin() + READ_BUFFER_SIZE + 3 * VERSION_SIZE);
+			m_hbleVerLog.AddString(RawString(hblev, VERSION_SIZE));
+			m_hbleVerLog.SetTopIndex(m_hbleVerLog.GetCount() - 1);
 		}
 
 		if (m_bSendWriteBuffer) {
