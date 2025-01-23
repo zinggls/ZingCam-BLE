@@ -83,6 +83,8 @@
 #define IDC_ZXX_LOG_LIST                1055
 #define IDC_ZCD_LOG_LIST                1056
 #define IDC_DBLE_VER_LOG_LIST           1057
+#define IDC_DBLE_VER_LOG_LIST2          1058
+#define IDC_ZCD_VER_LOG_LIST            1058
 
 // Next default values for new objects
 // 

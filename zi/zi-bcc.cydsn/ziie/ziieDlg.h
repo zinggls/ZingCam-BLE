@@ -194,4 +194,5 @@ public:
 	CListBox m_zxxLog;
 	CListBox m_zcdLog;
 	CListBox m_dbleVerLog;
+	CListBox m_zcdVerLog;
 };
