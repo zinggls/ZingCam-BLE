@@ -197,4 +197,5 @@ public:
 	CListBox m_zcdVerLog;
 	CListBox m_hbleVerLog;
 	CListBox m_zxxVerLog;
+	CString m_zxxVerRawStr;
 };

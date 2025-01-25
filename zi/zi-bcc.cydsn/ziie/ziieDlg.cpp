@@ -101,6 +101,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strFwDbleVer(_T(""))
 	, m_strFwZxxVer(_T(""))
 	, m_strFwZcdVer(_T(""))
+	, m_zxxVerRawStr(_T("ZXX"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -162,6 +163,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ZCD_VER_LOG_LIST, m_zcdVerLog);
 	DDX_Control(pDX, IDC_HBLE_VER_LOG_LIST, m_hbleVerLog);
 	DDX_Control(pDX, IDC_ZXX_VER_LOG_LIST, m_zxxVerLog);
+	DDX_Text(pDX, IDC_ZXX_VERSION_RAW_STATIC, m_zxxVerRawStr);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -790,6 +792,9 @@ void CZiieDlg::UpdateZxxGUI(ZXX& z)
 		m_zxxListCtrl.SetItemText(nItem, 2, _T(""));
 		m_zxxListCtrl.SetItemText(nItem, 3, _T(""));
 	}
+	CString str;
+	GetDlgItem(IDC_ZXX_STATIC)->GetWindowText(str);
+	m_zxxVerRawStr = str;
 }
 
 BOOL CZiieDlg::IsNULL(ZCD& z)
