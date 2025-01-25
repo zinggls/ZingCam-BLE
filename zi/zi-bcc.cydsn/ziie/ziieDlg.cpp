@@ -297,10 +297,8 @@ BOOL CZiieDlg::OnInitDialog()
 
 	SetTimer(1, 100, NULL);
 
-#ifdef DEBUG
 	CString strDescribe(GIT_DESCRIBE);
 	SetWindowText(_T("ziie ") + strDescribe);
-#endif // DEBUG
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 

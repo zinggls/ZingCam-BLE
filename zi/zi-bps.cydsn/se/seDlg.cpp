@@ -201,10 +201,8 @@ BOOL CseDlg::OnInitDialog()
 	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
 
-#ifdef DEBUG
 	CString strDescribe(GIT_DESCRIBE);
 	SetWindowText(_T("se ") + strDescribe);
-#endif // DEBUG
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
