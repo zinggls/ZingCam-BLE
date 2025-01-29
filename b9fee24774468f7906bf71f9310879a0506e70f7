@@ -1,0 +1,15 @@
+3단 스위치 선택에 따른 LED점멸 상태 확인 결과
+
+Pioneer board RGB LED (White)
+
+1. Switch LED_ON
+   SPDT Low (Green)
+   TX Run (Green)
+   Battery(Red)
+   Ch_H/L(Red)
+
+2. Switch PW_ON
+   SPDT Low (Green)
+
+3. Switch PW_OFF
+   SPDT Low (Green)
