@@ -200,15 +200,17 @@ static void updateStateInfo()
     setImuState(getImuState(),0xE5,(uint8*)&peripheral.txState.txStateIMU);    //송신기 IMU 상태 0x00: 정상, 0xE5: 무선영상 수신기 IMU 이상
 }
 
-CY_ISR(Timer_ISR)
-{
-    // Clear the interrupt
-    Timer_ClearInterrupt(Timer_INTR_MASK_TC);
+static uint16 timerCount = 0;
 
-    // Add your custom code here
-    updateStateInfo();
+void TimerCallback(void)
+{
+    timerCount++;
     
-    LED_RED_Write(!LED_RED_Read());
+    if(timerCount==1000) {  //1 second
+        updateStateInfo();
+        
+        LED_RED_Write(!LED_RED_Read());
+    }
 }
 
 /***************************************************************
@@ -217,6 +219,18 @@ CY_ISR(Timer_ISR)
 int main()
 {
     CyGlobalIntEnable; 
+    
+    CySysTickStart();
+    /* Find unused callback slot and assign the callback. */
+    for (uint8 i = 0u; i < CY_SYS_SYST_NUM_OF_CALLBACKS; ++i)
+    {
+        if (CySysTickGetCallback(i) == NULL)
+        {
+            /* Set callback */
+            CySysTickSetCallback(i, TimerCallback);
+            break;
+        }
+    }
     
     setBbsVersion();
     setGreen(LED_OFF);
@@ -232,9 +246,6 @@ int main()
     
     CyDelay(1000);
     UART_IMU_StartAndInitialize();
-    
-    Timer_Start();
-    Timer_ISR_StartEx(Timer_ISR);
 
     CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
     myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE;
