@@ -224,8 +224,6 @@ int main()
     Zing_Init(ZingCB);
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
-    capsense_Start();
-    capsense_InitializeEnabledBaselines();
     
     i2cs_start();
     /* Start BLE stack and register the callback function */
@@ -243,14 +241,6 @@ int main()
     uint32 count = 0;
     for(;;)
     {        
-        /* if Capsense scan is done, read the value and start another scan */
-        if(!capsense_IsBusy())
-        {
-            peripheral.zxxFrame.pos=capsense_GetCentroidPos(capsense_LINEARSLIDER0__LS);
-            capsense_UpdateEnabledBaselines();
-            capsense_ScanEnabledWidgets();
-        }
-        
         myDataHandle.value.val = (uint8_t *)&peripheral;
         myDataHandle.value.len = sizeof(PERIPHERAL);
         CyBle_GattsWriteAttributeValue( &myDataHandle, 0, &cyBle_connHandle, 0 );
