@@ -20,11 +20,13 @@ int main(void)
 
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     TX_Run_Write(OFF);
+    SPDT_Write(OFF);
 
     for(;;)
     {
         /* Place your application code here. */
         TX_Run_Write(~TX_Run_Read());
+        SPDT_Write(~SPDT_Read());
         CyDelay(1000);
     }
 }
