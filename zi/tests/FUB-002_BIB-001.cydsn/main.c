@@ -22,6 +22,7 @@ int main(void)
     TX_Run_Write(OFF);
     SPDT_Write(OFF);
     CH_LED_Write(0x0);
+    Batt_state_LED_Write(0x7);
 
     for(;;)
     {
@@ -35,6 +36,23 @@ int main(void)
         CH_LED_Write(0x2);
         CyDelay(1000);
         CH_LED_Write(0x3);
+        CyDelay(1000);
+
+        Batt_state_LED_Write(0x7);
+        CyDelay(1000);
+        Batt_state_LED_Write(0x6);
+        CyDelay(1000);
+        Batt_state_LED_Write(0x5);
+        CyDelay(1000);
+        Batt_state_LED_Write(0x4);
+        CyDelay(1000);
+        Batt_state_LED_Write(0x3);
+        CyDelay(1000);
+        Batt_state_LED_Write(0x2);
+        CyDelay(1000);
+        Batt_state_LED_Write(0x1);
+        CyDelay(1000);
+        Batt_state_LED_Write(0x0);
         CyDelay(1000);
     }
 }
