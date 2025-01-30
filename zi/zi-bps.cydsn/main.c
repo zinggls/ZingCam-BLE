@@ -220,6 +220,7 @@ int main()
     
     setBbsVersion();
     setGreen(LED_OFF);
+    CH_LED_Write(0x3);  //LED Off
 
     Zing_Init(ZingCB);
     UART_ZING_Start();
