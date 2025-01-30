@@ -260,6 +260,14 @@ int main()
             TX_Run_Write(0x1);  //LED OFF
         }
         
+        if(peripheral.zxxFrame.bnd=='H') {
+            CH_LED_Write(0x1);  //LED Red
+        }else if(peripheral.zxxFrame.bnd=='L') {
+            CH_LED_Write(0x2);  //LED Green
+        }else{
+            CH_LED_Write(0x3);  //LED Off
+        }
+        
         count++;
     }
 }

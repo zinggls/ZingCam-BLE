@@ -37,6 +37,7 @@
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="LED_RED" />
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/73b612cd-240c-4d8e-8340-ea28aabf4b11" value="capsense_Sns" />
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/899719c0-e797-4403-a44f-07a66de2cbeb" value="capsense_Cmod" />
+      <Data key="f9a13d4f-dcfb-429f-bf29-41d23f9f17f7" value="CH_LED" />
     </Group>
   </Group>
   <Group key="FlashSecurity">
@@ -3793,6 +3794,14 @@
     <Group key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/899719c0-e797-4403-a44f-07a66de2cbeb">
       <Group key="0">
         <Data key="Port Format" value="4,0" />
+      </Group>
+    </Group>
+    <Group key="f9a13d4f-dcfb-429f-bf29-41d23f9f17f7">
+      <Group key="0">
+        <Data key="Port Format" value="4,0" />
+      </Group>
+      <Group key="1">
+        <Data key="Port Format" value="4,1" />
       </Group>
     </Group>
   </Group>
