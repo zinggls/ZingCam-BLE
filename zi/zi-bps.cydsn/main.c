@@ -210,6 +210,7 @@ void TimerCallback(void)
         updateStateInfo();
         
         LED_RED_Write(!LED_RED_Read());
+        timerCount = 0;        
     }
 }
 
