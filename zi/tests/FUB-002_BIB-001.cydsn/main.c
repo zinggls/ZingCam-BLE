@@ -11,15 +11,21 @@
 */
 #include "project.h"
 
+#define ON  0x0
+#define OFF 0x1
+
 int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
 
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+    TX_Run_Write(OFF);
 
     for(;;)
     {
         /* Place your application code here. */
+        TX_Run_Write(~TX_Run_Read());
+        CyDelay(1000);
     }
 }
 
