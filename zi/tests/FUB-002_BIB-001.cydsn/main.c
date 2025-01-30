@@ -18,6 +18,8 @@ void TxRun_Test();
 void SPDT_Test();
 void CH_LED_Test();
 void Batt_state_LED_Test();
+void HGATE_Con1_Test();
+void HGATE_Con2_Test();
 
 int main(void)
 {
@@ -38,6 +40,8 @@ int main(void)
         SPDT_Test();
         CH_LED_Test();
         Batt_state_LED_Test();
+        HGATE_Con1_Test();
+        HGATE_Con2_Test();
     }
 }
 
@@ -81,6 +85,37 @@ void Batt_state_LED_Test()
     CyDelay(1000);
     Batt_state_LED_Write(0x0);
     CyDelay(1000);
+}
+
+void HGATE_Con1_Test()
+{
+    HGATE_Con1_Write(0x0f);
+    CyDelay(1000);
+    HGATE_Con1_Write(0x07);
+    CyDelay(1000);
+    HGATE_Con1_Write(0x03);
+    CyDelay(1000);
+    HGATE_Con1_Write(0x01);
+    CyDelay(1000);
+    HGATE_Con1_Write(0x00);
+}
+
+void HGATE_Con2_Test()
+{
+    HGATE_Con2_1_Write(0x03);
+    HGATE_Con2_2_Write(0x03);
+    CyDelay(1000);
+    HGATE_Con2_1_Write(0x03);
+    HGATE_Con2_2_Write(0x01);
+    CyDelay(1000);
+    HGATE_Con2_1_Write(0x03);
+    HGATE_Con2_2_Write(0x00);
+    CyDelay(1000);
+    HGATE_Con2_1_Write(0x01);
+    HGATE_Con2_2_Write(0x00);
+    CyDelay(1000);
+    HGATE_Con2_1_Write(0x00);
+    HGATE_Con2_2_Write(0x00); 
 }
 
 /* [] END OF FILE */
