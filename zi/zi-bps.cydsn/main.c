@@ -264,6 +264,12 @@ int main()
         imu_process_uart_data(onImuFrame);
         processImuCommand(ivfCom.wirelessVideoTransmitterImuOutputType,ivfCom.wirelessVideoTransmitterImuCalibrate);
         
+        if(peripheral.zxxFrame.run=='Y') {
+            TX_Run_Write(0x0);  //LED ON
+        }else{
+            TX_Run_Write(0x1);  //LED OFF
+        }
+        
         count++;
     }
 }
