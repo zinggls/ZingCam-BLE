@@ -219,9 +219,13 @@ static uint8_t adc_get_battery_level(int16_t adc_value)
     return level;
 }
 
+static int16_t BatteryFull = BATTERY_FULL_CHARGE;
+
 static char adc_percentage(int16_t val)
 {
-    float fPer = ((float)val/(float)BATTERY_FULL_CHARGE)*100.0;
+    if(val>BatteryFull) BatteryFull = val;
+    
+    float fPer = ((float)val/(float)BatteryFull)*100.0;
     int intPer = (int)fPer;
     return intPer;
 }
