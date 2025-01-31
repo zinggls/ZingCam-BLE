@@ -205,8 +205,10 @@ static void display_battery_level(int percentage)
         Batt_state_LED_Write(0x6);
     }else if(percentage<66 && percentage>=33){
         Batt_state_LED_Write(0x5);
-    }else{
+    }else if(percentage<33 && percentage>=10){
         Batt_state_LED_Write(0x0);
+    }else{
+        Batt_state_LED_Write(~Batt_state_LED_Read());
     }
 }
 
