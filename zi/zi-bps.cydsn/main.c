@@ -199,40 +199,32 @@ static int16_t adc_measure(uint8_t channel)
     return ADC_GetResult16(channel);
 }
 
-static uint8_t adc_get_battery_level(int16_t adc_value)
-{
-    uint8_t level;
-    
-    if (adc_value < BATTERY_FULL_CHARGE)
-    {
-        level = 0;
+static void display_battery_level(int percentage)
+{   
+    if(percentage>=66) {
+        Batt_state_LED_Write(0x6);
+    }else if(percentage<66 && percentage>=33){
+        Batt_state_LED_Write(0x5);
+    }else{
+        Batt_state_LED_Write(0x0);
     }
-    else if ((adc_value > BATTERY_NEED_CHARGE) && (adc_value <= BATTERY_FULL_CHARGE))
-    {
-        level = 1;
-    }
-    else if (adc_value < BATTERY_NEED_CHARGE)
-    {
-        level = 2;
-    }
-    
-    return level;
 }
 
 static int16_t BatteryFull = BATTERY_FULL_CHARGE;
 
-static char adc_percentage(int16_t val)
+static int adc_percentage(int16_t val)
 {
     if(val>BatteryFull) BatteryFull = val;
     
     float fPer = ((float)val/(float)BatteryFull)*100.0;
-    int intPer = (int)fPer;
-    return intPer;
+    return (int)fPer;
 }
 
 static void updateStateInfo()
 {
-    peripheral.txState.txStateBattery = adc_percentage(adc_measure(0));
+    int percentage = adc_percentage(adc_measure(0));
+    peripheral.txState.txStateBattery = (char)percentage;
+    display_battery_level(percentage);
     
     uint8 zingState = getZingState();
     setZingState(zingState,0xE3,(uint8*)&peripheral.txState.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
