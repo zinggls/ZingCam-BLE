@@ -14,6 +14,9 @@
 #include "git_describe.h"
 #include "versionInfo.h"
 
+#define BATTERY_FULL_CHARGE 1610
+#define BATTERY_NEED_CHARGE 1568
+
 static uint16 notifyCustom = 0;
 static uint32 ZingCbCount = 0;
 
@@ -189,9 +192,43 @@ static void clearZxxZingInfo(ZXX_FRAME *z)
     z->pos = 0;
 }
 
+static int16_t adc_measure(uint8_t channel)
+{
+    ADC_StartConvert();
+    ADC_IsEndConversion(ADC_WAIT_FOR_RESULT);
+    return ADC_GetResult16(channel);
+}
+
+static uint8_t adc_get_battery_level(int16_t adc_value)
+{
+    uint8_t level;
+    
+    if (adc_value < BATTERY_FULL_CHARGE)
+    {
+        level = 0;
+    }
+    else if ((adc_value > BATTERY_NEED_CHARGE) && (adc_value <= BATTERY_FULL_CHARGE))
+    {
+        level = 1;
+    }
+    else if (adc_value < BATTERY_NEED_CHARGE)
+    {
+        level = 2;
+    }
+    
+    return level;
+}
+
+static char adc_percentage(int16_t val)
+{
+    float fPer = ((float)val/(float)BATTERY_FULL_CHARGE)*100.0;
+    int intPer = (int)fPer;
+    return intPer;
+}
+
 static void updateStateInfo()
 {
-    peripheral.txState.txStateBattery = 78;   //TO DO 배터리 용량 파악하는 기능 구현전까지 하드코딩 상태로 둔다 (78%로 표시됨)
+    peripheral.txState.txStateBattery = adc_percentage(adc_measure(0));
     
     uint8 zingState = getZingState();
     setZingState(zingState,0xE3,(uint8*)&peripheral.txState.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
@@ -247,6 +284,7 @@ int main()
     
     CyDelay(1000);
     UART_IMU_StartAndInitialize();
+    ADC_Start();
 
     CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
     myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE;

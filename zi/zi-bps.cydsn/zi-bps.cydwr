@@ -19,6 +19,7 @@
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/74063576-f256-4f8f-8a82-9abdee876261" value="capsense_SampleClk" />
     </Group>
     <Group key="Pin">
+      <Data key="2b2cbae3-9108-4a7b-a0cb-4184df2727e0" value="BT_ADC" />
       <Data key="3dfd8dc4-b3e2-49d0-a078-22f2b11bd7aa" value="TX_Run" />
       <Data key="6f1c6cc3-8ac8-42b8-9be0-54c1b90c12b2" value="UART_IMU_TX" />
       <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="UART_RX" />
@@ -3694,6 +3695,11 @@
     </Group>
   </Group>
   <Group key="Pin2">
+    <Group key="2b2cbae3-9108-4a7b-a0cb-4184df2727e0">
+      <Group key="0">
+        <Data key="Port Format" value="3,5" />
+      </Group>
+    </Group>
     <Group key="3dfd8dc4-b3e2-49d0-a078-22f2b11bd7aa">
       <Group key="0">
         <Data key="Port Format" value="1,0" />
