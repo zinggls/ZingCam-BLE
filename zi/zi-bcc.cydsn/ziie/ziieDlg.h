@@ -139,6 +139,7 @@ public:
 	CString m_strScopeStateBattery;
 	CString m_strScopeStateIR;
 	CString m_strScopeStateEO;
+	CString m_strTxStateLmscopeDetect;
 	CString m_strTxStateBattery;
 	CString m_strTxStateModem;
 	CString m_strTxStateImu;

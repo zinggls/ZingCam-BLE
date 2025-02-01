@@ -88,6 +88,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strScopeStateBattery(_T("배터리잔량:"))
 	, m_strScopeStateIR(_T("IR상태:"))
 	, m_strScopeStateEO(_T("EO상태:"))
+	, m_strTxStateLmscopeDetect(_T("경II조준경:"))
 	, m_strTxStateBattery(_T("배터리잔량:"))
 	, m_strTxStateModem(_T("모뎀상태:"))
 	, m_strTxStateImu(_T("IMU상태:"))
@@ -131,6 +132,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_SCOPE_STATE_BATTERY_STATIC, m_strScopeStateBattery);
 	DDX_Text(pDX, IDC_SCOPE_STATE_IR_STATIC, m_strScopeStateIR);
 	DDX_Text(pDX, IDC_SCOPE_STATE_EO_STATIC, m_strScopeStateEO);
+	DDX_Text(pDX, IDC_TX_STATE_LMSCOPE_DETECT_STATIC, m_strTxStateLmscopeDetect);
 	DDX_Text(pDX, IDC_TX_STATE_BATTERY_STATIC, m_strTxStateBattery);
 	DDX_Text(pDX, IDC_TX_STATE_MODEM_STATIC, m_strTxStateModem);
 	DDX_Text(pDX, IDC_TX_STATE_IMU_STATIC, m_strTxStateImu);
@@ -1243,6 +1245,7 @@ void CZiieDlg::UpdateStateGUI(I2C_STATE& is)
 		m_strScopeStateBattery = _T("배터리잔량: -");
 		m_strScopeStateIR = _T("IR상태: -");
 		m_strScopeStateEO = _T("EO상태: -");
+		m_strTxStateLmscopeDetect = _T("경II조준경: -");
 		m_strTxStateBattery = _T("배터리잔량: -");
 		m_strTxStateModem = _T("모뎀상태: -");
 		m_strTxStateImu = _T("IMU상태: -");
