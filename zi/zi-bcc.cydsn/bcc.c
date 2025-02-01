@@ -91,6 +91,27 @@ static void setZxxVerBuffer(uint8_t *buf,Version *v)
     memcpy(buf,v->info,VERSION_SIZE);
 }
 
+static void setScopeVideoKind(uint8_t *buf,int kind)
+{
+    switch(kind){
+    case 2: //ZCH
+        *buf = 0x04;    //경II인 경우에만 0x04로 표시한다. ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+        break;
+    default:
+        //경II가 아닌 경우이므로 이들은 mapToICD에서 복사된 값을 유지한다
+        break;
+    }
+}
+
+static void setScopeOutput(uint8_t *buf,char run)
+{
+    if(run=='Y') {
+        *buf = 0x0;     //화기조준경 영상 상태 0x00 : 출력     ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    }else{
+        *buf = 0x1;     //화기조준경 영상 상태 0x01 : 미출력    ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    }
+}
+
 static void processingZxx()
 {
     if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
@@ -107,6 +128,9 @@ static void processingZxx()
         getZcdFrame()->pos = peripheral.zxxFrame.pos;
         setBpsVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+2*VERSION_SIZE,&peripheral.bpsVer);
         setZxxVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+3*VERSION_SIZE,&peripheral.zxxVer);
+        
+        setScopeVideoKind(getI2CReadBuffer()+ICD_SCOPE_VIDEO_KIND_OFFSET,peripheral.zxxFrame.kind);
+        setScopeOutput(getI2CReadBuffer()+ICD_SCOPE_OUTPUT_OFFSET,peripheral.zxxFrame.run);
     }
 }
 
