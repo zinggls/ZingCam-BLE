@@ -1222,6 +1222,7 @@ size_t CZiieDlg::ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_ST
 {
 	is.ScopeStateKind = dataOUT[index++];
 	is.ScopeStateOut = dataOUT[index++];
+	is.TxStateLmscopeDetect = dataOUT[index++];
 	is.ScopeStateBattery = dataOUT[index++];
 	is.TxStateBattery = dataOUT[index++];
 	is.ScopeStateIR = dataOUT[index++];
@@ -1338,22 +1339,22 @@ size_t CZiieDlg::Parse_I2C(std::vector<byte>& dataOUT, IVF& ivf)
 {
 	size_t index = 0;
 	index = ParseCommandData(dataOUT, index, ivf.read);
-	ASSERT(index == 11);
+	ASSERT(index == ICD_COMMAND_SIZE);
 
 	index = ParseStateData(dataOUT, index, ivf.state);
-	ASSERT(index == 22);
+	ASSERT(index == ICD_SIZE);
 
 	index = ParseImuData(dataOUT, index, ivf.txImu);
-	ASSERT(index == 34);
+	ASSERT(index == IMU_RX_OFFSET);
 
 	index = ParseImuData(dataOUT, index, ivf.rxImu);
-	ASSERT(index == 46);
+	ASSERT(index == ICD_IVF_SIZE);
 
 	index = ParseZxxData(dataOUT, index, ivf.zxx);
-	ASSERT(index == 99);
+	ASSERT(index == (ICD_IVF_SIZE + ZING_ZXX_SIZE));
 
 	index = ParseZcdData(dataOUT, index, ivf.zcd);
-	ASSERT(index == 165);
+	ASSERT(index == (ICD_IVF_SIZE + ZING_ZXX_SIZE + ZING_ZCD_SIZE));
 
 	return index;
 }
@@ -1538,15 +1539,15 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		if (m_bReadBuffer) {
 			L(RawString(dataOUT, READ_BUFFER_SIZE));
 
-			m_icdLog.AddString(RawString(dataOUT,46));	//ICD_IVF_SIZE
+			m_icdLog.AddString(RawString(dataOUT, ICD_IVF_SIZE));	//ICD_IVF_SIZE
 			m_icdLog.SetTopIndex(m_icdLog.GetCount() - 1);
 
-			std::vector<byte> zxx(dataOUT.begin() + 46, dataOUT.begin() + 46 + 53);	//ZING_ZXX_SIZE
-			m_zxxLog.AddString(RawString(zxx,53));
+			std::vector<byte> zxx(dataOUT.begin() + ICD_IVF_SIZE, dataOUT.begin() + ICD_IVF_SIZE + ZING_ZXX_SIZE);	//ZING_ZXX_SIZE
+			m_zxxLog.AddString(RawString(zxx, ZING_ZXX_SIZE));
 			m_zxxLog.SetTopIndex(m_zxxLog.GetCount() - 1);
 
-			std::vector<byte> zcd(dataOUT.begin() + 46 + 53, dataOUT.begin() + 46 + 53 + 66);	//ZING_ZCD_SIZE
-			m_zcdLog.AddString(RawString(zcd, 66));
+			std::vector<byte> zcd(dataOUT.begin() + ICD_IVF_SIZE + ZING_ZXX_SIZE, dataOUT.begin() + ICD_IVF_SIZE + ZING_ZXX_SIZE + ZING_ZCD_SIZE);	//ZING_ZCD_SIZE
+			m_zcdLog.AddString(RawString(zcd, ZING_ZCD_SIZE));
 			m_zcdLog.SetTopIndex(m_zcdLog.GetCount() - 1);
 
 			std::vector<byte> dblev(dataOUT.begin() + READ_BUFFER_SIZE, dataOUT.begin() + READ_BUFFER_SIZE + VERSION_SIZE);

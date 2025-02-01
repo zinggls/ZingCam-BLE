@@ -116,7 +116,7 @@ void i2cs_process(ZCD_FRAME *zcd)
         i2cReadBuffer[10] = ivfCom.wirelessVideoReceiverImuCalibrate;
     }
     
-    setZcdBuffer(i2cReadBuffer+ZING_ZCD_OFFSET,zcd);    //ZCD offset ICD(46) + ZXX(73) = 119
+    setZcdBuffer(i2cReadBuffer+ZING_ZCD_OFFSET,zcd);    //ZCD offset ICD(47) + ZXX(53) = 100
     
     /* Read complete: expose buffer to master */
     if (0u != (I2C_I2CSlaveStatus() & I2C_I2C_SSTAT_RD_CMPLT))
