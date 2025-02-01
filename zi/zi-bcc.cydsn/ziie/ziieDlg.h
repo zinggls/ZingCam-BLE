@@ -81,12 +81,13 @@ public:
 	static void UpdateXIMU(BOOL bTx, CString& strImuType, CString& strCalib, byte type, byte calib);
 	void UpdateScopeStateKind(byte kind);
 	void UpdateScopeStateOut(byte out);
+	void UpdateLmscopeDetect(byte det);
 	static void BatteryInfo(CString& str, byte val);
 	void UpdateScopeStateBattery(byte val);
 	CString ModuleSanity(CString strName, byte code, byte errCode);
 	void UpdateScopeStateIR(byte code);
 	void UpdateScopeStateEO(byte code);
-	void UpdateScopeState(byte kind, byte out, byte val, byte irCode, byte eoCode);
+	void UpdateScopeState(byte kind, byte out, byte det, byte val, byte irCode, byte eoCode);
 	void UpdateTxState(byte val, byte modemCode, byte imuCode);
 	void UpdateRxState(byte modemCode, byte imuCode);
 	void UpdateBleState(byte dat);

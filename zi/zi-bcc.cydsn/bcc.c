@@ -114,6 +114,8 @@ static void applyICD_for_Unknown()
     *eo = 0xff;
     
     //경II조준경 장치인식
+    uint8_t *det = getI2CReadBuffer()+ICD_TX_LMSCOPE_DETECT_OFFSET;
+    *det = 0x0; //장치 인식못함
 }
 
 static void applyICD_for_LMG()
@@ -144,6 +146,13 @@ static void applyICD_for_LMG()
     *eo = 0xff;     //0xff: unknown ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
     
     //경II조준경 장치인식
+    uint8_t *det = getI2CReadBuffer()+ICD_TX_LMSCOPE_DETECT_OFFSET;
+    if( peripheral.zxxFrame.kind==ZCH && peripheral.zxxFrame.usb==2 &&
+        peripheral.zxxFrame.vnd!=0x0 && peripheral.zxxFrame.prd!=0x0 ) {
+        *det = 0x1; //장치 인식
+    }else{
+        *det = 0x0; //장치 인식 못함
+    }
 }
 
 static void processingZxx()

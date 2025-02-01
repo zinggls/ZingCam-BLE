@@ -1086,6 +1086,25 @@ void CZiieDlg::UpdateScopeStateOut(byte out)
 	m_strScopeStateOut += str;
 }
 
+void CZiieDlg::UpdateLmscopeDetect(byte det)
+{
+	m_strTxStateLmscopeDetect = _T("경II조준경: ");
+
+	CString str;
+	switch (det) {
+	case 0:
+		str.Format(_T("인식안됨(%x)"), det);
+		break;
+	case 1:
+		str.Format(_T("인식성공(%x)"), det);
+		break;
+	default:
+		str.Format(_T("미정의(%x)"), det);
+		break;
+	}
+	m_strTxStateLmscopeDetect += str;
+}
+
 void CZiieDlg::BatteryInfo(CString& str, byte val)
 {
 	if (val < 0 || val>100) {
@@ -1138,10 +1157,11 @@ void CZiieDlg::UpdateScopeStateEO(byte code)
 	m_strScopeStateEO = ModuleSanity(_T("EO상태: "), code, 0xE2);
 }
 
-void CZiieDlg::UpdateScopeState(byte kind, byte out, byte val, byte irCode, byte eoCode)
+void CZiieDlg::UpdateScopeState(byte kind, byte out, byte det, byte val, byte irCode, byte eoCode)
 {
 	UpdateScopeStateKind(kind);
 	UpdateScopeStateOut(out);
+	UpdateLmscopeDetect(det);
 	UpdateScopeStateBattery(val);
 	UpdateScopeStateIR(irCode);
 	UpdateScopeStateEO(eoCode);
@@ -1238,7 +1258,7 @@ size_t CZiieDlg::ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_ST
 void CZiieDlg::UpdateStateGUI(I2C_STATE& is)
 {
 	if (is.BleState == 2) {
-		UpdateScopeState(is.ScopeStateKind, is.ScopeStateOut, is.ScopeStateBattery, is.ScopeStateIR, is.ScopeStateEO);
+		UpdateScopeState(is.ScopeStateKind, is.ScopeStateOut, is.TxStateLmscopeDetect, is.ScopeStateBattery, is.ScopeStateIR, is.ScopeStateEO);
 		UpdateTxState(is.TxStateBattery, is.TxStateModem, is.TxStateImu);
 	}else{
 		m_strScopeStateKind = _T("종류: -");
