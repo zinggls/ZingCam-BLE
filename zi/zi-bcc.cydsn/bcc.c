@@ -91,25 +91,34 @@ static void setZxxVerBuffer(uint8_t *buf,Version *v)
     memcpy(buf,v->info,VERSION_SIZE);
 }
 
-static void setScopeVideoKind(uint8_t *buf,int kind)
+static void applyICD_for_LMG()
 {
-    switch(kind){
-    case 2: //ZCH
-        *buf = 0x04;    //경II인 경우에만 0x04로 표시한다. ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
-        break;
-    default:
-        //경II가 아닌 경우이므로 이들은 mapToICD에서 복사된 값을 유지한다
-        break;
-    }
-}
-
-static void setScopeOutput(uint8_t *buf,char run)
-{
-    if(run=='Y') {
-        *buf = 0x0;     //화기조준경 영상 상태 0x00 : 출력     ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    //화기조준경 상태정보 조준경 종류
+    uint8_t *buf = getI2CReadBuffer()+ICD_SCOPE_VIDEO_KIND_OFFSET;
+    *buf = 0x04;    //경II인 경우 0x04로 표시한다. ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    
+    //화기조준경 상태정보 화기조준경 영상출력
+    buf = getI2CReadBuffer()+ICD_SCOPE_OUTPUT_OFFSET;
+    if(peripheral.zxxFrame.run=='Y') {
+        *buf = 0x0; //화기조준경 영상 상태 0x00 : 출력     ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
     }else{
-        *buf = 0x1;     //화기조준경 영상 상태 0x01 : 미출력    ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+        *buf = 0x1; //화기조준경 영상 상태 0x01 : 미출력    ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
     }
+    
+    //화기조준경 상태정보 배터리 잔량 (경II의 경우 송신기로 부터 전원을 공급받으므로 송신기의 배터리 잔량을 화기조준경 배터리 잔량으로 표시
+    buf = getI2CReadBuffer()+ICD_SCOPE_BATTERY_OFFSET;
+    uint8_t *txBat = getI2CReadBuffer()+ICD_TX_BATTERY_OFFSET;
+    *buf = *txBat;
+    
+    //화기조준경 IR상태
+    uint8_t *ir = getI2CReadBuffer()+ICD_SCOPE_IR_STATE_OFFSET;
+    *ir = 0xff;     //0xff: unknown ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    
+    //화기조준경 EO상태
+    uint8_t *eo = getI2CReadBuffer()+ICD_SCOPE_EO_STATE_OFFSET;
+    *eo = 0xff;     //0xff: unknown ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    
+    //경II조준경 장치인식
 }
 
 static void processingZxx()
@@ -129,8 +138,7 @@ static void processingZxx()
         setBpsVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+2*VERSION_SIZE,&peripheral.bpsVer);
         setZxxVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+3*VERSION_SIZE,&peripheral.zxxVer);
         
-        setScopeVideoKind(getI2CReadBuffer()+ICD_SCOPE_VIDEO_KIND_OFFSET,peripheral.zxxFrame.kind);
-        setScopeOutput(getI2CReadBuffer()+ICD_SCOPE_OUTPUT_OFFSET,peripheral.zxxFrame.run);
+        if(peripheral.zxxFrame.kind==ZCH) applyICD_for_LMG();  //경2조준경 ICD 적용
     }
 }
 
