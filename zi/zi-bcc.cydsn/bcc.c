@@ -91,6 +91,31 @@ static void setZxxVerBuffer(uint8_t *buf,Version *v)
     memcpy(buf,v->info,VERSION_SIZE);
 }
 
+static void applyICD_for_Unknown()
+{
+    //화기조준경 상태정보 조준경 종류
+    uint8_t *kind = getI2CReadBuffer()+ICD_SCOPE_VIDEO_KIND_OFFSET;
+    *kind = 0x0;    //None
+    
+    //화기조준경 상태정보 화기조준경 영상출력
+    uint8_t *output = getI2CReadBuffer()+ICD_SCOPE_OUTPUT_OFFSET;
+    *output = 0x1;  //미출력
+    
+    //화기조준경 상태정보 배터리 잔량
+    uint8_t *bat = getI2CReadBuffer()+ICD_SCOPE_BATTERY_OFFSET;
+    *bat = 0;
+    
+    //화기조준경 IR상태
+    uint8_t *ir = getI2CReadBuffer()+ICD_SCOPE_IR_STATE_OFFSET;
+    *ir = 0xff;
+    
+    //화기조준경 EO상태
+    uint8_t *eo = getI2CReadBuffer()+ICD_SCOPE_EO_STATE_OFFSET;
+    *eo = 0xff;
+    
+    //경II조준경 장치인식
+}
+
 static void applyICD_for_LMG()
 {
     //화기조준경 상태정보 조준경 종류
@@ -138,6 +163,7 @@ static void processingZxx()
         setBpsVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+2*VERSION_SIZE,&peripheral.bpsVer);
         setZxxVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+3*VERSION_SIZE,&peripheral.zxxVer);
         
+        if(peripheral.zxxFrame.kind==Unknown) applyICD_for_Unknown();
         if(peripheral.zxxFrame.kind==ZCH) applyICD_for_LMG();  //경2조준경 ICD 적용
     }
 }
