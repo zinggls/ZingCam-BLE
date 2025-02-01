@@ -1043,6 +1043,9 @@ void CZiieDlg::UpdateScopeStateKind(byte kind)
 
 	CString str;
 	switch (kind) {
+	case 0:
+		str.Format(_T("None(Default)(%x)"), kind);
+		break;
 	case 1:
 		str.Format(_T("EO(%x)"), kind);
 		break;
@@ -1053,10 +1056,7 @@ void CZiieDlg::UpdateScopeStateKind(byte kind)
 		str.Format(_T("IR흑상(%x)"), kind);
 		break;
 	case 4:
-		str.Format(_T("경II EO(%x)"), kind);
-		break;
-	case 8:
-		str.Format(_T("경II IR(%x)"), kind);
+		str.Format(_T("경II(%x)"), kind);
 		break;
 	default:
 		str.Format(_T("미정의(%x)"), kind);
