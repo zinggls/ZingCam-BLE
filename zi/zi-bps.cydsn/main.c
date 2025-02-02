@@ -14,7 +14,7 @@
 #include "git_describe.h"
 #include "versionInfo.h"
 
-#define BATTERY_FULL_CHARGE 1610
+#define BATTERY_FULL_CHARGE 1658
 #define BATTERY_NEED_CHARGE 1568
 
 static uint16 notifyCustom = 0;
