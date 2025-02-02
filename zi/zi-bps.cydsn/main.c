@@ -212,13 +212,9 @@ static void display_battery_level(int percentage)
     }
 }
 
-static int16_t BatteryFull = BATTERY_FULL_CHARGE;
-
 static int adc_percentage(int16_t val)
-{
-    if(val>BatteryFull) BatteryFull = val;
-    
-    float fPer = ((float)val/(float)BatteryFull)*100.0;
+{    
+    float fPer = ((float)val/(float)BATTERY_FULL_CHARGE)*100.0;
     return (int)fPer;
 }
 
