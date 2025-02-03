@@ -45,5 +45,8 @@ void i2cs_start(void);
 void i2cs_process(ZCD_FRAME *zcd);
 uint8_t* getI2CReadBuffer();
 
+// Data Ready Flag
+volatile uint8 dataReady;
+
 #endif //I2CS_H
 /* [] END OF FILE */

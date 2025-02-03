@@ -159,7 +159,7 @@ static void processingZxx()
 {
     if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
     
-    if(notificationParam->handleValPair.value.len == sizeof(PERIPHERAL)) {
+    if(notificationParam->handleValPair.value.len == sizeof(PERIPHERAL) && dataReady==0) {
         notifiedCustom++;
         
         // Process the received data                                
@@ -174,6 +174,8 @@ static void processingZxx()
         
         if(peripheral.zxxFrame.kind==Unknown) applyICD_for_Unknown();
         if(peripheral.zxxFrame.kind==ZCH) applyICD_for_LMG();  //경2조준경 ICD 적용
+        
+        dataReady = 1;
     }
 }
 
