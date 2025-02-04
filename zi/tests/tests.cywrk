@@ -3,11 +3,12 @@
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
 <CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="tests" persistent="tests.cywrk" platform="NOT_USED">
-<current_project name=".\FUB-002_BIB-001.cydsn\FUB-002_BIB-001.cyprj" />
+<current_project name=".\formatSpecifier.cydsn\formatSpecifier.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
 <v>.\FUB-002_BIB-001.cydsn\FUB-002_BIB-001.cyprj</v>
+<v>.\formatSpecifier.cydsn\formatSpecifier.cyprj</v>
 </projects>
 <workspace_id v="1a786977-ef98-459d-9d56-20691ade0a51" />
 <WriteAppVersionLastSavedWith v="4.4.0.80" />
