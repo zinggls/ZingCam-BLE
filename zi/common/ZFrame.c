@@ -6,7 +6,7 @@
 
 static const char ZED_SSCANF_FORMAT[] = "ZED USB:%d BND:%c PPID:0x%X DeviceID:0x%X TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
 static const char ZCH_SSCANF_FORMAT[] = "ZCH USB:%d VND:0x%X PRD:0x%X BND:%c PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d TRT:%c ACK:%c PPC:%c TXID:0x%X RXID:0x%X RUN:%c CNT:%d";
-static const char ZCD_SSCANF_FORMAT[] = "ZCD USB:%d PPID:0x%X DeviceID:0x%X FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%X RXID:0x%X DestID_ERR_CNT:%d DestID_DIFF:%d PHY_RX_FRAME_CNT:%d PHY_RX_DIFF:%d CNT:%d";
+static const char ZCD_SSCANF_FORMAT[] = "ZCD USB:%d PPID:0x%x DeviceID:0x%x FMT:%d IDX:%d FPS:0x%X TRT:%c ACK:%c PPC:%c RUN:%c ITF:%c TXID:0x%x RXID:0x%x DestID_ERR_CNT:%d DestID_DIFF:%d PHY_RX_FRAME_CNT:%d PHY_RX_DIFF:%d CNT:%d";
 static char git_describe[128];
 static char git_info[128];
 
