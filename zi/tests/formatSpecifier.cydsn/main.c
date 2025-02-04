@@ -28,6 +28,17 @@ int main(void)
         
         sprintf(msg, "format specifier test=%d\n", nCount++);
         UART_DBG_UartPutString(msg);
+        
+        unsigned int ppidx,ppidX;
+        int parsedx = sscanf("PPID:0xABCDABCD", "PPID:0x%x", &ppidx);
+        int parsedX = sscanf("PPID:0xABCDABCD", "PPID:0x%X", &ppidX);
+        
+        sprintf(msg, "parsedx=%d ppidx (x:0x%x,X:0x%X)\n", parsedx,ppidx,ppidx);
+        UART_DBG_UartPutString(msg);
+        
+        sprintf(msg, "parsedX=%d ppidX (x:0x%x,X:0x%X)\n", parsedX,ppidX,ppidX);
+        UART_DBG_UartPutString(msg);
+        
         CyDelay(1000);
     }
 }
