@@ -193,7 +193,7 @@ void TimerCallback(void)
     if(timerCount==1000) {  //1 second
         updateStateInfo();
         
-        LED_RED_Write(!LED_RED_Read());
+        //LED_RED_Write(!LED_RED_Read());
         timerCount = 0;
         btnHoldCount++;
     }
@@ -201,7 +201,7 @@ void TimerCallback(void)
 
 CY_ISR( Pin_SW2_Handler )
 {   
-    LED_RED_Write( ~LED_RED_Read() );
+    //LED_RED_Write( ~LED_RED_Read() );
     
     if(Pin_SW2_Read()==0) { // Button pressed
         btnHoldCount = 0;
@@ -229,6 +229,10 @@ CY_ISR( Pin_SW2_Handler )
 
 int main(void)
 {
+    PW_EN_Write(1);
+    Reset_Write(1);
+    CyDelay(10);
+
     setBccVersion();
     
     CySysTickStart();
@@ -255,7 +259,7 @@ int main(void)
         if(fd) {
             LED_GREEN_Write(!LED_GREEN_Read()); //loaded from flash
         }else{
-            LED_RED_Write(!LED_RED_Read());     //could not load from empty flash
+            //LED_RED_Write(!LED_RED_Read());     //could not load from empty flash
         }
         CyDelay(100);
     }
