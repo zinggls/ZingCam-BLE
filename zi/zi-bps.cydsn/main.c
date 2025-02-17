@@ -240,7 +240,7 @@ void TimerCallback(void)
     if(timerCount==1000) {  //1 second
         updateStateInfo();
         
-        LED_RED_Write(!LED_RED_Read());
+        //LED_RED_Write(!LED_RED_Read());
         timerCount = 0;        
     }
 }
@@ -250,6 +250,10 @@ void TimerCallback(void)
  **************************************************************/
 int main()
 {
+    PW_EN_Write(1);
+    Reset_Write(1);
+    CyDelay(10);
+    
     CyGlobalIntEnable; 
     
     CySysTickStart();
