@@ -230,10 +230,6 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
     switch( eventCode )
     {
         case CYBLE_EVT_STACK_ON:
-            {
-                uint8_t newPPID[4] = { 0x4, 0x70, 0xbc, 0xde };
-                UART_ZING_PutArray(newPPID, sizeof(newPPID));
-            }
             L("CYBLE_EVT_STACK_ON\r\n");
         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
             systemMode = SM_SCANNING;
