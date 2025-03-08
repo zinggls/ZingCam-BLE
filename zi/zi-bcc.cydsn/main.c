@@ -227,6 +227,28 @@ CY_ISR( Pin_SW2_Handler )
     Pin_SW2_ClearInterrupt();
 }
 
+
+static uint16_t generate_unique_value(uint8_t input[6]) {
+    // XOR the bytes in the input to collapse them down into 2 bytes
+    uint16_t result = 0;
+
+    // Combine bytes by XORing them in parts
+    result ^= (input[0] << 8) | input[1];  // First two bytes
+    result ^= (input[2] << 8) | input[3];  // Next two bytes
+    result ^= (input[4] << 8) | input[5];  // Last two bytes
+
+    // Return the result (2-byte value)
+    return result;
+}
+
+static void setPPID(uint16 ppid)
+{
+    uint8_t  command[4] = { 0x4, 0x70, 0x0, 0x0 };
+    command[2] = (ppid&0xff00)>>8;
+    command[3] = (ppid&0xff);
+    UART_ZING_PutArray(command, sizeof(command));
+}
+
 int main(void)
 {
     PW_EN_Write(1);
@@ -265,6 +287,12 @@ int main(void)
     }
 
     CyBle_Start( CyBle_AppCallback );
+    
+    CyDelay(10);
+    CYBLE_GAP_BD_ADDR_T deviceAddress;    
+    CyBle_GetDeviceAddress(&deviceAddress);
+    setPPID(generate_unique_value(deviceAddress.bdAddr));
+    
     Pin_SW2_Int_StartEx( Pin_SW2_Handler );
     
     CyDelay(1000);
