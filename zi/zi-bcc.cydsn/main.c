@@ -241,14 +241,6 @@ static uint16_t generate_unique_value(uint8_t input[6]) {
     return result;
 }
 
-static void setPPID(uint16 ppid)
-{
-    uint8_t  command[4] = { 0x4, 0x70, 0x0, 0x0 };
-    command[2] = (ppid&0xff00)>>8;
-    command[3] = (ppid&0xff);
-    UART_ZING_PutArray(command, sizeof(command));
-}
-
 int main(void)
 {
     PW_EN_Write(1);

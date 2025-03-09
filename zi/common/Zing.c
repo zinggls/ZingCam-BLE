@@ -67,3 +67,11 @@ void setZingState(uint8 val, uint8 errCode, uint8 *buf)
         *buf = errCode;
     }
 }
+
+void setPPID(uint16 ppid)
+{
+    uint8_t  command[4] = { 0x4, 0x70, 0x0, 0x0 };
+    command[2] = (ppid&0xff00)>>8;
+    command[3] = (ppid&0xff);
+    UART_ZING_PutArray(command, sizeof(command));
+}
