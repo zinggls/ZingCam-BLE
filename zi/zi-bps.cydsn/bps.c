@@ -6,6 +6,7 @@
 #include "NoLog.h"
 #include "led.h"
 #include "i2cs.h"
+#include "Zing.h"
 
 static uint16 writereqCustom = 0;
 
@@ -85,6 +86,15 @@ void BleCallBack(uint32 event, void* eventParam)
                     setI2cReadBuffer(&ivfCom);
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
+                    writereqCustom++;
+                }
+
+                if (wrReqParam->handleValPair.value.len == sizeof(uint16)) {    //PPID
+                    uint16_t ppid;
+                    memcpy(&ppid,wrReqParam->handleValPair.value.val,wrReqParam->handleValPair.value.len);
+                    setPPID(ppid);
+                    CyBle_GattsWriteRsp(cyBle_connHandle);
+                    
                     writereqCustom++;
                 }
             }

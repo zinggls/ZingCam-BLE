@@ -223,6 +223,21 @@ void RetrieveStoredPeripheralAddress()
     }
 }
 
+static CYBLE_API_RESULT_T sendPPID(uint16 ppid)
+{
+    // Use the characteristic index to obtain the attribute handle    
+    CYBLE_GATT_DB_ATTR_HANDLE_T attrHandle = cyBle_customCServ[CYBLE_CUSTOMC_CUSTOM_SERVICE_SERVICE_INDEX]
+                                                .customServChar[CYBLE_CUSTOMC_CUSTOM_SERVICE_ZXX_CHAR_INDEX]
+                                                .customServCharHandle;
+
+    CYBLE_GATTC_WRITE_REQ_T writeReq;
+    writeReq.attrHandle = attrHandle;
+    writeReq.value.val = (uint8_t*)&ppid;
+    writeReq.value.len = sizeof(uint16);
+
+    return CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq);
+}
+
 /* BLE App Callback Function */
 void CyBle_AppCallback( uint32 eventCode, void *eventParam )
 {
@@ -322,6 +337,9 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
                                                                 .customServCharHandle)
             {
                 processingZxx();
+                
+                CYBLE_API_RESULT_T apiRes = sendPPID(gPPID);
+                L("sendPPID=0x%x\r\n",apiRes);
             }
             break;
             

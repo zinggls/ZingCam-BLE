@@ -283,7 +283,8 @@ int main(void)
     CyDelay(10);
     CYBLE_GAP_BD_ADDR_T deviceAddress;    
     CyBle_GetDeviceAddress(&deviceAddress);
-    setPPID(generate_unique_value(deviceAddress.bdAddr));
+    gPPID = generate_unique_value(deviceAddress.bdAddr);
+    setPPID(gPPID);
     
     Pin_SW2_Int_StartEx( Pin_SW2_Handler );
     
