@@ -291,6 +291,7 @@ int main(void)
     CyDelay(1000);
     UART_IMU_StartAndInitialize();
     
+    uint16_t loop = 0;
     for(;;)
     {          
         CyBle_ProcessEvents();
@@ -298,5 +299,7 @@ int main(void)
         i2cs_process(getZcdFrame());
         imu_process_uart_data(onImuFrame);
         processImuCommand(ivfCom.wirelssVideoReceiverImuOutputType,ivfCom.wirelessVideoReceiverImuCalibrate);
+        
+        if((++loop%1000)==0) setPPID(gPPID);
     }
 }
