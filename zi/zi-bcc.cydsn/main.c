@@ -51,7 +51,12 @@ static void ZingCB(const char *buf)
         L("\r\n");
 #endif
     }else{
-        if(getZcdFrame()->itf=='Y') sendITF('Y');   //Interference occurs
+        if(getZcdFrame()->itf=='Y') {
+            sendITF('Y');   //Interference occurs
+            if(ivfCom.wirelessVideoChannelMode==0x01) { //자동 채널 설정 모드
+                SPDT_Write(~SPDT_Read());
+            }
+        }
     }
 }
 
