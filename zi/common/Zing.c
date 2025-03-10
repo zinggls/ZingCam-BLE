@@ -75,3 +75,10 @@ void setPPID(uint16 ppid)
     command[3] = (ppid&0xff);
     UART_ZING_PutArray(command, sizeof(command));
 }
+
+void setCh(uint8 ch)
+{
+    uint8_t  command[4] = { 0x4, 0x62, 0x0, 0x2e };
+    command[2] = ch;
+    UART_ZING_PutArray(command, sizeof(command));
+}

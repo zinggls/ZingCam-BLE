@@ -14,5 +14,6 @@ void zing_process_uart_data();
 uint8 getZingState();
 void setZingState(uint8 val, uint8 errCode, uint8 *buf);
 void setPPID(uint16 ppid);
+void setCh(uint8 ch);
 
 #endif /* ZING_H */
