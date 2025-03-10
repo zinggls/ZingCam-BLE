@@ -24,6 +24,21 @@ static void setBccVersion()
     memcpy(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE,ver.info,VERSION_SIZE);
 }
 
+static CYBLE_API_RESULT_T sendITF(char itf)
+{
+    // Use the characteristic index to obtain the attribute handle    
+    CYBLE_GATT_DB_ATTR_HANDLE_T attrHandle = cyBle_customCServ[CYBLE_CUSTOMC_CUSTOM_SERVICE_SERVICE_INDEX]
+                                                .customServChar[CYBLE_CUSTOMC_CUSTOM_SERVICE_ZXX_CHAR_INDEX]
+                                                .customServCharHandle;
+
+    CYBLE_GATTC_WRITE_REQ_T writeReq;
+    writeReq.attrHandle = attrHandle;
+    writeReq.value.val = (uint8_t*)&itf;
+    writeReq.value.len = sizeof(char);
+
+    return CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq);
+}
+
 // Function to process data when a complete message is available
 static void ZingCB(const char *buf)
 {
@@ -35,6 +50,8 @@ static void ZingCB(const char *buf)
         L(zing_status);
         L("\r\n");
 #endif
+    }else{
+        if(getZcdFrame()->itf=='Y') sendITF('Y');   //Interference occurs
     }
 }
 
