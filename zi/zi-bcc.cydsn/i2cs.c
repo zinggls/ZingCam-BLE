@@ -83,6 +83,8 @@ void i2cs_process(ZCD_FRAME *zcd)
         /* Check the packet length */
         if (PACKET_SIZE == I2C_I2CSlaveGetWriteBufSize())
         {
+            uint8_t prevCh = ivfCom.wirelessVideoChannelInformation;
+            
             ivfCom.scopeCamera = changeScope(i2cWriteBuffer[0]);
             ivfCom.scopeOutput = i2cWriteBuffer[1];
             ivfCom.wirelessVideoChannelMode = i2cWriteBuffer[2];
@@ -94,6 +96,13 @@ void i2cs_process(ZCD_FRAME *zcd)
             ivfCom.wirelessVideoTransmitterImuCalibrate = i2cWriteBuffer[8];
             ivfCom.wirelssVideoReceiverImuOutputType = i2cWriteBuffer[9];
             ivfCom.wirelessVideoReceiverImuCalibrate = i2cWriteBuffer[10];
+            
+            if(ivfCom.wirelessVideoChannelMode==0x02) { //수동 채널 설정 모드
+                if(prevCh!=ivfCom.wirelessVideoChannelInformation) {
+                    if(ivfCom.wirelessVideoChannelInformation==0x01) SPDT_Write(0);    //수동 1채널 (Low band)
+                    if(ivfCom.wirelessVideoChannelInformation==0x02) SPDT_Write(1);    //수동 2채널 (High band)
+                }
+            }
             
             i2c_command_to_bps();
         }

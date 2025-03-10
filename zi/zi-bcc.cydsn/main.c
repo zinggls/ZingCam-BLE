@@ -262,6 +262,7 @@ int main(void)
 {
     PW_EN_Write(1);
     Reset_Write(1);
+    SPDT_Write(0);
     CyDelay(10);
 
     setBccVersion();
