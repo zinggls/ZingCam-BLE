@@ -1096,6 +1096,7 @@ void CZiieDlg::UpdateScopeDetect(byte det)
 		str.Format(_T("인식안됨(%x)"), det);
 		break;
 	case 1:
+	case 2:
 		str.Format(_T("인식성공(%x)"), det);
 		break;
 	default:
