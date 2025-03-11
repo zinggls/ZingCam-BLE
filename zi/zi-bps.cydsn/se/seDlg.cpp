@@ -122,6 +122,7 @@ BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_BATTERY_COMBO, &CseDlg::OnCbnSelchangeScopeStateBatteryCombo)
 	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_IR_COMBO, &CseDlg::OnCbnSelchangeScopeStateIrCombo)
 	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_EO_COMBO, &CseDlg::OnCbnSelchangeScopeStateEoCombo)
+	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_USB_DETECT_COMBO, &CseDlg::OnCbnSelchangeScopeStateUsbDetectCombo)
 	ON_CBN_DROPDOWN(IDC_PORTS_COMBO, &CseDlg::OnCbnDropdownPortsCombo)
 	ON_BN_CLICKED(IDC_I2C_RESET_BUTTON, &CseDlg::OnBnClickedI2cResetButton)
 END_MESSAGE_MAP()
@@ -929,6 +930,17 @@ void CseDlg::OnCbnSelchangeScopeStateEoCombo()
 	CString str;
 	str.Format(_T("%x"), m_scope.write.state.eo);
 	m_writeBufferListCtrl.SetItemText(0, 7, str);
+}
+
+
+void CseDlg::OnCbnSelchangeScopeStateUsbDetectCombo()
+{
+	int nSel = m_scopeStateUsbDetectCombo.GetCurSel();
+	m_scope.write.state.usbDetect = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%x"), m_scope.write.state.usbDetect);
+	m_writeBufferListCtrl.SetItemText(0, 8, str);
 }
 
 
