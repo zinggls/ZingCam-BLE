@@ -315,14 +315,24 @@ void SW_init()
     }
 }
 
+void init()
+{
+    PW_EN_Write(0);
+    HGATE_Con1_Write(0x00);
+    CyDelay(1000);
+    PW_EN_Write(1);
+    CyDelay(2000);
+    HGATE_Con1_Write(0x04);
+    Reset_Write(1);
+    CyDelay(10);
+}
+
 /***************************************************************
  * Main
  **************************************************************/
 int main()
 {
-    SW_init();
-    Reset_Write(1);
-    CyDelay(10);
+    init();
     
     CyGlobalIntEnable; 
     

@@ -265,26 +265,17 @@ static uint16_t generate_unique_value(uint8_t input[6]) {
 
 void init()
 {
+    PW_EN_Write(0);
+    HGATE_Con1_Write(0x00);
+    HGATE_Con2_1_Write(0x00);
+    HGATE_Con2_2_Write(0x00);
+    CyDelay(1000);
+    
     PW_EN_Write(1);
-    Reset_Write(1);
-    HGATE_Con1_Write(0x0);
+    CyDelay(2000);
+    HGATE_Con1_Write(0x04);
     HGATE_Con2_1_Write(0x00);
-    HGATE_Con2_2_Write(0x00);
-    HGATE_Con1_Write(0x4);
-    HGATE_Con2_1_Write(0x04);
-    HGATE_Con2_2_Write(0x00); 
-    HGATE_Con1_Write(0x1);
-    HGATE_Con2_1_Write(0x01);
-    HGATE_Con2_2_Write(0x00); 
-    HGATE_Con1_Write(0x2);
-    HGATE_Con2_1_Write(0x02);
-    HGATE_Con2_2_Write(0x00);
-    HGATE_Con1_Write(0xC);
-    HGATE_Con2_1_Write(0x00);
-    HGATE_Con2_2_Write(0x03);
-    HGATE_Con1_Write(0xF);
-    HGATE_Con2_1_Write(0x03);
-    HGATE_Con2_2_Write(0x03);
+    HGATE_Con2_2_Write(0x01);
     SPDT_Write(0);
     CyDelay(10);
 }
