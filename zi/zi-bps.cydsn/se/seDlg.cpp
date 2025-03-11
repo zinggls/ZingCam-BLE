@@ -363,6 +363,7 @@ void CseDlg::EnableCombos(BOOL b)
 	m_scopeStateIrCombo.EnableWindow(b);
 	m_scopeStateEoCombo.EnableWindow(b);
 	m_scopeStateOutCombo.EnableWindow(b);
+	m_scopeStateUsbDetectCombo.EnableWindow(b);
 }
 
 void CseDlg::OnBnClickedRawClearButton()
