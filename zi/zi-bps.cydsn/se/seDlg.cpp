@@ -768,6 +768,7 @@ void CseDlg::InitWriteBufferCombo(SCOPE& sc)
 	m_scopeStateIrCombo.SetCurSel(0);
 	m_scopeStateEoCombo.SetCurSel(0);
 	m_scopeStateOutCombo.SetCurSel(0);
+	m_scopeStateUsbDetectCombo.SetCurSel(0);
 }
 
 void CseDlg::OnBnClickedI2cReadButton()
