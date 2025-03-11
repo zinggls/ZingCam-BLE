@@ -676,6 +676,7 @@ HRESULT CseDlg::Send_I2C_WriteBuffer(int deviceAddress)
 	dataIN[5] = m_scope.write.state.battery;
 	dataIN[6] = m_scope.write.state.ir;
 	dataIN[7] = m_scope.write.state.eo;
+	dataIN[8] = m_scope.write.state.usbDetect;
 
 	HRESULT hr = m_pCom->writeI2C(deviceAddress, dataIN);
 	if (!SUCCEEDED(hr)) {
@@ -685,8 +686,8 @@ HRESULT CseDlg::Send_I2C_WriteBuffer(int deviceAddress)
 
 	if (m_bWriteBuffer) {
 		SCOPE_WRITE& s = m_scope.write;
-		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
-			sizeof(SCOPE_WRITE), s.command.scopeKindChangeNotify,s.command.scopeOutChangeNotify,s.command.scopeOperationMode,s.state.kind,s.state.out,s.state.battery,s.state.ir,s.state.eo);
+		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
+			sizeof(SCOPE_WRITE), s.command.scopeKindChangeNotify,s.command.scopeOutChangeNotify,s.command.scopeOperationMode,s.state.kind,s.state.out,s.state.battery,s.state.ir,s.state.eo, s.state.usbDetect);
 	}
 	return S_OK;
 }
@@ -695,7 +696,7 @@ void CseDlg::ResetWriteBufferList()
 {
 	memset(&m_scope.write, 0, sizeof(SCOPE_WRITE));
 	CString str(_T("0"));
-	for (int i = 0; i <= 7; i++) m_writeBufferListCtrl.SetItemText(0, i, str);
+	for (int i = 0; i < WRITE_BUFFER_SIZE; i++) m_writeBufferListCtrl.SetItemText(0, i, str);
 }
 
 HRESULT CseDlg::Read_I2C_SCB_Slave(int deviceAddress)
