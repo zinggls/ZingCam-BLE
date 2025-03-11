@@ -155,6 +155,42 @@ static void applyICD_for_LMG()
     }
 }
 
+static void applyICD_for_NS()
+{
+    //화기조준경 상태정보 조준경 종류
+    uint8_t *buf = getI2CReadBuffer()+ICD_SCOPE_VIDEO_KIND_OFFSET;
+    *buf = 0x04;    //경II인 경우 0x04로 표시한다. ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    
+    //화기조준경 상태정보 화기조준경 영상출력
+    buf = getI2CReadBuffer()+ICD_SCOPE_OUTPUT_OFFSET;
+    if(peripheral.zxxFrame.run=='Y') {
+        *buf = 0x0; //화기조준경 영상 상태 0x00 : 출력     ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    }else{
+        *buf = 0x1; //화기조준경 영상 상태 0x01 : 미출력    ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    }
+    
+    //화기조준경 상태정보 배터리 잔량 (경II의 경우 송신기로 부터 전원을 공급받으므로 송신기의 배터리 잔량을 화기조준경 배터리 잔량으로 표시
+    buf = getI2CReadBuffer()+ICD_SCOPE_BATTERY_OFFSET;
+    uint8_t *txBat = getI2CReadBuffer()+ICD_TX_BATTERY_OFFSET;
+    *buf = *txBat;
+    
+    //화기조준경 IR상태
+    uint8_t *ir = getI2CReadBuffer()+ICD_SCOPE_IR_STATE_OFFSET;
+    *ir = 0xff;     //0xff: unknown ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    
+    //화기조준경 EO상태
+    uint8_t *eo = getI2CReadBuffer()+ICD_SCOPE_EO_STATE_OFFSET;
+    *eo = 0xff;     //0xff: unknown ref.(AIAS)연동통제문서(ICD)_v0.3_241231.xls
+    
+    //화기조준경 장치인식
+    uint8_t *det = getI2CReadBuffer()+ICD_SCOPE_DETECT_OFFSET;
+    if( peripheral.zxxFrame.kind==ZED && peripheral.zxxFrame.usb==2 && peripheral.scope.scopeDetect==0x01 ) {
+        *det = 0x2; //조준경이 송신기를 USB 장치로 인식함
+    }else{
+        *det = 0x0; //조준경이 송신기를 USB 장치로 인식 못함
+    }
+}
+
 static void processingZxx()
 {
     if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
@@ -174,6 +210,7 @@ static void processingZxx()
         
         if(peripheral.zxxFrame.kind==Unknown) applyICD_for_Unknown();
         if(peripheral.zxxFrame.kind==ZCH) applyICD_for_LMG();  //경2조준경 ICD 적용
+        if(peripheral.zxxFrame.kind==ZED) applyICD_for_NS();   //화기조준경 ICD 적용
         
         dataReady = 1;
     }
