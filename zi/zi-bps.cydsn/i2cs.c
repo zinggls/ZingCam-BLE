@@ -51,6 +51,7 @@ void i2cs_process()
             peripheral.scope.scopeStateBattery = i2cWriteBuffer[5];
             peripheral.scope.scopeStateIR = i2cWriteBuffer[6];
             peripheral.scope.scopeStateEO = i2cWriteBuffer[7];
+            peripheral.scope.scopeDetect = i2cWriteBuffer[8];
             
             i2c_command_to_bcc();
         }
