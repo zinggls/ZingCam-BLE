@@ -89,7 +89,7 @@
 #define IDC_HBLE_VER_LOG_LIST2          1060
 #define IDC_ZXX_VER_LOG_LIST            1060
 #define IDC_ZXX_VERSION_RAW_STATIC      1061
-#define IDC_TX_STATE_LMSCOPE_DETECT_STATIC 1062
+#define IDC_SCOPE_DETECT_STATIC         1062
 
 // Next default values for new objects
 // 

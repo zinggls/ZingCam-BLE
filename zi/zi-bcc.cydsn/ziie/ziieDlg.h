@@ -81,7 +81,7 @@ public:
 	static void UpdateXIMU(BOOL bTx, CString& strImuType, CString& strCalib, byte type, byte calib);
 	void UpdateScopeStateKind(byte kind);
 	void UpdateScopeStateOut(byte out);
-	void UpdateLmscopeDetect(byte det);
+	void UpdateScopeDetect(byte det);
 	static void BatteryInfo(CString& str, byte val);
 	void UpdateScopeStateBattery(byte val);
 	CString ModuleSanity(CString strName, byte code, byte errCode);
@@ -140,7 +140,7 @@ public:
 	CString m_strScopeStateBattery;
 	CString m_strScopeStateIR;
 	CString m_strScopeStateEO;
-	CString m_strTxStateLmscopeDetect;
+	CString m_strScopeDetect;
 	CString m_strTxStateBattery;
 	CString m_strTxStateModem;
 	CString m_strTxStateImu;
