@@ -91,6 +91,7 @@ public:
 	CComboBox m_scopeStateIrCombo;
 	CComboBox m_scopeStateEoCombo;
 	CComboBox m_scopeStateOutCombo;
+	CComboBox m_scopeStateUsbDetectCombo;
 	CString m_strScopeKindChangeNoti;
 	CString m_strScopeOutChangeNoti;
 	CString m_strScopeOperationMode;

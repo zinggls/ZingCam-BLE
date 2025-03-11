@@ -95,6 +95,7 @@ void CseDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SCOPE_STATE_BATTERY_COMBO, m_scopeStateBatteryCombo);
 	DDX_Control(pDX, IDC_SCOPE_STATE_IR_COMBO, m_scopeStateIrCombo);
 	DDX_Control(pDX, IDC_SCOPE_STATE_EO_COMBO, m_scopeStateEoCombo);
+	DDX_Control(pDX, IDC_SCOPE_STATE_USB_DETECT_COMBO, m_scopeStateUsbDetectCombo);
 	DDX_Text(pDX, IDC_SCOPE_KIND_CHANGE_NOTI_STATIC, m_strScopeKindChangeNoti);
 	DDX_Text(pDX, IDC_SCOPE_OUT_CHANGE_NOTI_STATIC, m_strScopeOutChangeNoti);
 	DDX_Text(pDX, IDC_OPMODE_SCOPE_STATIC, m_strScopeOperationMode);
