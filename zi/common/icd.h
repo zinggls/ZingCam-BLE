@@ -17,7 +17,7 @@
 #define ICD_RX_IMU_CALIB_OFFSET             10
 #define ICD_SCOPE_VIDEO_KIND_OFFSET         11
 #define ICD_SCOPE_OUTPUT_OFFSET             12
-#define ICD_TX_LMSCOPE_DETECT_OFFSET        13
+#define ICD_SCOPE_DETECT_OFFSET             13
 #define ICD_SCOPE_BATTERY_OFFSET            14
 #define ICD_TX_BATTERY_OFFSET               15
 #define ICD_SCOPE_IR_STATE_OFFSET           16
