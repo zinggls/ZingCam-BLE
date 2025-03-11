@@ -245,12 +245,82 @@ void TimerCallback(void)
     }
 }
 
+CY_ISR( SW_PW_Handler )
+{   
+    UART_ZING_RX_INTR_Disable();
+    SW_PW_Int_Disable();
+    CyDelay(10);
+    //char SW_state =0;
+    u_int8_t SWP=SW_PW_Read();
+    u_int8_t SWL=SW_LED_Read();
+  
+    //SW_state = ((0xff&SW_PW_Read())<<1)|(0xff&SW_LED_Read());
+  
+    if((SWP==1)&&(SWL==0))
+    {
+        Reset_Write(1);
+        HGATE_Con1_Write(0x0);
+        PW_EN_Write(1);
+        HGATE_Con1_Write(0x4);
+        HGATE_Con1_Write(0x1);
+        HGATE_Con1_Write(0x2);
+        HGATE_Con1_Write(0xC);
+        HGATE_Con1_Write(0xF);
+        UART_ZING_PutString("POWER On\n");
+    }
+    else if((SWP==0)&&(SWL==1))
+    {
+        Reset_Write(0);
+        UART_ZING_PutString("REST\n");
+    }
+    else 
+    {
+        HGATE_Con1_Write(0x0);
+        PW_EN_Write(0);
+        UART_ZING_PutString("POWER OFF\n");
+    }
+    UART_ZING_RX_INTR_Enable();
+    SW_PW_Int_Enable();
+    SW_PW_ClearInterrupt();
+}
+
+void SW_init()
+{
+    //char SW_state =0;
+    //SW_state = ((0xff&SW_PW_Read())<<1)|(0xff&SW_LED_Read());
+    if(SW_PW_Read()==1)
+    {
+        HGATE_Con1_Write(0x0);
+        PW_EN_Write(1);
+        HGATE_Con1_Write(0x4);
+        HGATE_Con1_Write(0x1);
+        HGATE_Con1_Write(0x2);
+        HGATE_Con1_Write(0xC);
+        HGATE_Con1_Write(0xF);
+    }
+    else if((SW_PW_Read()==0)&&(SW_LED_Read()==1))
+    {
+        HGATE_Con1_Write(0x0);
+        PW_EN_Write(1);
+        HGATE_Con1_Write(0x4);
+        HGATE_Con1_Write(0x1);
+        HGATE_Con1_Write(0x2);
+        HGATE_Con1_Write(0xC);
+        HGATE_Con1_Write(0xF);
+    }
+    else
+    {
+        HGATE_Con1_Write(0x0);
+        PW_EN_Write(0);
+    }
+}
+
 /***************************************************************
  * Main
  **************************************************************/
 int main()
 {
-    PW_EN_Write(1);
+    SW_init();
     Reset_Write(1);
     CyDelay(10);
     
@@ -286,6 +356,8 @@ int main()
 
     CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
     myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE;
+    
+    SW_PW_Int_StartEx( SW_PW_Handler );
     
     uint32 count = 0;
     for(;;)
