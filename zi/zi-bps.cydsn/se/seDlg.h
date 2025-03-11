@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#define WRITE_BUFFER_SIZE	(8)
+#define WRITE_BUFFER_SIZE	(9)
 #define READ_BUFFER_SIZE	(3)
 #define MAX_LIST_ITEMS		(1024*8)
 
