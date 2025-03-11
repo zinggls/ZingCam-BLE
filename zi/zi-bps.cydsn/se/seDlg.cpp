@@ -642,6 +642,7 @@ void CseDlg::UpdateWriteBufferGUI(SCOPE_WRITE& sw)
 	m_writeBufferListCtrl.SetItemText(0, 5, HexStr(sw.state.battery));
 	m_writeBufferListCtrl.SetItemText(0, 6, HexStr(sw.state.ir));
 	m_writeBufferListCtrl.SetItemText(0, 7, HexStr(sw.state.eo));
+	m_writeBufferListCtrl.SetItemText(0, 8, HexStr(sw.state.usbDetect));
 }
 
 void CseDlg::UpdateGUI(SCOPE& s)
