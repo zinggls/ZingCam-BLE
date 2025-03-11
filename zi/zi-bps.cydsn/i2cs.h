@@ -15,7 +15,7 @@
 
 #include <ZFrame.h>
 
-#define I2C_WR_BUFFER_SIZE  (8u)
+#define I2C_WR_BUFFER_SIZE  (9u)
 #define I2C_RD_BUFFER_SIZE  (3u)
 
 /* Buffer and packet size */

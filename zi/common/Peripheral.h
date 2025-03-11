@@ -15,6 +15,7 @@
     char scopeStateBattery;       \
     char scopeStateIR;            \
     char scopeStateEO;            \
+    char scopeDetect;             \
 
 #define TX_STATE_INFO_FIELDS      \
     char txStateBattery;          \
