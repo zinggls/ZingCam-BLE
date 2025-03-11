@@ -195,6 +195,9 @@ BOOL CseDlg::OnInitDialog()
 	m_scopeStateEoCombo.AddString(_T("정상"));
 	m_scopeStateEoCombo.AddString(_T("EO모듈 이상"));
 
+	m_scopeStateUsbDetectCombo.AddString(_T("인식실패"));
+	m_scopeStateUsbDetectCombo.AddString(_T("인식성공"));
+
 	EnableCombos(FALSE);
 
 	SetTimer(1, 100, NULL);
