@@ -345,6 +345,7 @@ void CseDlg::CreateWriteBuffer()
 	m_writeBufferListCtrl.InsertColumn(5, _T("5"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(6, _T("6"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(7, _T("7"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(8, _T("8"), LVCFMT_RIGHT, nHexWidth);
 
 	m_writeBufferListCtrl.InsertItem(0, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 0, _T(""));
@@ -355,6 +356,7 @@ void CseDlg::CreateWriteBuffer()
 	m_writeBufferListCtrl.SetItemText(0, 5, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 6, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 7, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 8, _T(""));
 }
 
 void CseDlg::EnableCombos(BOOL b)
