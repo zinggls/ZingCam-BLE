@@ -15,6 +15,7 @@
 #include "FlashRow.h"
 
 #define BUTTON_HOLD_TIME_SEC  3   //3 seconds
+#define ITF_CRITERIA        10
 
 static void setBccVersion()
 {
@@ -39,7 +40,8 @@ static CYBLE_API_RESULT_T sendITF(char itf)
     return CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq);
 }
 
-static uint32 interferenceCount = 0; 
+static uint32 interferenceCount = 0;
+static bool bITF = false;
 
 // Function to process data when a complete message is available
 static void ZingCB(const char *buf)
@@ -59,7 +61,18 @@ static void ZingCB(const char *buf)
             interferenceCount = 0;
         }
         
-        if(interferenceCount>30) sendITF('Y');   //Interference occurs
+        if(bITF == false && interferenceCount>=ITF_CRITERIA) {
+            //Interference appeared
+            sendITF('Y');
+            bITF = true;
+        } else if(bITF==false && interferenceCount < ITF_CRITERIA) {
+            //Negligible interference (DO NOTHING)
+        } else if(bITF==true && interferenceCount >= ITF_CRITERIA) {
+            //Still under interference (DO NOTHING)
+        } else if(bITF==true && interferenceCount < ITF_CRITERIA) {
+            //Interference disappeared
+            bITF = false;
+        }
     }
 }
 
