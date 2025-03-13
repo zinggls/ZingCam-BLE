@@ -96,6 +96,13 @@ void BleCallBack(uint32 event, void* eventParam)
                 
                     writereqCustom++;
                 }
+                
+                if (wrReqParam->handleValPair.value.len == sizeof(char)) {    //ITF
+                    char itf;
+                    memcpy(&itf,wrReqParam->handleValPair.value.val,wrReqParam->handleValPair.value.len);
+                    CyBle_GattsWriteRsp(cyBle_connHandle);
+                    writereqCustom++;
+                }
             }
 			break;  
             
