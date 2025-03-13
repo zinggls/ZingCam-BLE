@@ -85,9 +85,11 @@ void BleCallBack(uint32 event, void* eventParam)
                     memcpy(&ivfCom,wrReqParam->handleValPair.value.val,wrReqParam->handleValPair.value.len);
                     handleScope(ivfCom.scopeCamera);
                     setI2cReadBuffer(&ivfCom);
-                    if(oldIvfCom.wirelessVideoChannelInformation!=ivfCom.wirelessVideoChannelInformation) {
-                        if(ivfCom.wirelessVideoChannelInformation==0x1 || ivfCom.wirelessVideoChannelInformation==0x2) {
-                            setCh(ivfCom.wirelessVideoChannelInformation);
+                    if(ivfCom.wirelessVideoChannelMode == 0x2){ //수동 채널 설정 모드
+                        if(oldIvfCom.wirelessVideoChannelInformation!=ivfCom.wirelessVideoChannelInformation) { //채널이 변경되었는지 조사
+                            if(ivfCom.wirelessVideoChannelInformation==0x1 || ivfCom.wirelessVideoChannelInformation==0x2) {    //1,2채널 이외는 변경없음
+                                setCh(ivfCom.wirelessVideoChannelInformation);
+                            }
                         }
                     }
                     CyBle_GattsWriteRsp(cyBle_connHandle);
