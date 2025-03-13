@@ -102,12 +102,10 @@ void BleCallBack(uint32 event, void* eventParam)
                 if (wrReqParam->handleValPair.value.len == sizeof(char)) {    //ITF
                     char itf;
                     memcpy(&itf,wrReqParam->handleValPair.value.val,wrReqParam->handleValPair.value.len);
-                    if(ivfCom.wirelessVideoChannelMode ==0x1) { //자동 채널 설정 모드인경우
-                        if(peripheral.zxxFrame.bnd=='L') {
-                            setCh(0x2); //set High band
-                        }else if(peripheral.zxxFrame.bnd=='H') {
-                            setCh(0x1); //set Low band
-                        }
+                    if(peripheral.zxxFrame.bnd=='L') {
+                        setCh(0x2); //set High band
+                    }else if(peripheral.zxxFrame.bnd=='H') {
+                        setCh(0x1); //set Low band
                     }
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                     writereqCustom++;

@@ -15,7 +15,7 @@
 #include "FlashRow.h"
 
 #define BUTTON_HOLD_TIME_SEC  3   //3 seconds
-#define ITF_CRITERIA        10
+#define ITF_CRITERIA        5
 
 static void setBccVersion()
 {
@@ -63,8 +63,8 @@ static void ZingCB(const char *buf)
         
         if(bITF == false && interferenceCount>=ITF_CRITERIA) {
             //Interference appeared
-            sendITF('Y');
-            if(ivfCom.wirelessVideoChannelMode==0x01) { //자동 채널 설정 모드
+            if(ivfCom.wirelessVideoChannelMode==0x00 || ivfCom.wirelessVideoChannelMode==0x01 ) { //자동 채널 설정 모드
+                sendITF('Y');
                 SPDT_Write(~SPDT_Read());
             }
             bITF = true;
