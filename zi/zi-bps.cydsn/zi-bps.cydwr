@@ -37,7 +37,7 @@
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="UART_ZING_RX" />
       <Data key="73779242-6b28-49d2-b702-12fc937e6e01" value="UART_ZING_TX" />
       <Data key="bb734f01-5339-4532-8545-b3ececb7c687" value="Reset" />
-      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="UART_TX" />
+      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="HGATE_Con1" />
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="LED_RED" />
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/73b612cd-240c-4d8e-8340-ea28aabf4b11" value="capsense_Sns" />
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/899719c0-e797-4403-a44f-07a66de2cbeb" value="capsense_Cmod" />
@@ -3785,7 +3785,16 @@
     </Group>
     <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">
       <Group key="0">
-        <Data key="Port Format" value="1,5" />
+        <Data key="Port Format" value="2,0" />
+      </Group>
+      <Group key="1">
+        <Data key="Port Format" value="2,1" />
+      </Group>
+      <Group key="2">
+        <Data key="Port Format" value="2,2" />
+      </Group>
+      <Group key="3">
+        <Data key="Port Format" value="2,3" />
       </Group>
     </Group>
     <Group key="ed092b9b-d398-4703-be89-cebf998501f6">

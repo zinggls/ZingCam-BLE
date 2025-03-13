@@ -25,6 +25,6 @@ void setBlue(uint8 blue)
 void setRGB(uint8 red, uint8 green, uint8 blue)
 {
     //LED_RED_Write(red);
-    LED_GREEN_Write(green);
-    LED_BLUE_Write(blue);
+    //LED_GREEN_Write(green);
+    //LED_BLUE_Write(blue);
 }

@@ -198,7 +198,7 @@ void TimerCallback(void)
         btnHoldCount++;
     }
 }
-
+/*
 CY_ISR( Pin_SW2_Handler )
 {   
     //LED_RED_Write( ~LED_RED_Read() );
@@ -226,11 +226,46 @@ CY_ISR( Pin_SW2_Handler )
     
     Pin_SW2_ClearInterrupt();
 }
+*/
+void HGATE_CON2_Write(int val)
+{
+    HGATE_Con2_1_Write(0x03&(val));
+    HGATE_Con2_2_Write((0x0C&val)>>2);
+}
+void HGate_init()
+{
+        HGATE_Con1_Write(0x02);  //
+        HGATE_CON2_Write(0x02); //-1V
+        /***********************************
+         Gate Voltage value
+        
+        0x00 = -3.119V
+        0x04 = -1.557V
+        0x01 = -1.010V   ----- Default
+        0x08 = -0.7773V
+        0x02 = -0.5030V
+        0x0C = -0.3872V
+        0x03 = -0.2500V
+        0x07 = -0.1234V
+        0x0B = -0.0601V
+        0x0F = -0.0284V
+        
+        **************************************/
+}
 
 int main(void)
 {
+    PW_EN_Write(0);
+    HGATE_Con1_Write(0x00);
+    HGATE_Con2_1_Write(0x00);
+    HGATE_Con2_2_Write(0x00);
+    CyDelay(1000);
+    
     PW_EN_Write(1);
-    Reset_Write(1);
+    CyDelay(2000);
+    HGATE_Con1_Write(0x03);
+    HGATE_Con2_1_Write(0x03);
+    HGATE_Con2_2_Write(0x00);
     CyDelay(10);
 
     setBccVersion();
@@ -257,7 +292,7 @@ int main(void)
     const FlashData_t* fd = LoadStoredPeripheralAddress();	//Load stored address from flash
     for(int i=0;i<5;i++) {
         if(fd) {
-            LED_GREEN_Write(!LED_GREEN_Read()); //loaded from flash
+//            LED_GREEN_Write(!LED_GREEN_Read()); //loaded from flash
         }else{
             //LED_RED_Write(!LED_RED_Read());     //could not load from empty flash
         }
@@ -265,7 +300,7 @@ int main(void)
     }
 
     CyBle_Start( CyBle_AppCallback );
-    Pin_SW2_Int_StartEx( Pin_SW2_Handler );
+//    Pin_SW2_Int_StartEx( Pin_SW2_Handler );
     
     CyDelay(1000);
     UART_IMU_StartAndInitialize();

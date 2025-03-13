@@ -245,13 +245,36 @@ void TimerCallback(void)
     }
 }
 
+ void HGate_init()
+{
+      /***********************************
+         Gate Voltage value
+        
+        0x00 = -3.119V
+        0x04 = -1.557V
+        0x01 = -1.010V   ----- Default
+        0x08 = -0.7773V
+        0x02 = -0.5030V
+        0x0C = -0.3872V
+        0x03 = -0.2500V               
+        0x07 = -0.1234V
+        0x0B = -0.0601V
+        0x0F = -0.0284V
+        
+        **************************************/
+}
 /***************************************************************
  * Main
  **************************************************************/
 int main()
 {
+    PW_EN_Write(0);
+    HGATE_Con1_Write(0x00);
+    CyDelay(1000);
     PW_EN_Write(1);
-    Reset_Write(1);
+    CyDelay(2000);
+    HGATE_Con1_Write(0x03);
+      
     CyDelay(10);
     
     CyGlobalIntEnable; 
@@ -269,7 +292,7 @@ int main()
     }
     
     setBbsVersion();
-    setGreen(LED_OFF);
+//    setGreen(LED_OFF);
     CH_LED_Write(0x3);  //LED Off
 
     Zing_Init(ZingCB);
