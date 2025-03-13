@@ -80,9 +80,12 @@ void BleCallBack(uint32 event, void* eventParam)
             
             if (wrReqParam->handleValPair.attrHandle == CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE) {
                 if (wrReqParam->handleValPair.value.len == sizeof(IvfCom)) {
+                    IvfCom oldIvfCom;
+                    memcpy(&oldIvfCom,&ivfCom,sizeof(IvfCom));
                     memcpy(&ivfCom,wrReqParam->handleValPair.value.val,wrReqParam->handleValPair.value.len);
                     handleScope(ivfCom.scopeCamera);
                     setI2cReadBuffer(&ivfCom);
+                    if(oldIvfCom.wirelessVideoChannelInformation!=ivfCom.wirelessVideoChannelInformation) setCh(ivfCom.wirelessVideoChannelInformation);
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
                     writereqCustom++;
