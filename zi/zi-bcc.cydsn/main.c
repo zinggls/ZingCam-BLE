@@ -266,6 +266,7 @@ int main(void)
     HGATE_Con1_Write(0x03);
     HGATE_Con2_1_Write(0x03);
     HGATE_Con2_2_Write(0x00);
+    SPDT_Write(0);
     CyDelay(10);
 
     setBccVersion();
