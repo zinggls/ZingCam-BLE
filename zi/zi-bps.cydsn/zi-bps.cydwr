@@ -22,7 +22,7 @@
       <Data key="2b2cbae3-9108-4a7b-a0cb-4184df2727e0" value="BT_ADC" />
       <Data key="3dfd8dc4-b3e2-49d0-a078-22f2b11bd7aa" value="TX_Run" />
       <Data key="6f1c6cc3-8ac8-42b8-9be0-54c1b90c12b2" value="UART_IMU_TX" />
-      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="UART_RX" />
+      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="SW_PW" />
       <Data key="9e336c02-827a-4f7e-9893-9cc0a1b0ccf8" value="LED_BLUE" />
       <Data key="17efb76d-c7a8-4121-beb8-bc7fa71723b5" value="I2C_SDA" />
       <Data key="35d42b31-41a7-4384-ab8d-80b5196afaaf" value="PW_EN" />
@@ -37,6 +37,7 @@
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="UART_ZING_RX" />
       <Data key="73779242-6b28-49d2-b702-12fc937e6e01" value="UART_ZING_TX" />
       <Data key="bb734f01-5339-4532-8545-b3ececb7c687" value="Reset" />
+      <Data key="cc2ed38f-6428-4302-a7ec-8133535e8bc7" value="SW_LED" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="HGATE_Con1" />
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="LED_RED" />
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/73b612cd-240c-4d8e-8340-ea28aabf4b11" value="capsense_Sns" />
@@ -3715,7 +3716,7 @@
     </Group>
     <Group key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba">
       <Group key="0">
-        <Data key="Port Format" value="1,4" />
+        <Data key="Port Format" value="1,2" />
       </Group>
     </Group>
     <Group key="9e336c02-827a-4f7e-9893-9cc0a1b0ccf8">
@@ -3792,6 +3793,11 @@
     <Group key="bb734f01-5339-4532-8545-b3ececb7c687">
       <Group key="0">
         <Data key="Port Format" value="2,6" />
+      </Group>
+    </Group>
+    <Group key="cc2ed38f-6428-4302-a7ec-8133535e8bc7">
+      <Group key="0">
+        <Data key="Port Format" value="2,7" />
       </Group>
     </Group>
     <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">
