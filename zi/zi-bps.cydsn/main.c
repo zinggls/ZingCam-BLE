@@ -263,6 +263,33 @@ void TimerCallback(void)
         
         **************************************/
 }
+
+CY_ISR( SW_PW_Handler )
+{   
+    UART_ZING_RX_INTR_Disable();
+    SW_PW_Int_Disable();
+    CyDelay(10);
+    u_int8_t SWP=SW_PW_Read();
+    u_int8_t SWL=SW_LED_Read();
+    if(((SWP==1)&&(SWL==0)) || ((SWP==0)&&(SWL==1)))
+    {
+        Reset_Write(1);
+        HGATE_Con1_Write(0x0);
+        PW_EN_Write(1);
+        HGATE_Con1_Write(0x3);
+        UART_ZING_PutString("POWER On\n");
+    }
+    else if((SWP==0)&&(SWL==0))
+    {
+        HGATE_Con1_Write(0x0);
+        PW_EN_Write(0);
+        UART_ZING_PutString("POWER OFF\n");
+    }
+    UART_ZING_RX_INTR_Enable();
+    SW_PW_Int_Enable();
+    SW_PW_ClearInterrupt();
+}
+
 /***************************************************************
  * Main
  **************************************************************/
@@ -271,11 +298,13 @@ int main()
     PW_EN_Write(0);
     HGATE_Con1_Write(0x00);
     CyDelay(1000);
+#ifdef WITHOUT_CB
     PW_EN_Write(1);
     CyDelay(2000);
     HGATE_Con1_Write(0x03);
       
     CyDelay(10);
+#endif
     
     CyGlobalIntEnable; 
     
@@ -309,7 +338,9 @@ int main()
 
     CYBLE_GATTS_HANDLE_VALUE_NTF_T myDataHandle;
     myDataHandle.attrHandle = CYBLE_CUSTOM_SERVICE_ZXX_CHAR_HANDLE;
-    
+#ifndef WITHOUT_CB
+    SW_PW_Int_StartEx( SW_PW_Handler );
+#endif
     uint32 count = 0;
     for(;;)
     {        
