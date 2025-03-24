@@ -363,5 +363,7 @@ int main(void)
         i2cs_process(getZcdFrame());
         imu_process_uart_data(onImuFrame);
         processImuCommand(ivfCom.wirelssVideoReceiverImuOutputType,ivfCom.wirelessVideoReceiverImuCalibrate);
+        
+        L("[cc] st:%d \r\n", cyBle_state);
     }
 }
