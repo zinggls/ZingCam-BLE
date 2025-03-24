@@ -33,7 +33,7 @@
       <Data key="bb734f01-5339-4532-8545-b3ececb7c687" value="Reset" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="HGATE_Con1" />
       <Data key="eb7ce1a1-6e91-4da9-bc55-7fb8c6fe36fb" value="HGATE_Con2_2" />
-      <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="LED_RED" />
+      <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="UART_TX" />
     </Group>
   </Group>
   <Group key="FlashSecurity">
@@ -3688,7 +3688,7 @@
     </Group>
     <Group key="ed092b9b-d398-4703-be89-cebf998501f6">
       <Group key="0">
-        <Data key="Port Format" value="2,6" />
+        <Data key="Port Format" value="3,1" />
       </Group>
     </Group>
     <Group key="UnAssigned Pins">

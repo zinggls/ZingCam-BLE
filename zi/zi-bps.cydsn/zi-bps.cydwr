@@ -39,7 +39,7 @@
       <Data key="bb734f01-5339-4532-8545-b3ececb7c687" value="Reset" />
       <Data key="cc2ed38f-6428-4302-a7ec-8133535e8bc7" value="SW_LED" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="HGATE_Con1" />
-      <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="LED_RED" />
+      <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="UART_TX" />
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/73b612cd-240c-4d8e-8340-ea28aabf4b11" value="capsense_Sns" />
       <Data key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/899719c0-e797-4403-a44f-07a66de2cbeb" value="capsense_Cmod" />
       <Data key="f9a13d4f-dcfb-429f-bf29-41d23f9f17f7" value="CH_LED" />
@@ -3816,7 +3816,7 @@
     </Group>
     <Group key="ed092b9b-d398-4703-be89-cebf998501f6">
       <Group key="0">
-        <Data key="Port Format" value="2,6" />
+        <Data key="Port Format" value="3,1" />
       </Group>
     </Group>
     <Group key="ed734a18-4e3d-4333-81bd-62f33dd6f1bb/73b612cd-240c-4d8e-8340-ea28aabf4b11">
@@ -3849,6 +3849,7 @@
         <Data key="Port Format" value="4,1" />
       </Group>
     </Group>
+    <Group key="UnAssigned Pins" />
   </Group>
   <Group key="PlaceDir">
     <Data key="count" value="0" />
