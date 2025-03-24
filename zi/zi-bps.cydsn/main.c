@@ -266,7 +266,9 @@ void TimerCallback(void)
 
 CY_ISR( SW_PW_Handler )
 {   
+#if 0
     UART_ZING_RX_INTR_Disable();
+#endif
     SW_PW_Int_Disable();
     CyDelay(10);
     u_int8_t SWP=SW_PW_Read();
@@ -277,15 +279,21 @@ CY_ISR( SW_PW_Handler )
         HGATE_Con1_Write(0x0);
         PW_EN_Write(1);
         HGATE_Con1_Write(0x3);
+#if 0
         UART_ZING_PutString("POWER On\n");
+#endif
     }
     else if((SWP==0)&&(SWL==0))
     {
         HGATE_Con1_Write(0x0);
         PW_EN_Write(0);
+#if 0
         UART_ZING_PutString("POWER OFF\n");
+#endif
     }
+#if 0
     UART_ZING_RX_INTR_Enable();
+#endif
     SW_PW_Int_Enable();
     SW_PW_ClearInterrupt();
 }
@@ -325,8 +333,10 @@ int main()
     CH_LED_Write(0x3);  //LED Off
 
     Zing_Init(ZingCB);
+#if 0
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
+#endif
     
     i2cs_start();
     /* Start BLE stack and register the callback function */

@@ -327,8 +327,10 @@ int main(void)
     CyGlobalIntEnable; /* Enable global interrupts. */
     
     Zing_Init(ZingCB);
+#if 0
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
+#endif
     i2cs_start();
 
     const FlashData_t* fd = LoadStoredPeripheralAddress();	//Load stored address from flash
