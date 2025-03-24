@@ -9,7 +9,11 @@
 #include "bps.h"
 #include "led.h"
 #include "icd.h"
+#if 0
 #include "NoLog.h"
+#else
+#include "Log.h"
+#endif
 #include "i2cs.h"
 #include "git_describe.h"
 #include "versionInfo.h"
@@ -49,20 +53,8 @@ static void ZingCB(const char *buf)
 
 static void zxxLog()
 {
-    const char *name = (peripheral.zxxFrame.kind==ZCH)?"ZCH":"ZED";
-    L("[ps %s] st:%d O>NC:%u(%04X) I>WRC=%u, %s USB:%d CNT:%d IvfCom{%d %d %d %d %d %d %d %d %d %d %d}\r\n", 
-        GIT_INFO,cyBle_state,notifyCustom,zxxFrame.pos,getWritereqCustom(),name,zxxFrame.usb,zxxFrame.cnt,
-        ivfCom.scopeCamera,
-        ivfCom.scopeOutput,
-        ivfCom.wirelessVideoChannelMode,
-        ivfCom.wirelessVideoChannelInformation,
-        ivfCom.scopeOperationMode,
-        ivfCom.wirelessVideoTransmitterOperationModeStatus,
-        ivfCom.wirelessVideoReceiverOperationModeStatus,
-        ivfCom.wirelessVideoTransmitterImuOutputType,
-        ivfCom.wirelessVideoTransmitterImuCalibrate,
-        ivfCom.wirelssVideoReceiverImuOutputType,
-        ivfCom.wirelessVideoReceiverImuCalibrate);
+    L("[ps %s] st:%d O>NC:%u\r\n", 
+        " ",cyBle_state,notifyCustom);
 }
 
 static uint8 sof = 1;                       //Euler angles as default
@@ -303,6 +295,8 @@ CY_ISR( SW_PW_Handler )
  **************************************************************/
 int main()
 {
+    UART_DBG_PutString("zi-bps main\r\n");
+    
     PW_EN_Write(0);
     HGATE_Con1_Write(0x00);
     CyDelay(1000);
@@ -337,7 +331,7 @@ int main()
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
 #endif
-    
+    UART_DBG_Start();
     i2cs_start();
     /* Start BLE stack and register the callback function */
     CyBle_Start(BleCallBack);

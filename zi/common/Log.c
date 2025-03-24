@@ -21,5 +21,5 @@ void L(const char *format, ...)
     va_end(args);
 
     // Send the formatted string over UART
-    UART_DBG_UartPutString(buffer);
+    UART_DBG_PutString(buffer);
 }

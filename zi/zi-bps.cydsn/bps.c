@@ -3,7 +3,11 @@
 #include <ZFrame.h>
 #include "led.h"
 #include "icd.h"
+#if 0
 #include "NoLog.h"
+#else
+#include "Log.h"
+#endif
 #include "led.h"
 #include "i2cs.h"
 #include "Peripheral.h"

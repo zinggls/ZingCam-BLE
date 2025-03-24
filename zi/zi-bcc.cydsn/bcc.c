@@ -1,5 +1,9 @@
 #include "bcc.h"
+#if 0
 #include "NoLog.h"
+#else
+#include "Log.h"
+#endif
 #include "i2cs.h"
 #include "icd.h"
 #include "led.h"

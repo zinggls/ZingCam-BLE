@@ -6,7 +6,11 @@
 #include <Zing.h>
 #include <i2cs.h>
 #include "imu.h"
+#if 0
 #include "NoLog.h"
+#else
+#include "Log.h"
+#endif
 #include "bcc.h"
 #include "icd.h"
 #include "Peripheral.h"
@@ -296,6 +300,8 @@ void HGate_init()
 
 int main(void)
 {
+    UART_DBG_PutString("zi-bcc main\r\n");
+    
     PW_EN_Write(0);
     HGATE_Con1_Write(0x00);
     HGATE_Con2_1_Write(0x00);
@@ -331,6 +337,7 @@ int main(void)
     UART_ZING_Start();
     UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
 #endif
+    UART_DBG_Start();
     i2cs_start();
 
     const FlashData_t* fd = LoadStoredPeripheralAddress();	//Load stored address from flash
