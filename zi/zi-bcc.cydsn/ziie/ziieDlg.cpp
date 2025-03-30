@@ -253,8 +253,8 @@ BOOL CZiieDlg::OnInitDialog()
 	m_wirelessChannelModeCombo.AddString(_T("수동"));
 
 	m_wirelessChannelInfoCombo.AddString(_T("선택안함(Default)"));
-	m_wirelessChannelInfoCombo.AddString(_T("수동1채널"));
-	m_wirelessChannelInfoCombo.AddString(_T("수동2채널"));
+	m_wirelessChannelInfoCombo.AddString(_T("수동1채널(L)"));
+	m_wirelessChannelInfoCombo.AddString(_T("수동2채널(H)"));
 
 	m_opmodeScopeCombo.AddString(_T("(default)"));
 	m_opmodeScopeCombo.AddString(_T("운용모드"));
@@ -957,10 +957,10 @@ void CZiieDlg::UpdateWirelessChannel(byte mode, byte info)
 		m_strWirelessChannelInfo.Format(_T("3.정보: 선택 안함(Default)(%x)"), info);
 		break;
 	case 1:
-		m_strWirelessChannelInfo.Format(_T("3.정보: 수동 1채널(%x)"), info);
+		m_strWirelessChannelInfo.Format(_T("3.정보: 수동1채널(L:%x)"), info);
 		break;
 	case 2:
-		m_strWirelessChannelInfo.Format(_T("3.정보: 수동 2채널(%x)"), info);
+		m_strWirelessChannelInfo.Format(_T("3.정보: 수동2채널(H:%x)"), info);
 		break;
 	default:
 		m_strWirelessChannelInfo.Format(_T("3.정보: 미정의(%x)"), info);
