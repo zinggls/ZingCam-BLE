@@ -103,6 +103,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strFwZxxVer(_T(""))
 	, m_strFwZcdVer(_T(""))
 	, m_zxxVerRawStr(_T("ZXX"))
+	, m_strHbleBtAddress(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -166,6 +167,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_HBLE_VER_LOG_LIST, m_hbleVerLog);
 	DDX_Control(pDX, IDC_ZXX_VER_LOG_LIST, m_zxxVerLog);
 	DDX_Text(pDX, IDC_ZXX_VERSION_RAW_STATIC, m_zxxVerRawStr);
+	DDX_Text(pDX, IDC_HBLE_BT_ADDRESS_STATIC, m_strHbleBtAddress);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
