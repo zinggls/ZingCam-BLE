@@ -242,6 +242,16 @@ void TimerCallback(void)
         
         //LED_RED_Write(!LED_RED_Read());
         timerCount = 0;        
+        
+        if(cyBle_state==2) {// BT connected
+            if(peripheral.zxxFrame.run=='Y') {
+                TX_Run_Write(~TX_Run_Read());  //Flickering on running
+            }else{
+                TX_Run_Write(0x0);  //LED ON
+            }
+        }else{
+            TX_Run_Write(0x1);  //LED OFF
+        }
     }
 }
 
@@ -356,12 +366,6 @@ int main()
         i2cs_process();
         imu_process_uart_data(onImuFrame);
         processImuCommand(ivfCom.wirelessVideoTransmitterImuOutputType,ivfCom.wirelessVideoTransmitterImuCalibrate);
-        
-        if(peripheral.zxxFrame.run=='Y') {
-            TX_Run_Write(0x0);  //LED ON
-        }else{
-            TX_Run_Write(0x1);  //LED OFF
-        }
         
         if(peripheral.zxxFrame.bnd=='H') {
             CH_LED_Write(0x1);  //LED Red
