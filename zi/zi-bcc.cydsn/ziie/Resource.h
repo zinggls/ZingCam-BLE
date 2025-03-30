@@ -91,6 +91,7 @@
 #define IDC_ZXX_VERSION_RAW_STATIC      1061
 #define IDC_SCOPE_DETECT_STATIC         1062
 #define IDC_HBLE_BT_ADDRESS_STATIC      1063
+#define IDC_HBLE_BT_ADDRESS_STATIC2     1064
 
 // Next default values for new objects
 // 
