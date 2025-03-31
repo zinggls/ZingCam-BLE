@@ -166,9 +166,9 @@ static void applyICD_for_NS()
     }
 }
 
-static void btAddress()
+static void btAddress(const CYBLE_GAP_BD_ADDR_T *addr)
 {
-    memcpy(getI2CReadBuffer()+ICD_BT_ADDRESS_OFFSET,&remoteDevice,ICD_BT_ADDRESS_SIZE);
+    memcpy(getI2CReadBuffer()+ICD_BT_ADDRESS_OFFSET,addr,ICD_BT_ADDRESS_SIZE);
 }
 
 static void processingZxx()
@@ -253,6 +253,8 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
             CyBle_GapcStartScan(CYBLE_SCANNING_FAST); // Start scanning for peripherals
             memset(getI2CReadBuffer()+IMU_TX_OFFSET,0,IMU_TX_SIZE);
             memset(getI2CReadBuffer()+ZING_ZXX_OFFSET,0,ZING_ZXX_SIZE);
+            memset(&remoteDevice,0,sizeof(remoteDevice));
+            btAddress(&remoteDevice);
             L("Scanning...\r\n");
             setRGB(LED_OFF,LED_OFF,LED_OFF);
             break;
@@ -290,7 +292,6 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
             if(systemMode == SM_CONNECTING ) {
                 if(CyBle_GapcConnectDevice(&remoteDevice)==CYBLE_ERROR_OK) {
-                    btAddress();
                     if (CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
                         if(!IsAddressStored()) {
                             printAddress(&remoteDevice);
@@ -316,6 +317,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GAP_DEVICE_CONNECTED:              // Connection request is complete
             CyBle_GattcStartDiscovery(cyBle_connHandle);  // Discover the services on the GATT Server
             systemMode = SM_SERVICEDISCOVERY;
+            btAddress(&remoteDevice);
             L("CYBLE_EVT_GAP_DEVICE_CONNECTED\r\n");
             setRGB(LED_OFF,LED_OFF,LED_ON);
             break;
