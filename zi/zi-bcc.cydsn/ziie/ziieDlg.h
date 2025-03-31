@@ -203,4 +203,5 @@ public:
 	CListBox m_zxxVerLog;
 	CString m_zxxVerRawStr;
 	CString m_strHbleBtAddress;
+	afx_msg void OnBnClickedPairingResetButton();
 };

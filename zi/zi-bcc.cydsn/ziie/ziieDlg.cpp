@@ -194,6 +194,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RAW_CLEAR_BUTTON, &CZiieDlg::OnBnClickedRawClearButton)
 	ON_CBN_DROPDOWN(IDC_PORTS_COMBO, &CZiieDlg::OnCbnDropdownPortsCombo)
 	ON_BN_CLICKED(IDC_I2C_RESET_BUTTON, &CZiieDlg::OnBnClickedI2cResetButton)
+	ON_BN_CLICKED(IDC_PAIRING_RESET_BUTTON, &CZiieDlg::OnBnClickedPairingResetButton)
 END_MESSAGE_MAP()
 
 
@@ -1863,4 +1864,9 @@ void CZiieDlg::OnCbnDropdownPortsCombo()
 void CZiieDlg::OnBnClickedI2cResetButton()
 {
 	ResetWriteBufferList();
+}
+
+void CZiieDlg::OnBnClickedPairingResetButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
