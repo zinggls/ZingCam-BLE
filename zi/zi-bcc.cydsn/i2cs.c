@@ -84,7 +84,7 @@ void i2cs_process(ZCD_FRAME *zcd)
         /* Check the packet length */
         if (PACKET_SIZE == I2C_I2CSlaveGetWriteBufSize())
         {
-            if(i2cWriteBuffer[0]==0x1F) {   //Reset Paring command
+            if(i2cWriteBuffer[0]==0x1F) {   //Reset Pairing command
                 cystatus status;
                 if(ClearPeripheralAddress(&status)) {	//Address in flash cleared
                     CyDelay(100);
