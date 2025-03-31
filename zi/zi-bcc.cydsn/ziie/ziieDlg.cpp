@@ -98,6 +98,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_bReadBuffer(TRUE)
 	, m_bWriteBuffer(TRUE)
 	, m_bSendWriteBuffer(FALSE)
+	, m_bSendPairingReset(FALSE)
 	, m_strFwHbleVer(_T(""))
 	, m_strFwDbleVer(_T(""))
 	, m_strFwZxxVer(_T(""))
@@ -1427,6 +1428,22 @@ void CZiieDlg::UpdateGUI(IVF& ivf)
 	UpdateWriteBufferGUI(ivf.write);
 }
 
+HRESULT CZiieDlg::Send_I2C_Buffer(std::vector<byte> &dataIN, int deviceAddress)
+{
+	HRESULT hr = m_pCom->writeI2C(deviceAddress, dataIN);
+	if (!SUCCEEDED(hr)) {
+		L(_T("Failed writeI2C,HRESULT: 0x%08X"), hr);
+		return hr;
+	}
+
+	if (m_bWriteBuffer) {
+		I2C_IVF_COMMAND& i = m_ivf.write;
+		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
+			sizeof(I2C_IVF_COMMAND), i.ScopeKind, i.ScopeOut, i.WirelessChannelMode, i.WirelessChannelInfo, i.OpmodeScope, i.OpmodeTx, i.OpmodeRx, i.TxImuType, i.TxImuCalib, i.RxImuType, i.RxImuCalib);
+	}
+	return S_OK;
+}
+
 HRESULT CZiieDlg::Send_I2C_WriteBuffer(int deviceAddress)
 {
 	std::vector<byte> dataIN;
@@ -1443,18 +1460,15 @@ HRESULT CZiieDlg::Send_I2C_WriteBuffer(int deviceAddress)
 	dataIN[9] = m_ivf.write.RxImuType;
 	dataIN[10] = m_ivf.write.RxImuCalib;
 
-	HRESULT hr = m_pCom->writeI2C(deviceAddress, dataIN);
-	if (!SUCCEEDED(hr)) {
-		L(_T("Failed writeI2C,HRESULT: 0x%08X"), hr);
-		return hr;
-	}
+	return Send_I2C_Buffer(dataIN, deviceAddress);
+}
 
-	if (m_bWriteBuffer) {
-		I2C_IVF_COMMAND& i = m_ivf.write;
-		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
-			sizeof(I2C_IVF_COMMAND), i.ScopeKind, i.ScopeOut, i.WirelessChannelMode, i.WirelessChannelInfo, i.OpmodeScope, i.OpmodeTx, i.OpmodeRx, i.TxImuType, i.TxImuCalib, i.RxImuType, i.RxImuCalib);
-	}
-	return S_OK;
+HRESULT CZiieDlg::Send_ParingReset_Command(int deviceAddress)
+{
+	std::vector<byte> dataIN;
+	dataIN.resize(WRITE_BUFFER_SIZE);
+	dataIN[0] = 0x1F;
+	return Send_I2C_Buffer(dataIN, deviceAddress);
 }
 
 BOOL CZiieDlg::AllValues(std::vector<byte> &dataOUT, byte value)
@@ -1611,6 +1625,12 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 			L(_T("Waiting..."));
 			Sleep(3000);
 			m_bSendWriteBuffer = FALSE;
+		}
+
+		if (m_bSendPairingReset) {
+			Send_ParingReset_Command(deviceAddress);
+			L(_T("Pairing Reset..."));
+			m_bSendPairingReset = FALSE;
 		}
 
 		if (bRead == FALSE) break;
@@ -1868,5 +1888,5 @@ void CZiieDlg::OnBnClickedI2cResetButton()
 
 void CZiieDlg::OnBnClickedPairingResetButton()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_bSendPairingReset = TRUE;
 }

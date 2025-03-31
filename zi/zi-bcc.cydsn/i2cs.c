@@ -14,6 +14,7 @@
 #include "project.h"
 #include "icd.h"
 #include "led.h"
+#include "FlashRow.h"
 
 static uint8 i2cReadBuffer [I2C_RD_BUFFER_SIZE] = {0};
 static uint8 i2cWriteBuffer[I2C_WR_BUFFER_SIZE] = {0};
@@ -83,6 +84,14 @@ void i2cs_process(ZCD_FRAME *zcd)
         /* Check the packet length */
         if (PACKET_SIZE == I2C_I2CSlaveGetWriteBufSize())
         {
+            if(i2cWriteBuffer[0]==0x1F) {   //Reset Paring command
+                cystatus status;
+                if(ClearPeripheralAddress(&status)) {	//Address in flash cleared
+                    CyDelay(100);
+                    CySoftwareReset();
+    			}
+            }
+            
             uint8_t prevCh = ivfCom.wirelessVideoChannelInformation;
             
             ivfCom.scopeCamera = changeScope(i2cWriteBuffer[0]);

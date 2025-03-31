@@ -105,7 +105,9 @@ public:
 	static CString ShortToStr(short val);
 	void UpdateImuGUI(CListCtrl& listCtrl, IMU& i);
 	void UpdateGUI(IVF& ivf);
+	HRESULT Send_I2C_Buffer(std::vector<byte>& dataIN, int deviceAddress);
 	HRESULT Send_I2C_WriteBuffer(int deviceAddress);
+	HRESULT Send_ParingReset_Command(int deviceAddress);
 	static BOOL AllValues(std::vector<byte>& dataOUT, byte value);
 	void ResetWriteBufferList();
 	static void ConvertVectorToCString(const std::vector<byte>& data, CString& result);
@@ -188,6 +190,7 @@ public:
 	afx_msg void OnBnClickedWriteBufferCheck();
 	afx_msg void OnBnClickedRawClearButton();
 	BOOL m_bSendWriteBuffer;
+	BOOL m_bSendPairingReset;
 	afx_msg void OnCbnDropdownPortsCombo();
 	afx_msg void OnBnClickedI2cResetButton();
 	CString m_strFwHbleVer;
