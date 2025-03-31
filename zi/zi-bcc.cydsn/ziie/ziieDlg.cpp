@@ -1533,6 +1533,9 @@ void CZiieDlg::GetZxxVersion(std::vector<byte>& data)
 
 void CZiieDlg::GetBtAddress(std::vector<byte>& data)
 {
+	m_strHbleBtAddress.Empty();
+	if (data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 0 && data[4] == 0 && data[5] == 0) return;
+
 	m_strHbleBtAddress.Format(_T("%02X:%02X:%02X:%02X:%02X:%02X"), data[5], data[4], data[3], data[2], data[1], data[0]);
 
 	if (data[6] == 0x0)
