@@ -40,6 +40,11 @@
 #define ZING_ZCD_OFFSET                     100                 //ZING_ZXX_OFFSET + ZING_ZXX_SIZE = 47 + 53 = 100
 
 #define I2C_IVF_READ_BUFFER_SIZE            166                 //ICD_IVF_SIZE + ZING_ZXX_SIZE + ZING_ZCD_SIZE = 47 + 53 + 66 = 166
+
+#define ICD_VERSION_SIZE                    25
+#define ICD_IVF_VER_SIZE                    (I2C_IVF_READ_BUFFER_SIZE+(4*ICD_VERSION_SIZE))
+#define ICD_BT_ADDRESS_OFFSET               ICD_IVF_VER_SIZE
+#define ICD_BT_ADDRESS_SIZE                 7
     
 typedef struct {
     uint8_t scopeCamera;

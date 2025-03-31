@@ -166,6 +166,11 @@ static void applyICD_for_NS()
     }
 }
 
+static void btAddress()
+{
+    memcpy(getI2CReadBuffer()+ICD_BT_ADDRESS_OFFSET,&remoteDevice,ICD_BT_ADDRESS_SIZE);
+}
+
 static void processingZxx()
 {
     if(zxxKind==Unknown) zxxKind = inspect((char*)notificationParam->handleValPair.value.val);
@@ -285,6 +290,7 @@ void CyBle_AppCallback( uint32 eventCode, void *eventParam )
         case CYBLE_EVT_GAPC_SCAN_START_STOP: // If you stopped scanning to make a connection.. then launch connection
             if(systemMode == SM_CONNECTING ) {
                 if(CyBle_GapcConnectDevice(&remoteDevice)==CYBLE_ERROR_OK) {
+                    btAddress();
                     if (CyBle_GapAddDeviceToWhiteList(&remoteDevice) == CYBLE_ERROR_OK) {
                         if(!IsAddressStored()) {
                             printAddress(&remoteDevice);

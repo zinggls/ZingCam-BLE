@@ -1531,6 +1531,16 @@ void CZiieDlg::GetZxxVersion(std::vector<byte>& data)
 	m_strFwZxxVer += str;
 }
 
+void CZiieDlg::GetBtAddress(std::vector<byte>& data)
+{
+	m_strHbleBtAddress.Format(_T("%02X:%02X:%02X:%02X:%02X:%02X"), data[5], data[4], data[3], data[2], data[1], data[0]);
+
+	if (data[6] == 0x0)
+		m_strHbleBtAddress += _T(" public");
+	else
+		m_strHbleBtAddress += _T(" random");
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1538,7 +1548,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 	std::vector<byte> dataOUT;
 	size_t index;
 	while (1) {
-		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE + 4 * VERSION_SIZE, dataOUT);
+		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE + 4 * VERSION_SIZE + BT_ADDRESS_SIZE, dataOUT);
 		if (!SUCCEEDED(hr)) {
 			L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
 			return hr;
@@ -1552,6 +1562,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		GetBpsVersion(bpsVer);
 		std::vector<byte> zxxVer(dataOUT.begin() + READ_BUFFER_SIZE + 3 * VERSION_SIZE, dataOUT.begin() + READ_BUFFER_SIZE + 4 * VERSION_SIZE);
 		GetZxxVersion(zxxVer);
+		std::vector<byte> btAddr(dataOUT.begin() + READ_BUFFER_SIZE + 4 * VERSION_SIZE, dataOUT.begin() + READ_BUFFER_SIZE + 4 * VERSION_SIZE + BT_ADDRESS_SIZE);
+		GetBtAddress(btAddr);
 
 		if (!AllValues(dataOUT, 0xFF)) {
 			index = Parse_I2C(dataOUT, m_ivf);
