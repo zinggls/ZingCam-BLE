@@ -1559,6 +1559,10 @@ void CZiieDlg::GetBtAddress(std::vector<byte>& data)
 		m_strHbleBtAddress += _T(" random");
 }
 
+void CZiieDlg::GetItfCriteria(std::vector<byte>& data)
+{
+}
+
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 {
 	HRESULT hr;
@@ -1566,7 +1570,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 	std::vector<byte> dataOUT;
 	size_t index;
 	while (1) {
-		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE + 4 * VERSION_SIZE + BT_ADDRESS_SIZE, dataOUT);
+		hr = m_pCom->readI2C(deviceAddress, READ_BUFFER_SIZE + 4 * VERSION_SIZE + BT_ADDRESS_SIZE + ITF_CRITERIA_SIZE, dataOUT);
 		if (!SUCCEEDED(hr)) {
 			L(_T("Failed readI2C,HRESULT: 0x%08X"), hr);
 			return hr;
@@ -1582,6 +1586,8 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		GetZxxVersion(zxxVer);
 		std::vector<byte> btAddr(dataOUT.begin() + READ_BUFFER_SIZE + 4 * VERSION_SIZE, dataOUT.begin() + READ_BUFFER_SIZE + 4 * VERSION_SIZE + BT_ADDRESS_SIZE);
 		GetBtAddress(btAddr);
+		std::vector<byte> itfCriteia(dataOUT.begin() + READ_BUFFER_SIZE + 4 * VERSION_SIZE + BT_ADDRESS_SIZE, dataOUT.begin() + READ_BUFFER_SIZE + 4 * VERSION_SIZE + BT_ADDRESS_SIZE + ITF_CRITERIA_SIZE);
+		GetItfCriteria(itfCriteia);
 
 		if (!AllValues(dataOUT, 0xFF)) {
 			index = Parse_I2C(dataOUT, m_ivf);

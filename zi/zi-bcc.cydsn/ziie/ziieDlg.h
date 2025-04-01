@@ -12,6 +12,7 @@
 #define VERSION_SIZE		(25)
 #define MAX_LIST_ITEMS		(1024*8)
 #define BT_ADDRESS_SIZE		(7)
+#define ITF_CRITERIA_SIZE	(1)
 
 class CCom;
 
@@ -116,6 +117,7 @@ public:
 	void GetBpsVersion(std::vector<byte>& data);
 	void GetZxxVersion(std::vector<byte>& data);
 	void GetBtAddress(std::vector<byte>& data);
+	void GetItfCriteria(std::vector<byte>& data);
 	HRESULT Read_I2C_SCB_Slave(int deviceAddress);
 	static BOOL bRead;
 	static UINT I2C_Read(LPVOID pParam);
