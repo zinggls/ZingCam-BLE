@@ -418,7 +418,7 @@ void CZiieDlg::CreateWriteBuffer()
 {
 	m_writeBufferListCtrl.EnableWindow(FALSE);
 
-	int nHexWidth = 26;
+	int nHexWidth = 27;
 	m_writeBufferListCtrl.InsertColumn(0, _T("0"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(1, _T("1"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(2, _T("2"), LVCFMT_RIGHT, nHexWidth);
