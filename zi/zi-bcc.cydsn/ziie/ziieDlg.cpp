@@ -199,6 +199,7 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_CBN_DROPDOWN(IDC_PORTS_COMBO, &CZiieDlg::OnCbnDropdownPortsCombo)
 	ON_BN_CLICKED(IDC_I2C_RESET_BUTTON, &CZiieDlg::OnBnClickedI2cResetButton)
 	ON_BN_CLICKED(IDC_PAIRING_RESET_BUTTON, &CZiieDlg::OnBnClickedPairingResetButton)
+	ON_CBN_SELCHANGE(IDC_ITF_CRITERIA_COMBO, &CZiieDlg::OnCbnSelchangeItfCriteriaCombo)
 END_MESSAGE_MAP()
 
 
@@ -1908,4 +1909,8 @@ void CZiieDlg::OnBnClickedI2cResetButton()
 void CZiieDlg::OnBnClickedPairingResetButton()
 {
 	m_bSendPairingReset = TRUE;
+}
+
+void CZiieDlg::OnCbnSelchangeItfCriteriaCombo()
+{
 }

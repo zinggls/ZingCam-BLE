@@ -212,4 +212,5 @@ public:
 	CString m_strItfCriteriaValue;
 	CComboBox m_itfCriteriaCombo;
 	byte m_itfCriteria;
+	afx_msg void OnCbnSelchangeItfCriteriaCombo();
 };
