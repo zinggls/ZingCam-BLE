@@ -133,6 +133,8 @@ void i2cs_process(ZCD_FRAME *zcd)
         i2cReadBuffer[8] = ivfCom.wirelessVideoTransmitterImuCalibrate;
         i2cReadBuffer[9] = ivfCom.wirelssVideoReceiverImuOutputType;
         i2cReadBuffer[10] = ivfCom.wirelessVideoReceiverImuCalibrate;
+        
+        i2cReadBuffer[I2C_RD_BUFFER_SIZE-1] = itfCriteria;
     }
     
     setZcdBuffer(i2cReadBuffer+ZING_ZCD_OFFSET,zcd);    //ZCD offset ICD(47) + ZXX(53) = 100
