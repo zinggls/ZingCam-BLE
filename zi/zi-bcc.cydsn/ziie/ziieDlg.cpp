@@ -307,6 +307,7 @@ BOOL CZiieDlg::OnInitDialog()
 		str.Format(_T("%d"), i);
 		m_itfCriteriaCombo.AddString(str);
 	}
+	m_itfCriteriaCombo.SetCurSel(9);	//default 10
 
 	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
