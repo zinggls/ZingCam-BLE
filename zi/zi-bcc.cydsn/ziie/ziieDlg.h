@@ -211,4 +211,5 @@ public:
 	afx_msg void OnBnClickedPairingResetButton();
 	CString m_strItfCriteriaValue;
 	CComboBox m_itfCriteriaCombo;
+	byte m_itfCriteria;
 };

@@ -1571,7 +1571,8 @@ void CZiieDlg::GetBtAddress(std::vector<byte>& data)
 
 void CZiieDlg::GetItfCriteria(std::vector<byte>& data)
 {
-	m_strItfCriteriaValue.Format(_T("간섭민감도: %d"), data[0]);
+	m_itfCriteria = data[0];
+	m_strItfCriteriaValue.Format(_T("간섭민감도: %d"), m_itfCriteria);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
