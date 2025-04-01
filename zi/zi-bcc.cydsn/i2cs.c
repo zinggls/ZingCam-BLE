@@ -57,6 +57,7 @@ uint8 changeScope(uint8_t cam)
 
 void i2cs_start(void)
 {
+    itfCriteria = ITF_CRITERIA;
     I2C_I2CSlaveInitReadBuf (i2cReadBuffer,  I2C_RD_BUFFER_SIZE);
     I2C_I2CSlaveInitWriteBuf(i2cWriteBuffer, I2C_WR_BUFFER_SIZE);
     I2C_Start();

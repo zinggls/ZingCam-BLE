@@ -16,7 +16,7 @@
 #include <ZFrame.h>
 
 #define I2C_WR_BUFFER_SIZE  (11u)
-#define I2C_RD_BUFFER_SIZE  (273u)  //ICD(47)+ZXX(53)+ZCD(66)+VERSION(4*25=100)+BTAddress(7) = 273
+#define I2C_RD_BUFFER_SIZE  (274u)  //ICD(47)+ZXX(53)+ZCD(66)+VERSION(4*25=100)+BTAddress(7)+itfCriteria(1) = 274
 
 /* Buffer and packet size */
 #define PACKET_SIZE         (I2C_WR_BUFFER_SIZE)
@@ -40,6 +40,9 @@
 #define CMD_SET_RED         (1u)
 #define CMD_SET_GREEN       (2u)
 #define CMD_SET_BLUE        (3u)
+
+#define ITF_CRITERIA        10
+uint8_t itfCriteria;
 
 void i2cs_start(void);
 void i2cs_process(ZCD_FRAME *zcd);

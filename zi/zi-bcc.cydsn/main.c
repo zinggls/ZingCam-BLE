@@ -15,8 +15,6 @@
 #include "FlashRow.h"
 
 #define BUTTON_HOLD_TIME_SEC  3   //3 seconds
-#define ITF_CRITERIA        10
-static uint8_t itfCriteria = ITF_CRITERIA;
 
 static void setBccVersion()
 {
