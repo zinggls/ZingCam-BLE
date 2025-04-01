@@ -1926,14 +1926,22 @@ void CZiieDlg::OnCbnSelchangeItfCriteriaCombo()
 	if (nVal == m_itfCriteria) {
 		byte low = m_ivf.write.ScopeKind & 0x0f;    //Bit[5] SET_ITF_CRITERIA=0
 		m_ivf.write.ScopeKind = low;
+		m_ivf.write.ScopeOut = m_ivf.write.ScopeOut & 0x0f;
 	}
 	else {
 		byte high = 0x2 << 4;    //Bit[5] SET_ITF_CRITERIA=1
 		byte low = m_ivf.write.ScopeKind & 0x0f;
 		m_ivf.write.ScopeKind = high | low;
+
+		low = m_ivf.write.ScopeOut & 0x0f;
+		high = nVal << 4;
+		m_ivf.write.ScopeOut = high | low;
 	}
 
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.ScopeKind);
 	m_writeBufferListCtrl.SetItemText(0, 0, str);
+
+	str.Format(_T("%02X"), m_ivf.write.ScopeOut);
+	m_writeBufferListCtrl.SetItemText(0, 1, str);
 }
