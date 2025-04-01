@@ -1752,7 +1752,8 @@ void CZiieDlg::OnBnClickedI2cWriteButton()
 void CZiieDlg::OnSelchangeScopeKindCombo()
 {
 	int nSel = m_scopeKindCombo.GetCurSel();
-	m_ivf.write.ScopeKind = nSel & 0xff;
+	byte high = m_ivf.write.ScopeKind & 0xf0;       //상위4비트 추출
+	m_ivf.write.ScopeKind = high | (nSel & 0xf);    //이전의 상위1비트에 콤보에서 읽은 하위4비트 결합
 
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.ScopeKind);
@@ -1920,4 +1921,19 @@ void CZiieDlg::OnBnClickedPairingResetButton()
 
 void CZiieDlg::OnCbnSelchangeItfCriteriaCombo()
 {
+	int nVal = m_itfCriteriaCombo.GetCurSel() + 1;
+
+	if (nVal == m_itfCriteria) {
+		byte low = m_ivf.write.ScopeKind & 0x0f;    //Bit[5] SET_ITF_CRITERIA=0
+		m_ivf.write.ScopeKind = low;
+	}
+	else {
+		byte high = 0x2 << 4;    //Bit[5] SET_ITF_CRITERIA=1
+		byte low = m_ivf.write.ScopeKind & 0x0f;
+		m_ivf.write.ScopeKind = high | low;
+	}
+
+	CString str;
+	str.Format(_T("%02X"), m_ivf.write.ScopeKind);
+	m_writeBufferListCtrl.SetItemText(0, 0, str);
 }
