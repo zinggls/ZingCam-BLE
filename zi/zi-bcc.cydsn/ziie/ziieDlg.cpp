@@ -302,6 +302,12 @@ BOOL CZiieDlg::OnInitDialog()
 	m_rxImuCalibCombo.AddString(_T("지자기On"));
 	m_rxImuCalibCombo.AddString(_T("지자기 능동형On"));
 
+	for (int i = 1; i < 16; i++) {
+		CString str;
+		str.Format(_T("%d"), i);
+		m_itfCriteriaCombo.AddString(str);
+	}
+
 	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
 	EnableCombos(FALSE);
