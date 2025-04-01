@@ -171,6 +171,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_ZXX_VERSION_RAW_STATIC, m_zxxVerRawStr);
 	DDX_Text(pDX, IDC_HBLE_BT_ADDRESS_STATIC, m_strHbleBtAddress);
 	DDX_Text(pDX, IDC_ITF_CRITERIA_VALUE_STATIC, m_strItfCriteriaValue);
+	DDX_Control(pDX, IDC_ITF_CRITERIA_COMBO, m_itfCriteriaCombo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
