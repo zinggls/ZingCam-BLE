@@ -105,6 +105,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strFwZcdVer(_T(""))
 	, m_zxxVerRawStr(_T("ZXX"))
 	, m_strHbleBtAddress(_T(""))
+	, m_strItfCriteriaValue(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -169,6 +170,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ZXX_VER_LOG_LIST, m_zxxVerLog);
 	DDX_Text(pDX, IDC_ZXX_VERSION_RAW_STATIC, m_zxxVerRawStr);
 	DDX_Text(pDX, IDC_HBLE_BT_ADDRESS_STATIC, m_strHbleBtAddress);
+	DDX_Text(pDX, IDC_ITF_CRITERIA_VALUE_STATIC, m_strItfCriteriaValue);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -1561,6 +1563,7 @@ void CZiieDlg::GetBtAddress(std::vector<byte>& data)
 
 void CZiieDlg::GetItfCriteria(std::vector<byte>& data)
 {
+	m_strItfCriteriaValue.Format(_T("간섭민감도: %d"), data[0]);
 }
 
 HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)

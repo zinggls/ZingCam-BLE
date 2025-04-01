@@ -209,4 +209,5 @@ public:
 	CString m_zxxVerRawStr;
 	CString m_strHbleBtAddress;
 	afx_msg void OnBnClickedPairingResetButton();
+	CString m_strItfCriteriaValue;
 };

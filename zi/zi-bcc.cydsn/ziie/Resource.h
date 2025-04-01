@@ -93,6 +93,7 @@
 #define IDC_HBLE_BT_ADDRESS_STATIC      1063
 #define IDC_HBLE_BT_ADDRESS_STATIC2     1064
 #define IDC_PAIRING_RESET_BUTTON        1064
+#define IDC_ITF_CRITERIA_VALUE_STATIC   1065
 
 // Next default values for new objects
 // 
