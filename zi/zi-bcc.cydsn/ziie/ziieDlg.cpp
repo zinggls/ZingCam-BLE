@@ -384,6 +384,7 @@ void CZiieDlg::EnableCombos(BOOL b)
 	m_txImuCalibCombo.EnableWindow(b);
 	m_rxImuTypeCombo.EnableWindow(b);
 	m_rxImuCalibCombo.EnableWindow(b);
+	m_itfCriteriaCombo.EnableWindow(b);
 }
 
 void CZiieDlg::FillPortsCombo()
