@@ -16,6 +16,7 @@
 
 #define BUTTON_HOLD_TIME_SEC  3   //3 seconds
 #define ITF_CRITERIA        10
+static uint8_t itfCriteria = ITF_CRITERIA;
 
 static void setBccVersion()
 {
@@ -61,18 +62,18 @@ static void ZingCB(const char *buf)
             interferenceCount = 0;
         }
         
-        if(bITF == false && interferenceCount>=ITF_CRITERIA) {
+        if(bITF == false && interferenceCount>=itfCriteria) {
             //Interference appeared
             if(ivfCom.wirelessVideoChannelMode==0x00 || ivfCom.wirelessVideoChannelMode==0x01 ) { //자동 채널 설정 모드
                 sendITF('Y');
                 SPDT_Write(~SPDT_Read());
             }
             bITF = true;
-        } else if(bITF==false && interferenceCount < ITF_CRITERIA) {
+        } else if(bITF==false && interferenceCount < itfCriteria) {
             //Negligible interference (DO NOTHING)
-        } else if(bITF==true && interferenceCount >= ITF_CRITERIA) {
+        } else if(bITF==true && interferenceCount >= itfCriteria) {
             //Still under interference (DO NOTHING)
-        } else if(bITF==true && interferenceCount < ITF_CRITERIA) {
+        } else if(bITF==true && interferenceCount < itfCriteria) {
             //Interference disappeared
             bITF = false;
         }
