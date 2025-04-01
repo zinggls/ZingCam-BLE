@@ -1505,7 +1505,7 @@ BOOL CZiieDlg::AllValues(std::vector<byte> &dataOUT, byte value)
 void CZiieDlg::ResetWriteBufferList()
 {
 	memset(&m_ivf.write, 0, sizeof(I2C_IVF_COMMAND));
-	CString str(_T("0"));
+	CString str(_T("00"));
 	for (int i = 0; i <= 10; i++) m_writeBufferListCtrl.SetItemText(0, i, str);
 }
 
@@ -1755,7 +1755,7 @@ void CZiieDlg::OnSelchangeScopeKindCombo()
 	m_ivf.write.ScopeKind = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.ScopeKind);
+	str.Format(_T("%02X"), m_ivf.write.ScopeKind);
 	m_writeBufferListCtrl.SetItemText(0, 0, str);
 }
 
@@ -1766,7 +1766,7 @@ void CZiieDlg::OnSelchangeScopeOutCombo()
 	m_ivf.write.ScopeOut = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.ScopeOut);
+	str.Format(_T("%02X"), m_ivf.write.ScopeOut);
 	m_writeBufferListCtrl.SetItemText(0, 1, str);
 }
 
@@ -1778,7 +1778,7 @@ void CZiieDlg::OnSelchangeWirelessChannelModeCombo()
 	m_ivf.write.WirelessChannelMode = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.WirelessChannelMode);
+	str.Format(_T("%02X"), m_ivf.write.WirelessChannelMode);
 	m_writeBufferListCtrl.SetItemText(0, 2, str);
 }
 
@@ -1790,7 +1790,7 @@ void CZiieDlg::OnSelchangeWirelessChannelInfoCombo()
 	m_ivf.write.WirelessChannelInfo = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.WirelessChannelInfo);
+	str.Format(_T("%02X"), m_ivf.write.WirelessChannelInfo);
 	m_writeBufferListCtrl.SetItemText(0, 3, str);
 }
 
@@ -1803,7 +1803,7 @@ void CZiieDlg::OnCbnSelchangeOpmodeScopeCombo()
 	if (nSel == 3) m_ivf.write.OpmodeScope++;	//세번째 선택은 0x04 절전모드로 정의되어 값을 증가 시킴
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.OpmodeScope);
+	str.Format(_T("%02X"), m_ivf.write.OpmodeScope);
 	m_writeBufferListCtrl.SetItemText(0, 4, str);
 }
 
@@ -1816,7 +1816,7 @@ void CZiieDlg::OnCbnSelchangeOpmodeTxCombo()
 	if (nSel == 3) m_ivf.write.OpmodeTx++;	//세번째 선택은 0x04 절전모드로 정의되어 값을 증가 시킴
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.OpmodeTx);
+	str.Format(_T("%02X"), m_ivf.write.OpmodeTx);
 	m_writeBufferListCtrl.SetItemText(0, 5, str);
 }
 
@@ -1829,7 +1829,7 @@ void CZiieDlg::OnCbnSelchangeOpmodeRxCombo()
 	if (nSel == 3) m_ivf.write.OpmodeRx++;	//세번째 선택은 0x04 절전모드로 정의되어 값을 증가 시킴
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.OpmodeRx);
+	str.Format(_T("%02X"), m_ivf.write.OpmodeRx);
 	m_writeBufferListCtrl.SetItemText(0, 6, str);
 }
 
@@ -1841,7 +1841,7 @@ void CZiieDlg::OnCbnSelchangeTxImuTypeCombo()
 	m_ivf.write.TxImuType = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.TxImuType);
+	str.Format(_T("%02X"), m_ivf.write.TxImuType);
 	m_writeBufferListCtrl.SetItemText(0, 7, str);
 }
 
@@ -1853,7 +1853,7 @@ void CZiieDlg::OnCbnSelchangeTxImuCalibCombo()
 	m_ivf.write.TxImuCalib = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.TxImuCalib);
+	str.Format(_T("%02X"), m_ivf.write.TxImuCalib);
 	m_writeBufferListCtrl.SetItemText(0, 8, str);
 }
 
@@ -1865,7 +1865,7 @@ void CZiieDlg::OnCbnSelchangeRxImuTypeCombo()
 	m_ivf.write.RxImuType = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.RxImuType);
+	str.Format(_T("%02X"), m_ivf.write.RxImuType);
 	m_writeBufferListCtrl.SetItemText(0, 9, str);
 }
 
@@ -1877,7 +1877,7 @@ void CZiieDlg::OnCbnSelchangeRxImuCalibCombo()
 	m_ivf.write.RxImuCalib = nSel & 0xff;
 
 	CString str;
-	str.Format(_T("%d"), m_ivf.write.RxImuCalib);
+	str.Format(_T("%02X"), m_ivf.write.RxImuCalib);
 	m_writeBufferListCtrl.SetItemText(0, 10, str);
 }
 
