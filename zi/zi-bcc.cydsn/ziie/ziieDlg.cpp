@@ -710,6 +710,13 @@ CString CZiieDlg::DecStr(int val)
 	return str;
 }
 
+CString CZiieDlg::HexStr(int val)
+{
+	CString str;
+	str.Format(_T("%02X"), val);
+	return str;
+}
+
 CString CZiieDlg::CharStr(char c)
 {
 	CString str;
@@ -885,17 +892,17 @@ void CZiieDlg::UpdateZcdGUI(ZCD& z)
 
 void CZiieDlg::UpdateWriteBufferGUI(I2C_IVF_COMMAND& ic)
 {
-	m_writeBufferListCtrl.SetItemText(0, 0, DecStr(ic.ScopeKind));
-	m_writeBufferListCtrl.SetItemText(0, 1, DecStr(ic.ScopeOut));
-	m_writeBufferListCtrl.SetItemText(0, 2, DecStr(ic.WirelessChannelMode));
-	m_writeBufferListCtrl.SetItemText(0, 3, DecStr(ic.WirelessChannelInfo));
-	m_writeBufferListCtrl.SetItemText(0, 4, DecStr(ic.OpmodeScope));
-	m_writeBufferListCtrl.SetItemText(0, 5, DecStr(ic.OpmodeTx));
-	m_writeBufferListCtrl.SetItemText(0, 6, DecStr(ic.OpmodeRx));
-	m_writeBufferListCtrl.SetItemText(0, 7, DecStr(ic.TxImuType));
-	m_writeBufferListCtrl.SetItemText(0, 8, DecStr(ic.TxImuCalib));
-	m_writeBufferListCtrl.SetItemText(0, 9, DecStr(ic.RxImuType));
-	m_writeBufferListCtrl.SetItemText(0,10, DecStr(ic.RxImuCalib));
+	m_writeBufferListCtrl.SetItemText(0, 0, HexStr(ic.ScopeKind));
+	m_writeBufferListCtrl.SetItemText(0, 1, HexStr(ic.ScopeOut));
+	m_writeBufferListCtrl.SetItemText(0, 2, HexStr(ic.WirelessChannelMode));
+	m_writeBufferListCtrl.SetItemText(0, 3, HexStr(ic.WirelessChannelInfo));
+	m_writeBufferListCtrl.SetItemText(0, 4, HexStr(ic.OpmodeScope));
+	m_writeBufferListCtrl.SetItemText(0, 5, HexStr(ic.OpmodeTx));
+	m_writeBufferListCtrl.SetItemText(0, 6, HexStr(ic.OpmodeRx));
+	m_writeBufferListCtrl.SetItemText(0, 7, HexStr(ic.TxImuType));
+	m_writeBufferListCtrl.SetItemText(0, 8, HexStr(ic.TxImuCalib));
+	m_writeBufferListCtrl.SetItemText(0, 9, HexStr(ic.RxImuType));
+	m_writeBufferListCtrl.SetItemText(0,10, HexStr(ic.RxImuCalib));
 }
 
 void CZiieDlg::UpdateScopeKind(byte kind)

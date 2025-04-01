@@ -184,6 +184,7 @@ public:
 	afx_msg void OnCbnSelchangeRxImuTypeCombo();
 	afx_msg void OnCbnSelchangeRxImuCalibCombo();
 	static CString DecStr(int val);
+	static CString HexStr(int val);
 	static CString CharStr(char c);
 	static CString IntHexStr(int val);
 	BOOL m_bReadBuffer;
