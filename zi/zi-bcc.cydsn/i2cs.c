@@ -95,6 +95,11 @@ void i2cs_process(ZCD_FRAME *zcd)
     			}
             }
             
+            if((i2cWriteBuffer[0]&0x20)!=0) {   //SET_ITF_CRITERIA 1
+                itfCriteria = (i2cWriteBuffer[1]&0xf0)>>4;
+                i2cReadBuffer[I2C_RD_BUFFER_SIZE-1] = itfCriteria;
+            }
+            
             uint8_t prevCh = ivfCom.wirelessVideoChannelInformation;
             
             ivfCom.scopeCamera = changeScope(i2cWriteBuffer[0]);
