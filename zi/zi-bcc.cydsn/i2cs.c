@@ -79,6 +79,10 @@ void i2c_command_to_bps() {
     if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeReqCount++;
 }
 
+static void onWirelessVideoReceiverOperationMode(uint8_t mode)
+{
+}
+
 void i2cs_process(ZCD_FRAME *zcd)
 {
     /* Write complete: parse the command packet */
@@ -120,6 +124,8 @@ void i2cs_process(ZCD_FRAME *zcd)
                     if(ivfCom.wirelessVideoChannelInformation==0x02) SPDT_Write(1);    //수동 2채널 (High band)
                 }
             }
+            
+            onWirelessVideoReceiverOperationMode(ivfCom.wirelessVideoReceiverOperationModeStatus);
             
             i2c_command_to_bps();
         }

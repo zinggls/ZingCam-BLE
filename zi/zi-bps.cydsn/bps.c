@@ -45,6 +45,10 @@ static void setI2cReadBuffer(IvfCom *ic)
     rb[2] = ic->scopeOperationMode;
 }
 
+static void onWirelessVideoTransmitterOperationMode(uint8_t mode)
+{
+}
+
 void BleCallBack(uint32 event, void* eventParam)
 {
     CYBLE_GATTS_WRITE_REQ_PARAM_T *wrReqParam;
@@ -94,6 +98,7 @@ void BleCallBack(uint32 event, void* eventParam)
                             }
                         }
                     }
+                    onWirelessVideoTransmitterOperationMode(ivfCom.wirelessVideoTransmitterOperationModeStatus);
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                 
                     writereqCustom++;
