@@ -8,6 +8,7 @@
 #include "i2cs.h"
 #include "Peripheral.h"
 #include "Zing.h"
+#include "hgate.h"
 
 static uint16 writereqCustom = 0;
 
@@ -45,8 +46,37 @@ static void setI2cReadBuffer(IvfCom *ic)
     rb[2] = ic->scopeOperationMode;
 }
 
+static uint8_t prevMode = 0x0;
+
 static void onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
+    switch(mode){
+        case 0x1:   //운용모드
+            if(prevMode!=mode) {
+                PW_EN_Write(0);
+                HGATE_Con1_Write(0x00);
+                PW_EN_Write(1);
+                HGATE_Con1_Write(HGATE_Con1_VAL);
+                prevMode = mode;
+            }
+            break;
+        case 0x2:   //대기모드
+            if(prevMode!=mode) {
+                PW_EN_Write(1);
+                HGATE_Con1_Write(0x0);
+                prevMode = mode;
+            }
+            break;
+        case 0x4:   //절전모드
+            if(prevMode!=mode) {
+                HGATE_Con1_Write(0x0);
+                PW_EN_Write(0);
+                prevMode = mode;
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 void BleCallBack(uint32 event, void* eventParam)
