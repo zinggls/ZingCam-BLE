@@ -13,10 +13,8 @@
 #include "git_describe.h"
 #include "versionInfo.h"
 #include "FlashRow.h"
+#include "hgate.h"
 
-#define HGATE_Con1_VAL      (0x03)
-#define HGATE_Con2_1_VAL    (0x03)
-#define HGATE_Con2_2_VAL    (0x00)
 #define BUTTON_HOLD_TIME_SEC  3   //3 seconds
 
 static void setBccVersion()

@@ -13,8 +13,8 @@
 #include "i2cs.h"
 #include "git_describe.h"
 #include "versionInfo.h"
+#include "hgate.h"
 
-#define HGATE_Con1_VAL      (0x03)
 #define BATTERY_FULL_CHARGE 1658
 #define BATTERY_NEED_CHARGE 1568
 
