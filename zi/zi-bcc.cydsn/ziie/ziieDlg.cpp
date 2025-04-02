@@ -960,9 +960,6 @@ void CZiieDlg::UpdateScope(byte scopeKind, byte scopeOut)
 void CZiieDlg::UpdateWirelessChannel(byte mode, byte info)
 {
 	switch (mode) {
-	case 0:
-		m_strWirelessChannelMode.Format(_T("2.모드: 자동(%x)"), mode);
-		break;
 	case 1:
 		m_strWirelessChannelMode.Format(_T("2.모드: 자동(Default)(%x)"), mode);
 		break;
