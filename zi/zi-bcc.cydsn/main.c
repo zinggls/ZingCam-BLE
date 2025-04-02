@@ -270,31 +270,6 @@ CY_ISR( Pin_SW2_Handler )
     Pin_SW2_ClearInterrupt();
 }
 */
-void HGATE_CON2_Write(int val)
-{
-    HGATE_Con2_1_Write(0x03&(val));
-    HGATE_Con2_2_Write((0x0C&val)>>2);
-}
-void HGate_init()
-{
-        HGATE_Con1_Write(0x02);  //
-        HGATE_CON2_Write(0x02); //-1V
-        /***********************************
-         Gate Voltage value
-        
-        0x00 = -3.119V
-        0x04 = -1.557V
-        0x01 = -1.010V   ----- Default
-        0x08 = -0.7773V
-        0x02 = -0.5030V
-        0x0C = -0.3872V
-        0x03 = -0.2500V
-        0x07 = -0.1234V
-        0x0B = -0.0601V
-        0x0F = -0.0284V
-        
-        **************************************/
-}
 
 int main(void)
 {
