@@ -241,35 +241,6 @@ void TimerCallback(void)
         btnHoldCount++;
     }
 }
-/*
-CY_ISR( Pin_SW2_Handler )
-{   
-    //LED_RED_Write( ~LED_RED_Read() );
-    
-    if(Pin_SW2_Read()==0) { // Button pressed
-        btnHoldCount = 0;
-    }else{ // Button released
-        L("Button hold time %d second(s)\r\n",btnHoldCount);
-        if(btnHoldCount>BUTTON_HOLD_TIME_SEC) {
-            LED_GREEN_Write( 0 );
-            CyDelay(500);
-            LED_GREEN_Write( 1 );
-            
-            cystatus status;
-            if(ClearPeripheralAddress(&status)) {
-                LED_BLUE_Write( 0 );
-                L("Address in flash cleared\r\n");
-                CyDelay(500);
-                CySoftwareReset();
-            }else{
-                 L("Clearing Address in flash failed(0x%02X)\r\n",status);
-            }
-        }
-    }
-    
-    Pin_SW2_ClearInterrupt();
-}
-*/
 
 int main(void)
 {
@@ -319,7 +290,6 @@ int main(void)
     }
 
     CyBle_Start( CyBle_AppCallback );
-//    Pin_SW2_Int_StartEx( Pin_SW2_Handler );
     
     CyDelay(1000);
     UART_IMU_StartAndInitialize();
