@@ -14,6 +14,9 @@
 #include "versionInfo.h"
 #include "FlashRow.h"
 
+#define HGATE_Con1_VAL      (0x03)
+#define HGATE_Con2_1_VAL    (0x03)
+#define HGATE_Con2_2_VAL    (0x00)
 #define BUTTON_HOLD_TIME_SEC  3   //3 seconds
 
 static void setBccVersion()
@@ -303,9 +306,9 @@ int main(void)
     
     PW_EN_Write(1);
     CyDelay(2000);
-    HGATE_Con1_Write(0x03);
-    HGATE_Con2_1_Write(0x03);
-    HGATE_Con2_2_Write(0x00);
+    HGATE_Con1_Write(HGATE_Con1_VAL);
+    HGATE_Con2_1_Write(HGATE_Con2_1_VAL);
+    HGATE_Con2_2_Write(HGATE_Con2_2_VAL);
     SPDT_Write(0);
     CyDelay(10);
 
