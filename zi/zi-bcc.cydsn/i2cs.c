@@ -15,6 +15,7 @@
 #include "icd.h"
 #include "led.h"
 #include "FlashRow.h"
+#include "hgate.h"
 
 static uint8 i2cReadBuffer [I2C_RD_BUFFER_SIZE] = {0};
 static uint8 i2cWriteBuffer[I2C_WR_BUFFER_SIZE] = {0};
@@ -79,8 +80,46 @@ void i2c_command_to_bps() {
     if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeReqCount++;
 }
 
+static uint8_t prevMode = 0x0;
+
 static void onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
+    switch(mode){
+        case 0x1:   //운용모드
+            if(prevMode!=mode) {
+                PW_EN_Write(0);
+                HGATE_Con1_Write(0x00);
+                HGATE_Con2_1_Write(0x00);
+                HGATE_Con2_2_Write(0x00);
+                PW_EN_Write(1);
+                HGATE_Con1_Write(HGATE_Con1_VAL);
+                HGATE_Con2_1_Write(HGATE_Con2_1_VAL);
+                HGATE_Con2_2_Write(HGATE_Con2_2_VAL);
+                prevMode = mode;
+            }
+            break;
+        case 0x2:   //대기모드
+            if(prevMode!=mode) {
+                PW_EN_Write(0);
+                HGATE_Con1_Write(0x00);
+                HGATE_Con2_1_Write(0x00);
+                HGATE_Con2_2_Write(0x00);
+                PW_EN_Write(1);
+                prevMode = mode;
+            }
+            break;
+        case 0x4:   //절전모드
+            if(prevMode!=mode) {
+                HGATE_Con1_Write(0x00);
+                HGATE_Con2_1_Write(0x00);
+                HGATE_Con2_2_Write(0x00);
+                PW_EN_Write(0);
+                prevMode = mode;
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 void i2cs_process(ZCD_FRAME *zcd)
