@@ -14,6 +14,7 @@
 #include "git_describe.h"
 #include "versionInfo.h"
 
+#define HGATE_Con1_VAL      (0x03)
 #define BATTERY_FULL_CHARGE 1658
 #define BATTERY_NEED_CHARGE 1568
 
@@ -267,7 +268,7 @@ CY_ISR( SW_PW_Handler )
         Reset_Write(1);
         HGATE_Con1_Write(0x0);
         PW_EN_Write(1);
-        HGATE_Con1_Write(0x3);
+        HGATE_Con1_Write(HGATE_Con1_VAL);
         UART_ZING_PutString("POWER On\n");
     }
     else if((SWP==0)&&(SWL==0))
