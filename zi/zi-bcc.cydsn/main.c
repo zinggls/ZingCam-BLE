@@ -240,6 +240,11 @@ void TimerCallback(void)
     }
 }
 
+static void InitOnBleDisconnect()
+{
+    if(cyBle_state!=CYBLE_STATE_CONNECTED) memset(getI2CReadBuffer()+ICD_SCOPE_BATTERY_OFFSET,0xFF,ICD_RX_IMU_STATE_OFFSET-ICD_SCOPE_BATTERY_OFFSET+1);
+}
+
 int main(void)
 {
     PW_EN_Write(0);
@@ -294,6 +299,7 @@ int main(void)
     
     for(;;)
     {          
+        InitOnBleDisconnect();
         CyBle_ProcessEvents();
         zing_process_uart_data();
         i2cs_process(getZcdFrame());
