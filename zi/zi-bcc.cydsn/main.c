@@ -259,7 +259,7 @@ int main(void)
     HGATE_Con2_1_Write(HGATE_Con2_1_VAL);
     HGATE_Con2_2_Write(HGATE_Con2_2_VAL);
     SPDT_Write(0);
-    CyDelay(10);
+    CyDelay(5000);
 
     setBccVersion();
     
