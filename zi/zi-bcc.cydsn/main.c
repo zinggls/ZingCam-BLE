@@ -254,12 +254,12 @@ int main(void)
     CyDelay(1000);
     
     PW_EN_Write(1);
-    CyDelay(2000);
+    CyDelay(500);
     HGATE_Con1_Write(HGATE_Con1_VAL);
     HGATE_Con2_1_Write(HGATE_Con2_1_VAL);
     HGATE_Con2_2_Write(HGATE_Con2_2_VAL);
     SPDT_Write(0);
-    CyDelay(5000);
+    //CyDelay(5000);
 
     setBccVersion();
     
@@ -294,7 +294,7 @@ int main(void)
 
     CyBle_Start( CyBle_AppCallback );
     
-    CyDelay(1000);
+    //CyDelay(1000);
     UART_IMU_StartAndInitialize();
     
     for(;;)
