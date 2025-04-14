@@ -1281,15 +1281,15 @@ void CZiieDlg::UpdateStateGUI(I2C_STATE& is)
 		UpdateScopeState(is.ScopeStateKind, is.ScopeStateOut, is.TxStateLmscopeDetect, is.ScopeStateBattery, is.ScopeStateIR, is.ScopeStateEO);
 		UpdateTxState(is.TxStateBattery, is.TxStateModem, is.TxStateImu);
 	}else{
-		m_strScopeStateKind = _T("종류: -");
-		m_strScopeStateOut = _T("출력: -");
-		m_strScopeStateBattery = _T("배터리잔량: -");
-		m_strScopeStateIR = _T("IR상태: -");
-		m_strScopeStateEO = _T("EO상태: -");
-		m_strScopeDetect = _T("조준경: -");
-		m_strTxStateBattery = _T("배터리잔량: -");
-		m_strTxStateModem = _T("모뎀상태: -");
-		m_strTxStateImu = _T("IMU상태: -");
+		m_strScopeStateKind.Format(_T("종류: -(%x)"), is.ScopeStateKind);
+		m_strScopeStateOut.Format(_T("출력: -(%x)"),is.ScopeStateOut);
+		m_strScopeStateBattery.Format(_T("배터리잔량: -(%x)"),is.ScopeStateBattery);
+		m_strScopeStateIR.Format(_T("IR상태: -(%x)"),is.ScopeStateIR);
+		m_strScopeStateEO.Format(_T("EO상태: -(%x)"),is.ScopeStateEO);
+		m_strScopeDetect.Format(_T("조준경: -(%x)"), is.TxStateLmscopeDetect);
+		m_strTxStateBattery.Format(_T("배터리잔량: -(%x)"), is.TxStateBattery);
+		m_strTxStateModem.Format(_T("모뎀상태: -(%x)"), is.TxStateModem);
+		m_strTxStateImu.Format(_T("IMU상태: -(%x)"), is.TxStateImu);
 	}
 	UpdateRxState(is.RxStateModem, is.RxStateImu);
 	UpdateBleState(is.BleState);
