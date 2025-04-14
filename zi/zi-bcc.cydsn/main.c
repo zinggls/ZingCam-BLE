@@ -92,10 +92,9 @@ static void processImuOutputType(uint8_t imuOutputType)
         sof = imuOutputType+1;  //ICD, 0x00 : Euler Angle (Default) 0x01 : Quaternion
         
         ImuFrame_setSof(sof);
-        UART_IMU_InitializeOutputFormat(sof);
+        if(sof==1) UART_IMU_UartPutString("<sof1>");
+        if(sof==2) UART_IMU_UartPutString("<sof2>");
         currentImuOutputType = imuOutputType;
-        
-        CyDelay(1000);
     }
 }
 
@@ -149,7 +148,6 @@ static void processImuCalibrate(uint8_t imuCalibrate)
             break;
         }
         currentImuCalibrate = imuCalibrate;
-        if(bProcessed) CyDelay(1000);
     }
 }
 
