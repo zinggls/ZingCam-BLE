@@ -241,7 +241,7 @@ void TimerCallback(void)
 static void InitOnBleDisconnect()
 {
     if(cyBle_state!=CYBLE_STATE_CONNECTED) {
-        memset(getI2CReadBuffer()+ICD_SCOPE_BATTERY_OFFSET,0xFF,ICD_TX_MODEM_STATE_OFFSET-ICD_SCOPE_BATTERY_OFFSET+1);
+        memset(getI2CReadBuffer()+ICD_SCOPE_VIDEO_KIND_OFFSET,0xFF,ICD_TX_MODEM_STATE_OFFSET-ICD_SCOPE_VIDEO_KIND_OFFSET+1);
         getI2CReadBuffer()[ICD_TX_IMU_STATE_OFFSET] = 0xFF;
     }
 }
