@@ -106,7 +106,6 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_zxxVerRawStr(_T("ZXX"))
 	, m_strHbleBtAddress(_T(""))
 	, m_strItfCriteriaValue(_T(""))
-	, m_dwI2CWriteSleep(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
