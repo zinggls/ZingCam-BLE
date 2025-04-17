@@ -1658,7 +1658,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		if (m_bSendWriteBuffer) {
 			Send_I2C_WriteBuffer(deviceAddress);
 			L(_T("Waiting..."));
-			Sleep(m_dwI2CWriteSleep);
+			Sleep(m_i2cWriteSleepCombo.GetCurSel()*100);
 			m_bSendWriteBuffer = FALSE;
 		}
 
