@@ -54,11 +54,11 @@ void i2cs_process()
             peripheral.scope.scopeDetect = i2cWriteBuffer[8];
             
             i2c_command_to_bcc();
+            
+            /* Clear the slave write buffer and status */
+            I2C_I2CSlaveClearWriteBuf();
+            (void) I2C_I2CSlaveClearWriteStatus();
         }
-        
-        /* Clear the slave write buffer and status */
-        I2C_I2CSlaveClearWriteBuf();
-        (void) I2C_I2CSlaveClearWriteStatus();
     }
 
     /* Read complete: expose buffer to master */
