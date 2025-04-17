@@ -314,10 +314,11 @@ BOOL CZiieDlg::OnInitDialog()
 	int val = 0;
 	for (int i = 0; i < 50; i++) {
 		CString str;
-		val += 100;
 		str.Format(_T("%d"), val);
 		m_i2cWriteSleepCombo.AddString(str);
+		val += 100;
 	}
+	m_i2cWriteSleepCombo.SetCurSel(0);
 
 	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
