@@ -92,8 +92,7 @@ static void processImuOutputType(uint8_t imuOutputType)
         sof = imuOutputType+1;  //ICD, 0x00 : Euler Angle (Default) 0x01 : Quaternion
         
         ImuFrame_setSof(sof);
-        if(sof==1) UART_IMU_UartPutString("<sof1>");
-        if(sof==2) UART_IMU_UartPutString("<sof2>");
+        UART_IMU_InitializeOutputFormat(sof);
         currentImuOutputType = imuOutputType;
     }
 }
