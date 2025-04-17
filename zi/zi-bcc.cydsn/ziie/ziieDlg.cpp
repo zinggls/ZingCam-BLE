@@ -106,6 +106,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_zxxVerRawStr(_T("ZXX"))
 	, m_strHbleBtAddress(_T(""))
 	, m_strItfCriteriaValue(_T(""))
+	, m_dwI2CWriteSleep(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -1646,6 +1647,7 @@ HRESULT CZiieDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		if (m_bSendWriteBuffer) {
 			Send_I2C_WriteBuffer(deviceAddress);
 			L(_T("Waiting..."));
+			Sleep(m_dwI2CWriteSleep);
 			m_bSendWriteBuffer = FALSE;
 		}
 
