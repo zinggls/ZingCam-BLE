@@ -395,6 +395,7 @@ void CZiieDlg::EnableCombos(BOOL b)
 	m_rxImuTypeCombo.EnableWindow(b);
 	m_rxImuCalibCombo.EnableWindow(b);
 	m_itfCriteriaCombo.EnableWindow(b);
+	m_i2cWriteSleepCombo.EnableWindow(b);
 }
 
 void CZiieDlg::FillPortsCombo()
