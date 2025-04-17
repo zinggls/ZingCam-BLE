@@ -173,6 +173,7 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_HBLE_BT_ADDRESS_STATIC, m_strHbleBtAddress);
 	DDX_Text(pDX, IDC_ITF_CRITERIA_VALUE_STATIC, m_strItfCriteriaValue);
 	DDX_Control(pDX, IDC_ITF_CRITERIA_COMBO, m_itfCriteriaCombo);
+	DDX_Control(pDX, IDC_I2C_WRITE_SLEEP_COMBO, m_i2cWriteSleepCombo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -309,6 +310,14 @@ BOOL CZiieDlg::OnInitDialog()
 		m_itfCriteriaCombo.AddString(str);
 	}
 	m_itfCriteriaCombo.SetCurSel(9);	//default 10
+
+	int val = 0;
+	for (int i = 0; i < 50; i++) {
+		CString str;
+		val += 100;
+		str.Format(_T("%d"), val);
+		m_i2cWriteSleepCombo.AddString(str);
+	}
 
 	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
