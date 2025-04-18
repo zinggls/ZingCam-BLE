@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define ICD_SIZE                            23
+#define ICD_SIZE                            25
 #define ICD_SCOPE_VIDEO_KIND_NOTIFY_OFFSET   0
 #define ICD_SCOPE_OUTPUT_NOTIFY_OFFSET       1
 #define ICD_WIRELESS_CHANNEL_MODE_OFFSET     2
@@ -15,31 +15,33 @@
 #define ICD_TX_IMU_CALIB_OFFSET              8
 #define ICD_RX_IMU_TYPE_OFFSET               9
 #define ICD_RX_IMU_CALIB_OFFSET             10
-#define ICD_SCOPE_VIDEO_KIND_OFFSET         11
-#define ICD_SCOPE_OUTPUT_OFFSET             12
-#define ICD_SCOPE_DETECT_OFFSET             13
-#define ICD_SCOPE_BATTERY_OFFSET            14
-#define ICD_TX_BATTERY_OFFSET               15
-#define ICD_SCOPE_IR_STATE_OFFSET           16
-#define ICD_SCOPE_EO_STATE_OFFSET           17
-#define ICD_TX_MODEM_STATE_OFFSET           18
-#define ICD_RX_MODEM_STATE_OFFSET           19
-#define ICD_TX_IMU_STATE_OFFSET             20
-#define ICD_RX_IMU_STATE_OFFSET             21
-#define ICD_BLE_OFFSET                      22
+#define ICD_TX_POWER_LEVEL_OFFSET           11
+#define ICD_RX_POWER_LEVEL_OFFSET           12
+#define ICD_SCOPE_VIDEO_KIND_OFFSET         13
+#define ICD_SCOPE_OUTPUT_OFFSET             14
+#define ICD_SCOPE_DETECT_OFFSET             15
+#define ICD_SCOPE_BATTERY_OFFSET            16
+#define ICD_TX_BATTERY_OFFSET               17
+#define ICD_SCOPE_IR_STATE_OFFSET           18
+#define ICD_SCOPE_EO_STATE_OFFSET           19
+#define ICD_TX_MODEM_STATE_OFFSET           20
+#define ICD_RX_MODEM_STATE_OFFSET           21
+#define ICD_TX_IMU_STATE_OFFSET             22
+#define ICD_RX_IMU_STATE_OFFSET             23
+#define ICD_BLE_OFFSET                      24
     
 #define IMU_TX_SIZE                         12
 #define IMU_TX_OFFSET                       23
 #define IMU_RX_SIZE                         12
 #define IMU_RX_OFFSET                       35
-#define ICD_IVF_SIZE                        47                  //ICD_SIZE + IMU_TX_SIZE + IMU_RX_SIZE = 23 + 12 + 12 = 47
+#define ICD_IVF_SIZE                        49                  //ICD_SIZE + IMU_TX_SIZE + IMU_RX_SIZE = 25 + 12 + 12 = 49
     
 #define ZING_ZXX_SIZE                       53                  //sizeof(ZXX_FRAME)
 #define ZING_ZCD_SIZE                       66                  //sizeof(ZCD_FRAME)
 #define ZING_ZXX_OFFSET                     ICD_IVF_SIZE
-#define ZING_ZCD_OFFSET                     100                 //ZING_ZXX_OFFSET + ZING_ZXX_SIZE = 47 + 53 = 100
+#define ZING_ZCD_OFFSET                     102                 //ZING_ZXX_OFFSET + ZING_ZXX_SIZE = 49 + 53 = 102
 
-#define I2C_IVF_READ_BUFFER_SIZE            166                 //ICD_IVF_SIZE + ZING_ZXX_SIZE + ZING_ZCD_SIZE = 47 + 53 + 66 = 166
+#define I2C_IVF_READ_BUFFER_SIZE            168                 //ICD_IVF_SIZE + ZING_ZXX_SIZE + ZING_ZCD_SIZE = 49 + 53 + 66 = 168
 
 #define ICD_VERSION_SIZE                    25
 #define ICD_IVF_VER_SIZE                    (I2C_IVF_READ_BUFFER_SIZE+(4*ICD_VERSION_SIZE))
@@ -58,6 +60,8 @@ typedef struct {
     uint8_t wirelessVideoTransmitterImuCalibrate;
     uint8_t wirelssVideoReceiverImuOutputType;
     uint8_t wirelessVideoReceiverImuCalibrate;
+    uint8_t wirelessVideoTransmitterPower;
+    uint8_t wirelessVideoReceiverPower;
 } IvfCom;
 
 IvfCom ivfCom;

@@ -156,6 +156,8 @@ void i2cs_process(ZCD_FRAME *zcd)
             ivfCom.wirelessVideoTransmitterImuCalibrate = i2cWriteBuffer[8];
             ivfCom.wirelssVideoReceiverImuOutputType = i2cWriteBuffer[9];
             ivfCom.wirelessVideoReceiverImuCalibrate = i2cWriteBuffer[10];
+            ivfCom.wirelessVideoTransmitterPower = i2cWriteBuffer[11];
+            ivfCom.wirelessVideoReceiverPower = i2cWriteBuffer[12];
             
             if(ivfCom.wirelessVideoChannelMode==0x02) { //수동 채널 설정 모드
                 if(prevCh!=ivfCom.wirelessVideoChannelInformation) {
@@ -185,9 +187,11 @@ void i2cs_process(ZCD_FRAME *zcd)
         i2cReadBuffer[8] = ivfCom.wirelessVideoTransmitterImuCalibrate;
         i2cReadBuffer[9] = ivfCom.wirelssVideoReceiverImuOutputType;
         i2cReadBuffer[10] = ivfCom.wirelessVideoReceiverImuCalibrate;
+        i2cReadBuffer[11] = ivfCom.wirelessVideoTransmitterPower;
+        i2cReadBuffer[12] = ivfCom.wirelessVideoReceiverPower;
     }
     
-    setZcdBuffer(i2cReadBuffer+ZING_ZCD_OFFSET,zcd);    //ZCD offset ICD(47) + ZXX(53) = 100
+    setZcdBuffer(i2cReadBuffer+ZING_ZCD_OFFSET,zcd);    //ZCD offset ICD(49) + ZXX(53) = 102
     
     /* Read complete: expose buffer to master */
     if (0u != (I2C_I2CSlaveStatus() & I2C_I2C_SSTAT_RD_CMPLT))
