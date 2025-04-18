@@ -215,4 +215,6 @@ public:
 	byte m_itfCriteria;
 	afx_msg void OnCbnSelchangeItfCriteriaCombo();
 	CComboBox m_i2cWriteSleepCombo;
+	CComboBox m_txPowerCombo;
+	CComboBox m_rxPowerCombo;
 };

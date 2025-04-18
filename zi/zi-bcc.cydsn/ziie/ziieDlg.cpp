@@ -173,6 +173,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_ITF_CRITERIA_VALUE_STATIC, m_strItfCriteriaValue);
 	DDX_Control(pDX, IDC_ITF_CRITERIA_COMBO, m_itfCriteriaCombo);
 	DDX_Control(pDX, IDC_I2C_WRITE_SLEEP_COMBO, m_i2cWriteSleepCombo);
+	DDX_Control(pDX, IDC_TX_POWER_COMBO, m_txPowerCombo);
+	DDX_Control(pDX, IDC_RX_POWER_COMBO, m_rxPowerCombo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
