@@ -106,6 +106,8 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_zxxVerRawStr(_T("ZXX"))
 	, m_strHbleBtAddress(_T(""))
 	, m_strItfCriteriaValue(_T(""))
+	, m_strTxPower(_T(""))
+	, m_strRxPower(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -175,6 +177,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_I2C_WRITE_SLEEP_COMBO, m_i2cWriteSleepCombo);
 	DDX_Control(pDX, IDC_TX_POWER_COMBO, m_txPowerCombo);
 	DDX_Control(pDX, IDC_RX_POWER_COMBO, m_rxPowerCombo);
+	DDX_Text(pDX, IDC_TX_POWER_STATIC, m_strTxPower);
+	DDX_Text(pDX, IDC_RX_POWER_STATIC, m_strRxPower);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)

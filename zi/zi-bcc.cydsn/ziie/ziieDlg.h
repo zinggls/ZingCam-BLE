@@ -217,4 +217,6 @@ public:
 	CComboBox m_i2cWriteSleepCombo;
 	CComboBox m_txPowerCombo;
 	CComboBox m_rxPowerCombo;
+	CString m_strTxPower;
+	CString m_strRxPower;
 };
