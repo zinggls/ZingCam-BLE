@@ -1520,6 +1520,8 @@ HRESULT CZiieDlg::Send_I2C_WriteBuffer(int deviceAddress)
 	dataIN[8] = m_ivf.write.TxImuCalib;
 	dataIN[9] = m_ivf.write.RxImuType;
 	dataIN[10] = m_ivf.write.RxImuCalib;
+	dataIN[11] = m_ivf.write.TxPower;
+	dataIN[12] = m_ivf.write.RxPower;
 
 	return Send_I2C_Buffer(dataIN, deviceAddress);
 }
