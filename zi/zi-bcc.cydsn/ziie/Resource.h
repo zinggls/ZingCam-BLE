@@ -96,6 +96,8 @@
 #define IDC_ITF_CRITERIA_VALUE_STATIC   1065
 #define IDC_ITF_CRITERIA_COMBO          1066
 #define IDC_I2C_WRITE_SLEEP_COMBO       1067
+#define IDC_TX_POWER_COMBO              1068
+#define IDC_RX_POWER_COMBO              1069
 
 // Next default values for new objects
 // 
@@ -103,7 +105,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1068
+#define _APS_NEXT_CONTROL_VALUE         1069
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
