@@ -7,7 +7,7 @@
 #include <vector>
 #include "ivf.h"
 
-#define WRITE_BUFFER_SIZE	(11)
+#define WRITE_BUFFER_SIZE	(13)
 #define READ_BUFFER_SIZE	(ICD_IVF_SIZE+ZING_ZXX_SIZE+ZING_ZCD_SIZE )
 #define VERSION_SIZE		(25)
 #define MAX_LIST_ITEMS		(1024*8)

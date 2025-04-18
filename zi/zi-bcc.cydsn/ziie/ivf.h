@@ -1,13 +1,13 @@
 #pragma once
 
-#define ICD_COMMAND_SIZE	11
-#define ICD_SIZE			23
+#define ICD_COMMAND_SIZE	13
+#define ICD_SIZE			25
 #define IMU_TX_SIZE			12
 #define IMU_RX_SIZE			12
-#define ICD_IVF_SIZE		(ICD_SIZE+IMU_TX_SIZE+IMU_RX_SIZE)		//ICD_SIZE + IMU_TX_SIZE + IMU_RX_SIZE = 23 + 12 + 12 = 47
+#define ICD_IVF_SIZE		(ICD_SIZE+IMU_TX_SIZE+IMU_RX_SIZE)		//ICD_SIZE + IMU_TX_SIZE + IMU_RX_SIZE = 25 + 12 + 12 = 49
 #define ZING_ZXX_SIZE		53										//sizeof(ZXX_FRAME)
 #define ZING_ZCD_SIZE		66										//sizeof(ZCD_FRAME)
-#define IMU_RX_OFFSET		(ICD_SIZE+IMU_TX_SIZE)					//ICD_SIZE + IMU_TX_SIZE = 23 + 12 = 35
+#define IMU_RX_OFFSET		(ICD_SIZE+IMU_TX_SIZE)					//ICD_SIZE + IMU_TX_SIZE = 25 + 12 = 37
 
 typedef struct I2C_IVF_COMMAND {
 	byte ScopeKind;
@@ -21,6 +21,8 @@ typedef struct I2C_IVF_COMMAND {
 	byte TxImuCalib;
 	byte RxImuType;
 	byte RxImuCalib;
+	byte TxPower;
+	byte RxPower;
 } I2C_IVF_COMMAND;
 
 typedef struct I2C_STATE {

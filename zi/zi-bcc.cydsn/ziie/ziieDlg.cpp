@@ -1273,6 +1273,8 @@ size_t CZiieDlg::ParseCommandData(std::vector<byte>& dataOUT, size_t index, I2C_
 	ic.TxImuCalib = dataOUT[index++];
 	ic.RxImuType = dataOUT[index++];
 	ic.RxImuCalib = dataOUT[index++];
+	ic.TxPower = dataOUT[index++];
+	ic.RxPower = dataOUT[index++];
 	return index;
 }
 
