@@ -457,6 +457,8 @@ void CZiieDlg::CreateWriteBuffer()
 	m_writeBufferListCtrl.InsertColumn(8, _T("8"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(9, _T("9"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(10, _T("10"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(11, _T("11"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(12, _T("12"), LVCFMT_RIGHT, nHexWidth);
 
 	m_writeBufferListCtrl.InsertItem(0, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 0, _T(""));
@@ -470,6 +472,8 @@ void CZiieDlg::CreateWriteBuffer()
 	m_writeBufferListCtrl.SetItemText(0, 8, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 9, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 10, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 11, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 12, _T(""));
 }
 
 void CZiieDlg::CreateColumnsIMU(CListCtrl& listCtrl)
@@ -930,6 +934,8 @@ void CZiieDlg::UpdateWriteBufferGUI(I2C_IVF_COMMAND& ic)
 	m_writeBufferListCtrl.SetItemText(0, 8, HexStr(ic.TxImuCalib));
 	m_writeBufferListCtrl.SetItemText(0, 9, HexStr(ic.RxImuType));
 	m_writeBufferListCtrl.SetItemText(0,10, HexStr(ic.RxImuCalib));
+	m_writeBufferListCtrl.SetItemText(0,11, HexStr(ic.TxPower));
+	m_writeBufferListCtrl.SetItemText(0,12, HexStr(ic.RxPower));
 }
 
 void CZiieDlg::UpdateScopeKind(byte kind)
