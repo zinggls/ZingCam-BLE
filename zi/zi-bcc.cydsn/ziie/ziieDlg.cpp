@@ -200,6 +200,8 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_TX_IMU_CALIB_COMBO, &CZiieDlg::OnCbnSelchangeTxImuCalibCombo)
 	ON_CBN_SELCHANGE(IDC_RX_IMU_TYPE_COMBO, &CZiieDlg::OnCbnSelchangeRxImuTypeCombo)
 	ON_CBN_SELCHANGE(IDC_RX_IMU_CALIB_COMBO, &CZiieDlg::OnCbnSelchangeRxImuCalibCombo)
+	ON_CBN_SELCHANGE(IDC_TX_POWER_COMBO, &CZiieDlg::OnCbnSelchangeTxPowerCombo)
+	ON_CBN_SELCHANGE(IDC_RX_POWER_COMBO, &CZiieDlg::OnCbnSelchangeRxPowerCombo)
 	ON_BN_CLICKED(IDC_READ_BUFFER_CHECK, &CZiieDlg::OnBnClickedReadBufferCheck)
 	ON_BN_CLICKED(IDC_WRITE_BUFFER_CHECK, &CZiieDlg::OnBnClickedWriteBufferCheck)
 	ON_BN_CLICKED(IDC_RAW_CLEAR_BUTTON, &CZiieDlg::OnBnClickedRawClearButton)
@@ -1922,6 +1924,27 @@ void CZiieDlg::OnCbnSelchangeRxImuCalibCombo()
 	m_writeBufferListCtrl.SetItemText(0, 10, str);
 }
 
+void CZiieDlg::OnCbnSelchangeTxPowerCombo()
+{
+	int nSel = m_txPowerCombo.GetCurSel();
+
+	m_ivf.write.TxPower = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%02X"), m_ivf.write.TxPower);
+	m_writeBufferListCtrl.SetItemText(0, 11, str);
+}
+
+void CZiieDlg::OnCbnSelchangeRxPowerCombo()
+{
+	int nSel = m_rxPowerCombo.GetCurSel();
+
+	m_ivf.write.RxPower = nSel & 0xff;
+
+	CString str;
+	str.Format(_T("%02X"), m_ivf.write.RxPower);
+	m_writeBufferListCtrl.SetItemText(0, 12, str);
+}
 
 void CZiieDlg::OnBnClickedReadBufferCheck()
 {

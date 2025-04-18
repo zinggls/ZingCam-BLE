@@ -184,6 +184,8 @@ public:
 	afx_msg void OnCbnSelchangeTxImuCalibCombo();
 	afx_msg void OnCbnSelchangeRxImuTypeCombo();
 	afx_msg void OnCbnSelchangeRxImuCalibCombo();
+	afx_msg void OnCbnSelchangeTxPowerCombo();
+	afx_msg void OnCbnSelchangeRxPowerCombo();
 	static CString DecStr(int val);
 	static CString HexStr(int val);
 	static CString CharStr(char c);
