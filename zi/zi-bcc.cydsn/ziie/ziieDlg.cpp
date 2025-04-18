@@ -106,8 +106,8 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_zxxVerRawStr(_T("ZXX"))
 	, m_strHbleBtAddress(_T(""))
 	, m_strItfCriteriaValue(_T(""))
-	, m_strTxPower(_T(""))
-	, m_strRxPower(_T(""))
+	, m_strTxPower(_T("11.송신기출력:"))
+	, m_strRxPower(_T("12.수신기출력:"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
