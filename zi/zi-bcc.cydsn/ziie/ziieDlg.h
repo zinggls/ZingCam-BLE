@@ -81,6 +81,7 @@ public:
 	CString Opmode(byte mode);
 	void UpdateOpmode(byte scope, byte tx, byte rx);
 	static void UpdateXIMU(BOOL bTx, CString& strImuType, CString& strCalib, byte type, byte calib);
+	void UpdatePower(byte txPower,byte rxPower);
 	void UpdateScopeStateKind(byte kind);
 	void UpdateScopeStateOut(byte out);
 	void UpdateScopeDetect(byte det);

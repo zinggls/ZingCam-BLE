@@ -1086,6 +1086,12 @@ void CZiieDlg::UpdateXIMU(BOOL bTx, CString& strImuType, CString& strCalib, byte
 	}
 }
 
+void CZiieDlg::UpdatePower(byte txPower, byte rxPower)
+{
+	m_strTxPower.Format(_T("11.송신기출력:%d"), txPower);
+	m_strRxPower.Format(_T("12.수신기출력:%d"), rxPower);
+}
+
 void CZiieDlg::UpdateScopeStateKind(byte kind)
 {
 	m_strScopeStateKind = _T("종류: ");
@@ -1286,6 +1292,8 @@ void CZiieDlg::UpdateCommandGUI(I2C_IVF_COMMAND& ic)
 
 	UpdateXIMU(TRUE, m_strTxImuType, m_strTxImuCalib, ic.TxImuType, ic.TxImuCalib);
 	UpdateXIMU(FALSE, m_strRxImuType, m_strRxImuCalib, ic.RxImuType, ic.RxImuCalib);
+
+	UpdatePower(ic.TxPower, ic.RxPower);
 }
 
 size_t CZiieDlg::ParseStateData(std::vector<byte>& dataOUT, size_t index, I2C_STATE& is)
