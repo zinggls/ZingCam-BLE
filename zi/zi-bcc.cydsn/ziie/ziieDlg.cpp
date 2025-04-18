@@ -321,6 +321,15 @@ BOOL CZiieDlg::OnInitDialog()
 	}
 	m_i2cWriteSleepCombo.SetCurSel(15);
 
+	for (int i = 0; i < 5; i++) {
+		CString str;
+		str.Format(_T("%d"), i);
+		m_txPowerCombo.AddString(str);
+		m_rxPowerCombo.AddString(str);
+	}
+	m_txPowerCombo.SetCurSel(0);
+	m_rxPowerCombo.SetCurSel(0);
+
 	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
 	EnableCombos(FALSE);
