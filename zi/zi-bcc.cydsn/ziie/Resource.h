@@ -98,6 +98,8 @@
 #define IDC_I2C_WRITE_SLEEP_COMBO       1067
 #define IDC_TX_POWER_COMBO              1068
 #define IDC_RX_POWER_COMBO              1069
+#define IDC_TX_POWER_STATIC             1070
+#define IDC_RX_POWER_STATIC             1072
 
 // Next default values for new objects
 // 
