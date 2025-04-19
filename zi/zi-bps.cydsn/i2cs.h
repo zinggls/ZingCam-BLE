@@ -15,7 +15,7 @@
 
 #include <ZFrame.h>
 
-#define I2C_WR_BUFFER_SIZE  (9u)
+#define I2C_WR_BUFFER_SIZE  (10u)
 #define I2C_RD_BUFFER_SIZE  (3u)
 
 /* Buffer and packet size */
@@ -24,6 +24,7 @@
 void i2cs_start(void);
 void i2cs_process();
 uint8_t* getI2CReadBuffer();
+uint8 scopeWorkingState;
 
 #endif //I2CS_H
 /* [] END OF FILE */
