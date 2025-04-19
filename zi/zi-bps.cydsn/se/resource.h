@@ -10,6 +10,8 @@
 #define IDB_GLS_BITMAP                  130
 #define IDC_LOG_LIST                    1000
 #define IDC_I2C_READ_BUTTON             1001
+#define IDC_CHECK1                      1002
+#define IDC_SCOPE_WORKING_STATE_CHECK   1002
 #define IDC_PORTS_COMBO                 1007
 #define IDC_SCOPE_KIND_CHANGE_NOTI_STATIC 1008
 #define IDC_SCOPE_STATE_KIND_STATIC     1009
@@ -47,7 +49,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
