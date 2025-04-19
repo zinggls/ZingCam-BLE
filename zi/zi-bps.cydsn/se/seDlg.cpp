@@ -978,5 +978,9 @@ void CseDlg::OnBnClickedScopeWorkingStateCheck()
 
 	if (m_scopeWorkingStateCheck) {
 		m_bSendWriteBuffer = TRUE;
+		GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
+	}
+	else {
+		GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(TRUE);
 	}
 }
