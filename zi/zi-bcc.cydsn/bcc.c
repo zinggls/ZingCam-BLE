@@ -159,7 +159,7 @@ static void applyICD_for_NS()
 {    
     //화기조준경 장치인식
     uint8_t *det = getI2CReadBuffer()+ICD_SCOPE_DETECT_OFFSET;
-    if( peripheral.zxxFrame.kind==ZED && peripheral.zxxFrame.usb==2 ) {
+    if( peripheral.zxxFrame.kind==ZED && peripheral.zxxFrame.usb==2 && peripheral.scope.scopeDetect==0x01) {
         *det = 0x2; //조준경이 송신기를 USB 장치로 인식함
     }else{
         *det = 0x0; //조준경이 송신기를 USB 장치로 인식 못함
