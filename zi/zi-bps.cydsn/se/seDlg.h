@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#define WRITE_BUFFER_SIZE	(9)
+#define WRITE_BUFFER_SIZE	(10)
 #define READ_BUFFER_SIZE	(3)
 #define MAX_LIST_ITEMS		(1024*8)
 
@@ -23,6 +23,7 @@ typedef struct SCOPE_STATE {
 	byte ir;
 	byte eo;
 	byte usbDetect;
+	byte working;
 } SCOPE_STATE;
 
 typedef struct SCOPE_WRITE {

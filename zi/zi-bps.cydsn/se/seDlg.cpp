@@ -683,6 +683,7 @@ HRESULT CseDlg::Send_I2C_WriteBuffer(int deviceAddress)
 	dataIN[6] = m_scope.write.state.ir;
 	dataIN[7] = m_scope.write.state.eo;
 	dataIN[8] = m_scope.write.state.usbDetect;
+	dataIN[9] = m_scope.write.state.working;
 
 	HRESULT hr = m_pCom->writeI2C(deviceAddress, dataIN);
 	if (!SUCCEEDED(hr)) {
