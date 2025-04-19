@@ -188,7 +188,7 @@ static void processingZxx()
         setBpsVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+2*VERSION_SIZE,&peripheral.bpsVer);
         setZxxVerBuffer(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+3*VERSION_SIZE,&peripheral.zxxVer);
         
-        if(peripheral.zxxFrame.kind==Unknown) applyICD_for_Unknown();
+        if(cyBle_state!=CYBLE_STATE_CONNECTED) applyICD_for_Unknown();
         if(peripheral.zxxFrame.kind==ZCH) applyICD_for_LMG();  //경2조준경 ICD 적용
         if(peripheral.zxxFrame.kind==ZED) applyICD_for_NS();   //화기조준경 ICD 적용
         
