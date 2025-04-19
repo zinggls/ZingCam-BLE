@@ -732,7 +732,13 @@ HRESULT CseDlg::Read_I2C_SCB_Slave(int deviceAddress)
 		if (m_bSendWriteBuffer) {
 			Send_I2C_WriteBuffer(deviceAddress);
 			Sleep(1000);
-			m_bSendWriteBuffer = FALSE;
+			if (m_scopeWorkingStateCheck) {
+				//working값을 토글한다
+				(m_scope.write.state.working == 0) ? m_scope.write.state.working = 1 : m_scope.write.state.working = 0;
+			}
+			else {
+				m_bSendWriteBuffer = FALSE;
+			}
 		}
 
 		if (bRead == FALSE) break;
@@ -969,4 +975,8 @@ void CseDlg::OnBnClickedI2cResetButton()
 void CseDlg::OnBnClickedScopeWorkingStateCheck()
 {
 	m_scopeWorkingStateCheck = !m_scopeWorkingStateCheck;
+
+	if (m_scopeWorkingStateCheck) {
+		m_bSendWriteBuffer = TRUE;
+	}
 }
