@@ -696,8 +696,8 @@ HRESULT CseDlg::Send_I2C_WriteBuffer(int deviceAddress)
 
 	if (m_bWriteBuffer) {
 		SCOPE_WRITE& s = m_scope.write;
-		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
-			sizeof(SCOPE_WRITE), s.command.scopeKindChangeNotify,s.command.scopeOutChangeNotify,s.command.scopeOperationMode,s.state.kind,s.state.out,s.state.battery,s.state.ir,s.state.eo, s.state.usbDetect);
+		L(_T("I2C Write Buffer[%d]: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x"),
+			sizeof(SCOPE_WRITE), s.command.scopeKindChangeNotify, s.command.scopeOutChangeNotify, s.command.scopeOperationMode, s.state.kind, s.state.out, s.state.battery, s.state.ir, s.state.eo, s.state.usbDetect, s.state.working);
 	}
 	return S_OK;
 }
