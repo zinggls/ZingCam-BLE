@@ -349,6 +349,7 @@ void CseDlg::CreateWriteBuffer()
 	m_writeBufferListCtrl.InsertColumn(6, _T("6"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(7, _T("7"), LVCFMT_RIGHT, nHexWidth);
 	m_writeBufferListCtrl.InsertColumn(8, _T("8"), LVCFMT_RIGHT, nHexWidth);
+	m_writeBufferListCtrl.InsertColumn(9, _T("9"), LVCFMT_RIGHT, nHexWidth);
 
 	m_writeBufferListCtrl.InsertItem(0, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 0, _T(""));
@@ -360,6 +361,7 @@ void CseDlg::CreateWriteBuffer()
 	m_writeBufferListCtrl.SetItemText(0, 6, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 7, _T(""));
 	m_writeBufferListCtrl.SetItemText(0, 8, _T(""));
+	m_writeBufferListCtrl.SetItemText(0, 9, _T(""));
 }
 
 void CseDlg::EnableCombos(BOOL b)
@@ -646,6 +648,7 @@ void CseDlg::UpdateWriteBufferGUI(SCOPE_WRITE& sw)
 	m_writeBufferListCtrl.SetItemText(0, 6, HexStr(sw.state.ir));
 	m_writeBufferListCtrl.SetItemText(0, 7, HexStr(sw.state.eo));
 	m_writeBufferListCtrl.SetItemText(0, 8, HexStr(sw.state.usbDetect));
+	m_writeBufferListCtrl.SetItemText(0, 9, HexStr(sw.state.working));
 }
 
 void CseDlg::UpdateGUI(SCOPE& s)
