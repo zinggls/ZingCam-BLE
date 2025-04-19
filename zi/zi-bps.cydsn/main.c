@@ -274,7 +274,7 @@ void TimerCallback(void)
         prevScopeWorkingState = scopeWorkingState;
     }
     
-    if(scopeMonTimer>=1500) {   //1.5 second
+    if(scopeMonTimer>=2000) {   //2.0 second
         if(changeCount==0) {
             resetScopeStates();
             i2c_command_to_bcc();
