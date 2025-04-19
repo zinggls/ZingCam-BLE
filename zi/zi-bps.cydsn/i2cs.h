@@ -23,6 +23,7 @@
 
 void i2cs_start(void);
 void i2cs_process();
+void i2c_command_to_bcc();
 uint8_t* getI2CReadBuffer();
 uint8 scopeWorkingState;
 

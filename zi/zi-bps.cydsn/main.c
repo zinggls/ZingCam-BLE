@@ -232,11 +232,25 @@ static void updateStateInfo()
     setImuState(getImuState(),0xE5,(uint8*)&peripheral.txState.txStateIMU);    //송신기 IMU 상태 0x00: 정상, 0xE5: 무선영상 수신기 IMU 이상
 }
 
+void resetScopeStates()
+{
+    peripheral.scope.scopeStateKind = 0x0;
+    peripheral.scope.scopeStateOut = 0xff;
+    peripheral.scope.scopeStateBattery = 0xff;
+    peripheral.scope.scopeStateIR = 0xff;
+    peripheral.scope.scopeStateEO = 0xff;
+    peripheral.scope.scopeDetect = 0x0;
+}
+
 static uint16 timerCount = 0;
+static uint16 scopeMonTimer = 0;
+static uint8 changeCount = 0;
+static uint8 prevScopeWorkingState = 0;
 
 void TimerCallback(void)
 {
     timerCount++;
+    scopeMonTimer++;
     
     if(timerCount==1000) {  //1 second
         updateStateInfo();
@@ -253,6 +267,22 @@ void TimerCallback(void)
         }else{
             TX_Run_Write(0x1);  //LED OFF
         }
+    }
+    
+    if(prevScopeWorkingState!=scopeWorkingState) {
+        changeCount++;
+        prevScopeWorkingState = scopeWorkingState;
+    }
+    
+    if(scopeMonTimer>=1500) {   //1.5 second
+        if(changeCount==0) {
+            resetScopeStates();
+            i2c_command_to_bcc();
+        }
+
+        //reset timer and count
+        scopeMonTimer = 0;
+        changeCount = 0;
     }
 }
 
