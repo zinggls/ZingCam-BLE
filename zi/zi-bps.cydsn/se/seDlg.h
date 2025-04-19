@@ -138,4 +138,6 @@ public:
 	afx_msg void OnCbnSelchangeScopeStateUsbDetectCombo();
 	afx_msg void OnCbnDropdownPortsCombo();
 	afx_msg void OnBnClickedI2cResetButton();
+	BOOL m_scopeWorkingStateCheck;
+	afx_msg void OnBnClickedScopeWorkingStateCheck();
 };

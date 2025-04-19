@@ -78,6 +78,7 @@ CseDlg::CseDlg(CWnd* pParent /*=nullptr*/)
 	, m_bReadBuffer(TRUE)
 	, m_bWriteBuffer(TRUE)
 	, m_bSendWriteBuffer(FALSE)
+	, m_scopeWorkingStateCheck(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -102,6 +103,7 @@ void CseDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_WRITE_BUFFER_LIST, m_writeBufferListCtrl);
 	DDX_Check(pDX, IDC_READ_BUFFER_CHECK, m_bReadBuffer);
 	DDX_Check(pDX, IDC_WRITE_BUFFER_CHECK, m_bWriteBuffer);
+	DDX_Check(pDX, IDC_SCOPE_WORKING_STATE_CHECK, m_scopeWorkingStateCheck);
 }
 
 BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
@@ -125,6 +127,7 @@ BEGIN_MESSAGE_MAP(CseDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_SCOPE_STATE_USB_DETECT_COMBO, &CseDlg::OnCbnSelchangeScopeStateUsbDetectCombo)
 	ON_CBN_DROPDOWN(IDC_PORTS_COMBO, &CseDlg::OnCbnDropdownPortsCombo)
 	ON_BN_CLICKED(IDC_I2C_RESET_BUTTON, &CseDlg::OnBnClickedI2cResetButton)
+	ON_BN_CLICKED(IDC_SCOPE_WORKING_STATE_CHECK, &CseDlg::OnBnClickedScopeWorkingStateCheck)
 END_MESSAGE_MAP()
 
 
@@ -957,4 +960,9 @@ void CseDlg::OnCbnDropdownPortsCombo()
 void CseDlg::OnBnClickedI2cResetButton()
 {
 	ResetWriteBufferList();
+}
+
+void CseDlg::OnBnClickedScopeWorkingStateCheck()
+{
+	m_scopeWorkingStateCheck = !m_scopeWorkingStateCheck;
 }
