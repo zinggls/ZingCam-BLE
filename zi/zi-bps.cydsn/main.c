@@ -298,7 +298,6 @@ CY_ISR( SW_PW_Handler )
         Reset_Write(1);
         HGATE_Con1_Write(0x0);
         PW_EN_Write(1);
-        HGATE_Con1_Write(HGATE_Con1_VAL);
         UART_ZING_PutString("POWER On\n");
     }
     else if((SWP==0)&&(SWL==0))
@@ -319,7 +318,10 @@ int main()
 {
     PW_EN_Write(0);
     HGATE_Con1_Write(0x00);
-    CyDelay(1000);
+    PW_EN_Write(1);
+    CyDelay(500);
+    HGATE_Con1_Write(0x04);
+    HGATE_Con1_Write(HGATE_Con1_VAL);
 #ifdef WITHOUT_CB
     PW_EN_Write(1);
     CyDelay(2000);
