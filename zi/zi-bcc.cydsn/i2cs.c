@@ -92,9 +92,12 @@ static void onWirelessVideoReceiverOperationMode(uint8_t mode)
                 HGATE_Con2_1_Write(0x00);
                 HGATE_Con2_2_Write(0x00);
                 PW_EN_Write(1);
+                HGATE_Con1_Write(0x04);
+                HGATE_Con2_1_Write(0x03&(0x04));
+                HGATE_Con2_2_Write((0x0C&0x04)>>2);
                 HGATE_Con1_Write(HGATE_Con1_VAL);
-                HGATE_Con2_1_Write(HGATE_Con2_1_VAL);
-                HGATE_Con2_2_Write(HGATE_Con2_2_VAL);
+                HGATE_Con2_1_Write(0x03&(HGATE_Con2_VAL));
+                HGATE_Con2_2_Write((0x0C&HGATE_Con2_VAL)>>2);
                 prevMode = mode;
             }
             break;
