@@ -84,45 +84,7 @@ static uint8_t prevMode = 0x0;
 
 static void onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
-    switch(mode){
-        case 0x1:   //운용모드
-            if(prevMode!=mode) {
-                PW_EN_Write(0);
-                HGATE_Con1_Write(0x00);
-                HGATE_Con2_1_Write(0x00);
-                HGATE_Con2_2_Write(0x00);
-                PW_EN_Write(1);
-                HGATE_Con1_Write(0x04);
-                HGATE_Con2_1_Write(0x03&(0x04));
-                HGATE_Con2_2_Write((0x0C&0x04)>>2);
-                HGATE_Con1_Write(HGATE_Con1_VAL);
-                HGATE_Con2_1_Write(0x03&(HGATE_Con2_VAL));
-                HGATE_Con2_2_Write((0x0C&HGATE_Con2_VAL)>>2);
-                prevMode = mode;
-            }
-            break;
-        case 0x2:   //대기모드
-            if(prevMode!=mode) {
-                PW_EN_Write(0);
-                HGATE_Con1_Write(0x00);
-                HGATE_Con2_1_Write(0x00);
-                HGATE_Con2_2_Write(0x00);
-                PW_EN_Write(1);
-                prevMode = mode;
-            }
-            break;
-        case 0x4:   //절전모드
-            if(prevMode!=mode) {
-                HGATE_Con1_Write(0x00);
-                HGATE_Con2_1_Write(0x00);
-                HGATE_Con2_2_Write(0x00);
-                PW_EN_Write(0);
-                prevMode = mode;
-            }
-            break;
-        default:
-            break;
-    }
+    //TODO
 }
 
 void i2cs_process(ZCD_FRAME *zcd)
