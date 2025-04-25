@@ -81,6 +81,12 @@ static void setScope(uint8_t *buf,SCOPE *s)
     buf[16] = s->scopeStateEO;          //[16] 화기조준경 EO 모듈 상태
 }
 
+static void setChannel(uint8_t *buf,char bnd)
+{
+    if(bnd=='L') buf[0] = 0x1;
+    if(bnd=='H') buf[0] = 0x2;
+}
+
 static void setBpsVerBuffer(uint8_t *buf,Version *v)
 {
     memcpy(buf,v->info,VERSION_SIZE);
@@ -181,6 +187,7 @@ static void processingZxx()
         // Process the received data                                
         memcpy(&peripheral,notificationParam->handleValPair.value.val,notificationParam->handleValPair.value.len);
         setScope(getI2CReadBuffer(),&peripheral.scope);
+        setChannel(getI2CReadBuffer()+ICD_WIRELESS_CHANNEL_INFO_OFFSET,peripheral.zxxFrame.bnd);
         setZxxBuffer(getI2CReadBuffer()+ZING_ZXX_OFFSET,&peripheral.zxxFrame);
         mapToICD(getI2CReadBuffer(),&peripheral);
         setImuBuffer(getI2CReadBuffer()+IMU_TX_OFFSET,&peripheral.imu);   //ICD 무선영상 송신기 IMU

@@ -95,6 +95,16 @@ void BleCallBack(uint32 event, void* eventParam)
                     memcpy(&ivfCom,wrReqParam->handleValPair.value.val,wrReqParam->handleValPair.value.len);
                     handleScope(ivfCom.scopeCamera);
                     setI2cReadBuffer(&ivfCom);
+                    
+                    if(ivfCom.wirelessVideoChannelMode == 0x1){ //자동 채널 설정 모드
+                        setCh(ivfCom.wirelessVideoChannelInformation);
+                        if(ivfCom.wirelessVideoChannelInformation==0x1) {
+                            peripheral.zxxFrame.bnd = 'L';
+                        }else if(ivfCom.wirelessVideoChannelInformation==0x2) {
+                            peripheral.zxxFrame.bnd = 'H';
+                        }
+                    }
+                    
                     if(ivfCom.wirelessVideoChannelMode == 0x2){ //수동 채널 설정 모드
                         if(oldIvfCom.wirelessVideoChannelInformation!=ivfCom.wirelessVideoChannelInformation) { //채널이 변경되었는지 조사
                             if(ivfCom.wirelessVideoChannelInformation==0x1 || ivfCom.wirelessVideoChannelInformation==0x2) {    //1,2채널 이외는 변경없음
@@ -113,8 +123,10 @@ void BleCallBack(uint32 event, void* eventParam)
                     memcpy(&itf,wrReqParam->handleValPair.value.val,wrReqParam->handleValPair.value.len);
                     if(peripheral.zxxFrame.bnd=='L') {
                         setCh(0x2); //set High band
+                        peripheral.zxxFrame.bnd = 'H';
                     }else if(peripheral.zxxFrame.bnd=='H') {
                         setCh(0x1); //set Low band
+                        peripheral.zxxFrame.bnd = 'L';
                     }
                     CyBle_GattsWriteRsp(cyBle_connHandle);
                     writereqCustom++;

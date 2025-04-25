@@ -124,6 +124,12 @@ void i2cs_process(ZCD_FRAME *zcd)
             ivfCom.wirelessVideoTransmitterPower = i2cWriteBuffer[11];
             ivfCom.wirelessVideoReceiverPower = i2cWriteBuffer[12];
             
+            if(ivfCom.wirelessVideoChannelMode==0x01) { //자동 채널 설정 모드
+                //default 채널로 Low band를 지정
+                ivfCom.wirelessVideoChannelInformation = 0x01;
+                SPDT_Write(0);  //Low band
+            }
+            
             if(ivfCom.wirelessVideoChannelMode==0x02) { //수동 채널 설정 모드
                 if(prevCh!=ivfCom.wirelessVideoChannelInformation) {
                     if(ivfCom.wirelessVideoChannelInformation==0x01) SPDT_Write(0);    //수동 1채널 (Low band)
