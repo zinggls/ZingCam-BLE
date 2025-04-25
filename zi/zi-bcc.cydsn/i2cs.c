@@ -150,7 +150,7 @@ void i2cs_process(ZCD_FRAME *zcd)
         setReadBuffer_ScopeCamera(&i2cReadBuffer[0],ivfCom.scopeCamera);
         setReadBuffer_ScopeOutput(&i2cReadBuffer[1],ivfCom.scopeOutput);
         i2cReadBuffer[2] = ivfCom.wirelessVideoChannelMode;
-        i2cReadBuffer[3] = ivfCom.wirelessVideoChannelInformation;
+        //i2cReadBuffer[3] = ivfCom.wirelessVideoChannelInformation;    이 값은 bps에서 보내오는 응답값으로 대체
         i2cReadBuffer[4] = ivfCom.scopeOperationMode;
         i2cReadBuffer[5] = ivfCom.wirelessVideoTransmitterOperationModeStatus;
         i2cReadBuffer[6] = ivfCom.wirelessVideoReceiverOperationModeStatus;
