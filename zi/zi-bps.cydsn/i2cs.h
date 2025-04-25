@@ -26,6 +26,7 @@ void i2cs_process();
 void i2c_command_to_bcc();
 uint8_t* getI2CReadBuffer();
 uint8 scopeWorkingState;
+bool i2c_command_to_bcc_req;
 
 #endif //I2CS_H
 /* [] END OF FILE */

@@ -277,7 +277,7 @@ void TimerCallback(void)
     if(scopeMonTimer>=2000) {   //2.0 second
         if(changeCount==0) {
             resetScopeStates();
-            i2c_command_to_bcc();
+            i2c_command_to_bcc_req = true;
         }
 
         //reset timer and count
@@ -389,6 +389,11 @@ int main()
             CH_LED_Write(0x3);  //LED Off
         }
         
+        if(i2c_command_to_bcc_req) {
+            i2c_command_to_bcc();
+            i2c_command_to_bcc_req = false;
+        }
+
         count++;
     }
 }

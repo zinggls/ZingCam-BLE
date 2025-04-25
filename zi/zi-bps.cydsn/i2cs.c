@@ -20,6 +20,7 @@ static uint32 notifyCustom = 0;
 
 void i2cs_start(void)
 {
+    i2c_command_to_bcc_req = false;
     I2C_I2CSlaveInitReadBuf (i2cReadBuffer,  I2C_RD_BUFFER_SIZE);
     I2C_I2CSlaveInitWriteBuf(i2cWriteBuffer, I2C_WR_BUFFER_SIZE);
     I2C_Start();
@@ -54,7 +55,7 @@ void i2cs_process()
             peripheral.scope.scopeDetect = i2cWriteBuffer[8];
             scopeWorkingState = i2cWriteBuffer[9];
             
-            i2c_command_to_bcc();
+            i2c_command_to_bcc_req = true;
             
             /* Clear the slave write buffer and status */
             I2C_I2CSlaveClearWriteBuf();
