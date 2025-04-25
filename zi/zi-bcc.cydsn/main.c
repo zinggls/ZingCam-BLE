@@ -156,6 +156,54 @@ static void processImuCommand(uint8_t imuOutputType,uint8_t imuCalibrate)
     processImuCalibrate(imuCalibrate);
 }
 
+static uint8_t curLevel = 0x0;  //default
+
+static void RxHemtPower(uint8_t level)
+{
+    switch(level)
+    {
+        case 0x1:
+            //0x1 레벨 HEMT출력 코드
+            //VG1=-0.2500V VG2=-0.2500V
+            HGATE_Con1_Write(0x03);
+            HGATE_Con2_1_Write(0x03);
+            HGATE_Con2_2_Write(0x00);
+            break;
+        case 0x2:
+            //0x2 레벨 HEMT출력 코드
+            //VG1=-0.1234V VG2=-0.1234V
+            HGATE_Con1_Write(0x07);
+            HGATE_Con2_1_Write(0x03);
+            HGATE_Con2_2_Write(0x01);
+            break;
+        case 0x3:
+            //0x3 레벨 HEMT출력 코드
+            //VG1=-0.0601V VG2=-0.0601V
+            HGATE_Con1_Write(0x0B);
+            HGATE_Con2_1_Write(0x03);
+            HGATE_Con2_2_Write(0x02);
+
+            break;
+        case 0x4:
+            //0x4 레벨 HEMT출력 코드
+            //VG1=-0.0284V VG2=-0.0284V
+            HGATE_Con1_Write(0x0F);
+            HGATE_Con2_1_Write(0x03);
+            HGATE_Con2_2_Write(0x03);
+            break;
+        default:
+            break;
+    }
+}
+
+static void processPower(uint8_t level)
+{
+    if(level!=curLevel) {
+        RxHemtPower(level);
+        curLevel = level;
+    }
+}
+
 static short toShort(const char *data)
 {
     return (short)((data[1] << 8) | data[0]);
@@ -310,5 +358,6 @@ int main(void)
         i2cs_process(getZcdFrame());
         imu_process_uart_data(onImuFrame);
         processImuCommand(ivfCom.wirelssVideoReceiverImuOutputType,ivfCom.wirelessVideoReceiverImuCalibrate);
+        processPower(ivfCom.wirelessVideoReceiverPower);
     }
 }
