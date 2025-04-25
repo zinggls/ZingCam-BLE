@@ -63,7 +63,7 @@ static void ZingCB(const char *buf)
         
         if(bITF == false && interferenceCount>=itfCriteria) {
             //Interference appeared
-            if(ivfCom.wirelessVideoChannelMode==0x00 || ivfCom.wirelessVideoChannelMode==0x01 ) { //자동 채널 설정 모드
+            if(ivfCom.wirelessVideoChannelMode==0x01 ) { //자동 채널 설정 모드
                 sendITF('Y');
                 SPDT_Write(~SPDT_Read());
             }
