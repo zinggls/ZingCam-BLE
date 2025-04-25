@@ -267,6 +267,7 @@ int main(void)
     SPDT_Write(0);
 
     setBccVersion();
+    ivfCom.wirelessVideoChannelMode = 0x1;  //자동 채널 설정 모드를 default 초기값으로 지정
     
     CySysTickStart();
     /* Find unused callback slot and assign the callback. */
