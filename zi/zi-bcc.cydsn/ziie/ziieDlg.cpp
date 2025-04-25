@@ -326,7 +326,7 @@ BOOL CZiieDlg::OnInitDialog()
 		m_i2cWriteSleepCombo.AddString(str);
 		val += 100;
 	}
-	m_i2cWriteSleepCombo.SetCurSel(15);
+	m_i2cWriteSleepCombo.SetCurSel(0);
 
 	for (int i = 0; i < 5; i++) {
 		CString str;
