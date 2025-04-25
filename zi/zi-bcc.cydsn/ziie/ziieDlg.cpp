@@ -110,6 +110,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 	, m_strRxPower(_T("12.수신기출력:"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_ivf.write.WirelessChannelMode = 0x1;	//디폴트로 자동모드(0x1)
 }
 
 void CZiieDlg::DoDataExchange(CDataExchange* pDX)
