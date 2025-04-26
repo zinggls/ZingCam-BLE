@@ -36,7 +36,8 @@ static void ZingCB(const char *buf)
     // Parsing the values into the structure
     void *frame = &peripheral.zxxFrame;
     CYASSERT(frame);
-    if (!parse(frame,buf)) {
+    int nRtn = parse(frame,buf);
+    if (nRtn==0) {
 #ifdef ZXX_DEBUG
         L("Parsing Error\r\n");
         L("Received: ");
@@ -44,7 +45,8 @@ static void ZingCB(const char *buf)
         L("\r\n");
 #endif
     }else{
-        ZingCbCount++;
+        if(nRtn==ZED_NUM) ZingCbCount++;
+        if(nRtn==ZCH_NUM) ZingCbCount++;
     }
 }
 
@@ -285,6 +287,7 @@ static uint16 timerCount = 0;
 static uint16 scopeMonTimer = 0;
 static uint8 changeCount = 0;
 static uint8 prevScopeWorkingState = 0;
+static uint32 prevZingCbCount = 0;
 
 void TimerCallback(void)
 {
@@ -306,6 +309,15 @@ void TimerCallback(void)
         }else{
             TX_Run_Write(0x1);  //LED OFF
         }
+
+        if(peripheral.zxxFrame.kind==ZCH) {
+            if(prevZingCbCount==ZingCbCount) {
+                CH_LED_Write(0x1);
+                CyDelay(1000);
+                CH_LED_Write(0x3);
+            }
+        }
+        prevZingCbCount = ZingCbCount;
     }
     
     if(prevScopeWorkingState!=scopeWorkingState) {
