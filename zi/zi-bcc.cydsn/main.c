@@ -358,6 +358,9 @@ int main(void)
         i2cs_process(getZcdFrame());
         imu_process_uart_data(onImuFrame);
         processImuCommand(ivfCom.wirelssVideoReceiverImuOutputType,ivfCom.wirelessVideoReceiverImuCalibrate);
-        processPower(ivfCom.wirelessVideoReceiverPower);
+        if( (ivfCom.wirelessVideoReceiverOperationModeStatus==0x0) || (ivfCom.wirelessVideoReceiverOperationModeStatus==0x1)) {
+            //무선영상 수신기 운용모드가 default또는 운용모드인 경우만 출력 변경 함수 호출 허용
+            processPower(ivfCom.wirelessVideoReceiverPower);
+        }
     }
 }

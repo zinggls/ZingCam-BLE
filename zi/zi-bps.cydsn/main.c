@@ -431,7 +431,10 @@ int main()
         i2cs_process();
         imu_process_uart_data(onImuFrame);
         processImuCommand(ivfCom.wirelessVideoTransmitterImuOutputType,ivfCom.wirelessVideoTransmitterImuCalibrate);
-        processPower(ivfCom.wirelessVideoTransmitterPower);
+        if((ivfCom.wirelessVideoTransmitterOperationModeStatus==0x0) || (ivfCom.wirelessVideoTransmitterOperationModeStatus==0x1)) {
+            //무선영상 송신기 운용모드가 default또는 운용모드인 경우만 출력 변경 함수 호출 허용
+            processPower(ivfCom.wirelessVideoTransmitterPower);
+        }
         
         if(peripheral.zxxFrame.bnd=='H') {
             CH_LED_Write(0x1);  //LED Red
