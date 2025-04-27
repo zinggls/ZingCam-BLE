@@ -1090,6 +1090,15 @@ void CZiieDlg::UpdateXIMU(BOOL bTx, CString& strImuType, CString& strCalib, byte
 	case 4:
 		strCalib.Format(_T("%d.보정:지자계E(%x)"), refNum+1, calib);
 		break;
+	case 5:
+		strCalib.Format(_T("%d.보정:지자기Off(%x)"), refNum + 1, calib);
+		break;
+	case 6:
+		strCalib.Format(_T("%d.보정:지자기On(%x)"), refNum + 1, calib);
+		break;
+	case 7:
+		strCalib.Format(_T("%d.보정:지자기 능동형On(%x)"), refNum + 1, calib);
+		break;
 	default:
 		break;
 	}
