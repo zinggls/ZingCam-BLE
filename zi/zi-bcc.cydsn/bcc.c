@@ -71,14 +71,14 @@ static void setScope(uint8_t *buf,SCOPE *s)
     /*
     "지능형 영상융합처리기(Master) - 무선영상 수신기" Read Buffer에 값 설정
     */
-    buf[0] = s->scopeKindChangeNotify;  //[0] 화기조준경 영상 종류 변경 알림
-    buf[1] = s->scopeOutChangeNotify;   //[1] 화기조준경 영상 출력종류 변경 알림
-    buf[4] = s->scopeOperMode;          //[4] 화기조준경 운용모드 상태
-    buf[11] = s->scopeStateKind;        //[11] 화기조준경 영상 종류
-    buf[12] = s->scopeStateOut;         //[12] 화기조준경 영상 상태
-    buf[13] = s->scopeStateBattery;     //[13] 화기조준경 배터리 잔량
-    buf[15] = s->scopeStateIR;          //[15] 화기조준경 IR 모듈 상태
-    buf[16] = s->scopeStateEO;          //[16] 화기조준경 EO 모듈 상태
+    buf[ICD_SCOPE_VIDEO_KIND_NOTIFY_OFFSET] = s->scopeKindChangeNotify;  //[0] 화기조준경 영상 종류 변경 알림
+    buf[ICD_SCOPE_OUTPUT_NOTIFY_OFFSET] = s->scopeOutChangeNotify;       //[1] 화기조준경 영상 출력종류 변경 알림
+    buf[ICD_SCOPE_OPER_MODE_OFFSET] = s->scopeOperMode;                  //[4] 화기조준경 운용모드 상태
+    buf[ICD_SCOPE_VIDEO_KIND_OFFSET] = s->scopeStateKind;                //[13] 화기조준경 영상 종류
+    buf[ICD_SCOPE_OUTPUT_OFFSET] = s->scopeStateOut;                     //[14] 화기조준경 영상 상태
+    buf[ICD_SCOPE_BATTERY_OFFSET] = s->scopeStateBattery;                //[16] 화기조준경 배터리 잔량
+    buf[ICD_SCOPE_IR_STATE_OFFSET] = s->scopeStateIR;                    //[18] 화기조준경 IR 모듈 상태
+    buf[ICD_SCOPE_EO_STATE_OFFSET] = s->scopeStateEO;                    //[19] 화기조준경 EO 모듈 상태
 }
 
 static void setChannel(uint8_t *buf,char bnd)
