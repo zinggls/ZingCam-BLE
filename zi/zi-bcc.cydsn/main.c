@@ -268,8 +268,6 @@ static void updateStateInfo()
     
     setImuState(getImuState(),0xE6,getI2CReadBuffer()+ICD_RX_IMU_STATE_OFFSET);         //수신기 IMU 상태 0x00: 정상, 0xE6: 무선영상 수신기 IMU 이상    
     setPairingState(getSystemMode(), getI2CReadBuffer()+ICD_BLE_OFFSET);                //BLE state
-    
-    getI2CReadBuffer()[ICD_TX_POWER_LEVEL_OFFSET] = ivfCom.wirelessVideoTransmitterPower;
 }
 
 static uint16 timerCount = 0;
