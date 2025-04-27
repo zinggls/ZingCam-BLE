@@ -194,6 +194,7 @@ static void RxHemtPower(uint8_t level)
         default:
             break;
     }
+    getI2CReadBuffer()[ICD_RX_POWER_LEVEL_OFFSET] = level;
 }
 
 static void processPower(uint8_t level)
@@ -269,7 +270,6 @@ static void updateStateInfo()
     setPairingState(getSystemMode(), getI2CReadBuffer()+ICD_BLE_OFFSET);                //BLE state
     
     getI2CReadBuffer()[ICD_TX_POWER_LEVEL_OFFSET] = ivfCom.wirelessVideoTransmitterPower;
-    getI2CReadBuffer()[ICD_RX_POWER_LEVEL_OFFSET] = ivfCom.wirelessVideoReceiverPower;
 }
 
 static uint16 timerCount = 0;
