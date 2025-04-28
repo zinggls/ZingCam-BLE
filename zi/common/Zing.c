@@ -68,6 +68,15 @@ void setZingState(uint8 val, uint8 errCode, uint8 *buf)
     }
 }
 
+void setTxZingState(uint8 val, char run, uint8 errCode, uint8 *buf)
+{
+    if(val==0) {
+        if(run=='Y') { *buf = 0x00; } else { *buf = 0x01; }
+    }else{
+        *buf = errCode;
+    }
+}
+
 void setCh(uint8 ch)
 {
     uint8_t  command[4] = { 0x4, 0x62, 0x0, 0x2e };

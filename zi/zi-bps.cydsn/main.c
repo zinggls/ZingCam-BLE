@@ -267,7 +267,7 @@ static void updateStateInfo()
     display_battery_level(percentage);
     
     uint8 zingState = getZingState();
-    setZingState(zingState,0xE3,(uint8*)&peripheral.txState.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
+    setTxZingState(zingState,peripheral.zxxFrame.run,0xE3,(uint8*)&peripheral.txState.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
     if(zingState==1) clearZxxZingInfo(&peripheral.zxxFrame);
     
     setImuState(getImuState(),0xE5,(uint8*)&peripheral.txState.txStateIMU);    //송신기 IMU 상태 0x00: 정상, 0xE5: 무선영상 수신기 IMU 이상
