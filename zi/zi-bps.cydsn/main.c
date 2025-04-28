@@ -154,6 +154,7 @@ void TxHemtPower(uint8_t level)
 {
     switch(level)
     {
+        case 0x0:
         case 0x1:
             //0x1 레벨 HEMT출력 코드 
             //VG=-0.2500V
