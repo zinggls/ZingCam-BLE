@@ -1243,6 +1243,8 @@ void CZiieDlg::UpdateTxState(byte val, byte modemCode, byte imuCode)
 {
 	BatteryInfo(m_strTxStateBattery, val);
 	m_strTxStateModem = ModuleSanity(_T("모뎀상태: "), modemCode, 0xE3);
+	if (m_strTxStateModem == _T("모뎀상태: 정상(0)")) m_strTxStateModem = _T("모뎀상태: 정상/송출(0)");
+	if (m_strTxStateModem == _T("모뎀상태: 미정의(1)")) m_strTxStateModem = _T("모뎀상태: 정상/미송출(1)");
 	m_strTxStateImu = ModuleSanity(_T("IMU상태: "), imuCode, 0xE5);
 }
 
