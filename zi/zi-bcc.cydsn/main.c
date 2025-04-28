@@ -195,6 +195,14 @@ static void RxHemtPower(uint8_t level)
             break;
     }
     getI2CReadBuffer()[ICD_RX_POWER_LEVEL_OFFSET] = level;
+    
+    uint8 org = SPDT_Read();
+    for(uint8_t i=0;i<level;i++) {
+        SPDT_Write(~SPDT_Read());
+        CyDelay(500);
+        SPDT_Write(org);
+        CyDelay(500);
+    }
 }
 
 static void processPower(uint8_t level)
