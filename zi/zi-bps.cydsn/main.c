@@ -179,6 +179,7 @@ void TxHemtPower(uint8_t level)
             break;
     }
     
+#ifdef TX_HEMT_POWER_DEBUG
     uint8 org = Batt_state_LED_Read();
     for(uint8_t i=0;i<level;i++) {
         Batt_state_LED_Write(~Batt_state_LED_Read());
@@ -186,6 +187,7 @@ void TxHemtPower(uint8_t level)
         Batt_state_LED_Write(org);
         CyDelay(500);
     }
+#endif
 }
 
 static void processPower(uint8_t level)
