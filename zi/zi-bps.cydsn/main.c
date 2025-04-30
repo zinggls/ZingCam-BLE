@@ -271,6 +271,8 @@ static int adc_percentage(int16_t val)
     return (int)fPer;
 }
 
+static uint32 prevZingCbCount = 0;
+
 static void updateStateInfo()
 {
     int percentage = adc_percentage(adc_measure(0));
@@ -278,14 +280,15 @@ static void updateStateInfo()
     display_battery_level(percentage);
     
     uint8 zingState = getZingState();
-    setTxZingState(zingState,peripheral.zxxFrame.run,0xE3,(uint8*)&peripheral.txState.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
-    if(zingState==1) clearZxxZingInfo(&peripheral.zxxFrame);
-    
-    if(peripheral.txState.txStateModem==0x01 && getI2CReadBuffer()[4]==0x0) {
-        PW_EN_Write(0);
-        CyDelay(100);
-        PW_EN_Write(1);
+    if(prevZingCbCount!=ZingCbCount) {
+        setTxZingState(zingState,peripheral.zxxFrame.run,0xE3,(uint8*)&peripheral.txState.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
+    }else{
+        peripheral.txState.txStateModem = 0xe3;
+        peripheral.zxxFrame.run = 'N';
     }
+    prevZingCbCount = ZingCbCount;
+
+    if(zingState==1) clearZxxZingInfo(&peripheral.zxxFrame);
     
     setImuState(getImuState(),0xE5,(uint8*)&peripheral.txState.txStateIMU);    //송신기 IMU 상태 0x00: 정상, 0xE5: 무선영상 수신기 IMU 이상
 }
@@ -304,12 +307,13 @@ static uint16 timerCount = 0;
 static uint16 scopeMonTimer = 0;
 static uint8 changeCount = 0;
 static uint8 prevScopeWorkingState = 0;
-static uint32 prevZingCbCount = 0;
+static uint32 powerOffCount = 0;
 
 void TimerCallback(void)
 {
     timerCount++;
     scopeMonTimer++;
+    powerOffCount++;
     
     if(timerCount==1000) {  //1 second
         updateStateInfo();
@@ -326,15 +330,6 @@ void TimerCallback(void)
         }else{
             TX_Run_Write(0x1);  //LED OFF
         }
-
-        if(peripheral.zxxFrame.kind==ZCH) {
-            if(prevZingCbCount==ZingCbCount) {
-                CH_LED_Write(0x1);
-                CyDelay(1000);
-                CH_LED_Write(0x3);
-            }
-        }
-        prevZingCbCount = ZingCbCount;
     }
     
     if(prevScopeWorkingState!=scopeWorkingState) {
@@ -351,6 +346,15 @@ void TimerCallback(void)
         //reset timer and count
         scopeMonTimer = 0;
         changeCount = 0;
+    }
+    
+    if(powerOffCount>=5000){
+        if(peripheral.txState.txStateModem==0x01 && peripheral.scope.scopeStateOut==0x0) {
+            PW_EN_Write(0);
+            CyDelay(100);
+            PW_EN_Write(1);
+        }
+        powerOffCount = 0;
     }
 }
 
