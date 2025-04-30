@@ -281,6 +281,12 @@ static void updateStateInfo()
     setTxZingState(zingState,peripheral.zxxFrame.run,0xE3,(uint8*)&peripheral.txState.txStateModem);     //수신기 모뎀 상태 0x00 : 정상, 0xE3 : 무선영상 송신기 모뎀 이상
     if(zingState==1) clearZxxZingInfo(&peripheral.zxxFrame);
     
+    if(peripheral.txState.txStateModem==0x01 && getI2CReadBuffer()[4]==0x0) {
+        PW_EN_Write(0);
+        CyDelay(100);
+        PW_EN_Write(1);
+    }
+    
     setImuState(getImuState(),0xE5,(uint8*)&peripheral.txState.txStateIMU);    //송신기 IMU 상태 0x00: 정상, 0xE5: 무선영상 수신기 IMU 이상
 }
 
