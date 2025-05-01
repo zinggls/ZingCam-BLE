@@ -2040,10 +2040,17 @@ void CZiieDlg::OnCbnSelchangeItfCriteriaCombo()
 
 void CZiieDlg::OnCbnSelchangeRxPowerHemt1Combo()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	int nHemt1Sel = m_rxPowerHemt1Combo.GetCurSel() & 0xFF;	//1바이트임을 명시적으로 나타내기 위해 & 0xFF를 사용
+	int nHemt2Sel = m_rxPowerHemt2Combo.GetCurSel() & 0xFF;	//1바이트임을 명시적으로 나타내기 위해 & 0xFF를 사용
+
+	m_ivf.write.RxPower = (nHemt1Sel<<4) | nHemt2Sel;
+
+	CString str;
+	str.Format(_T("%02X"), m_ivf.write.RxPower);
+	m_writeBufferListCtrl.SetItemText(0, 12, str);
 }
 
 void CZiieDlg::OnCbnSelchangeRxPowerHemt2Combo()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	OnCbnSelchangeRxPowerHemt1Combo();
 }
