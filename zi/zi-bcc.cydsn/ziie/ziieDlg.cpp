@@ -1122,7 +1122,7 @@ void CZiieDlg::UpdateXIMU(BOOL bTx, CString& strImuType, CString& strCalib, byte
 void CZiieDlg::UpdatePower(byte txPower, byte rxPower)
 {
 	m_strTxPower.Format(_T("11.송신기출력:%d"), txPower);
-	m_strRxPower.Format(_T("12.수신기출력:%d"), rxPower);
+	m_strRxPower.Format(_T("12.수신기출력:%d(0x%x)"), rxPower,rxPower);
 }
 
 void CZiieDlg::UpdateScopeStateKind(byte kind)
