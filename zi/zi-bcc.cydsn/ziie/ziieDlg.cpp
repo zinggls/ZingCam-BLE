@@ -212,6 +212,8 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_I2C_RESET_BUTTON, &CZiieDlg::OnBnClickedI2cResetButton)
 	ON_BN_CLICKED(IDC_PAIRING_RESET_BUTTON, &CZiieDlg::OnBnClickedPairingResetButton)
 	ON_CBN_SELCHANGE(IDC_ITF_CRITERIA_COMBO, &CZiieDlg::OnCbnSelchangeItfCriteriaCombo)
+	ON_CBN_SELCHANGE(IDC_RX_POWER_HEMT1_COMBO, &CZiieDlg::OnCbnSelchangeRxPowerHemt1Combo)
+	ON_CBN_SELCHANGE(IDC_RX_POWER_HEMT2_COMBO, &CZiieDlg::OnCbnSelchangeRxPowerHemt2Combo)
 END_MESSAGE_MAP()
 
 
@@ -2034,4 +2036,14 @@ void CZiieDlg::OnCbnSelchangeItfCriteriaCombo()
 
 	str.Format(_T("%02X"), m_ivf.write.ScopeOut);
 	m_writeBufferListCtrl.SetItemText(0, 1, str);
+}
+
+void CZiieDlg::OnCbnSelchangeRxPowerHemt1Combo()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+void CZiieDlg::OnCbnSelchangeRxPowerHemt2Combo()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
