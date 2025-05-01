@@ -222,4 +222,6 @@ public:
 	CComboBox m_rxPowerCombo;
 	CString m_strTxPower;
 	CString m_strRxPower;
+	CComboBox m_rxPowerHemt1Combo;
+	CComboBox m_rxPowerHemt2Combo;
 };

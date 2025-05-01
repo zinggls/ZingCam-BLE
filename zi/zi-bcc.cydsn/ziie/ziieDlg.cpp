@@ -180,6 +180,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RX_POWER_COMBO, m_rxPowerCombo);
 	DDX_Text(pDX, IDC_TX_POWER_STATIC, m_strTxPower);
 	DDX_Text(pDX, IDC_RX_POWER_STATIC, m_strRxPower);
+	DDX_Control(pDX, IDC_RX_POWER_HEMT1_COMBO, m_rxPowerHemt1Combo);
+	DDX_Control(pDX, IDC_RX_POWER_HEMT2_COMBO, m_rxPowerHemt2Combo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
