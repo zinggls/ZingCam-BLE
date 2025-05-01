@@ -99,7 +99,10 @@
 #define IDC_TX_POWER_COMBO              1068
 #define IDC_RX_POWER_COMBO              1069
 #define IDC_TX_POWER_STATIC             1070
+#define IDC_RX_POWER_HEMT1_COMBO        1071
 #define IDC_RX_POWER_STATIC             1072
+#define IDC_RX_POWER_HEMT1_COMBO2       1073
+#define IDC_RX_POWER_HEMT2_COMBO        1073
 
 // Next default values for new objects
 // 
