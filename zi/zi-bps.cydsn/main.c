@@ -196,6 +196,12 @@ void TxHemtPower(uint8_t level)
         Batt_state_LED_Write(org);
         CyDelay(500);
     }
+#else
+    //HemtPower변경 명령이 먹었는지 확인할 수 있도록 단한번만 깜빡이도록 한다 (100ms)
+    uint8 org = Batt_state_LED_Read();
+    Batt_state_LED_Write(~Batt_state_LED_Read());
+    CyDelay(100);
+    Batt_state_LED_Write(org);
 #endif
 }
 

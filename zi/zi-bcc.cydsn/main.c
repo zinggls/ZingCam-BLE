@@ -260,6 +260,12 @@ static void RxHemtPower(uint8_t level)
         SPDT_Write(org);
         CyDelay(500);
     }
+#else
+    //HemtPower변경 명령이 먹었는지 확인할 수 있도록 단한번만 깜빡이도록 한다 (100ms)
+    uint8 org = SPDT_Read();
+    SPDT_Write(~SPDT_Read());
+    CyDelay(100);
+    SPDT_Write(org);
 #endif
 }
 
