@@ -342,12 +342,18 @@ BOOL CZiieDlg::OnInitDialog()
 	m_txPowerCombo.SetCurSel(0);
 	m_rxPowerCombo.SetCurSel(0);
 
-	for (int i = 0; i < 10; i++) {
-		CString str;
-		str.Format(_T("%d"), i);
-		m_rxPowerHemt1Combo.AddString(str);
-		m_rxPowerHemt2Combo.AddString(str);
-	}
+	//HEMT1
+	m_rxPowerHemt1Combo.AddString(_T("1"));
+	m_rxPowerHemt1Combo.AddString(_T("3"));
+	m_rxPowerHemt1Combo.AddString(_T("7"));
+	m_rxPowerHemt1Combo.AddString(_T("9"));
+
+	//HEMT2
+	m_rxPowerHemt2Combo.AddString(_T("1"));
+	m_rxPowerHemt2Combo.AddString(_T("3"));
+	m_rxPowerHemt2Combo.AddString(_T("6"));
+	m_rxPowerHemt2Combo.AddString(_T("9"));
+
 	m_rxPowerHemt1Combo.SetCurSel(0);
 	m_rxPowerHemt2Combo.SetCurSel(0);
 
@@ -2043,8 +2049,11 @@ void CZiieDlg::OnCbnSelchangeItfCriteriaCombo()
 
 void CZiieDlg::OnCbnSelchangeRxPowerHemt1Combo()
 {
-	int nHemt1Sel = m_rxPowerHemt1Combo.GetCurSel() & 0xFF;	//1바이트임을 명시적으로 나타내기 위해 & 0xFF를 사용
-	int nHemt2Sel = m_rxPowerHemt2Combo.GetCurSel() & 0xFF;	//1바이트임을 명시적으로 나타내기 위해 & 0xFF를 사용
+	CString strHemt1,strHemt2;
+	m_rxPowerHemt1Combo.GetLBText(m_rxPowerHemt1Combo.GetCurSel(), strHemt1);
+	m_rxPowerHemt2Combo.GetLBText(m_rxPowerHemt2Combo.GetCurSel(), strHemt2);
+	int nHemt1Sel = _ttoi(strHemt1) & 0xFF;	//1바이트임을 명시적으로 나타내기 위해 & 0xFF를 사용
+	int nHemt2Sel = _ttoi(strHemt2) & 0xFF;	//1바이트임을 명시적으로 나타내기 위해 & 0xFF를 사용
 
 	m_ivf.write.RxPower = (nHemt1Sel<<4) | nHemt2Sel;
 
