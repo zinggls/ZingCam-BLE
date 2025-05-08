@@ -335,9 +335,10 @@ BOOL CZiieDlg::OnInitDialog()
 	for (int i = 0; i < 10; i++) {
 		CString str;
 		str.Format(_T("%d"), i);
-		m_txPowerCombo.AddString(str);
 		m_rxPowerCombo.AddString(str);
 	}
+	m_txPowerCombo.AddString(_T("6"));
+	m_txPowerCombo.AddString(_T("9"));
 	m_txPowerCombo.SetCurSel(0);
 	m_rxPowerCombo.SetCurSel(0);
 
@@ -1955,9 +1956,11 @@ void CZiieDlg::OnCbnSelchangeRxImuCalibCombo()
 
 void CZiieDlg::OnCbnSelchangeTxPowerCombo()
 {
-	int nSel = m_txPowerCombo.GetCurSel();
+	CString strText;
+	m_txPowerCombo.GetLBText(m_txPowerCombo.GetCurSel(), strText);
+	int nVal = _ttoi(strText);
 
-	m_ivf.write.TxPower = nSel & 0xff;
+	m_ivf.write.TxPower = nVal & 0xff;
 
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.TxPower);
