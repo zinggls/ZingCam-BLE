@@ -353,6 +353,12 @@ void TimerCallback(void)
             PW_EN_Write(0);
             CyDelay(100);
             PW_EN_Write(1);
+            
+            UART_ZING_Stop();
+            UART_ZING_ClearRxBuffer();
+            Zing_Init(ZingCB);
+            UART_ZING_Start();
+            UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
         }
         powerOffCount = 0;
     }
