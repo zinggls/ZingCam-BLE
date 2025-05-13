@@ -396,15 +396,7 @@ void TimerCallback(void)
     }
     
     if(powerOffCount>=5000){
-        if(peripheral.txState.txStateModem==0x01 && peripheral.scope.scopeStateOut==0x0) {
-            uint8 org = Batt_state_LED_Read();
-            for(uint8 i=0;i<5;i++) {
-                Batt_state_LED_Write(~Batt_state_LED_Read());
-                CyDelay(100);
-                Batt_state_LED_Write(org);
-                CyDelay(100);
-            }
-            
+        if(peripheral.txState.txStateModem==0x01 && peripheral.scope.scopeStateOut==0x0) {            
             PW_EN_Write(0);
             CyDelay(100);
             PW_EN_Write(1);
