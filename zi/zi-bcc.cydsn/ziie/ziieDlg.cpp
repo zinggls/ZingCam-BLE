@@ -180,6 +180,8 @@ void CZiieDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RX_POWER_COMBO, m_rxPowerCombo);
 	DDX_Text(pDX, IDC_TX_POWER_STATIC, m_strTxPower);
 	DDX_Text(pDX, IDC_RX_POWER_STATIC, m_strRxPower);
+	DDX_Control(pDX, IDC_RX_POWER_HEMT1_COMBO, m_rxPowerHemt1Combo);
+	DDX_Control(pDX, IDC_RX_POWER_HEMT2_COMBO, m_rxPowerHemt2Combo);
 }
 
 BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
@@ -210,6 +212,8 @@ BEGIN_MESSAGE_MAP(CZiieDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_I2C_RESET_BUTTON, &CZiieDlg::OnBnClickedI2cResetButton)
 	ON_BN_CLICKED(IDC_PAIRING_RESET_BUTTON, &CZiieDlg::OnBnClickedPairingResetButton)
 	ON_CBN_SELCHANGE(IDC_ITF_CRITERIA_COMBO, &CZiieDlg::OnCbnSelchangeItfCriteriaCombo)
+	ON_CBN_SELCHANGE(IDC_RX_POWER_HEMT1_COMBO, &CZiieDlg::OnCbnSelchangeRxPowerHemt1Combo)
+	ON_CBN_SELCHANGE(IDC_RX_POWER_HEMT2_COMBO, &CZiieDlg::OnCbnSelchangeRxPowerHemt2Combo)
 END_MESSAGE_MAP()
 
 
@@ -328,7 +332,7 @@ BOOL CZiieDlg::OnInitDialog()
 	}
 	m_i2cWriteSleepCombo.SetCurSel(0);
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 10; i++) {
 		CString str;
 		str.Format(_T("%d"), i);
 		m_txPowerCombo.AddString(str);
@@ -336,6 +340,15 @@ BOOL CZiieDlg::OnInitDialog()
 	}
 	m_txPowerCombo.SetCurSel(0);
 	m_rxPowerCombo.SetCurSel(0);
+
+	for (int i = 0; i < 10; i++) {
+		CString str;
+		str.Format(_T("%d"), i);
+		m_rxPowerHemt1Combo.AddString(str);
+		m_rxPowerHemt2Combo.AddString(str);
+	}
+	m_rxPowerHemt1Combo.SetCurSel(0);
+	m_rxPowerHemt2Combo.SetCurSel(0);
 
 	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
@@ -416,6 +429,8 @@ void CZiieDlg::EnableCombos(BOOL b)
 	m_i2cWriteSleepCombo.EnableWindow(b);
 	m_txPowerCombo.EnableWindow(b);
 	m_rxPowerCombo.EnableWindow(b);
+	m_rxPowerHemt1Combo.EnableWindow(b);
+	m_rxPowerHemt2Combo.EnableWindow(b);
 }
 
 void CZiieDlg::FillPortsCombo()
@@ -1107,7 +1122,7 @@ void CZiieDlg::UpdateXIMU(BOOL bTx, CString& strImuType, CString& strCalib, byte
 void CZiieDlg::UpdatePower(byte txPower, byte rxPower)
 {
 	m_strTxPower.Format(_T("11.송신기출력:%d"), txPower);
-	m_strRxPower.Format(_T("12.수신기출력:%d"), rxPower);
+	m_strRxPower.Format(_T("12.수신기출력:%d(0x%x)"), rxPower,rxPower);
 }
 
 void CZiieDlg::UpdateScopeStateKind(byte kind)
@@ -2021,4 +2036,21 @@ void CZiieDlg::OnCbnSelchangeItfCriteriaCombo()
 
 	str.Format(_T("%02X"), m_ivf.write.ScopeOut);
 	m_writeBufferListCtrl.SetItemText(0, 1, str);
+}
+
+void CZiieDlg::OnCbnSelchangeRxPowerHemt1Combo()
+{
+	int nHemt1Sel = m_rxPowerHemt1Combo.GetCurSel() & 0xFF;	//1바이트임을 명시적으로 나타내기 위해 & 0xFF를 사용
+	int nHemt2Sel = m_rxPowerHemt2Combo.GetCurSel() & 0xFF;	//1바이트임을 명시적으로 나타내기 위해 & 0xFF를 사용
+
+	m_ivf.write.RxPower = (nHemt1Sel<<4) | nHemt2Sel;
+
+	CString str;
+	str.Format(_T("%02X"), m_ivf.write.RxPower);
+	m_writeBufferListCtrl.SetItemText(0, 12, str);
+}
+
+void CZiieDlg::OnCbnSelchangeRxPowerHemt2Combo()
+{
+	OnCbnSelchangeRxPowerHemt1Combo();
 }

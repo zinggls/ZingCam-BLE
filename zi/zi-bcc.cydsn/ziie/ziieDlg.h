@@ -222,4 +222,8 @@ public:
 	CComboBox m_rxPowerCombo;
 	CString m_strTxPower;
 	CString m_strRxPower;
+	CComboBox m_rxPowerHemt1Combo;
+	CComboBox m_rxPowerHemt2Combo;
+	afx_msg void OnCbnSelchangeRxPowerHemt1Combo();
+	afx_msg void OnCbnSelchangeRxPowerHemt2Combo();
 };

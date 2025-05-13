@@ -154,25 +154,34 @@ void TxHemtPower(uint8_t level)
 {
     switch(level)
     {
-        case 0x0:
+        case 0x0: //default
+            HGATE_Con1_Write(0x00);
+            break;
         case 0x1:
-            //0x1 레벨 HEMT출력 코드 
-            //VG=-0.2500V
-            HGATE_Con1_Write(0x03);
+            HGATE_Con1_Write(0x04);
             break;
         case 0x2:
-            //0x2 레벨 HEMT출력 코드 
-            //VG=-0.1234V
-            HGATE_Con1_Write(0x07);
+            HGATE_Con1_Write(0x01);
             break;
         case 0x3:
-            //0x3 레벨 HEMT출력 코드 
-            //VG=-0.0601V
-            HGATE_Con1_Write(0x0B);
+            HGATE_Con1_Write(0x08);
             break;
         case 0x4:
-            //0x4 레벨 HEMT출력 코드 
-            //VG=-0.0284V
+            HGATE_Con1_Write(0x02);
+            break;
+        case 0x5:
+            HGATE_Con1_Write(0x0C);
+            break;
+        case 0x6:
+            HGATE_Con1_Write(0x03);
+            break;
+        case 0x7:
+            HGATE_Con1_Write(0x07);
+            break;
+        case 0x8:
+            HGATE_Con1_Write(0x0B);
+            break;
+        case 0x9:
             HGATE_Con1_Write(0x0F);
             break;
         default:
@@ -187,6 +196,12 @@ void TxHemtPower(uint8_t level)
         Batt_state_LED_Write(org);
         CyDelay(500);
     }
+#else
+    //HemtPower변경 명령이 먹었는지 확인할 수 있도록 단한번만 깜빡이도록 한다 (100ms)
+    uint8 org = Batt_state_LED_Read();
+    Batt_state_LED_Write(~Batt_state_LED_Read());
+    CyDelay(100);
+    Batt_state_LED_Write(org);
 #endif
 }
 
