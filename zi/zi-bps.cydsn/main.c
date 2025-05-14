@@ -397,9 +397,9 @@ void TimerCallback(void)
     
     if(powerOffCount>=5000){
         if(peripheral.txState.txStateModem==0x01 && peripheral.scope.scopeStateOut==0x0) {            
-            PW_EN_Write(0);
-            CyDelay(100);
-            PW_EN_Write(1);
+            Reset_Write(0);
+            CyDelay(25);
+            Reset_Write(1);
             
             UART_ZING_Stop();
             UART_ZING_ClearRxBuffer();
