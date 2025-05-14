@@ -269,10 +269,44 @@ static void RxHemtPower(uint8_t level)
 #endif
 }
 
+void RxHemtPower_Hanwha(uint8_t level)
+{
+    switch(level)
+    {
+        case 0x0: //default
+        case 0x1:
+            HGATE_Con1_Write(0x03);
+            HGATE_Con2_1_Write(0x00);
+            HGATE_Con2_2_Write(0x03);
+            break;
+        case 0x2:
+            HGATE_Con1_Write(0x03);
+            HGATE_Con2_1_Write(0x03);
+            HGATE_Con2_2_Write(0x00);
+            break;
+        case 0x3:
+            HGATE_Con1_Write(0x0B);
+            HGATE_Con2_1_Write(0x03);
+            HGATE_Con2_2_Write(0x01);
+            break;
+        case 0x4:
+            HGATE_Con1_Write(0x0F);
+            HGATE_Con2_1_Write(0x03);
+            HGATE_Con2_2_Write(0x03);
+            break;
+        default:
+            break;
+    }
+}
+
 static void processPower(uint8_t level)
 {
     if(level!=curLevel) {
+#ifdef HANWHA
+        RxHemtPower_Hanwha(level);
+#else
         RxHemtPower(level);
+#endif
         curLevel = level;
     }
 }
