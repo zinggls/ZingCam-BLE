@@ -282,40 +282,9 @@ static void display_battery_level(int percentage)
 
 static int adc_percentage(int16_t val)
 {
-    double voltlev = (2.5*val/2048*2);
-    uint16_t iBatVol=(voltlev*1000);
-
-    if(iBatVol >= 4150) {
-        return 100;
-    }else if(iBatVol < 4150 && iBatVol >= 4100) {
-        return 90;
-    }else if(iBatVol < 4100 && iBatVol >= 4050) {
-        return 85;
-    }else if(iBatVol < 4050 && iBatVol >= 4000) {
-        return 80;
-    }else if(iBatVol < 4000 && iBatVol >= 3950) {
-        return 75;
-    }else if(iBatVol < 3950 && iBatVol >= 3900) {
-        return 70;
-    }else if(iBatVol < 3900 && iBatVol >= 3850) {
-        return 65;
-    }else if(iBatVol < 3850 && iBatVol >= 3800) {
-        return 60;
-    }else if(iBatVol < 3800 && iBatVol >= 3750) {
-        return 55;
-    }else if(iBatVol < 3750 && iBatVol >= 3700) {
-        return 50;
-    }else if(iBatVol < 3700 && iBatVol >= 3650) {
-        return 40;
-    }else if(iBatVol < 3650 && iBatVol >= 3600) {
-        return 30;
-    }else if(iBatVol < 3600 && iBatVol >= 3550) {
-        return 20;
-    }else if(iBatVol < 3550 && iBatVol >= 3500) {
-        return 10;
-    }else{
-        return 0;
-    }
+    float voltlev= 3.3*2.0*val/2048;   
+    float fPer = ((float)voltlev/(float)4.2)*100.0;
+    return (int)fPer;
 }
 
 static uint32 prevZingCbCount = 0;
