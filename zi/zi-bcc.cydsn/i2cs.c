@@ -16,6 +16,7 @@
 #include "led.h"
 #include "FlashRow.h"
 #include "hgate.h"
+#include "operMode.h"
 
 static uint8 i2cReadBuffer [I2C_RD_BUFFER_SIZE] = {0};
 static uint8 i2cWriteBuffer[I2C_WR_BUFFER_SIZE] = {0};
@@ -80,7 +81,7 @@ void i2c_command_to_bps() {
     if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeReqCount++;
 }
 
-static uint8_t prevMode = 0x0;
+static uint8_t prevMode = MODE_OPER;
 
 static void onWirelessVideoReceiverOperationMode(uint8_t mode)
 {

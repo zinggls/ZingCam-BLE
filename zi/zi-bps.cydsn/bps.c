@@ -9,6 +9,7 @@
 #include "Peripheral.h"
 #include "Zing.h"
 #include "hgate.h"
+#include "operMode.h"
 
 static uint16 writereqCustom = 0;
 
@@ -46,7 +47,7 @@ static void setI2cReadBuffer(IvfCom *ic)
     rb[2] = ic->scopeOperationMode;
 }
 
-static uint8_t prevMode = 0x0;
+static uint8_t prevMode = MODE_OPER;
 
 static void onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
