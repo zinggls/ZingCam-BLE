@@ -1,4 +1,5 @@
-#pragma operMode
+#ifndef OPERMODE_H
+#define OPERMODE_H
 
 #include <stdint.h>
 
@@ -17,3 +18,5 @@
 
 void onWirelessVideoTransmitterOperationMode(uint8_t mode);
 void onWirelessVideoReceiverOperationMode(uint8_t mode);
+
+#endif //OPERMODE_H
