@@ -427,11 +427,7 @@ void TimerCallback(void)
             CyDelay(25);
             Reset_Write(1);
             
-            UART_ZING_Stop();
-            UART_ZING_ClearRxBuffer();
-            Zing_Init(ZingCB);
-            UART_ZING_Start();
-            UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
+            UartRestart(ZingCB);
         }
         powerOffCount = 0;
     }
