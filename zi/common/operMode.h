@@ -1,5 +1,7 @@
 #pragma operMode
 
+#include <stdint.h>
+
 /*
     0x00 : (default)
     0x01 : 운용모드
@@ -12,3 +14,6 @@
 #define MODE_OPER    (0x01)
 #define MODE_WAIT    (0x02)
 #define MODE_PSAVE   (0x04)
+
+void onWirelessVideoTransmitterOperationMode(uint8_t mode);
+void onWirelessVideoReceiverOperationMode(uint8_t mode);

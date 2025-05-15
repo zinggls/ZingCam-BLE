@@ -81,13 +81,6 @@ void i2c_command_to_bps() {
     if(CyBle_GattcWriteCharacteristicValue(cyBle_connHandle, &writeReq)==CYBLE_ERROR_OK) writeReqCount++;
 }
 
-static uint8_t prevMode = MODE_OPER;
-
-static void onWirelessVideoReceiverOperationMode(uint8_t mode)
-{
-    //TODO
-}
-
 void i2cs_process(ZCD_FRAME *zcd)
 {
     /* Write complete: parse the command packet */
