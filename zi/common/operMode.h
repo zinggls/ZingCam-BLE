@@ -2,6 +2,7 @@
 #define OPERMODE_H
 
 #include <stdint.h>
+#include "Zing.h"
 
 /*
     0x00 : (default)
@@ -16,6 +17,7 @@
 #define MODE_WAIT    (0x02)
 #define MODE_PSAVE   (0x04)
 
+void setZingRxCallback(ZingRxCallback cb);
 void onWirelessVideoTransmitterOperationMode(uint8_t mode);
 void onWirelessVideoReceiverOperationMode(uint8_t mode);
 
