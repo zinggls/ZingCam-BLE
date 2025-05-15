@@ -14,6 +14,7 @@
 #include "git_describe.h"
 #include "versionInfo.h"
 #include "hgate.h"
+#include "operMode.h"
 
 #define BATTERY_FULL_CHARGE 1658
 #define BATTERY_NEED_CHARGE 1568
@@ -492,6 +493,7 @@ int main()
     }
     
     setBbsVersion();
+    setZingRxCallback(ZingCB);
 //    setGreen(LED_OFF);
     CH_LED_Write(0x3);  //LED Off
 

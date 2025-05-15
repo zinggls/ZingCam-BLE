@@ -14,6 +14,7 @@
 #include "versionInfo.h"
 #include "FlashRow.h"
 #include "hgate.h"
+#include "operMode.h"
 
 #define BUTTON_HOLD_TIME_SEC  3   //3 seconds
 
@@ -419,6 +420,7 @@ int main(void)
     SPDT_Write(0);
 
     setBccVersion();
+    setZingRxCallback(ZingCB);
     ivfCom.wirelessVideoChannelMode = 0x1;  //자동 채널 설정 모드를 default 초기값으로 지정
     
     CySysTickStart();
