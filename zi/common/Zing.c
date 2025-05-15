@@ -83,3 +83,12 @@ void setCh(uint8 ch)
     command[2] = ch;
     UART_ZING_PutArray(command, sizeof(command));
 }
+
+void UartRestart(ZingRxCallback cb)
+{
+    UART_ZING_Stop();
+    UART_ZING_ClearRxBuffer();
+    Zing_Init(cb);
+    UART_ZING_Start();
+    UART_ZING_RX_INTR_StartEx(UART_ZING_RX_INTERRUPT);
+}
