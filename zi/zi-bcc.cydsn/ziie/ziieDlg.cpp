@@ -433,7 +433,7 @@ void CZiieDlg::EnableCombos(BOOL b)
 	m_i2cWriteSleepCombo.EnableWindow(b);
 	m_txPowerCombo.EnableWindow(b);
 	m_rxPowerCombo.EnableWindow(b);
-	m_rxPowerHemt1Combo.EnableWindow(b);
+	m_rxPowerHemt1Combo.EnableWindow(FALSE);
 	m_rxPowerHemt2Combo.EnableWindow(b);
 }
 
