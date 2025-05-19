@@ -2158,7 +2158,7 @@ void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 	str.Format(_T("    prevMode: 0x%x(%s)"), m_rxPrevMode, getOperationMode(m_rxPrevMode).GetBuffer());
 	m_pDlg->L(str);
 
-	if (m_rxPrevMode == MODE_OPER) {        //운용모드
+	if (m_rxPrevMode == MODE_OPER || m_rxPrevMode == MODE_DEFAULT) {        //운용모드
 		if (mode == MODE_WAIT) {
 			//운용모드->대기모드
 			HGATE_Con1_Write(0x04);
