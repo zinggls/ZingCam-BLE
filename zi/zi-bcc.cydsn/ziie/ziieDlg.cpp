@@ -1820,7 +1820,10 @@ void CZiieDlg::OnTimer(UINT_PTR nIDEvent)
 
 void CZiieDlg::OnBnClickedI2cWriteButton()
 {
-	m_bSendWriteBuffer = TRUE;
+	m_operMode.onWirelessVideoTransmitterOperationMode(m_ivf.write.OpmodeTx);
+	m_operMode.onWirelessVideoReceiverOperationMode(m_ivf.write.OpmodeRx);
+	m_txPower.TxHemtPower_Hanwha(m_ivf.write.TxPower);
+	m_rxPower.RxHemtPower_Hanwha(m_ivf.write.RxPower);
 }
 
 
