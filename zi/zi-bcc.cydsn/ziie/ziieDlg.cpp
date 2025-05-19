@@ -2092,7 +2092,10 @@ void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
 
 void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
-	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x start"), mode);
+	CString strBase;
+	strBase.Format(_T("Wireless Video Transmitter Operation Mode: 0x%x(%s)"), mode, getOperationMode(mode).GetBuffer());
+	m_pDlg->L(strBase+__T(" start"));
+
 	CString str;
 	str.Format(_T("    prevMode: 0x%x(%s)"), m_txPrevMode, getOperationMode(m_txPrevMode).GetBuffer());
 	m_pDlg->L(str);
@@ -2141,12 +2144,15 @@ void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 		m_txPrevMode = mode;
 	}
 
-	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x end"), mode);
+	m_pDlg->L(strBase + __T(" end"));
 }
 
 void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
-	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x start"), mode);
+	CString strBase;
+	strBase.Format(_T("Wireless Video Receiver Operation Mode: 0x%x(%s)"), mode, getOperationMode(mode).GetBuffer());
+	m_pDlg->L(strBase + __T(" start"));
+
 	CString str;
 	str.Format(_T("    prevMode: 0x%x(%s)"), m_rxPrevMode, getOperationMode(m_rxPrevMode).GetBuffer());
 	m_pDlg->L(str);
@@ -2210,7 +2216,7 @@ void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 		m_rxPrevMode = mode;
 	}
 
-	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x end"), mode);
+	m_pDlg->L(strBase + __T(" end"));
 }
 
 CString CZiieDlg::COperMode::getOperationMode(uint8_t mode)
