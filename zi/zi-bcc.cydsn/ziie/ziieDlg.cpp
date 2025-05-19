@@ -2245,23 +2245,28 @@ CString CZiieDlg::COperMode::getOperationMode(uint8_t mode)
 void CZiieDlg::CTxPower::TxHemtPower_Hanwha(uint8_t level)
 {
 	m_pDlg->L(_T("TxHemtPower_Hanwha(0x%x) start"), level);
-	switch (level)
-	{
-	case 0x0: //default
-	case 0x1:
-		HGATE_Con1_Write(0x03);
-		break;
-	case 0x2:
-		HGATE_Con1_Write(0x07);
-		break;
-	case 0x3:
-		HGATE_Con1_Write(0x0B);
-		break;
-	case 0x4:
-		HGATE_Con1_Write(0x0F);
-		break;
-	default:
-		break;
+	if (m_pDlg->m_ivf.write.OpmodeTx==MODE_OPER || m_pDlg->m_ivf.write.OpmodeTx == MODE_DEFAULT) {
+		switch (level)
+		{
+		case 0x0: //default
+		case 0x1:
+			HGATE_Con1_Write(0x03);
+			break;
+		case 0x2:
+			HGATE_Con1_Write(0x07);
+			break;
+		case 0x3:
+			HGATE_Con1_Write(0x0B);
+			break;
+		case 0x4:
+			HGATE_Con1_Write(0x0F);
+			break;
+		default:
+			break;
+		}
+	}
+	else {
+		m_pDlg->L(_T("    TxHemt is not applied in 0x%x(%s) mode"), m_pDlg->m_ivf.write.OpmodeTx, COperMode::getOperationMode(m_pDlg->m_ivf.write.OpmodeTx));
 	}
 	m_pDlg->L(_T("TxHemtPower_Hanwha(0x%x) end"), level);
 }
