@@ -2083,6 +2083,7 @@ void CZiieDlg::COperMode::HGATE_Con2_2_Write(uint8 value)
 	m_pDlg->L(_T("HGATE_Con2_2_Write(0x%x)"), value);
 }
 
+static uint8_t prevMode = MODE_OPER;
 static ZingRxCallback zingRxCb = NULL;
 
 void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
