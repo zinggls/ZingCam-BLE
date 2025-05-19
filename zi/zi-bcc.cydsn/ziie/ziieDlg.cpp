@@ -111,7 +111,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_ivf.write.WirelessChannelMode = 0x1;	//디폴트로 자동모드(0x1)
-	m_operMode.m_pDlg = this;
+	m_operMode.m_pDlg = m_txPower.m_pDlg = m_rxPower.m_pDlg = this;
 }
 
 void CZiieDlg::DoDataExchange(CDataExchange* pDX)
@@ -1891,6 +1891,7 @@ void CZiieDlg::OnCbnSelchangeOpmodeTxCombo()
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.OpmodeTx);
 	m_writeBufferListCtrl.SetItemText(0, 5, str);
+	m_txPower.TxHemtPower_Hanwha(m_ivf.write.OpmodeTx);
 }
 
 
@@ -1904,6 +1905,7 @@ void CZiieDlg::OnCbnSelchangeOpmodeRxCombo()
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.OpmodeRx);
 	m_writeBufferListCtrl.SetItemText(0, 6, str);
+	m_rxPower.RxHemtPower_Hanwha(m_ivf.write.OpmodeRx);
 }
 
 
