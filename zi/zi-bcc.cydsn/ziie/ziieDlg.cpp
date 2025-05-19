@@ -2093,7 +2093,9 @@ void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
 void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
 	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x start"), mode);
-	m_pDlg->L(_T("    prevMode: 0x%x "), m_txPrevMode);
+	CString str;
+	str.Format(_T("    prevMode: 0x%x(%s)"), m_txPrevMode, getOperationMode(m_txPrevMode).GetBuffer());
+	m_pDlg->L(str);
 
 	if (m_txPrevMode == MODE_OPER) {        //운용모드
 		if (mode == MODE_WAIT) {
@@ -2145,7 +2147,9 @@ void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
 	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x start"), mode);
-	m_pDlg->L(_T("    prevMode: 0x%x "), m_rxPrevMode);
+	CString str;
+	str.Format(_T("    prevMode: 0x%x(%s)"), m_rxPrevMode, getOperationMode(m_rxPrevMode).GetBuffer());
+	m_pDlg->L(str);
 
 	if (m_rxPrevMode == MODE_OPER) {        //운용모드
 		if (mode == MODE_WAIT) {
@@ -2207,6 +2211,26 @@ void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 	}
 
 	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x end"), mode);
+}
+
+CString CZiieDlg::COperMode::getOperationMode(uint8_t mode)
+{
+	CString str;
+	switch (mode) {
+	case MODE_OPER:
+		str = _T("운용모드");
+		break;
+	case MODE_WAIT:
+		str = _T("대기모드");
+		break;
+	case MODE_PSAVE:
+		str = _T("절전모드");
+		break;
+	default:
+		str = _T("Unknown Mode");
+		break;
+	}
+	return str;
 }
 
 void CZiieDlg::CTxPower::TxHemtPower_Hanwha(uint8_t level)

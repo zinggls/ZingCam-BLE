@@ -66,6 +66,7 @@ public:
 		void setZingRxCallback(ZingRxCallback cb);
 		void onWirelessVideoTransmitterOperationMode(uint8_t mode);
 		void onWirelessVideoReceiverOperationMode(uint8_t mode);
+		static CString getOperationMode(uint8_t mode);
 	};
 
 // 대화 상자 데이터입니다.
