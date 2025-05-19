@@ -359,6 +359,7 @@ BOOL CZiieDlg::OnInitDialog()
 
 	CString strDescribe(GIT_DESCRIBE);
 	SetWindowText(_T("ziie ") + strDescribe);
+	ResetWriteBufferList();
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -1578,7 +1579,7 @@ void CZiieDlg::ResetWriteBufferList()
 {
 	memset(&m_ivf.write, 0, sizeof(I2C_IVF_COMMAND));
 	CString str(_T("00"));
-	for (int i = 0; i <= 10; i++) m_writeBufferListCtrl.SetItemText(0, i, str);
+	for (int i = 0; i <= 12; i++) m_writeBufferListCtrl.SetItemText(0, i, str);
 }
 
 void CZiieDlg::ConvertVectorToCString(const std::vector<byte>& data, CString& result)
