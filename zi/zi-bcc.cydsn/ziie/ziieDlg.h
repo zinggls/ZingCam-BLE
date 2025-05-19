@@ -39,8 +39,15 @@ public:
 		void HGATE_Con2_2_Write(uint8 value);
 	};
 
-	class CTxPower : public CHemt {};
-	class CRxPower : public CHemt {};
+	class CTxPower : public CHemt {
+	public:
+		void TxHemtPower_Hanwha(uint8_t level);
+	};
+
+	class CRxPower : public CHemt {
+	public:
+		void RxHemtPower_Hanwha(uint8_t level);
+	};
 
 	class COperMode : public CHemt
 	{
