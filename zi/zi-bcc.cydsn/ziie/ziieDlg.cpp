@@ -2092,7 +2092,7 @@ void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
 
 void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
-	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x start========="), mode);
+	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x start"), mode);
 	m_pDlg->L(_T("    prevMode: 0x%x "), m_txPrevMode);
 
 	if (m_txPrevMode == MODE_OPER) {        //운용모드
@@ -2139,12 +2139,12 @@ void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 		m_txPrevMode = mode;
 	}
 
-	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x end==========="), mode);
+	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x end"), mode);
 }
 
 void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
-	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x start========="), mode);
+	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x start"), mode);
 	m_pDlg->L(_T("    prevMode: 0x%x "), m_rxPrevMode);
 
 	if (m_rxPrevMode == MODE_OPER) {        //운용모드
@@ -2206,12 +2206,12 @@ void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 		m_rxPrevMode = mode;
 	}
 
-	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x end==========="), mode);
+	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x end"), mode);
 }
 
 void CZiieDlg::CTxPower::TxHemtPower_Hanwha(uint8_t level)
 {
-	m_pDlg->L(_T("TxHemtPower_Hanwha(0x%x) start========="), level);
+	m_pDlg->L(_T("TxHemtPower_Hanwha(0x%x) start"), level);
 	switch (level)
 	{
 	case 0x0: //default
@@ -2230,12 +2230,12 @@ void CZiieDlg::CTxPower::TxHemtPower_Hanwha(uint8_t level)
 	default:
 		break;
 	}
-	m_pDlg->L(_T("TxHemtPower_Hanwha(0x%x) end==========="), level);
+	m_pDlg->L(_T("TxHemtPower_Hanwha(0x%x) end"), level);
 }
 
 void CZiieDlg::CRxPower::RxHemtPower_Hanwha(uint8_t level)
 {
-	m_pDlg->L(_T("RxHemtPower_Hanwha(0x%x) start========="), level);
+	m_pDlg->L(_T("RxHemtPower_Hanwha(0x%x) start"), level);
 	switch (level)
 	{
 	case 0x0: //default
@@ -2262,5 +2262,5 @@ void CZiieDlg::CRxPower::RxHemtPower_Hanwha(uint8_t level)
 	default:
 		break;
 	}
-	m_pDlg->L(_T("RxHemtPower_Hanwha(0x%x) end==========="), level);
+	m_pDlg->L(_T("RxHemtPower_Hanwha(0x%x) end"), level);
 }
