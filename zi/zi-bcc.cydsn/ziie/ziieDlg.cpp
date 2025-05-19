@@ -2092,6 +2092,8 @@ void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
 
 void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
+	if (mode == 0x00) mode = MODE_OPER;	//default인 경우 운용모드로 변경처리
+
 	CString strBase;
 	strBase.Format(_T("Wireless Video Transmitter Operation Mode: 0x%x(%s)"), mode, getOperationMode(mode).GetBuffer());
 	m_pDlg->L(strBase+__T(" start"));
@@ -2149,6 +2151,8 @@ void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 
 void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
+	if (mode == 0x00) mode= MODE_OPER;	//default인 경우 운용모드로 변경처리
+
 	CString strBase;
 	strBase.Format(_T("Wireless Video Receiver Operation Mode: 0x%x(%s)"), mode, getOperationMode(mode).GetBuffer());
 	m_pDlg->L(strBase + __T(" start"));
