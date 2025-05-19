@@ -2058,6 +2058,38 @@ void CZiieDlg::OnCbnSelchangeRxPowerHemt2Combo()
 	OnCbnSelchangeRxPowerHemt1Combo();
 }
 
+void CZiieDlg::COperMode::PW_EN_Write(uint8 value)
+{
+
+}
+
+void CZiieDlg::COperMode::UartRestart(ZingRxCallback cb)
+{
+
+}
+
+void CZiieDlg::COperMode::HGATE_Con1_Write(uint8 value)
+{
+
+}
+
+void CZiieDlg::COperMode::HGATE_Con2_1_Write(uint8 value)
+{
+
+}
+
+void CZiieDlg::COperMode::HGATE_Con2_2_Write(uint8 value)
+{
+
+}
+
+static ZingRxCallback zingRxCb = NULL;
+
+void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
+{
+	zingRxCb = cb;
+}
+
 void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
 	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x"), mode);

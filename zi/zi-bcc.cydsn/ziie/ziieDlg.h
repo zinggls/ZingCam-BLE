@@ -19,6 +19,8 @@
 
 class CCom;
 
+typedef unsigned char		uint8;
+typedef void (*ZingRxCallback)(const char* buf);
 
 // CZiieDlg 대화 상자
 class CZiieDlg : public CDialogEx
@@ -32,6 +34,13 @@ public:
 	public:
 		CZiieDlg* m_pDlg;
 
+		void PW_EN_Write(uint8 value);
+		void UartRestart(ZingRxCallback cb);
+		void HGATE_Con1_Write(uint8 value);
+		void HGATE_Con2_1_Write(uint8 value);
+		void HGATE_Con2_2_Write(uint8 value);
+
+		void setZingRxCallback(ZingRxCallback cb);
 		void onWirelessVideoTransmitterOperationMode(uint8_t mode);
 		void onWirelessVideoReceiverOperationMode(uint8_t mode);
 	};
