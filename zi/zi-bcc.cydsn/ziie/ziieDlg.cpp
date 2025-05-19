@@ -2085,12 +2085,9 @@ void CZiieDlg::COperMode::UartRestart(ZingRxCallback cb)
 	m_pDlg->L(_T("    UartRestart(0x%x)"), cb);
 }
 
-static uint8_t prevMode = MODE_OPER;
-static ZingRxCallback zingRxCb = NULL;
-
 void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
 {
-	zingRxCb = cb;
+	m_zingRxCb = cb;
 }
 
 void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)

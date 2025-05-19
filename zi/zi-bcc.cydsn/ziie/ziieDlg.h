@@ -32,7 +32,10 @@ public:
 	class CHemt
 	{
 	public:
+		CHemt() : m_pDlg(nullptr), m_prevMode(MODE_OPER) {}
+
 		CZiieDlg* m_pDlg;
+		uint8_t m_prevMode;
 
 		void HGATE_Con1_Write(uint8 value);
 		void HGATE_Con2_1_Write(uint8 value);
@@ -52,6 +55,10 @@ public:
 	class COperMode : public CHemt
 	{
 	public:
+		COperMode() : m_zingRxCb(nullptr) {}
+
+		ZingRxCallback m_zingRxCb;
+
 		void PW_EN_Write(uint8 value);
 		void UartRestart(ZingRxCallback cb);
 
