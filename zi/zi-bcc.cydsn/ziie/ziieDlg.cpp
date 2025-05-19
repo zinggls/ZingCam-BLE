@@ -2093,14 +2093,14 @@ void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
 void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
 	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x start========="), mode);
-	m_pDlg->L(_T("    prevMode: 0x%x "), m_pDlg->m_txPower.m_prevMode);
+	m_pDlg->L(_T("    prevMode: 0x%x "), m_txPrevMode);
 	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x end==========="), mode);
 }
 
 void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
 	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x start========="), mode);
-	m_pDlg->L(_T("    prevMode: 0x%x "), m_pDlg->m_rxPower.m_prevMode);
+	m_pDlg->L(_T("    prevMode: 0x%x "), m_rxPrevMode);
 	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x end==========="), mode);
 }
 
