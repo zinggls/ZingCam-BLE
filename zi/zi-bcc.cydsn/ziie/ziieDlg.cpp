@@ -2146,6 +2146,66 @@ void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
 	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x start========="), mode);
 	m_pDlg->L(_T("    prevMode: 0x%x "), m_rxPrevMode);
+
+	if (m_rxPrevMode == MODE_OPER) {        //운용모드
+		if (mode == MODE_WAIT) {
+			//운용모드->대기모드
+			HGATE_Con1_Write(0x04);
+			HGATE_Con2_1_Write(0x04);
+			HGATE_Con2_2_Write(0x04);
+			HGATE_Con1_Write(0x00);
+			HGATE_Con2_1_Write(0x00);
+			HGATE_Con2_2_Write(0x00);
+		}
+		else if (mode == MODE_PSAVE) {
+			//운용모드->절전모드
+			HGATE_Con1_Write(0x04);
+			HGATE_Con2_1_Write(0x04);
+			HGATE_Con2_2_Write(0x04);
+			HGATE_Con1_Write(0x00);
+			HGATE_Con2_1_Write(0x00);
+			HGATE_Con2_2_Write(0x00);
+			PW_EN_Write(0);
+		}
+
+		m_rxPrevMode = mode;
+	}
+	else if (m_rxPrevMode == MODE_WAIT) {    //대기모드
+		if (mode == MODE_OPER) {
+			//대기모드->운용모드
+
+			//수신기 디폴트 출력
+			HGATE_Con1_Write(0x03);
+			HGATE_Con2_1_Write(0x00);
+			HGATE_Con2_2_Write(0x03);
+		}
+		else if (mode == MODE_PSAVE) {
+			//대기모드->절전모드
+			PW_EN_Write(0);
+		}
+
+		m_rxPrevMode = mode;
+	}
+	else if (m_rxPrevMode == MODE_PSAVE) {    //절전모드
+		if (mode == MODE_OPER) {
+			//절전모드->운용모드
+			PW_EN_Write(1);
+			UartRestart(m_zingRxCb);
+
+			//수신기 디폴트 출력
+			HGATE_Con1_Write(0x03);
+			HGATE_Con2_1_Write(0x00);
+			HGATE_Con2_2_Write(0x03);
+		}
+		else if (mode == MODE_WAIT) {
+			//절전모드->대기모드
+			PW_EN_Write(1);
+			UartRestart(m_zingRxCb);
+		}
+
+		m_rxPrevMode = mode;
+	}
+
 	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x end==========="), mode);
 }
 
