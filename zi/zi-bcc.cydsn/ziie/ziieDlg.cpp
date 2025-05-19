@@ -1897,7 +1897,6 @@ void CZiieDlg::OnCbnSelchangeOpmodeTxCombo()
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.OpmodeTx);
 	m_writeBufferListCtrl.SetItemText(0, 5, str);
-	m_operMode.onWirelessVideoTransmitterOperationMode(m_ivf.write.OpmodeTx);
 }
 
 
@@ -1911,7 +1910,6 @@ void CZiieDlg::OnCbnSelchangeOpmodeRxCombo()
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.OpmodeRx);
 	m_writeBufferListCtrl.SetItemText(0, 6, str);
-	m_operMode.onWirelessVideoReceiverOperationMode(m_ivf.write.OpmodeRx);
 }
 
 
@@ -1971,7 +1969,6 @@ void CZiieDlg::OnCbnSelchangeTxPowerCombo()
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.TxPower);
 	m_writeBufferListCtrl.SetItemText(0, 11, str);
-	m_txPower.TxHemtPower_Hanwha(m_ivf.write.TxPower);
 }
 
 void CZiieDlg::OnCbnSelchangeRxPowerCombo()
@@ -2058,7 +2055,6 @@ void CZiieDlg::OnCbnSelchangeRxPowerHemt1Combo()
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.RxPower);
 	m_writeBufferListCtrl.SetItemText(0, 12, str);
-	m_rxPower.RxHemtPower_Hanwha(m_ivf.write.RxPower);
 }
 
 void CZiieDlg::OnCbnSelchangeRxPowerHemt2Combo()
