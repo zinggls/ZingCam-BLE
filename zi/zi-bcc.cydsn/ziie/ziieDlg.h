@@ -29,16 +29,21 @@ class CZiieDlg : public CDialogEx
 public:
 	CZiieDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 
-	class COperMode
+	class CHemt
 	{
 	public:
 		CZiieDlg* m_pDlg;
 
-		void PW_EN_Write(uint8 value);
-		void UartRestart(ZingRxCallback cb);
 		void HGATE_Con1_Write(uint8 value);
 		void HGATE_Con2_1_Write(uint8 value);
 		void HGATE_Con2_2_Write(uint8 value);
+	};
+
+	class COperMode : public CHemt
+	{
+	public:
+		void PW_EN_Write(uint8 value);
+		void UartRestart(ZingRxCallback cb);
 
 		void setZingRxCallback(ZingRxCallback cb);
 		void onWirelessVideoTransmitterOperationMode(uint8_t mode);
