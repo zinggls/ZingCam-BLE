@@ -39,6 +39,9 @@ public:
 		void HGATE_Con2_2_Write(uint8 value);
 	};
 
+	class CTxPower : public CHemt {};
+	class CRxPower : public CHemt {};
+
 	class COperMode : public CHemt
 	{
 	public:
@@ -253,5 +256,7 @@ public:
 	CComboBox m_rxPowerHemt2Combo;
 	afx_msg void OnCbnSelchangeRxPowerHemt1Combo();
 	afx_msg void OnCbnSelchangeRxPowerHemt2Combo();
+	CTxPower m_txPower;
+	CRxPower m_rxPower;
 	COperMode m_operMode;
 };
