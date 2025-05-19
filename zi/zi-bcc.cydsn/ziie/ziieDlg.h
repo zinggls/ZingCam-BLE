@@ -54,7 +54,7 @@ public:
 	class COperMode : public CHemt
 	{
 	public:
-		COperMode() : m_zingRxCb(nullptr), m_txPrevMode(MODE_OPER), m_rxPrevMode(MODE_OPER) {}
+		COperMode() : m_zingRxCb(nullptr), m_txPrevMode(MODE_PSAVE), m_rxPrevMode(MODE_PSAVE) {}
 
 		ZingRxCallback m_zingRxCb;
 		uint8_t m_txPrevMode;

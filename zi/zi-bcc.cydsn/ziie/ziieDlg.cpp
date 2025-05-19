@@ -351,8 +351,8 @@ BOOL CZiieDlg::OnInitDialog()
 	m_rxPowerHemt1Combo.SetCurSel(0);
 	m_rxPowerHemt2Combo.SetCurSel(0);
 
-	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
-	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
+	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(TRUE);
+	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(TRUE);
 	EnableCombos(TRUE);
 
 	SetTimer(1, 100, NULL);
@@ -568,8 +568,8 @@ void CZiieDlg::ResetI2CReadButton()
 	bRead = FALSE;
 	GetDlgItem(IDC_I2C_READ_BUTTON)->SetWindowText(_T("Read"));
 	GetDlgItem(IDC_PORTS_COMBO)->EnableWindow(TRUE);
-	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
-	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
+	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(TRUE);
+	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(TRUE);
 	EnableCombos(FALSE);
 	m_bleStateCtrl.ShowWindow(SW_HIDE);
 }
