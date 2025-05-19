@@ -111,6 +111,7 @@ CZiieDlg::CZiieDlg(CWnd* pParent /*=nullptr*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_ivf.write.WirelessChannelMode = 0x1;	//디폴트로 자동모드(0x1)
+	m_operMode.m_pDlg = this;
 }
 
 void CZiieDlg::DoDataExchange(CDataExchange* pDX)
@@ -1962,6 +1963,7 @@ void CZiieDlg::OnCbnSelchangeTxPowerCombo()
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.TxPower);
 	m_writeBufferListCtrl.SetItemText(0, 11, str);
+	m_operMode.onWirelessVideoTransmitterOperationMode(m_ivf.write.TxPower);
 }
 
 void CZiieDlg::OnCbnSelchangeRxPowerCombo()
@@ -2048,9 +2050,20 @@ void CZiieDlg::OnCbnSelchangeRxPowerHemt1Combo()
 	CString str;
 	str.Format(_T("%02X"), m_ivf.write.RxPower);
 	m_writeBufferListCtrl.SetItemText(0, 12, str);
+	m_operMode.onWirelessVideoReceiverOperationMode(m_ivf.write.RxPower);
 }
 
 void CZiieDlg::OnCbnSelchangeRxPowerHemt2Combo()
 {
 	OnCbnSelchangeRxPowerHemt1Combo();
+}
+
+void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
+{
+	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x"), mode);
+}
+
+void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
+{
+	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x"), mode);
 }

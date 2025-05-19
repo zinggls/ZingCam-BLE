@@ -13,8 +13,12 @@
 #define MAX_LIST_ITEMS		(1024*8)
 #define BT_ADDRESS_SIZE		(7)
 #define ITF_CRITERIA_SIZE	(1)
+#define MODE_OPER			(0x01)
+#define MODE_WAIT			(0x02)
+#define MODE_PSAVE			(0x04)
 
 class CCom;
+
 
 // CZiieDlg 대화 상자
 class CZiieDlg : public CDialogEx
@@ -22,6 +26,17 @@ class CZiieDlg : public CDialogEx
 // 생성입니다.
 public:
 	CZiieDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
+
+	class COperMode
+	{
+	public:
+		COperMode() {}
+
+		CZiieDlg* m_pDlg;
+
+		void onWirelessVideoTransmitterOperationMode(uint8_t mode);
+		void onWirelessVideoReceiverOperationMode(uint8_t mode);
+	};
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -226,4 +241,5 @@ public:
 	CComboBox m_rxPowerHemt2Combo;
 	afx_msg void OnCbnSelchangeRxPowerHemt1Combo();
 	afx_msg void OnCbnSelchangeRxPowerHemt2Combo();
+	COperMode m_operMode;
 };
