@@ -30,8 +30,6 @@ public:
 	class COperMode
 	{
 	public:
-		COperMode() {}
-
 		CZiieDlg* m_pDlg;
 
 		void onWirelessVideoTransmitterOperationMode(uint8_t mode);
