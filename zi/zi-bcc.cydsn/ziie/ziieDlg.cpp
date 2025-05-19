@@ -2060,27 +2060,27 @@ void CZiieDlg::OnCbnSelchangeRxPowerHemt2Combo()
 
 void CZiieDlg::COperMode::PW_EN_Write(uint8 value)
 {
-
+	m_pDlg->L(_T("PW_EN_Write(%d)"), value);
 }
 
 void CZiieDlg::COperMode::UartRestart(ZingRxCallback cb)
 {
-
+	m_pDlg->L(_T("UartRestart(0x%x)"), cb);
 }
 
 void CZiieDlg::COperMode::HGATE_Con1_Write(uint8 value)
 {
-
+	m_pDlg->L(_T("HGATE_Con1_Write(0x%x)"), value);
 }
 
 void CZiieDlg::COperMode::HGATE_Con2_1_Write(uint8 value)
 {
-
+	m_pDlg->L(_T("HGATE_Con2_1_Write(0x%x)"), value);
 }
 
 void CZiieDlg::COperMode::HGATE_Con2_2_Write(uint8 value)
 {
-
+	m_pDlg->L(_T("HGATE_Con2_2_Write(0x%x)"), value);
 }
 
 static ZingRxCallback zingRxCb = NULL;
