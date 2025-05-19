@@ -352,7 +352,7 @@ BOOL CZiieDlg::OnInitDialog()
 
 	GetDlgItem(IDC_I2C_RESET_BUTTON)->EnableWindow(FALSE);
 	GetDlgItem(IDC_I2C_WRITE_BUTTON)->EnableWindow(FALSE);
-	EnableCombos(FALSE);
+	EnableCombos(TRUE);
 
 	SetTimer(1, 100, NULL);
 
