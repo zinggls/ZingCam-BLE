@@ -13,6 +13,7 @@
 #define MAX_LIST_ITEMS		(1024*8)
 #define BT_ADDRESS_SIZE		(7)
 #define ITF_CRITERIA_SIZE	(1)
+#define MODE_DEFAULT		(0x00)
 #define MODE_OPER			(0x01)
 #define MODE_WAIT			(0x02)
 #define MODE_PSAVE			(0x04)

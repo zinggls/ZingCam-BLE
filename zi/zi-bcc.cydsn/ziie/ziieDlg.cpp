@@ -2093,8 +2093,6 @@ void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
 
 void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
-	if (mode == 0x00) mode = MODE_OPER;	//default인 경우 운용모드로 변경처리
-
 	CString strBase;
 	strBase.Format(_T("Wireless Video Transmitter Operation Mode: 0x%x(%s)"), mode, getOperationMode(mode).GetBuffer());
 	m_pDlg->L(strBase+__T(" start"));
@@ -2103,7 +2101,7 @@ void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 	str.Format(_T("    prevMode: 0x%x(%s)"), m_txPrevMode, getOperationMode(m_txPrevMode).GetBuffer());
 	m_pDlg->L(str);
 
-	if (m_txPrevMode == MODE_OPER) {        //운용모드
+	if (m_txPrevMode == MODE_OPER || m_txPrevMode == MODE_DEFAULT) {        //운용모드
 		if (mode == MODE_WAIT) {
 			//운용모드->대기모드
 			HGATE_Con1_Write(0x04);
@@ -2119,7 +2117,7 @@ void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 		m_txPrevMode = mode;
 	}
 	else if (m_txPrevMode == MODE_WAIT) {    //대기모드
-		if (mode == MODE_OPER) {
+		if (mode == MODE_OPER || mode == MODE_DEFAULT) {
 			//대기모드->운용모드
 			HGATE_Con1_Write(0x03);	//송신기 디폴트 출력
 		}
@@ -2131,7 +2129,7 @@ void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 		m_txPrevMode = mode;
 	}
 	else if (m_txPrevMode == MODE_PSAVE) {    //절전모드
-		if (mode == MODE_OPER) {
+		if (mode == MODE_OPER || mode == MODE_DEFAULT) {
 			//절전모드->운용모드
 			PW_EN_Write(1);
 			UartRestart(m_zingRxCb);
@@ -2152,8 +2150,6 @@ void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 
 void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
-	if (mode == 0x00) mode= MODE_OPER;	//default인 경우 운용모드로 변경처리
-
 	CString strBase;
 	strBase.Format(_T("Wireless Video Receiver Operation Mode: 0x%x(%s)"), mode, getOperationMode(mode).GetBuffer());
 	m_pDlg->L(strBase + __T(" start"));
@@ -2186,7 +2182,7 @@ void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 		m_rxPrevMode = mode;
 	}
 	else if (m_rxPrevMode == MODE_WAIT) {    //대기모드
-		if (mode == MODE_OPER) {
+		if (mode == MODE_OPER || mode == MODE_DEFAULT) {
 			//대기모드->운용모드
 
 			//수신기 디폴트 출력
@@ -2202,7 +2198,7 @@ void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 		m_rxPrevMode = mode;
 	}
 	else if (m_rxPrevMode == MODE_PSAVE) {    //절전모드
-		if (mode == MODE_OPER) {
+		if (mode == MODE_OPER || mode == MODE_DEFAULT) {
 			//절전모드->운용모드
 			PW_EN_Write(1);
 			UartRestart(m_zingRxCb);
@@ -2228,6 +2224,7 @@ CString CZiieDlg::COperMode::getOperationMode(uint8_t mode)
 {
 	CString str;
 	switch (mode) {
+	case MODE_DEFAULT:
 	case MODE_OPER:
 		str = _T("운용모드");
 		break;
