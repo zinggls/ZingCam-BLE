@@ -2274,31 +2274,36 @@ void CZiieDlg::CTxPower::TxHemtPower_Hanwha(uint8_t level)
 void CZiieDlg::CRxPower::RxHemtPower_Hanwha(uint8_t level)
 {
 	m_pDlg->L(_T("RxHemtPower_Hanwha(0x%x) start"), level);
-	switch (level)
-	{
-	case 0x0: //default
-	case 0x1:
-		HGATE_Con1_Write(0x03);
-		HGATE_Con2_1_Write(0x00);
-		HGATE_Con2_2_Write(0x03);
-		break;
-	case 0x2:
-		HGATE_Con1_Write(0x03);
-		HGATE_Con2_1_Write(0x03);
-		HGATE_Con2_2_Write(0x00);
-		break;
-	case 0x3:
-		HGATE_Con1_Write(0x0B);
-		HGATE_Con2_1_Write(0x03);
-		HGATE_Con2_2_Write(0x01);
-		break;
-	case 0x4:
-		HGATE_Con1_Write(0x0F);
-		HGATE_Con2_1_Write(0x03);
-		HGATE_Con2_2_Write(0x03);
-		break;
-	default:
-		break;
+	if (m_pDlg->m_ivf.write.OpmodeRx == MODE_OPER || m_pDlg->m_ivf.write.OpmodeRx == MODE_DEFAULT) {
+		switch (level)
+		{
+		case 0x0: //default
+		case 0x1:
+			HGATE_Con1_Write(0x03);
+			HGATE_Con2_1_Write(0x00);
+			HGATE_Con2_2_Write(0x03);
+			break;
+		case 0x2:
+			HGATE_Con1_Write(0x03);
+			HGATE_Con2_1_Write(0x03);
+			HGATE_Con2_2_Write(0x00);
+			break;
+		case 0x3:
+			HGATE_Con1_Write(0x0B);
+			HGATE_Con2_1_Write(0x03);
+			HGATE_Con2_2_Write(0x01);
+			break;
+		case 0x4:
+			HGATE_Con1_Write(0x0F);
+			HGATE_Con2_1_Write(0x03);
+			HGATE_Con2_2_Write(0x03);
+			break;
+		default:
+			break;
+		}
+	}
+	else {
+		m_pDlg->L(_T("    RxHemt is not applied in 0x%x(%s) mode"), m_pDlg->m_ivf.write.OpmodeRx, COperMode::getOperationMode(m_pDlg->m_ivf.write.OpmodeRx));
 	}
 	m_pDlg->L(_T("RxHemtPower_Hanwha(0x%x) end"), level);
 }
