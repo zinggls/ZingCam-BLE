@@ -287,11 +287,13 @@ BOOL CZiieDlg::OnInitDialog()
 	m_opmodeTxCombo.AddString(_T("운용모드"));
 	m_opmodeTxCombo.AddString(_T("대기모드"));
 	m_opmodeTxCombo.AddString(_T("절전모드"));
+	m_opmodeTxCombo.SetCurSel(1);
 
 	m_opmodeRxCombo.AddString(_T("(default)"));
 	m_opmodeRxCombo.AddString(_T("운용모드"));
 	m_opmodeRxCombo.AddString(_T("대기모드"));
 	m_opmodeRxCombo.AddString(_T("절전모드"));
+	m_opmodeRxCombo.SetCurSel(1);
 
 	m_txImuTypeCombo.AddString(_T("Euler Angle(Default)"));
 	m_txImuTypeCombo.AddString(_T("Quaternion"));
