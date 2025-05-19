@@ -2093,20 +2093,24 @@ void CZiieDlg::COperMode::setZingRxCallback(ZingRxCallback cb)
 
 void CZiieDlg::COperMode::onWirelessVideoTransmitterOperationMode(uint8_t mode)
 {
-	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x"), mode);
+	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x start========="), mode);
+	m_pDlg->L(_T("Wireless Video Transmitter Operation Mode: 0x%x end==========="), mode);
 }
 
 void CZiieDlg::COperMode::onWirelessVideoReceiverOperationMode(uint8_t mode)
 {
-	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x"), mode);
+	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x start========="), mode);
+	m_pDlg->L(_T("Wireless Video Receiver Operation Mode: 0x%x end==========="), mode);
 }
 
 void CZiieDlg::CTxPower::TxHemtPower_Hanwha(uint8_t level)
 {
-	m_pDlg->L(_T("TxHemtPower_Hanwha(0x%x)"), level);
+	m_pDlg->L(_T("TxHemtPower_Hanwha(0x%x) start========="), level);
+	m_pDlg->L(_T("TxHemtPower_Hanwha(0x%x) end==========="), level);
 }
 
 void CZiieDlg::CRxPower::RxHemtPower_Hanwha(uint8_t level)
 {
-	m_pDlg->L(_T("RxHemtPower_Hanwha(0x%x)"), level);
+	m_pDlg->L(_T("RxHemtPower_Hanwha(0x%x) start========="), level);
+	m_pDlg->L(_T("RxHemtPower_Hanwha(0x%x) end==========="), level);
 }
