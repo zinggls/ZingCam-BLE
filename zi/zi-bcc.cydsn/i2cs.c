@@ -17,6 +17,7 @@
 #include "FlashRow.h"
 #include "hgate.h"
 #include "operMode.h"
+#include "spdtMacro.h"
 
 static uint8 i2cReadBuffer [I2C_RD_BUFFER_SIZE] = {0};
 static uint8 i2cWriteBuffer[I2C_WR_BUFFER_SIZE] = {0};
@@ -121,13 +122,13 @@ void i2cs_process(ZCD_FRAME *zcd)
             if(ivfCom.wirelessVideoChannelMode==0x01) { //자동 채널 설정 모드
                 //default 채널로 Low band를 지정
                 ivfCom.wirelessVideoChannelInformation = 0x01;
-                SPDT_Write(0);  //Low band
+                SPDT_Write(SPDT_LOW);  //Low band
             }
             
             if(ivfCom.wirelessVideoChannelMode==0x02) { //수동 채널 설정 모드
                 if(prevCh!=ivfCom.wirelessVideoChannelInformation) {
-                    if(ivfCom.wirelessVideoChannelInformation==0x01) SPDT_Write(0);    //수동 1채널 (Low band)
-                    if(ivfCom.wirelessVideoChannelInformation==0x02) SPDT_Write(1);    //수동 2채널 (High band)
+                    if(ivfCom.wirelessVideoChannelInformation==0x01) SPDT_Write(SPDT_LOW);    //수동 1채널 (Low band)
+                    if(ivfCom.wirelessVideoChannelInformation==0x02) SPDT_Write(SPDT_HIGH);   //수동 2채널 (High band)
                 }
             }
             

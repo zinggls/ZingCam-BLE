@@ -15,6 +15,7 @@
 #include "FlashRow.h"
 #include "hgate.h"
 #include "operMode.h"
+#include "spdtMacro.h"
 
 #define BUTTON_HOLD_TIME_SEC  3   //3 seconds
 
@@ -417,7 +418,7 @@ int main(void)
     HGATE_Con1_Write(HGATE_Con1_VAL);
     HGATE_Con2_1_Write(0x03&(HGATE_Con2_VAL));
     HGATE_Con2_2_Write((0x0C&HGATE_Con2_VAL)>>2);
-    SPDT_Write(0);
+    SPDT_Write(SPDT_LOW);
 
     setBccVersion();
     setZingRxCallback(ZingCB);
