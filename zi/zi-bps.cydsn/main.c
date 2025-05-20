@@ -468,8 +468,11 @@ int main()
     HGATE_Con1_Write(0x00);
     PW_EN_Write(1);
     CyDelay(500);
+    
+    //절전모드->운용모드
     HGATE_Con1_Write(0x04);
-    HGATE_Con1_Write(HGATE_Con1_VAL);
+    HGATE_Con1_Write(0x03);    //송신기 디폴트 출력
+    
 #ifdef WITHOUT_CB
     PW_EN_Write(1);
     CyDelay(2000);
