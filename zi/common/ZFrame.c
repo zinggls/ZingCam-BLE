@@ -97,6 +97,7 @@ int parse(void *data, const char *buf)
                     
                     if(Kind==ZCD) {
                         memcpy(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE+VERSION_SIZE,ver.info,VERSION_SIZE);
+                        getI2CReadBuffer()[I2C_IVF_READ_BUFFER_SIZE+VERSION_SIZE+VERSION_SIZE-1] = 0;
                     }else if(Kind==ZED || Kind==ZCH) {
                         memcpy(peripheral.zxxVer.info,git_describe,VERSION_SIZE);
                     }

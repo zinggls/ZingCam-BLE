@@ -90,11 +90,13 @@ static void setChannel(uint8_t *buf,char bnd)
 static void setBpsVerBuffer(uint8_t *buf,Version *v)
 {
     memcpy(buf,v->info,VERSION_SIZE);
+    buf[VERSION_SIZE-1] = 0;
 }
 
 static void setZxxVerBuffer(uint8_t *buf,Version *v)
 {
     memcpy(buf,v->info,VERSION_SIZE);
+    buf[VERSION_SIZE-1] = 0;
 }
 
 static void applyICD_for_Unknown()

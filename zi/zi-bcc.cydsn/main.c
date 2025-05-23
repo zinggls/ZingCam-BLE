@@ -25,6 +25,7 @@ static void setBccVersion()
     memset(&ver,0,sizeof(Version));
     strcpy(ver.info,GIT_DESCRIBE);
     memcpy(getI2CReadBuffer()+I2C_IVF_READ_BUFFER_SIZE,ver.info,VERSION_SIZE);
+    getI2CReadBuffer()[I2C_IVF_READ_BUFFER_SIZE+VERSION_SIZE-1] = 0;
 }
 
 static CYBLE_API_RESULT_T sendITF(char itf)
