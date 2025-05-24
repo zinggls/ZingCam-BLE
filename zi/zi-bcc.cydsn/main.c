@@ -422,7 +422,7 @@ int main(void)
     HGATE_Con2_1_Write(0x00);
     HGATE_Con2_2_Write(0x03);
     
-    SPDT_Write(SPDT_LOW);
+    SPDT_Write(SPDT_HIGH);
 
     setBccVersion();
     setZingRxCallback(ZingCB);
