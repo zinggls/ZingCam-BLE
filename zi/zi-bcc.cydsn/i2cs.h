@@ -41,7 +41,7 @@
 #define CMD_SET_GREEN       (2u)
 #define CMD_SET_BLUE        (3u)
 
-#define ITF_CRITERIA        10
+#define ITF_CRITERIA        7
 uint8_t itfCriteria;
 
 void i2cs_start(void);
