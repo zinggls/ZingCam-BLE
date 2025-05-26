@@ -321,7 +321,7 @@ BOOL CZiieDlg::OnInitDialog()
 		str.Format(_T("%d"), i);
 		m_itfCriteriaCombo.AddString(str);
 	}
-	m_itfCriteriaCombo.SetCurSel(9);	//default 10
+	m_itfCriteriaCombo.SetCurSel(6);	//default 7
 
 	int val = 0;
 	for (int i = 0; i < 50; i++) {
