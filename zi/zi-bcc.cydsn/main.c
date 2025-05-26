@@ -279,11 +279,11 @@ void RxHemtPower_Hanwha(uint8_t level)
         case 0x0: //default
         case 0x1:
             HGATE_Con1_Write(0x03);
-            HGATE_Con2_1_Write(0x00);
-            HGATE_Con2_2_Write(0x03);
+            HGATE_Con2_1_Write(0x03);
+            HGATE_Con2_2_Write(0x00);
             break;
         case 0x2:
-            HGATE_Con1_Write(0x03);
+            HGATE_Con1_Write(0x07);
             HGATE_Con2_1_Write(0x03);
             HGATE_Con2_2_Write(0x00);
             break;
@@ -295,7 +295,7 @@ void RxHemtPower_Hanwha(uint8_t level)
         case 0x4:
             HGATE_Con1_Write(0x0F);
             HGATE_Con2_1_Write(0x03);
-            HGATE_Con2_2_Write(0x03);
+            HGATE_Con2_2_Write(0x02);
             break;
         default:
             break;
