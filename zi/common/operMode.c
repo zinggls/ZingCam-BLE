@@ -71,7 +71,6 @@ void onWirelessVideoReceiverOperationMode(uint8_t mode)
 			HGATE_Con1_Write(0x00);
 			HGATE_Con2_1_Write(0x00);
 			HGATE_Con2_2_Write(0x00);
-			PW_EN_Write(0);
 		}
 
 		rxPrevMode = mode;
@@ -90,7 +89,6 @@ void onWirelessVideoReceiverOperationMode(uint8_t mode)
 		}
 		else if (mode == MODE_PSAVE) {
 			//대기모드->절전모드
-			PW_EN_Write(0);
 		}
 
 		rxPrevMode = mode;
@@ -98,8 +96,6 @@ void onWirelessVideoReceiverOperationMode(uint8_t mode)
 	else if (rxPrevMode == MODE_PSAVE) {    //절전모드
 		if (mode == MODE_OPER || mode == MODE_DEFAULT) {
 			//절전모드->운용모드
-			PW_EN_Write(1);
-			UartRestart(zingRxCb);
 
 			//수신기 디폴트 출력
 			HGATE_Con1_Write(0x04);
@@ -111,8 +107,6 @@ void onWirelessVideoReceiverOperationMode(uint8_t mode)
 		}
 		else if (mode == MODE_WAIT) {
 			//절전모드->대기모드
-			PW_EN_Write(1);
-			UartRestart(zingRxCb);
 		}
 
 		rxPrevMode = mode;
