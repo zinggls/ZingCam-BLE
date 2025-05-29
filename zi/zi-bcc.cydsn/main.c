@@ -418,8 +418,8 @@ int main(void)
     HGATE_Con1_Write(0x04);
     HGATE_Con2_1_Write(0x00);
     HGATE_Con2_2_Write(0x01);
-    HGATE_Con1_Write(0x03);
-    HGATE_Con2_1_Write(0x00);
+    HGATE_Con1_Write(0x07);
+    HGATE_Con2_1_Write(0x03);
     HGATE_Con2_2_Write(0x03);
     
     SPDT_Write(SPDT_HIGH);
